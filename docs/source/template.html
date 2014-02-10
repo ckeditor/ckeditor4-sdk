@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='global-property-'>/**
+</span> * @fileOverview Defines the {@link CKEDITOR.template} class, which represents
+ * an UI template for an editor instance.
+ */
+
+( function() {
+	var cache = {},
+		rePlaceholder = /{([^}]+)}/g,
+		reQuote = /'/g,
+		reEscapableChars = /([\\'])/g,
+		reNewLine = /\n/g,
+		reCarriageReturn = /\r/g;
+
+<span id='CKEDITOR-template-method-constructor'><span id='CKEDITOR-template'>	/**
+</span></span>	 * Lightweight template used to build the output string from variables.
+	 *
+	 *		// HTML template for presenting a label UI.
+	 *		var tpl = new CKEDITOR.template( '&lt;div class=&quot;{cls}&quot;&gt;{label}&lt;/div&gt;' );
+	 *		alert( tpl.output( { cls: 'cke-label', label: 'foo'} ) ); // '&lt;div class=&quot;cke-label&quot;&gt;foo&lt;/div&gt;'
+	 *
+	 * @class
+	 * @constructor Creates a template class instance.
+	 * @param {String} source The template source.
+	 */
+	CKEDITOR.template = function( source ) {
+		// Builds an optimized function body for the output() method, focused on performance.
+		// For example, if we have this &quot;source&quot;:
+		//	'&lt;div style=&quot;{style}&quot;&gt;{editorName}&lt;/div&gt;'
+		// ... the resulting function body will be (apart from the &quot;buffer&quot; handling):
+		//	return [ '&lt;div style=&quot;', data['style'] == undefined ? '{style}' : data['style'], '&quot;&gt;', data['editorName'] == undefined ? '{editorName}' : data['editorName'], '&lt;/div&gt;' ].join('');
+
+		// Try to read from the cache.
+		if ( cache[ source ] )
+			this.output = cache[ source ];
+		else {
+			var fn = source
+				// Escape chars like slash &quot;\&quot; or single quote &quot;'&quot;.
+				.replace( reEscapableChars, '\\$1' )
+				.replace( reNewLine, '\\n' )
+				.replace( reCarriageReturn, '\\r' )
+				// Inject the template keys replacement.
+				.replace( rePlaceholder, function( m, key ) {
+					return &quot;',data['&quot; + key + &quot;']==undefined?'{&quot; + key + &quot;}':data['&quot; + key + &quot;'],'&quot;;
+				} );
+
+			fn = &quot;return buffer?buffer.push('&quot; + fn + &quot;'):['&quot; + fn + &quot;'].join('');&quot;;
+			this.output = cache[ source ] = Function( 'data', 'buffer', fn );
+		}
+	};
+} )();
+
+<span id='CKEDITOR-template-method-output'>/**
+</span> * Processes the template, filling its variables with the provided data.
+ *
+ * @method output
+ * @param {Object} data An object containing properties which values will be
+ * used to fill the template variables. The property names must match the
+ * template variables names. Variables without matching properties will be
+ * kept untouched.
+ * @param {Array} [buffer] An array into which the output data will be pushed into.
+ * The number of entries appended to the array is unknown.
+ * @returns {String/Number} If `buffer` has not been provided, the processed
+ * template output data, otherwise the new length of `buffer`.
+ */
+</pre>
+</body>
+</html>

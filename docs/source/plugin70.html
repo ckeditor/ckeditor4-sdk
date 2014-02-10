@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+CKEDITOR.plugins.add( 'uicolor', {
+	requires: 'dialog',
+	lang: 'ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,mk,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+	icons: 'uicolor', // %REMOVE_LINE_CORE%
+	hidpi: true, // %REMOVE_LINE_CORE%
+	init: function( editor ) {
+		if ( CKEDITOR.env.ie6Compat )
+			return;
+
+		editor.addCommand( 'uicolor', new CKEDITOR.dialogCommand( 'uicolor' ) );
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'UIColor', {
+			label: editor.lang.uicolor.title,
+			command: 'uicolor',
+			toolbar: 'tools,1'
+		} );
+		CKEDITOR.dialog.add( 'uicolor', this.path + 'dialogs/uicolor.js' );
+
+		// Load YUI js files.
+		CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( 'plugins/uicolor/yui/yui.js' ) );
+
+		// Load YUI css files.
+		CKEDITOR.document.appendStyleSheet( CKEDITOR.getUrl( 'plugins/uicolor/yui/assets/yui.css' ) );
+	}
+} );
+</pre>
+</body>
+</html>

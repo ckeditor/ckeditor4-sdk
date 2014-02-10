@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+CKEDITOR.dialog.add( 'smiley', function( editor ) {
+	var config = editor.config,
+		lang = editor.lang.smiley,
+		images = config.smiley_images,
+		columns = config.smiley_columns || 8,
+		i;
+
+	// Simulate &quot;this&quot; of a dialog for non-dialog events.
+	// @type {CKEDITOR.dialog}
+	var dialog;
+	var onClick = function( evt ) {
+			var target = evt.data.getTarget(),
+				targetName = target.getName();
+
+			if ( targetName == 'a' )
+				target = target.getChild( 0 );
+			else if ( targetName != 'img' )
+				return;
+
+			var src = target.getAttribute( 'cke_src' ),
+				title = target.getAttribute( 'title' );
+
+			var img = editor.document.createElement( 'img', {
+				attributes: {
+					src: src,
+					'data-cke-saved-src': src,
+					title: title,
+					alt: title,
+					width: target.$.width,
+					height: target.$.height
+				}
+			} );
+
+			editor.insertElement( img );
+
+			dialog.hide();
+			evt.data.preventDefault();
+		};
+
+	var onKeydown = CKEDITOR.tools.addFunction( function( ev, element ) {
+		ev = new CKEDITOR.dom.event( ev );
+		element = new CKEDITOR.dom.element( element );
+		var relative, nodeToMove;
+
+		var keystroke = ev.getKeystroke(),
+			rtl = editor.lang.dir == 'rtl';
+		switch ( keystroke ) {
+			// UP-ARROW
+			case 38:
+				// relative is TR
+				if ( ( relative = element.getParent().getParent().getPrevious() ) ) {
+					nodeToMove = relative.getChild( [ element.getParent().getIndex(), 0 ] );
+					nodeToMove.focus();
+				}
+				ev.preventDefault();
+				break;
+				// DOWN-ARROW
+			case 40:
+				// relative is TR
+				if ( ( relative = element.getParent().getParent().getNext() ) ) {
+					nodeToMove = relative.getChild( [ element.getParent().getIndex(), 0 ] );
+					if ( nodeToMove )
+						nodeToMove.focus();
+				}
+				ev.preventDefault();
+				break;
+				// ENTER
+				// SPACE
+			case 32:
+				onClick( { data: ev } );
+				ev.preventDefault();
+				break;
+
+				// RIGHT-ARROW
+			case rtl ? 37 : 39:
+				// relative is TD
+				if ( ( relative = element.getParent().getNext() ) ) {
+					nodeToMove = relative.getChild( 0 );
+					nodeToMove.focus();
+					ev.preventDefault( true );
+				}
+				// relative is TR
+				else if ( ( relative = element.getParent().getParent().getNext() ) ) {
+					nodeToMove = relative.getChild( [ 0, 0 ] );
+					if ( nodeToMove )
+						nodeToMove.focus();
+					ev.preventDefault( true );
+				}
+				break;
+
+				// LEFT-ARROW
+			case rtl ? 39 : 37:
+				// relative is TD
+				if ( ( relative = element.getParent().getPrevious() ) ) {
+					nodeToMove = relative.getChild( 0 );
+					nodeToMove.focus();
+					ev.preventDefault( true );
+				}
+				// relative is TR
+				else if ( ( relative = element.getParent().getParent().getPrevious() ) ) {
+					nodeToMove = relative.getLast().getChild( 0 );
+					nodeToMove.focus();
+					ev.preventDefault( true );
+				}
+				break;
+			default:
+				// Do not stop not handled events.
+				return;
+		}
+	} );
+
+	// Build the HTML for the smiley images table.
+	var labelId = CKEDITOR.tools.getNextId() + '_smiley_emtions_label';
+	var html = [
+		'&lt;div&gt;' +
+		'&lt;span id=&quot;' + labelId + '&quot; class=&quot;cke_voice_label&quot;&gt;' + lang.options + '&lt;/span&gt;',
+		'&lt;table role=&quot;listbox&quot; aria-labelledby=&quot;' + labelId + '&quot; style=&quot;width:100%;height:100%;border-collapse:separate;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot;',
+		CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.quirks ? ' style=&quot;position:absolute;&quot;' : '',
+		'&gt;&lt;tbody&gt;'
+		];
+
+	var size = images.length;
+	for ( i = 0; i &lt; size; i++ ) {
+		if ( i % columns === 0 )
+			html.push( '&lt;tr role=&quot;presentation&quot;&gt;' );
+
+		var smileyLabelId = 'cke_smile_label_' + i + '_' + CKEDITOR.tools.getNextNumber();
+		html.push( '&lt;td class=&quot;cke_dark_background cke_centered&quot; style=&quot;vertical-align: middle;&quot; role=&quot;presentation&quot;&gt;' +
+			'&lt;a href=&quot;javascript:void(0)&quot; role=&quot;option&quot;', ' aria-posinset=&quot;' + ( i + 1 ) + '&quot;', ' aria-setsize=&quot;' + size + '&quot;', ' aria-labelledby=&quot;' + smileyLabelId + '&quot;', ' class=&quot;cke_smile cke_hand&quot; tabindex=&quot;-1&quot; onkeydown=&quot;CKEDITOR.tools.callFunction( ', onKeydown, ', event, this );&quot;&gt;', '&lt;img class=&quot;cke_hand&quot; title=&quot;', config.smiley_descriptions[ i ], '&quot;' +
+					' cke_src=&quot;', CKEDITOR.tools.htmlEncode( config.smiley_path + images[ i ] ), '&quot; alt=&quot;', config.smiley_descriptions[ i ], '&quot;', ' src=&quot;', CKEDITOR.tools.htmlEncode( config.smiley_path + images[ i ] ), '&quot;',
+		// IE BUG: Below is a workaround to an IE image loading bug to ensure the image sizes are correct.
+		( CKEDITOR.env.ie ? ' onload=&quot;this.setAttribute(\'width\', 2); this.removeAttribute(\'width\');&quot; ' : '' ), '&gt;' +
+				'&lt;span id=&quot;' + smileyLabelId + '&quot; class=&quot;cke_voice_label&quot;&gt;' + config.smiley_descriptions[ i ] + '&lt;/span&gt;' +
+			'&lt;/a&gt;', '&lt;/td&gt;' );
+
+		if ( i % columns == columns - 1 )
+			html.push( '&lt;/tr&gt;' );
+	}
+
+	if ( i &lt; columns - 1 ) {
+		for ( ; i &lt; columns - 1; i++ )
+			html.push( '&lt;td&gt;&lt;/td&gt;' );
+		html.push( '&lt;/tr&gt;' );
+	}
+
+	html.push( '&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;' );
+
+	var smileySelector = {
+		type: 'html',
+		id: 'smileySelector',
+		html: html.join( '' ),
+		onLoad: function( event ) {
+			dialog = event.sender;
+		},
+		focus: function() {
+			var self = this;
+			// IE need a while to move the focus (#6539).
+			setTimeout( function() {
+				var firstSmile = self.getElement().getElementsByTag( 'a' ).getItem( 0 );
+				firstSmile.focus();
+			}, 0 );
+		},
+		onClick: onClick,
+		style: 'width: 100%; border-collapse: separate;'
+	};
+
+	return {
+		title: editor.lang.smiley.title,
+		minWidth: 270,
+		minHeight: 120,
+		contents: [
+			{
+			id: 'tab1',
+			label: '',
+			title: '',
+			expand: true,
+			padding: 0,
+			elements: [
+				smileySelector
+				]
+		}
+		],
+		buttons: [ CKEDITOR.dialog.cancelButton ]
+	};
+} );
+</pre>
+</body>
+</html>

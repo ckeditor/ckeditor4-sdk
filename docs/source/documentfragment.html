@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='CKEDITOR-dom-documentFragment-method-constructor'><span id='CKEDITOR-dom-documentFragment'>/**
+</span></span> * DocumentFragment is a &quot;lightweight&quot; or &quot;minimal&quot; Document object. It is
+ * commonly used to extract a portion of a document's tree or to create a new
+ * fragment of a document. Various operations may take DocumentFragment objects
+ * as arguments and results in all the child nodes of the DocumentFragment being
+ * moved to the child list of this node.
+ *
+ * @class
+ * @constructor Creates a document fragment class instance.
+ * @param {Object} nodeOrDoc
+ * @todo example and param doc
+ */
+CKEDITOR.dom.documentFragment = function( nodeOrDoc ) {
+	nodeOrDoc = nodeOrDoc || CKEDITOR.document;
+
+	if ( nodeOrDoc.type == CKEDITOR.NODE_DOCUMENT )
+		this.$ = nodeOrDoc.$.createDocumentFragment();
+	else
+		this.$ = nodeOrDoc;
+};
+
+CKEDITOR.tools.extend( CKEDITOR.dom.documentFragment.prototype, CKEDITOR.dom.element.prototype, {
+<span id='CKEDITOR-dom-documentFragment-property-type'>	/**
+</span>	 * The node type. This is a constant value set to {@link CKEDITOR#NODE_DOCUMENT_FRAGMENT}.
+	 *
+	 * @readonly
+	 * @property {Number} [=CKEDITOR.NODE_DOCUMENT_FRAGMENT]
+	 */
+	type: CKEDITOR.NODE_DOCUMENT_FRAGMENT,
+
+<span id='CKEDITOR-dom-documentFragment-method-insertAfterNode'>	/**
+</span>	 * Inserts document fragment's contents after specified node.
+	 *
+	 * @param {CKEDITOR.dom.node} node
+	 */
+	insertAfterNode: function( node ) {
+		node = node.$;
+		node.parentNode.insertBefore( this.$, node.nextSibling );
+	}
+}, true, { 'append': 1, 'appendBogus': 1, 'getFirst': 1, 'getLast': 1, 'getParent': 1, 'getNext': 1, 'getPrevious': 1, 'appendTo': 1, 'moveChildren': 1, 'insertBefore': 1, 'insertAfterNode': 1, 'replace': 1, 'trim': 1, 'type': 1, 'ltrim': 1, 'rtrim': 1, 'getDocument': 1, 'getChildCount': 1, 'getChild': 1, 'getChildren': 1 } );
+</pre>
+</body>
+</html>

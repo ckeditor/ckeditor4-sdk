@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='global-property-'>/**
+</span> * @fileOverview The &quot;divarea&quot; plugin. It registers the &quot;wysiwyg&quot; editing
+ *		mode using a DIV element.
+ */
+
+CKEDITOR.plugins.add( 'divarea', {
+	afterInit: function( editor ) {
+		// Add the &quot;wysiwyg&quot; mode.
+		// Do that in the afterInit function, so it'll eventually overwrite
+		// the mode defined by the wysiwygarea plugin.
+		editor.addMode( 'wysiwyg', function( callback ) {
+			var editingBlock = CKEDITOR.dom.element.createFromHtml( '&lt;div class=&quot;cke_wysiwyg_div cke_reset&quot; hidefocus=&quot;true&quot;&gt;&lt;/div&gt;' );
+
+			var contentSpace = editor.ui.space( 'contents' );
+			contentSpace.append( editingBlock );
+
+			editingBlock = editor.editable( editingBlock );
+
+			editingBlock.detach = CKEDITOR.tools.override( editingBlock.detach,
+				function( org ) {
+					return function() {
+						org.apply( this, arguments );
+						this.remove();
+					};
+				} );
+
+			editor.setData( editor.getData( 1 ), callback );
+			editor.fire( 'contentDom' );
+		} );
+	}
+} );
+</pre>
+</body>
+</html>

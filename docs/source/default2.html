@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+// Register a templates definition set named &quot;default&quot;.
+CKEDITOR.addTemplates( 'default', {
+	// The name of sub folder which hold the shortcut preview images of the
+	// templates.
+	imagesPath: CKEDITOR.getUrl( CKEDITOR.plugins.getPath( 'templates' ) + 'templates/images/' ),
+
+	// The templates definitions.
+	templates: [
+		{
+		title: 'Image and Title',
+		image: 'template1.gif',
+		description: 'One main image with a title and text that surround the image.',
+		html: '&lt;h3&gt;' +
+			// Use src=&quot; &quot; so image is not filtered out by the editor as incorrect (src is required).
+			'&lt;img src=&quot; &quot; alt=&quot;&quot; style=&quot;margin-right: 10px&quot; height=&quot;100&quot; width=&quot;100&quot; align=&quot;left&quot; /&gt;' +
+			'Type the title here' +
+			'&lt;/h3&gt;' +
+			'&lt;p&gt;' +
+			'Type the text here' +
+			'&lt;/p&gt;'
+	},
+		{
+		title: 'Strange Template',
+		image: 'template2.gif',
+		description: 'A template that defines two colums, each one with a title, and some text.',
+		html: '&lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; style=&quot;width:100%&quot; border=&quot;0&quot;&gt;' +
+			'&lt;tr&gt;' +
+				'&lt;td style=&quot;width:50%&quot;&gt;' +
+					'&lt;h3&gt;Title 1&lt;/h3&gt;' +
+				'&lt;/td&gt;' +
+				'&lt;td&gt;&lt;/td&gt;' +
+				'&lt;td style=&quot;width:50%&quot;&gt;' +
+					'&lt;h3&gt;Title 2&lt;/h3&gt;' +
+				'&lt;/td&gt;' +
+			'&lt;/tr&gt;' +
+			'&lt;tr&gt;' +
+				'&lt;td&gt;' +
+					'Text 1' +
+				'&lt;/td&gt;' +
+				'&lt;td&gt;&lt;/td&gt;' +
+				'&lt;td&gt;' +
+					'Text 2' +
+				'&lt;/td&gt;' +
+			'&lt;/tr&gt;' +
+			'&lt;/table&gt;' +
+			'&lt;p&gt;' +
+			'More text goes here.' +
+			'&lt;/p&gt;'
+	},
+		{
+		title: 'Text and Table',
+		image: 'template3.gif',
+		description: 'A title with some text and a table.',
+		html: '&lt;div style=&quot;width: 80%&quot;&gt;' +
+			'&lt;h3&gt;' +
+				'Title goes here' +
+			'&lt;/h3&gt;' +
+			'&lt;table style=&quot;width:150px;float: right&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; border=&quot;1&quot;&gt;' +
+				'&lt;caption style=&quot;border:solid 1px black&quot;&gt;' +
+					'&lt;strong&gt;Table title&lt;/strong&gt;' +
+				'&lt;/caption&gt;' +
+				'&lt;tr&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+				'&lt;/tr&gt;' +
+				'&lt;tr&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+				'&lt;/tr&gt;' +
+				'&lt;tr&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+					'&lt;td&gt;&amp;nbsp;&lt;/td&gt;' +
+				'&lt;/tr&gt;' +
+			'&lt;/table&gt;' +
+			'&lt;p&gt;' +
+				'Type the text here' +
+			'&lt;/p&gt;' +
+			'&lt;/div&gt;'
+	}
+	]
+} );
+</pre>
+</body>
+</html>

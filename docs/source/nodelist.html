@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='CKEDITOR-dom-nodeList-method-constructor'><span id='CKEDITOR-dom-nodeList'>/**
+</span></span> * Represents a list of {@link CKEDITOR.dom.node} objects.
+ * It's a wrapper for native nodes list.
+ *
+ *		var nodeList = CKEDITOR.document.getBody().getChildren();
+ *		alert( nodeList.count() ); // number [0;N]
+ *
+ * @class
+ * @constructor Creates a document class instance.
+ * @param {Object} nativeList
+ */
+CKEDITOR.dom.nodeList = function( nativeList ) {
+	this.$ = nativeList;
+};
+
+CKEDITOR.dom.nodeList.prototype = {
+<span id='CKEDITOR-dom-nodeList-method-count'>	/**
+</span>	 * Get count of nodes in this list.
+	 *
+	 * @returns {Number}
+	 */
+	count: function() {
+		return this.$.length;
+	},
+
+<span id='CKEDITOR-dom-nodeList-method-getItem'>	/**
+</span>	 * Get node from the list.
+	 *
+	 * @returns {CKEDITOR.dom.node}
+	 */
+	getItem: function( index ) {
+		if ( index &lt; 0 || index &gt;= this.$.length )
+			return null;
+
+		var $node = this.$[ index ];
+		return $node ? new CKEDITOR.dom.node( $node ) : null;
+	}
+};
+</pre>
+</body>
+</html>

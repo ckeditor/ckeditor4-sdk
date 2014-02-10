@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='global-property-'>/**
+</span> * @fileOverview Defines the {@link CKEDITOR.xml} class, which represents a
+ *		loaded XML document.
+ */
+
+( function() {
+	CKEDITOR.plugins.add( 'xml', {} );
+
+<span id='CKEDITOR-xml-method-constructor'><span id='CKEDITOR-xml'>	/**
+</span></span>	 * Represents a loaded XML document.
+	 *
+	 *		var xml = new CKEDITOR.xml( '&lt;books&gt;&lt;book title=&quot;My Book&quot; /&gt;&lt;/books&gt;' );
+	 *
+	 * @class
+	 * @constructor Creates xml class instance.
+	 * @param {Object/String} xmlObjectOrData A native XML (DOM document) object or
+	 * a string containing the XML definition to be loaded.
+	 */
+	CKEDITOR.xml = function( xmlObjectOrData ) {
+		var baseXml = null;
+
+		if ( typeof xmlObjectOrData == 'object' )
+			baseXml = xmlObjectOrData;
+		else {
+			var data = ( xmlObjectOrData || '' ).replace( /&amp;nbsp;/g, '\xA0' );
+			if ( window.DOMParser )
+				baseXml = ( new DOMParser() ).parseFromString( data, 'text/xml' );
+			else if ( window.ActiveXObject ) {
+				try {
+					baseXml = new ActiveXObject( 'MSXML2.DOMDocument' );
+				} catch ( e ) {
+					try {
+						baseXml = new ActiveXObject( 'Microsoft.XmlDom' );
+					} catch ( e ) {}
+				}
+
+				if ( baseXml ) {
+					baseXml.async = false;
+					baseXml.resolveExternals = false;
+					baseXml.validateOnParse = false;
+					baseXml.loadXML( data );
+				}
+			}
+		}
+
+<span id='CKEDITOR-xml-property-baseXml'>		/**
+</span>		 * The native XML (DOM document) used by the class instance.
+		 */
+		this.baseXml = baseXml;
+	};
+
+	CKEDITOR.xml.prototype = {
+<span id='CKEDITOR-xml-method-selectSingleNode'>		/**
+</span>		 * Get a single node from the XML document, based on a XPath query.
+		 *
+		 *		// Create the XML instance.
+		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		// Get the first &lt;item&gt; node.
+		 *		var itemNode = &lt;b&gt;xml.selectSingleNode( 'list/item' )&lt;/b&gt;;
+		 *		// Alert &quot;item&quot;.
+		 *		alert( itemNode.nodeName );
+		 *
+		 * @param {String} xpath The XPath query to execute.
+		 * @param {Object} [contextNode] The XML DOM node to be used as the context
+		 * for the XPath query. The document root is used by default.
+		 * @returns {Object} A XML node element or null if the query has no results.
+		 */
+		selectSingleNode: function( xpath, contextNode ) {
+			var baseXml = this.baseXml;
+
+			if ( contextNode || ( contextNode = baseXml ) ) {
+				if ( CKEDITOR.env.ie || contextNode.selectSingleNode ) // IE
+				return contextNode.selectSingleNode( xpath );
+				else if ( baseXml.evaluate ) // Others
+				{
+					var result = baseXml.evaluate( xpath, contextNode, null, 9, null );
+					return ( result &amp;&amp; result.singleNodeValue ) || null;
+				}
+			}
+
+			return null;
+		},
+
+<span id='CKEDITOR-xml-method-selectNodes'>		/**
+</span>		 * Gets a list node from the XML document, based on a XPath query.
+		 *
+		 *		// Create the XML instance.
+		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		// Get the first &lt;item&gt; node.
+		 *		var itemNodes = xml.selectSingleNode( 'list/item' );
+		 *		// Alert &quot;item&quot; twice, one for each &lt;item&gt;.
+		 *		for ( var i = 0 ; i &lt; itemNodes.length ; i++ )
+		 *			alert( itemNodes[i].nodeName );
+		 *
+		 * @param {String} xpath The XPath query to execute.
+		 * @param {Object} [contextNode] The XML DOM node to be used as the context
+		 * for the XPath query. The document root is used by default.
+		 * @returns {Array} An array containing all matched nodes. The array will
+		 * be empty if the query has no results.
+		 */
+		selectNodes: function( xpath, contextNode ) {
+			var baseXml = this.baseXml,
+				nodes = [];
+
+			if ( contextNode || ( contextNode = baseXml ) ) {
+				if ( CKEDITOR.env.ie || contextNode.selectNodes ) // IE
+				return contextNode.selectNodes( xpath );
+				else if ( baseXml.evaluate ) // Others
+				{
+					var result = baseXml.evaluate( xpath, contextNode, null, 5, null );
+
+					if ( result ) {
+						var node;
+						while ( ( node = result.iterateNext() ) )
+							nodes.push( node );
+					}
+				}
+			}
+
+			return nodes;
+		},
+
+<span id='CKEDITOR-xml-method-getInnerXml'>		/**
+</span>		 * Gets the string representation of hte inner contents of a XML node,
+		 * based on a XPath query.
+		 *
+		 *		// Create the XML instance.
+		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		// Alert &quot;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&quot;.
+		 *		alert( xml.getInnerXml( 'list' ) );
+		 *
+		 * @param {String} xpath The XPath query to execute.
+		 * @param {Object} [contextNode] The XML DOM node to be used as the context
+		 * for the XPath query. The document root is used by default.
+		 * @returns {String} The textual representation of the inner contents of
+		 * the node or null if the query has no results.
+		 */
+		getInnerXml: function( xpath, contextNode ) {
+			var node = this.selectSingleNode( xpath, contextNode ),
+				xml = [];
+			if ( node ) {
+				node = node.firstChild;
+				while ( node ) {
+					if ( node.xml ) // IE
+					xml.push( node.xml );
+					else if ( window.XMLSerializer ) // Others
+					xml.push( ( new XMLSerializer() ).serializeToString( node ) );
+
+					node = node.nextSibling;
+				}
+			}
+
+			return xml.length ? xml.join( '' ) : null;
+		}
+	};
+} )();
+</pre>
+</body>
+</html>

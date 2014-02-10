@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+<span id='global-property-'>/**
+</span> * @fileOverview Horizontal Page Break.
+ */
+
+// Register a plugin named &quot;newpage&quot;.
+CKEDITOR.plugins.add( 'newpage', {
+	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+	icons: 'newpage,newpage-rtl', // %REMOVE_LINE_CORE%
+	hidpi: true, // %REMOVE_LINE_CORE%
+	init: function( editor ) {
+		editor.addCommand( 'newpage', { modes: { wysiwyg: 1, source: 1 },
+
+			exec: function( editor ) {
+				var command = this;
+				editor.setData( editor.config.newpage_html || '', function() {
+					editor.focus();
+					// Save the undo snapshot after all document changes are affected. (#4889)
+					setTimeout( function() {
+						editor.fire( 'afterCommandExec', {
+							name: 'newpage',
+							command: command
+						} );
+						editor.selectionChange();
+
+					}, 200 );
+				} );
+			},
+			async: true
+		} );
+
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'NewPage', {
+			label: editor.lang.newpage.toolbar,
+			command: 'newpage',
+			toolbar: 'document,20'
+		} );
+	}
+} );
+
+<span id='CKEDITOR-config-cfg-newpage_html'>/**
+</span> * The HTML to load in the editor when the &quot;new page&quot; command is executed.
+ *
+ *		config.newpage_html = '&lt;p&gt;Type your text here.&lt;/p&gt;';
+ *
+ * @cfg {String} [newpage_html='']
+ * @member CKEDITOR.config
+ */
+</pre>
+</body>
+</html>

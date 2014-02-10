@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-use strict'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+'use strict';
+
+( function() {
+<span id='CKEDITOR-htmlParser-node-method-constructor'><span id='CKEDITOR-htmlParser-node'>	/**
+</span></span>	 * A lightweight representation of HTML node.
+	 *
+	 * @since 4.1
+	 * @class
+	 * @constructor Creates a node class instance.
+	 */
+	CKEDITOR.htmlParser.node = function() {};
+
+	CKEDITOR.htmlParser.node.prototype = {
+<span id='CKEDITOR-htmlParser-node-method-remove'>		/**
+</span>		 * Remove this node from a tree.
+		 *
+		 * @since 4.1
+		 */
+		remove: function() {
+			var children = this.parent.children,
+				index = CKEDITOR.tools.indexOf( children, this ),
+				previous = this.previous,
+				next = this.next;
+
+			previous &amp;&amp; ( previous.next = next );
+			next &amp;&amp; ( next.previous = previous );
+			children.splice( index, 1 );
+			this.parent = null;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-replaceWith'>		/**
+</span>		 * Replace this node with given one.
+		 *
+		 * @since 4.1
+		 * @param {CKEDITOR.htmlParser.node} node The node that will replace this one.
+		 */
+		replaceWith: function( node ) {
+			var children = this.parent.children,
+				index = CKEDITOR.tools.indexOf( children, this ),
+				previous = node.previous = this.previous,
+				next = node.next = this.next;
+
+			previous &amp;&amp; ( previous.next = node );
+			next &amp;&amp; ( next.previous = node );
+
+			children[ index ] = node;
+
+			node.parent = this.parent;
+			this.parent = null;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-insertAfter'>		/**
+</span>		 * Insert this node after given one.
+		 *
+		 * @since 4.1
+		 * @param {CKEDITOR.htmlParser.node} node The node that will precede this element.
+		 */
+		insertAfter: function( node ) {
+			var children = node.parent.children,
+				index = CKEDITOR.tools.indexOf( children, node ),
+				next = node.next;
+
+			children.splice( index + 1, 0, this );
+
+			this.next = node.next;
+			this.previous = node;
+			node.next = this;
+			next &amp;&amp; ( next.previous = this );
+
+			this.parent = node.parent;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-insertBefore'>		/**
+</span>		 * Insert this node before given one.
+		 *
+		 * @since 4.1
+		 * @param {CKEDITOR.htmlParser.node} node The node that will follow this element.
+		 */
+		insertBefore: function( node ) {
+			var children = node.parent.children,
+				index = CKEDITOR.tools.indexOf( children, node );
+
+			children.splice( index, 0, this );
+
+			this.next = node;
+			this.previous = node.previous;
+			node.previous &amp;&amp; ( node.previous.next = this );
+			node.previous = this;
+
+			this.parent = node.parent;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-getAscendant'>		/**
+</span>		 * Gets the closest ancestor element of this element which satisfies given condition
+		 *
+		 * @since 4.3
+		 * @param {String/Object/Function} condition Name of an ancestor, hash of names or validator function.
+		 * @returns {CKEDITOR.htmlParser.element} The closest ancestor which satisfies given condition or `null`.
+		 */
+		getAscendant: function( condition ) {
+			var checkFn =
+				typeof condition == 'function' ?	condition :
+				typeof condition == 'string' ?		function( el ) { return el.name == condition; } :
+													function( el ) { return el.name in condition; };
+
+			var parent = this.parent;
+
+			// Parent has to be an element - don't check doc fragment.
+			while ( parent &amp;&amp; parent.type == CKEDITOR.NODE_ELEMENT ) {
+				if ( checkFn( parent ) )
+					return parent;
+				parent = parent.parent;
+			}
+
+			return null;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-wrapWith'>		/**
+</span>		 * Wraps this element with given `wrapper`.
+		 *
+		 * @since 4.3
+		 * @param {CKEDITOR.htmlParser.element} wrapper The element which will be this element's new parent.
+		 * @returns {CKEDITOR.htmlParser.element} Wrapper.
+		 */
+		wrapWith: function( wrapper ) {
+			this.replaceWith( wrapper );
+			wrapper.add( this );
+			return wrapper;
+		},
+
+<span id='CKEDITOR-htmlParser-node-method-getIndex'>		/**
+</span>		 * Gets this node's index in its parent's children array.
+		 *
+		 * @since 4.3
+		 * @returns {Number}
+		 */
+		getIndex: function() {
+			return CKEDITOR.tools.indexOf( this.parent.children, this );
+		},
+
+		getFilterContext: function( context ) {
+			return context || {};
+		}
+	};
+} )();
+</pre>
+</body>
+</html>
