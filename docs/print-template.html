@@ -7,12 +7,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="{canonical}" />
   <link rel="stylesheet" href="resources/css/app-4689d2a5522dcd3c9e9923ca59c33f27.css" type="text/css" />
-  <link rel="stylesheet" href="styles-3eba09980fa05ead185cb17d9c0deb0f.css" type="text/css" />
+  <link rel="stylesheet" href="styles-8184dad50dadb76aad743829a7c19ed0.css" type="text/css" />
   <style type="text/css">
   .description .short { display: none !important }
   .description .long { display: block !important }
   </style>
   <title>{subtitle} - CKEditor 4 Documentation</title>
+
+  <script>
+	// Loads GA only on docs.ckeditor.com.
+	if ( location.hostname == 'docs.ckeditor.com' ) {
+		function pageView() {
+			ga('send', 'pageview', location.pathname + location.search + location.hash );
+		}
+
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-271067-14', 'ckeditor.com');
+
+		pageView();
+
+		window.addEventListener( 'hashchange', pageView );
+	}
+</script>
+
 </head>
 <body style="background: #fff; min-width: 0;">
   <div id="north-region" style="padding: 1px 0 11px 11px">

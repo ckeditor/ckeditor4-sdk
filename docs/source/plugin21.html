@@ -16,132 +16,134 @@
 </head>
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js"><span id='global-property-'>/**
-</span> * @license Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
+<span id='global-property-'>/**
+</span> * @fileOverview The &quot;div&quot; plugin. It wraps the selected block level elements with a 'div' element with specified styles and attributes.
+ *
+ */
+
 ( function() {
-
-	'use strict';
-
-	var containerTpl = CKEDITOR.addTemplate( 'sharedcontainer', '&lt;div' +
-		' id=&quot;cke_{name}&quot;' +
-		' class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_shared cke_detached cke_{langDir} ' + CKEDITOR.env.cssClass + '&quot;' +
-		' dir=&quot;{langDir}&quot;' +
-		' title=&quot;' + ( CKEDITOR.env.gecko ? ' ' : '' ) + '&quot;' +
-		' lang=&quot;{langCode}&quot;' +
-		' role=&quot;presentation&quot;' +
-		'&gt;' +
-			'&lt;div class=&quot;cke_inner&quot;&gt;' +
-				'&lt;div id=&quot;{spaceId}&quot; class=&quot;cke_{space}&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;' +
-			'&lt;/div&gt;' +
-		'&lt;/div&gt;' );
-
-	CKEDITOR.plugins.add( 'sharedspace', {
+	CKEDITOR.plugins.add( 'div', {
+		requires: 'dialog',
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		icons: 'creatediv', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			// Create toolbars on #loaded (like themed creator), but do that
-			// with higher priority to block the default scenario.
-			editor.on( 'loaded', function() {
-				var spaces = editor.config.sharedSpaces;
+			if ( editor.blockless )
+				return;
 
-				if ( spaces ) {
-					for ( var spaceName in spaces )
-						create( editor, spaceName, spaces[ spaceName ] );
+			var lang = editor.lang.div,
+				allowed = 'div(*)';
+
+			if ( CKEDITOR.dialog.isTabEnabled( editor, 'editdiv', 'advanced' ) )
+				allowed += ';div[dir,id,lang,title]{*}';
+
+			editor.addCommand( 'creatediv', new CKEDITOR.dialogCommand( 'creatediv', {
+				allowedContent: allowed,
+				requiredContent: 'div',
+				contextSensitive: true,
+				refresh: function( editor, path ) {
+					var context = editor.config.div_wrapTable ? path.root : path.blockLimit;
+					this.setState( 'div' in context.getDtd() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
 				}
-			}, null, null, 9 );
-		}
-	} );
+			} ) );
 
-	function create( editor, spaceName, targetId ) {
-		var target = CKEDITOR.document.getById( targetId ),
-			innerHtml, space;
+			editor.addCommand( 'editdiv', new CKEDITOR.dialogCommand( 'editdiv', { requiredContent: 'div' } ) );
+			editor.addCommand( 'removediv', {
+				requiredContent: 'div',
+				exec: function( editor ) {
+					var selection = editor.getSelection(),
+						ranges = selection &amp;&amp; selection.getRanges(),
+						range,
+						bookmarks = selection.createBookmarks(),
+						walker,
+						toRemove = [];
 
-		if ( target ) {
-			// Have other plugins filling the space.
-			innerHtml = editor.fire( 'uiSpace', { space: spaceName, html: '' } ).html;
-
-			if ( innerHtml ) {
-				// Block the uiSpace handling by others (e.g. themed-ui).
-				editor.on( 'uiSpace', function( ev ) {
-					if ( ev.data.space == spaceName )
-						ev.cancel();
-				}, null, null, 1 );  // Hi-priority
-
-				// Inject the space into the target.
-				space = target.append( CKEDITOR.dom.element.createFromHtml( containerTpl.output( {
-					id: editor.id,
-					name: editor.name,
-					langDir: editor.lang.dir,
-					langCode: editor.langCode,
-					space: spaceName,
-					spaceId: editor.ui.spaceId( spaceName ),
-					content: innerHtml
-				} ) ) );
-
-				// Only the first container starts visible. Others get hidden.
-				if ( target.getCustomData( 'cke_hasshared' ) )
-					space.hide();
-				else
-					target.setCustomData( 'cke_hasshared', 1 );
-
-				// There's no need for the space to be selectable.
-				space.unselectable();
-
-				// Prevent clicking on non-buttons area of the space from blurring editor.
-				space.on( 'mousedown', function( evt ) {
-					evt = evt.data;
-					if ( !evt.getTarget().hasAscendant( 'a', 1 ) )
-						evt.preventDefault();
-				} );
-
-				// Register this UI space to the focus manager.
-				editor.focusManager.add( space, 1 );
-
-				// When the editor gets focus, show the space container, hiding others.
-				editor.on( 'focus', function() {
-					for ( var i = 0, sibling, children = target.getChildren(); ( sibling = children.getItem( i ) ); i++ ) {
-						if ( sibling.type == CKEDITOR.NODE_ELEMENT &amp;&amp;
-							!sibling.equals( space ) &amp;&amp;
-							sibling.hasClass( 'cke_shared' ) ) {
-							sibling.hide();
+					function findDiv( node ) {
+						var div = CKEDITOR.plugins.div.getSurroundDiv( editor, node );
+						if ( div &amp;&amp; !div.data( 'cke-div-added' ) ) {
+							toRemove.push( div );
+							div.data( 'cke-div-added' );
 						}
 					}
 
-					space.show();
+					for ( var i = 0; i &lt; ranges.length; i++ ) {
+						range = ranges[ i ];
+						if ( range.collapsed )
+							findDiv( selection.getStartElement() );
+						else {
+							walker = new CKEDITOR.dom.walker( range );
+							walker.evaluator = findDiv;
+							walker.lastForward();
+						}
+					}
+
+					for ( i = 0; i &lt; toRemove.length; i++ )
+						toRemove[ i ].remove( true );
+
+					selection.selectBookmarks( bookmarks );
+				}
+			} );
+
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'CreateDiv', {
+				label: lang.toolbar,
+				command: 'creatediv',
+				toolbar: 'blocks,50'
+			} );
+
+			if ( editor.addMenuItems ) {
+				editor.addMenuItems( {
+					editdiv: {
+						label: lang.edit,
+						command: 'editdiv',
+						group: 'div',
+						order: 1
+					},
+
+					removediv: {
+						label: lang.remove,
+						command: 'removediv',
+						group: 'div',
+						order: 5
+					}
 				} );
 
-				editor.on( 'destroy', function() {
-					space.remove();
-				} );
+				if ( editor.contextMenu ) {
+					editor.contextMenu.addListener( function( element ) {
+						if ( !element || element.isReadOnly() )
+							return null;
+
+
+						if ( CKEDITOR.plugins.div.getSurroundDiv( editor ) ) {
+							return {
+								editdiv: CKEDITOR.TRISTATE_OFF,
+								removediv: CKEDITOR.TRISTATE_OFF
+							};
+						}
+
+						return null;
+					} );
+				}
 			}
-		}
-	}
-} )();
 
-<span id='CKEDITOR-config-cfg-sharedSpaces'>/**
-</span> * Makes it possible to place some of the editor UI blocks, like the toolbar
- * and the elements path, into any element in the page.
- *
- * The elements used to hold the UI blocks can be shared among several editor
- * instances. In that case, only the blocks of the active editor instance will
- * display.
- *
- *		// Place the toolbar inside the element with ID &quot;someElementId&quot; and the
- *		// elements path into the element with ID &quot;anotherId&quot;.
- *		config.sharedSpaces = {
- *			top: 'someElementId',
- *			bottom: 'anotherId'
- *		};
- *
- *		// Place the toolbar inside the element with ID &quot;someElementId&quot;. The
- *		// elements path will remain attached to the editor UI.
- *		config.sharedSpaces = {
- *			top: 'someElementId'
- *		};
- *
- * @cfg {Object} [sharedSpaces]
- * @member CKEDITOR.config
- */
+			CKEDITOR.dialog.add( 'creatediv', this.path + 'dialogs/div.js' );
+			CKEDITOR.dialog.add( 'editdiv', this.path + 'dialogs/div.js' );
+		}
+	} );
+
+	CKEDITOR.plugins.div = {
+		getSurroundDiv: function( editor, start ) {
+			var path = editor.elementPath( start );
+			return editor.elementPath( path.blockLimit ).contains( function( node ) {
+				// Avoid read-only (i.e. contenteditable=&quot;false&quot;) divs (#11083).
+				return node.is( 'div' ) &amp;&amp; !node.isReadOnly();
+			}, 1 );
+		}
+	};
+} )();
 </pre>
 </body>
 </html>

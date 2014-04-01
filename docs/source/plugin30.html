@@ -20,144 +20,150 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'contextmenu', {
-	requires: 'menu',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+( function() {
+	var flashFilenameRegex = /\.swf(?:$|\?)/i;
 
-	// Make sure the base class (CKEDITOR.menu) is loaded before it (#3318).
-	onLoad: function() {
-<span id='CKEDITOR-plugins-contextMenu'>		/**
-</span>		 * Class replacing the non-configurable native context menu with configurable CKEditor's equivalent.
-		 *
-		 * @class
-		 * @extends CKEDITOR.menu
-		 */
-		CKEDITOR.plugins.contextMenu = CKEDITOR.tools.createClass( {
-			base: CKEDITOR.menu,
+	function isFlashEmbed( element ) {
+		var attributes = element.attributes;
 
-<span id='CKEDITOR-plugins-contextMenu-method-constructor'>			/**
-</span>			 * Creates the CKEDITOR.plugins.contextMenu class instance.
-			 *
-			 * @constructor
-			 * @param {CKEDITOR.editor} editor
-			 */
-			$: function( editor ) {
-				this.base.call( this, editor, {
-					panel: {
-						className: 'cke_menu_panel',
-						attributes: {
-							'aria-label': editor.lang.contextmenu.options
-						}
+		return ( attributes.type == 'application/x-shockwave-flash' || flashFilenameRegex.test( attributes.src || '' ) );
+	}
+
+	function createFakeElement( editor, realElement ) {
+		return editor.createFakeParserElement( realElement, 'cke_flash', 'flash', true );
+	}
+
+	CKEDITOR.plugins.add( 'flash', {
+		requires: 'dialog,fakeobjects',
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		icons: 'flash', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		onLoad: function() {
+			CKEDITOR.addCss( 'img.cke_flash' +
+				'{' +
+					'background-image: url(' + CKEDITOR.getUrl( this.path + 'images/placeholder.png' ) + ');' +
+					'background-position: center center;' +
+					'background-repeat: no-repeat;' +
+					'border: 1px solid #a9a9a9;' +
+					'width: 80px;' +
+					'height: 80px;' +
+				'}'
+				);
+
+		},
+		init: function( editor ) {
+			var allowed = 'object[classid,codebase,height,hspace,vspace,width];' +
+				'param[name,value];' +
+				'embed[height,hspace,pluginspage,src,type,vspace,width]';
+
+			if ( CKEDITOR.dialog.isTabEnabled( editor, 'flash', 'properties' ) )
+				allowed += ';object[align]; embed[allowscriptaccess,quality,scale,wmode]';
+			if ( CKEDITOR.dialog.isTabEnabled( editor, 'flash', 'advanced' ) )
+				allowed += ';object[id]{*}; embed[bgcolor]{*}(*)';
+
+			editor.addCommand( 'flash', new CKEDITOR.dialogCommand( 'flash', {
+				allowedContent: allowed,
+				requiredContent: 'embed'
+			} ) );
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Flash', {
+				label: editor.lang.common.flash,
+				command: 'flash',
+				toolbar: 'insert,20'
+			} );
+			CKEDITOR.dialog.add( 'flash', this.path + 'dialogs/flash.js' );
+
+			// If the &quot;menu&quot; plugin is loaded, register the menu items.
+			if ( editor.addMenuItems ) {
+				editor.addMenuItems( {
+					flash: {
+						label: editor.lang.flash.properties,
+						command: 'flash',
+						group: 'flash'
 					}
 				} );
-			},
+			}
 
-			proto: {
-<span id='CKEDITOR-plugins-contextMenu-method-addTarget'>				/**
-</span>				 * Starts watching on native context menu triggers (option key, right click) on given element.
-				 *
-				 * @param {CKEDITOR.dom.element} element
-				 * @param {Boolean} [nativeContextMenuOnCtrl] Whether to open native context menu if
-				 * *Ctrl* key is hold on opening the context menu. See {@link CKEDITOR.config#browserContextMenuOnCtrl}.
-				 */
-				addTarget: function( element, nativeContextMenuOnCtrl ) {
-					element.on( 'contextmenu', function( event ) {
-						var domEvent = event.data,
-							isCtrlKeyDown =
-								// Safari on Windows always show 'ctrlKey' as true in 'contextmenu' event,
-								// which make this property unreliable. (#4826)
-								( CKEDITOR.env.webkit ? holdCtrlKey : ( CKEDITOR.env.mac ? domEvent.$.metaKey : domEvent.$.ctrlKey ) );
+			editor.on( 'doubleclick', function( evt ) {
+				var element = evt.data.element;
 
-						if ( nativeContextMenuOnCtrl &amp;&amp; isCtrlKeyDown )
-							return;
+				if ( element.is( 'img' ) &amp;&amp; element.data( 'cke-real-element-type' ) == 'flash' )
+					evt.data.dialog = 'flash';
+			} );
 
-						// Cancel the browser context menu.
-						domEvent.preventDefault();
+			// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
+			if ( editor.contextMenu ) {
+				editor.contextMenu.addListener( function( element, selection ) {
+					if ( element &amp;&amp; element.is( 'img' ) &amp;&amp; !element.isReadOnly() &amp;&amp; element.data( 'cke-real-element-type' ) == 'flash' )
+						return { flash: CKEDITOR.TRISTATE_OFF };
+				} );
+			}
+		},
 
-						var doc = domEvent.getTarget().getDocument(),
-							offsetParent = domEvent.getTarget().getDocument().getDocumentElement(),
-							fromFrame = !doc.equals( CKEDITOR.document ),
-							scroll = doc.getWindow().getScrollPosition(),
-							offsetX = fromFrame ? domEvent.$.clientX : domEvent.$.pageX || scroll.x + domEvent.$.clientX,
-							offsetY = fromFrame ? domEvent.$.clientY : domEvent.$.pageY || scroll.y + domEvent.$.clientY;
+		afterInit: function( editor ) {
+			var dataProcessor = editor.dataProcessor,
+				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter;
 
-						CKEDITOR.tools.setTimeout( function() {
-							this.open( offsetParent, null, offsetX, offsetY );
+			if ( dataFilter ) {
+				dataFilter.addRules( {
+					elements: {
+						'cke:object': function( element ) {
+							var attributes = element.attributes,
+								classId = attributes.classid &amp;&amp; String( attributes.classid ).toLowerCase();
 
-							// IE needs a short while to allow selection change before opening menu. (#7908)
-						}, CKEDITOR.env.ie ? 200 : 0, this );
-					}, this );
+							if ( !classId &amp;&amp; !isFlashEmbed( element ) ) {
+								// Look for the inner &lt;embed&gt;
+								for ( var i = 0; i &lt; element.children.length; i++ ) {
+									if ( element.children[ i ].name == 'cke:embed' ) {
+										if ( !isFlashEmbed( element.children[ i ] ) )
+											return null;
 
-					if ( CKEDITOR.env.webkit ) {
-						var holdCtrlKey,
-							onKeyDown = function( event ) {
-								holdCtrlKey = CKEDITOR.env.mac ? event.data.$.metaKey : event.data.$.ctrlKey;
-							},
-							resetOnKeyUp = function() {
-								holdCtrlKey = 0;
-							};
+										return createFakeElement( editor, element );
+									}
+								}
+								return null;
+							}
 
-						element.on( 'keydown', onKeyDown );
-						element.on( 'keyup', resetOnKeyUp );
-						element.on( 'contextmenu', resetOnKeyUp );
+							return createFakeElement( editor, element );
+						},
+
+						'cke:embed': function( element ) {
+							if ( !isFlashEmbed( element ) )
+								return null;
+
+							return createFakeElement( editor, element );
+						}
 					}
-				},
-
-<span id='CKEDITOR-plugins-contextMenu-method-open'>				/**
-</span>				 * Opens context menu in given location. See the {@link CKEDITOR.menu#show} method.
-				 *
-				 * @param {CKEDITOR.dom.element} offsetParent
-				 * @param {Number} [corner]
-				 * @param {Number} [offsetX]
-				 * @param {Number} [offsetY]
-				 */
-				open: function( offsetParent, corner, offsetX, offsetY ) {
-					this.editor.focus();
-					offsetParent = offsetParent || CKEDITOR.document.getDocumentElement();
-
-					// #9362: Force selection check to update commands' states in the new context.
-					this.editor.selectionChange( 1 );
-
-					this.show( offsetParent, corner, offsetX, offsetY );
-				}
+				}, 5 );
 			}
-		} );
-	},
+		}
+	} );
+} )();
 
-	beforeInit: function( editor ) {
-<span id='CKEDITOR-editor-property-contextMenu'>		/**
-</span>		 * @readonly
-		 * @property {CKEDITOR.plugins.contextMenu} contextMenu
-		 * @member CKEDITOR.editor
-		 */
-		var contextMenu = editor.contextMenu = new CKEDITOR.plugins.contextMenu( editor );
+CKEDITOR.tools.extend( CKEDITOR.config, {
+<span id='CKEDITOR-config-cfg-flashEmbedTagOnly'>	/**
+</span>	 * Save as `&lt;embed&gt;` tag only. This tag is unrecommended.
+	 *
+	 * @cfg {Boolean} [flashEmbedTagOnly=false]
+	 * @member CKEDITOR.config
+	 */
+	flashEmbedTagOnly: false,
 
-		editor.on( 'contentDom', function() {
-			contextMenu.addTarget( editor.editable(), editor.config.browserContextMenuOnCtrl !== false );
-		} );
+<span id='CKEDITOR-config-cfg-flashAddEmbedTag'>	/**
+</span>	 * Add `&lt;embed&gt;` tag as alternative: `&lt;object&gt;&lt;embed&gt;&lt;/embed&gt;&lt;/object&gt;`.
+	 *
+	 * @cfg {Boolean} [flashAddEmbedTag=false]
+	 * @member CKEDITOR.config
+	 */
+	flashAddEmbedTag: true,
 
-		editor.addCommand( 'contextMenu', {
-			exec: function() {
-				editor.contextMenu.open( editor.document.getBody() );
-			}
-		} );
-
-		editor.setKeystroke( CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
-		editor.setKeystroke( CKEDITOR.CTRL + CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
-	}
+<span id='CKEDITOR-config-cfg-flashConvertOnEdit'>	/**
+</span>	 * Use {@link #flashEmbedTagOnly} and {@link #flashAddEmbedTag} values on edit.
+	 *
+	 * @cfg {Boolean} [flashConvertOnEdit=false]
+	 * @member CKEDITOR.config
+	 */
+	flashConvertOnEdit: false
 } );
-
-<span id='CKEDITOR-config-cfg-browserContextMenuOnCtrl'>/**
-</span> * Whether to show the browser native context menu when the *Ctrl* or
- * *Meta* (Mac) key is pressed on opening the context menu with the
- * right mouse button click or the *Menu* key.
- *
- *		config.browserContextMenuOnCtrl = false;
- *
- * @since 3.0.2
- * @cfg {Boolean} [browserContextMenuOnCtrl=true]
- * @member CKEDITOR.config
- */
 </pre>
 </body>
 </html>

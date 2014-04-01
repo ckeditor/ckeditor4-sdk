@@ -15,27 +15,17 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js">/*
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.md or http://ckeditor.com/license
-*/
-CKEDITOR.plugins.setLang( 'toolbar', 'ja', {
-	toolbarCollapse: 'ツールバーを閉じる',
-	toolbarExpand: 'ツールバーを開く',
-	toolbarGroups: {
-		document: 'Document',
-		clipboard: 'Clipboard/Undo',
-		editing: 'Editing',
-		forms: 'Forms',
-		basicstyles: 'Basic Styles',
-		paragraph: 'Paragraph',
-		links: 'Links',
-		insert: 'Insert',
-		styles: 'Styles',
-		colors: 'Colors',
-		tools: 'Tools'
-	},
-	toolbars: '編集ツールバー'
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+CKEDITOR.plugins.setLang( 'placeholder', 'ja', {
+	title: 'プレースホルダのプロパティ',
+	toolbar: 'プレースホルダを作成',
+	name: 'プレースホルダ名',
+	invalidName: 'プレースホルダは空欄にできません。また、[, ], &lt;, &gt; の文字は使用できません。',
+	pathName: 'placeholder'
 } );
 </pre>
 </body>

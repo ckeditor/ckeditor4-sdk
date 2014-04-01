@@ -20,189 +20,155 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
+<span id='global-property-'>/**
+</span> * @fileOverview The &quot;sourcearea&quot; plugin. It registers the &quot;source&quot; editing
+ *		mode, which displays the raw data being edited in the editor.
+ */
+
 ( function() {
-	var eventNameList = [ 'click', 'keydown', 'mousedown', 'keypress', 'mouseover', 'mouseout' ];
-
-	// Inline event callbacks assigned via innerHTML/outerHTML, such as
-	// onclick/onmouseover, are ignored in AIR.
-	// Use DOM2 event listeners to substitue inline handlers instead.
-	function convertInlineHandlers( container ) {
-		// TODO: document.querySelectorAll is not supported in AIR.
-		var children = container.getElementsByTag( '*' ),
-			count = children.count(),
-			child;
-
-		for ( var i = 0; i &lt; count; i++ ) {
-			child = children.getItem( i );
-
-			( function( node ) {
-				for ( var j = 0; j &lt; eventNameList.length; j++ ) {
-					( function( eventName ) {
-						var inlineEventHandler = node.getAttribute( 'on' + eventName );
-						if ( node.hasAttribute( 'on' + eventName ) ) {
-							node.removeAttribute( 'on' + eventName );
-							node.on( eventName, function( evt ) {
-								var callFunc = /(return\s*)?CKEDITOR\.tools\.callFunction\(([^)]+)\)/.exec( inlineEventHandler ),
-									hasReturn = callFunc &amp;&amp; callFunc[ 1 ],
-									callFuncArgs = callFunc &amp;&amp; callFunc[ 2 ].split( ',' ),
-									preventDefault = /return false;/.test( inlineEventHandler );
-
-								if ( callFuncArgs ) {
-									var nums = callFuncArgs.length,
-										argName;
-
-									for ( var i = 0; i &lt; nums; i++ ) {
-										// Trim spaces around param.
-										callFuncArgs[ i ] = argName = CKEDITOR.tools.trim( callFuncArgs[ i ] );
-
-										// String form param.
-										var strPattern = argName.match( /^([&quot;'])([^&quot;']*?)\1$/ );
-										if ( strPattern ) {
-											callFuncArgs[ i ] = strPattern[ 2 ];
-											continue;
-										}
-
-										// Integer form param.
-										if ( argName.match( /\d+/ ) ) {
-											callFuncArgs[ i ] = parseInt( argName, 10 );
-											continue;
-										}
-
-										// Speical variables.
-										switch ( argName ) {
-											case 'this':
-												callFuncArgs[ i ] = node.$;
-												break;
-											case 'event':
-												callFuncArgs[ i ] = evt.data.$;
-												break;
-											case 'null':
-												callFuncArgs[ i ] = null;
-												break;
-										}
-									}
-
-									var retval = CKEDITOR.tools.callFunction.apply( window, callFuncArgs );
-									if ( hasReturn &amp;&amp; retval === false )
-										preventDefault = 1;
-								}
-
-								if ( preventDefault )
-									evt.data.preventDefault();
-							} );
-						}
-					} )( eventNameList[ j ] );
-				}
-			} )( child );
-		}
-	}
-
-	CKEDITOR.plugins.add( 'adobeair', {
-		onLoad: function() {
-			if ( !CKEDITOR.env.air )
-				return;
-
-			CKEDITOR.dom.document.prototype.write = CKEDITOR.tools.override( CKEDITOR.dom.document.prototype.write, function( original_write ) {
-				function appendElement( parent, tagName, fullTag, text ) {
-					var node = parent.append( tagName ),
-						attrs = CKEDITOR.htmlParser.fragment.fromHtml( fullTag ).children[ 0 ].attributes;
-					attrs &amp;&amp; node.setAttributes( attrs );
-					text &amp;&amp; node.append( parent.getDocument().createText( text ) );
-				}
-
-				return function( html, mode ) {
-					// document.write() or document.writeln() fail silently after
-					// the page load event in Adobe AIR.
-					// DOM manipulation could be used instead.
-					if ( this.getBody() ) {
-						// We're taking the below extra work only because innerHTML
-						// on &lt;html&gt; element doesn't work as expected.
-						var doc = this,
-							head = this.getHead();
-
-						// Create style nodes for inline css. ( &lt;style&gt; content doesn't applied when setting via innerHTML )
-						html = html.replace( /(&lt;style[^&gt;]*&gt;)([\s\S]*?)&lt;\/style&gt;/gi, function( match, startTag, styleText ) {
-							appendElement( head, 'style', startTag, styleText );
-							return '';
-						} );
-
-						html = html.replace( /&lt;base\b[^&gt;]*\/&gt;/i, function( match ) {
-							appendElement( head, 'base', match );
-							return '';
-						} );
-
-						html = html.replace( /&lt;title&gt;([\s\S]*)&lt;\/title&gt;/i, function( match, title ) {
-							doc.$.title = title;
-							return '';
-						} );
-
-						// Move the rest of head stuff.
-						html = html.replace( /&lt;head&gt;([\s\S]*)&lt;\/head&gt;/i, function( headHtml ) {
-							// Inject the &lt;head&gt; HTML inside a &lt;div&gt;.
-							// Do that before getDocumentHead because WebKit moves
-							// &lt;link css&gt; elements to the &lt;head&gt; at this point.
-							var div = new CKEDITOR.dom.element( 'div', doc );
-							div.setHtml( headHtml );
-							// Move the &lt;div&gt; nodes to &lt;head&gt;.
-							div.moveChildren( head );
-							return '';
-						} );
-
-						html.replace( /(&lt;body[^&gt;]*&gt;)([\s\S]*)(?=$|&lt;\/body&gt;)/i, function( match, startTag, innerHTML ) {
-							doc.getBody().setHtml( innerHTML );
-							var attrs = CKEDITOR.htmlParser.fragment.fromHtml( startTag ).children[ 0 ].attributes;
-							attrs &amp;&amp; doc.getBody().setAttributes( attrs );
-						} );
-					} else
-						original_write.apply( this, arguments );
-				};
-			} );
-
-			// Body doesn't get default margin on AIR.
-			CKEDITOR.addCss( 'body.cke_editable { padding: 8px }' );
-			CKEDITOR.ui.on( 'ready', function( evt ) {
-				var ui = evt.data;
-				// richcombo, panelbutton and menu
-				if ( ui._.panel ) {
-					var panel = ui._.panel._.panel,
-						holder;
-
-					( function() {
-						// Adding dom event listeners off-line are not supported in AIR,
-						// waiting for panel iframe loaded.
-						if ( !panel.isLoaded ) {
-							setTimeout( arguments.callee, 30 );
-							return;
-						}
-						holder = panel._.holder;
-						convertInlineHandlers( holder );
-					} )();
-				} else if ( ui instanceof CKEDITOR.dialog )
-					convertInlineHandlers( ui._.element );
-			} );
-		},
+	CKEDITOR.plugins.add( 'sourcearea', {
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		icons: 'source,source-rtl', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			if ( !CKEDITOR.env.air )
+			// Source mode isn't available in inline mode yet.
+			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
 				return;
 
-			editor.on( 'uiReady', function() {
-				convertInlineHandlers( editor.container );
+			var sourcearea = CKEDITOR.plugins.sourcearea;
 
-				editor.on( 'elementsPathUpdate', function( evt ) {
-					convertInlineHandlers( evt.data.space );
-				} );
+			editor.addMode( 'source', function( callback ) {
+				var contentsSpace = editor.ui.space( 'contents' ),
+					textarea = contentsSpace.getDocument().createElement( 'textarea' );
+
+				textarea.setStyles(
+					CKEDITOR.tools.extend( {
+						// IE7 has overflow the &lt;textarea&gt; from wrapping table cell.
+						width: CKEDITOR.env.ie7Compat ? '99%' : '100%',
+						height: '100%',
+						resize: 'none',
+						outline: 'none',
+						'text-align': 'left'
+					},
+					CKEDITOR.tools.cssVendorPrefix( 'tab-size', editor.config.sourceAreaTabSize || 4 ) ) );
+
+				// Make sure that source code is always displayed LTR,
+				// regardless of editor language (#10105).
+				textarea.setAttribute( 'dir', 'ltr' );
+
+				textarea.addClass( 'cke_source cke_reset cke_enable_context_menu' );
+
+				editor.ui.space( 'contents' ).append( textarea );
+
+				var editable = editor.editable( new sourceEditable( editor, textarea ) );
+
+				// Fill the textarea with the current editor data.
+				editable.setData( editor.getData( 1 ) );
+
+				// Having to make &lt;textarea&gt; fixed sized to conquer the following bugs:
+				// 1. The textarea height/width='100%' doesn't constraint to the 'td' in IE6/7.
+				// 2. Unexpected vertical-scrolling behavior happens whenever focus is moving out of editor
+				// if text content within it has overflowed. (#4762)
+				if ( CKEDITOR.env.ie ) {
+					editable.attachListener( editor, 'resize', onResize, editable );
+					editable.attachListener( CKEDITOR.document.getWindow(), 'resize', onResize, editable );
+					CKEDITOR.tools.setTimeout( onResize, 0, editable );
+				}
+
+				editor.fire( 'ariaWidget', this );
+
+				callback();
 			} );
 
-			editor.on( 'contentDom', function() {
-				// Hyperlinks are enabled in editable documents in Adobe
-				// AIR. Prevent their click behavior.
-				editor.document.on( 'click', function( ev ) {
-					ev.data.preventDefault( true );
+			editor.addCommand( 'source', sourcearea.commands.source );
+
+			if ( editor.ui.addButton ) {
+				editor.ui.addButton( 'Source', {
+					label: editor.lang.sourcearea.toolbar,
+					command: 'source',
+					toolbar: 'mode,10'
 				} );
+			}
+
+			editor.on( 'mode', function() {
+				editor.getCommand( 'source' ).setState( editor.mode == 'source' ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 			} );
+
+			function onResize() {
+				// Holder rectange size is stretched by textarea,
+				// so hide it just for a moment.
+				this.hide();
+				this.setStyle( 'height', this.getParent().$.clientHeight + 'px' );
+				this.setStyle( 'width', this.getParent().$.clientWidth + 'px' );
+				// When we have proper holder size, show textarea again.
+				this.show();
+			}
+		}
+	} );
+
+	var sourceEditable = CKEDITOR.tools.createClass( {
+		base: CKEDITOR.editable,
+		proto: {
+			setData: function( data ) {
+				this.setValue( data );
+				this.editor.fire( 'dataReady' );
+			},
+
+			getData: function() {
+				return this.getValue();
+			},
+
+			// Insertions are not supported in source editable.
+			insertHtml: function() {},
+			insertElement: function() {},
+			insertText: function() {},
+
+			// Read-only support for textarea.
+			setReadOnly: function( isReadOnly ) {
+				this[ ( isReadOnly ? 'set' : 'remove' ) + 'Attribute' ]( 'readOnly', 'readonly' );
+			},
+
+			detach: function() {
+				sourceEditable.baseProto.detach.call( this );
+				this.clearCustomData();
+				this.remove();
+			}
 		}
 	} );
 } )();
+
+CKEDITOR.plugins.sourcearea = {
+	commands: {
+		source: {
+			modes: { wysiwyg: 1, source: 1 },
+			editorFocus: false,
+			readOnly: 1,
+			exec: function( editor ) {
+				if ( editor.mode == 'wysiwyg' )
+					editor.fire( 'saveSnapshot' );
+				editor.getCommand( 'source' ).setState( CKEDITOR.TRISTATE_DISABLED );
+				editor.setMode( editor.mode == 'source' ? 'wysiwyg' : 'source' );
+			},
+
+			canUndo: false
+		}
+	}
+};
+
+<span id='CKEDITOR-config-cfg-sourceAreaTabSize'>/**
+</span> * Controls CSS tab-size property of the sourcearea view.
+ *
+ * **Note:** Works only with {@link #dataIndentationChars}
+ * set to `'\t'`. Please consider that not all browsers support CSS
+ * `tab-size` property yet.
+ *
+ *		// Set tab-size to 20 characters.
+ *		CKEDITOR.config.sourceAreaTabSize = 20;
+ *
+ * @cfg {Number} [sourceAreaTabSize=4]
+ * @member CKEDITOR.config
+ * @see CKEDITOR.config#dataIndentationChars
+ */
 </pre>
 </body>
 </html>

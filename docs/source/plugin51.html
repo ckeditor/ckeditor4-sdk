@@ -20,103 +20,68 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'menubutton', {
-	requires: 'button,menu',
-	onLoad: function() {
-		var clickFn = function( editor ) {
-				var _ = this._,
-					menu = _.menu;
+( function() {
+	CKEDITOR.plugins.liststyle = {
+		requires: 'dialog,contextmenu',
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			if ( editor.blockless )
+				return;
 
-				// Do nothing if this button is disabled.
-				if ( _.state === CKEDITOR.TRISTATE_DISABLED )
-					return;
+			var def, cmd;
 
-				if ( _.on &amp;&amp; menu ) {
-					menu.hide();
-					return;
+			def = new CKEDITOR.dialogCommand( 'numberedListStyle', {
+				requiredContent: 'ol',
+				allowedContent: 'ol{list-style-type}[start]'
+			} );
+			cmd = editor.addCommand( 'numberedListStyle', def );
+			editor.addFeature( cmd );
+			CKEDITOR.dialog.add( 'numberedListStyle', this.path + 'dialogs/liststyle.js' );
+
+			def = new CKEDITOR.dialogCommand( 'bulletedListStyle', {
+				requiredContent: 'ul',
+				allowedContent: 'ul{list-style-type}'
+			} );
+			cmd = editor.addCommand( 'bulletedListStyle', def );
+			editor.addFeature( cmd );
+			CKEDITOR.dialog.add( 'bulletedListStyle', this.path + 'dialogs/liststyle.js' );
+
+			//Register map group;
+			editor.addMenuGroup( &quot;list&quot;, 108 );
+
+			editor.addMenuItems( {
+				numberedlist: {
+					label: editor.lang.liststyle.numberedTitle,
+					group: 'list',
+					command: 'numberedListStyle'
+				},
+				bulletedlist: {
+					label: editor.lang.liststyle.bulletedTitle,
+					group: 'list',
+					command: 'bulletedListStyle'
 				}
+			} );
 
-				_.previousState = _.state;
+			editor.contextMenu.addListener( function( element, selection ) {
+				if ( !element || element.isReadOnly() )
+					return null;
 
-				// Check if we already have a menu for it, otherwise just create it.
-				if ( !menu ) {
-					menu = _.menu = new CKEDITOR.menu( editor, {
-						panel: {
-							className: 'cke_menu_panel',
-							attributes: { 'aria-label': editor.lang.common.options }
-						}
-					} );
+				while ( element ) {
+					var name = element.getName();
+					if ( name == 'ol' )
+						return { numberedlist: CKEDITOR.TRISTATE_OFF };
+					else if ( name == 'ul' )
+						return { bulletedlist: CKEDITOR.TRISTATE_OFF };
 
-					menu.onHide = CKEDITOR.tools.bind( function() {
-						var modes = this.command ? editor.getCommand( this.command ).modes : this.modes;
-						this.setState( !modes || modes[ editor.mode ] ? _.previousState : CKEDITOR.TRISTATE_DISABLED );
-						_.on = 0;
-					}, this );
-
-					// Initialize the menu items at this point.
-					if ( this.onMenu )
-						menu.addListener( this.onMenu );
+					element = element.getParent();
 				}
+				return null;
+			} );
+		}
+	};
 
-				this.setState( CKEDITOR.TRISTATE_ON );
-				_.on = 1;
-
-				// This timeout is needed to give time for the panel get focus
-				// when JAWS is running. (#9842)
-				setTimeout( function() {
-					menu.show( CKEDITOR.document.getById( _.id ), 4 );
-				}, 0 );
-			};
-
-<span id='CKEDITOR-ui-menuButton'>		/**
-</span>		 * @class
-		 * @extends CKEDITOR.ui.button
-		 * @todo
-		 */
-		CKEDITOR.ui.menuButton = CKEDITOR.tools.createClass( {
-			base: CKEDITOR.ui.button,
-
-<span id='CKEDITOR-ui-menuButton-method-constructor'>			/**
-</span>			 * Creates a menuButton class instance.
-			 *
-			 * @constructor
-			 * @param Object definition
-			 * @todo
-			 */
-			$: function( definition ) {
-				// We don't want the panel definition in this object.
-				var panelDefinition = definition.panel;
-				delete definition.panel;
-
-				this.base( definition );
-
-				this.hasArrow = true;
-
-				this.click = clickFn;
-			},
-
-			statics: {
-				handler: {
-					create: function( definition ) {
-						return new CKEDITOR.ui.menuButton( definition );
-					}
-				}
-			}
-		} );
-	},
-	beforeInit: function( editor ) {
-		editor.ui.addHandler( CKEDITOR.UI_MENUBUTTON, CKEDITOR.ui.menuButton.handler );
-	}
-} );
-
-<span id='CKEDITOR-property-UI_MENUBUTTON'>/**
-</span> * Button UI element.
- *
- * @readonly
- * @property {String} [='menubutton']
- * @member CKEDITOR
- */
-CKEDITOR.UI_MENUBUTTON = 'menubutton';
+	CKEDITOR.plugins.add( 'liststyle', CKEDITOR.plugins.liststyle );
+} )();
 </pre>
 </body>
 </html>

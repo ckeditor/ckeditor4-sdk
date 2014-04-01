@@ -98,6 +98,10 @@
 			// eat it up. (#5789)
 			data = protectPreFormatted( data );
 
+			// There are attributes which may execute JavaScript code inside fixBin.
+			// Encode them greedily. They will be unprotected right after getting HTML from fixBin. (#10)
+			data = protectInsecureAttributes( data );
+
 			var fixBin = evtData.context || editor.editable().getName(),
 				isPre;
 
@@ -116,7 +120,7 @@
 			data = el.getHtml().substr( 1 );
 
 			// Restore shortly protected attribute names.
-			data = data.replace( new RegExp( ' data-cke-' + CKEDITOR.rnd + '-', 'ig' ), ' ' );
+			data = data.replace( new RegExp( 'data-cke-' + CKEDITOR.rnd + '-', 'ig' ), '' );
 
 			isPre &amp;&amp; ( data = data.replace( /^&lt;pre&gt;|&lt;\/pre&gt;$/gi, '' ) );
 
@@ -841,6 +845,14 @@
 		} );
 	}
 
+	// Replace all &quot;on\w{3,}&quot; strings which are not:
+	// * opening tags - e.g. `&lt;onfoo`,
+	// * closing tags - e.g. &lt;/onfoo&gt; (tested in &quot;false positive 1&quot;),
+	// * part of other attribute - e.g. `data-onfoo` or `fonfoo`.
+	function protectInsecureAttributes( html ) {
+		return html.replace( /([^a-z0-9&lt;\-])(on\w{3,})(?!&gt;)/gi, '$1data-cke-' + CKEDITOR.rnd + '-$2' );
+	}
+
 	function unprotectRealComments( html ) {
 		return html.replace( /&lt;!--\{cke_protected\}\{C\}([\s\S]+?)--&gt;/g, function( match, data ) {
 			return decodeURIComponent( data );
@@ -900,8 +912,9 @@
 
 		// Different protection pattern is used for those that
 		// live in attributes to avoid from being HTML encoded.
-		return data.replace( /(['&quot;]).*?\1/g, function( match ) {
-			return match.replace( /&lt;!--\{cke_protected\}([\s\S]+?)--&gt;/g, function( match, data ) {
+		// Why so serious? See #9205, #8216, #7805.
+		return data.replace( /&lt;\w([^'&quot;&gt;]+|'[^']*'|&quot;[^&quot;]*&quot;)+&gt;/g, function( match ) {
+			return match.replace( /&lt;!--\{cke_protected\}([^&gt;]*)--&gt;/g, function( match, data ) {
 				store[ store.id ] = decodeURIComponent( data );
 				return '{cke_protected_' + ( store.id++ ) + '}';
 			} );

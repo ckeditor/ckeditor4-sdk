@@ -21,161 +21,142 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Defines the {@link CKEDITOR.xml} class, which represents a
- *		loaded XML document.
+</span> * @fileOverview Preview plugin.
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'xml', {} );
+	var pluginPath;
 
-<span id='CKEDITOR-xml-method-constructor'><span id='CKEDITOR-xml'>	/**
-</span></span>	 * Represents a loaded XML document.
-	 *
-	 *		var xml = new CKEDITOR.xml( '&lt;books&gt;&lt;book title=&quot;My Book&quot; /&gt;&lt;/books&gt;' );
-	 *
-	 * @class
-	 * @constructor Creates xml class instance.
-	 * @param {Object/String} xmlObjectOrData A native XML (DOM document) object or
-	 * a string containing the XML definition to be loaded.
-	 */
-	CKEDITOR.xml = function( xmlObjectOrData ) {
-		var baseXml = null;
+	var previewCmd = { modes: { wysiwyg: 1, source: 1 },
+		canUndo: false,
+		readOnly: 1,
+		exec: function( editor ) {
+			var sHTML,
+				config = editor.config,
+				baseTag = config.baseHref ? '&lt;base href=&quot;' + config.baseHref + '&quot;/&gt;' : '',
+				eventData;
 
-		if ( typeof xmlObjectOrData == 'object' )
-			baseXml = xmlObjectOrData;
-		else {
-			var data = ( xmlObjectOrData || '' ).replace( /&amp;nbsp;/g, '\xA0' );
-			if ( window.DOMParser )
-				baseXml = ( new DOMParser() ).parseFromString( data, 'text/xml' );
-			else if ( window.ActiveXObject ) {
-				try {
-					baseXml = new ActiveXObject( 'MSXML2.DOMDocument' );
-				} catch ( e ) {
-					try {
-						baseXml = new ActiveXObject( 'Microsoft.XmlDom' );
-					} catch ( e ) {}
+			if ( config.fullPage )
+				sHTML = editor.getData().replace( /&lt;head&gt;/, '$&amp;' + baseTag ).replace( /[^&gt;]*(?=&lt;\/title&gt;)/, '$&amp; &amp;mdash; ' + editor.lang.preview.preview );
+			else {
+				var bodyHtml = '&lt;body ',
+					body = editor.document &amp;&amp; editor.document.getBody();
+
+				if ( body ) {
+					if ( body.getAttribute( 'id' ) )
+						bodyHtml += 'id=&quot;' + body.getAttribute( 'id' ) + '&quot; ';
+					if ( body.getAttribute( 'class' ) )
+						bodyHtml += 'class=&quot;' + body.getAttribute( 'class' ) + '&quot; ';
 				}
 
-				if ( baseXml ) {
-					baseXml.async = false;
-					baseXml.resolveExternals = false;
-					baseXml.validateOnParse = false;
-					baseXml.loadXML( data );
-				}
-			}
-		}
+				bodyHtml += '&gt;';
 
-<span id='CKEDITOR-xml-property-baseXml'>		/**
-</span>		 * The native XML (DOM document) used by the class instance.
-		 */
-		this.baseXml = baseXml;
-	};
-
-	CKEDITOR.xml.prototype = {
-<span id='CKEDITOR-xml-method-selectSingleNode'>		/**
-</span>		 * Get a single node from the XML document, based on a XPath query.
-		 *
-		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
-		 *		// Get the first &lt;item&gt; node.
-		 *		var itemNode = &lt;b&gt;xml.selectSingleNode( 'list/item' )&lt;/b&gt;;
-		 *		// Alert &quot;item&quot;.
-		 *		alert( itemNode.nodeName );
-		 *
-		 * @param {String} xpath The XPath query to execute.
-		 * @param {Object} [contextNode] The XML DOM node to be used as the context
-		 * for the XPath query. The document root is used by default.
-		 * @returns {Object} A XML node element or null if the query has no results.
-		 */
-		selectSingleNode: function( xpath, contextNode ) {
-			var baseXml = this.baseXml;
-
-			if ( contextNode || ( contextNode = baseXml ) ) {
-				if ( CKEDITOR.env.ie || contextNode.selectSingleNode ) // IE
-				return contextNode.selectSingleNode( xpath );
-				else if ( baseXml.evaluate ) // Others
-				{
-					var result = baseXml.evaluate( xpath, contextNode, null, 9, null );
-					return ( result &amp;&amp; result.singleNodeValue ) || null;
-				}
+				sHTML = editor.config.docType + '&lt;html dir=&quot;' + editor.config.contentsLangDirection + '&quot;&gt;' +
+					'&lt;head&gt;' +
+						baseTag +
+						'&lt;title&gt;' + editor.lang.preview.preview + '&lt;/title&gt;' +
+						CKEDITOR.tools.buildStyleHtml( editor.config.contentsCss ) +
+					'&lt;/head&gt;' + bodyHtml +
+						editor.getData() +
+					'&lt;/body&gt;&lt;/html&gt;';
 			}
 
-			return null;
-		},
+			var iWidth = 640,
+				// 800 * 0.8,
+				iHeight = 420,
+				// 600 * 0.7,
+				iLeft = 80; // (800 - 0.8 * 800) /2 = 800 * 0.1.
+			try {
+				var screen = window.screen;
+				iWidth = Math.round( screen.width * 0.8 );
+				iHeight = Math.round( screen.height * 0.7 );
+				iLeft = Math.round( screen.width * 0.1 );
+			} catch ( e ) {}
 
-<span id='CKEDITOR-xml-method-selectNodes'>		/**
-</span>		 * Gets a list node from the XML document, based on a XPath query.
-		 *
-		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
-		 *		// Get the first &lt;item&gt; node.
-		 *		var itemNodes = xml.selectSingleNode( 'list/item' );
-		 *		// Alert &quot;item&quot; twice, one for each &lt;item&gt;.
-		 *		for ( var i = 0 ; i &lt; itemNodes.length ; i++ )
-		 *			alert( itemNodes[i].nodeName );
-		 *
-		 * @param {String} xpath The XPath query to execute.
-		 * @param {Object} [contextNode] The XML DOM node to be used as the context
-		 * for the XPath query. The document root is used by default.
-		 * @returns {Array} An array containing all matched nodes. The array will
-		 * be empty if the query has no results.
-		 */
-		selectNodes: function( xpath, contextNode ) {
-			var baseXml = this.baseXml,
-				nodes = [];
+			// (#9907) Allow data manipulation before preview is displayed.
+			// Also don't open the preview window when event cancelled.
+			if ( editor.fire( 'contentPreview', eventData = { dataValue: sHTML } ) === false )
+				return false;
 
-			if ( contextNode || ( contextNode = baseXml ) ) {
-				if ( CKEDITOR.env.ie || contextNode.selectNodes ) // IE
-				return contextNode.selectNodes( xpath );
-				else if ( baseXml.evaluate ) // Others
-				{
-					var result = baseXml.evaluate( xpath, contextNode, null, 5, null );
+			var sOpenUrl = '',
+				ieLocation;
 
-					if ( result ) {
-						var node;
-						while ( ( node = result.iterateNext() ) )
-							nodes.push( node );
-					}
-				}
+			if ( CKEDITOR.env.ie ) {
+				window._cke_htmlToLoad = eventData.dataValue;
+				ieLocation = 'javascript:void( (function(){' +
+					'document.open();' +
+					// Support for custom document.domain.
+					// Strip comments and replace parent with window.opener in the function body.
+					( '(' + CKEDITOR.tools.fixDomain + ')();' ).replace( /\/\/.*?\n/g, '' ).replace( /parent\./g, 'window.opener.' ) +
+					'document.write( window.opener._cke_htmlToLoad );' +
+					'document.close();' +
+					'window.opener._cke_htmlToLoad = null;' +
+				'})() )';
+				// For IE we should use window.location rather than setting url in window.open. (#11146)
+				sOpenUrl = '';
 			}
 
-			return nodes;
-		},
-
-<span id='CKEDITOR-xml-method-getInnerXml'>		/**
-</span>		 * Gets the string representation of hte inner contents of a XML node,
-		 * based on a XPath query.
-		 *
-		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
-		 *		// Alert &quot;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&quot;.
-		 *		alert( xml.getInnerXml( 'list' ) );
-		 *
-		 * @param {String} xpath The XPath query to execute.
-		 * @param {Object} [contextNode] The XML DOM node to be used as the context
-		 * for the XPath query. The document root is used by default.
-		 * @returns {String} The textual representation of the inner contents of
-		 * the node or null if the query has no results.
-		 */
-		getInnerXml: function( xpath, contextNode ) {
-			var node = this.selectSingleNode( xpath, contextNode ),
-				xml = [];
-			if ( node ) {
-				node = node.firstChild;
-				while ( node ) {
-					if ( node.xml ) // IE
-					xml.push( node.xml );
-					else if ( window.XMLSerializer ) // Others
-					xml.push( ( new XMLSerializer() ).serializeToString( node ) );
-
-					node = node.nextSibling;
-				}
+			// With Firefox only, we need to open a special preview page, so
+			// anchors will work properly on it. (#9047)
+			if ( CKEDITOR.env.gecko ) {
+				window._cke_htmlToLoad = eventData.dataValue;
+				sOpenUrl = pluginPath + 'preview.html';
 			}
 
-			return xml.length ? xml.join( '' ) : null;
+			var oWindow = window.open( sOpenUrl, null, 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+				iWidth + ',height=' + iHeight + ',left=' + iLeft );
+
+			// For IE we want to assign whole js stored in ieLocation, but in case of
+			// popup blocker activation oWindow variable will be null. (#11597)
+			if ( CKEDITOR.env.ie &amp;&amp; oWindow )
+				oWindow.location = ieLocation;
+
+			if ( !CKEDITOR.env.ie &amp;&amp; !CKEDITOR.env.gecko ) {
+				var doc = oWindow.document;
+				doc.open();
+				doc.write( eventData.dataValue );
+				doc.close();
+			}
+
+			return true;
 		}
 	};
+
+	var pluginName = 'preview';
+
+	// Register a plugin named &quot;preview&quot;.
+	CKEDITOR.plugins.add( pluginName, {
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		icons: 'preview,preview-rtl', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+
+			// Preview is not used for the inline creator.
+			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
+				return;
+
+			pluginPath = this.path;
+
+			editor.addCommand( pluginName, previewCmd );
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Preview', {
+				label: editor.lang.preview.preview,
+				command: pluginName,
+				toolbar: 'document,40'
+			} );
+		}
+	} );
 } )();
-</pre>
+
+<span id='CKEDITOR-event-contentPreview'>/**
+</span> * Event fired when executing `preview` command, which allows additional data manipulation.
+ * With this event, the raw HTML content of the preview window to be displayed can be altered
+ * or modified.
+ *
+ * @event contentPreview
+ * @member CKEDITOR
+ * @param {CKEDITOR.editor} editor This editor instance.
+ * @param data
+ * @param {String} data.dataValue The data that will go to the preview.
+ */</pre>
 </body>
 </html>

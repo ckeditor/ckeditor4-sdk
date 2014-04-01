@@ -20,782 +20,103 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview The &quot;toolbar&quot; plugin. Renders the default toolbar interface in
- * the editor.
- */
+CKEDITOR.plugins.add( 'menubutton', {
+	requires: 'button,menu',
+	onLoad: function() {
+		var clickFn = function( editor ) {
+				var _ = this._,
+					menu = _.menu;
 
-( function() {
-	var toolbox = function() {
-			this.toolbars = [];
-			this.focusCommandExecuted = false;
-		};
-
-	toolbox.prototype.focus = function() {
-		for ( var t = 0, toolbar; toolbar = this.toolbars[ t++ ]; ) {
-			for ( var i = 0, item; item = toolbar.items[ i++ ]; ) {
-				if ( item.focus ) {
-					item.focus();
-					return;
-				}
-			}
-		}
-	};
-
-	var commands = {
-		toolbarFocus: {
-			modes: { wysiwyg: 1, source: 1 },
-			readOnly: 1,
-
-			exec: function( editor ) {
-				if ( editor.toolbox ) {
-					editor.toolbox.focusCommandExecuted = true;
-
-					// Make the first button focus accessible for IE. (#3417)
-					// Adobe AIR instead need while of delay.
-					if ( CKEDITOR.env.ie || CKEDITOR.env.air )
-						setTimeout( function() {
-						editor.toolbox.focus();
-					}, 100 );
-					else
-						editor.toolbox.focus();
-				}
-			}
-		}
-	};
-
-	CKEDITOR.plugins.add( 'toolbar', {
-		requires: 'button',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-
-		init: function( editor ) {
-			var endFlag;
-
-			var itemKeystroke = function( item, keystroke ) {
-					var next, toolbar;
-					var rtl = editor.lang.dir == 'rtl',
-						toolbarGroupCycling = editor.config.toolbarGroupCycling,
-						// Picking right/left key codes.
-						rightKeyCode = rtl ? 37 : 39,
-						leftKeyCode = rtl ? 39 : 37;
-
-					toolbarGroupCycling = toolbarGroupCycling === undefined || toolbarGroupCycling;
-
-					switch ( keystroke ) {
-						case 9: // TAB
-						case CKEDITOR.SHIFT + 9: // SHIFT + TAB
-							// Cycle through the toolbars, starting from the one
-							// closest to the current item.
-							while ( !toolbar || !toolbar.items.length ) {
-								toolbar = keystroke == 9 ? ( ( toolbar ? toolbar.next : item.toolbar.next ) || editor.toolbox.toolbars[ 0 ] ) : ( ( toolbar ? toolbar.previous : item.toolbar.previous ) || editor.toolbox.toolbars[ editor.toolbox.toolbars.length - 1 ] );
-
-								// Look for the first item that accepts focus.
-								if ( toolbar.items.length ) {
-									item = toolbar.items[ endFlag ? ( toolbar.items.length - 1 ) : 0 ];
-									while ( item &amp;&amp; !item.focus ) {
-										item = endFlag ? item.previous : item.next;
-
-										if ( !item )
-											toolbar = 0;
-									}
-								}
-							}
-
-							if ( item )
-								item.focus();
-
-							return false;
-
-						case rightKeyCode:
-							next = item;
-							do {
-								// Look for the next item in the toolbar.
-								next = next.next;
-
-								// If it's the last item, cycle to the first one.
-								if ( !next &amp;&amp; toolbarGroupCycling ) next = item.toolbar.items[ 0 ];
-							}
-							while ( next &amp;&amp; !next.focus );
-
-							// If available, just focus it, otherwise focus the
-							// first one.
-							if ( next )
-								next.focus();
-							else
-								// Send a TAB.
-								itemKeystroke( item, 9 );
-
-							return false;
-						case 40: // DOWN-ARROW
-							if ( item.button &amp;&amp; item.button.hasArrow ) {
-								// Note: code is duplicated in plugins\richcombo\plugin.js in keyDownFn().
-								editor.once( 'panelShow', function( evt ) {
-									evt.data._.panel._.currentBlock.onKeyDown( 40 );
-								} );
-								item.execute();
-							} else {
-								// Send left arrow key.
-								itemKeystroke( item, keystroke == 40 ? rightKeyCode : leftKeyCode );
-							}
-							return false;
-						case leftKeyCode:
-						case 38: // UP-ARROW
-							next = item;
-							do {
-								// Look for the previous item in the toolbar.
-								next = next.previous;
-
-								// If it's the first item, cycle to the last one.
-								if ( !next &amp;&amp; toolbarGroupCycling ) next = item.toolbar.items[ item.toolbar.items.length - 1 ];
-							}
-							while ( next &amp;&amp; !next.focus );
-
-							// If available, just focus it, otherwise focus the
-							// last one.
-							if ( next )
-								next.focus();
-							else {
-								endFlag = 1;
-								// Send a SHIFT + TAB.
-								itemKeystroke( item, CKEDITOR.SHIFT + 9 );
-								endFlag = 0;
-							}
-
-							return false;
-
-						case 27: // ESC
-							editor.focus();
-							return false;
-
-						case 13: // ENTER
-						case 32: // SPACE
-							item.execute();
-							return false;
-					}
-					return true;
-				};
-
-			editor.on( 'uiSpace', function( event ) {
-				if ( event.data.space != editor.config.toolbarLocation )
+				// Do nothing if this button is disabled.
+				if ( _.state === CKEDITOR.TRISTATE_DISABLED )
 					return;
 
-				// Create toolbar only once.
-				event.removeListener();
-
-				editor.toolbox = new toolbox();
-
-				var labelId = CKEDITOR.tools.getNextId();
-
-				var output = [
-					'&lt;span id=&quot;', labelId, '&quot; class=&quot;cke_voice_label&quot;&gt;', editor.lang.toolbar.toolbars, '&lt;/span&gt;',
-					'&lt;span id=&quot;' + editor.ui.spaceId( 'toolbox' ) + '&quot; class=&quot;cke_toolbox&quot; role=&quot;group&quot; aria-labelledby=&quot;', labelId, '&quot; onmousedown=&quot;return false;&quot;&gt;' ];
-
-				var expanded = editor.config.toolbarStartupExpanded !== false,
-					groupStarted, pendingSeparator;
-
-				// If the toolbar collapser will be available, we'll have
-				// an additional container for all toolbars.
-				if ( editor.config.toolbarCanCollapse &amp;&amp; editor.elementMode != CKEDITOR.ELEMENT_MODE_INLINE )
-					output.push( '&lt;span class=&quot;cke_toolbox_main&quot;' + ( expanded ? '&gt;' : ' style=&quot;display:none&quot;&gt;' ) );
-
-				var toolbars = editor.toolbox.toolbars,
-					toolbar = getToolbarConfig( editor );
-
-				for ( var r = 0; r &lt; toolbar.length; r++ ) {
-					var toolbarId,
-						toolbarObj = 0,
-						toolbarName,
-						row = toolbar[ r ],
-						items;
-
-					// It's better to check if the row object is really
-					// available because it's a common mistake to leave
-					// an extra comma in the toolbar definition
-					// settings, which leads on the editor not loading
-					// at all in IE. (#3983)
-					if ( !row )
-						continue;
-
-					if ( groupStarted ) {
-						output.push( '&lt;/span&gt;' );
-						groupStarted = 0;
-						pendingSeparator = 0;
-					}
-
-					if ( row === '/' ) {
-						output.push( '&lt;span class=&quot;cke_toolbar_break&quot;&gt;&lt;/span&gt;' );
-						continue;
-					}
-
-					items = row.items || row;
-
-					// Create all items defined for this toolbar.
-					for ( var i = 0; i &lt; items.length; i++ ) {
-						var item = items[ i ],
-							canGroup;
-
-						if ( item ) {
-							if ( item.type == CKEDITOR.UI_SEPARATOR ) {
-								// Do not add the separator immediately. Just save
-								// it be included if we already have something in
-								// the toolbar and if a new item is to be added (later).
-								pendingSeparator = groupStarted &amp;&amp; item;
-								continue;
-							}
-
-							canGroup = item.canGroup !== false;
-
-							// Initialize the toolbar first, if needed.
-							if ( !toolbarObj ) {
-								// Create the basic toolbar object.
-								toolbarId = CKEDITOR.tools.getNextId();
-								toolbarObj = { id: toolbarId, items: [] };
-								toolbarName = row.name &amp;&amp; ( editor.lang.toolbar.toolbarGroups[ row.name ] || row.name );
-
-								// Output the toolbar opener.
-								output.push( '&lt;span id=&quot;', toolbarId, '&quot; class=&quot;cke_toolbar&quot;', ( toolbarName ? ' aria-labelledby=&quot;' + toolbarId + '_label&quot;' : '' ), ' role=&quot;toolbar&quot;&gt;' );
-
-								// If a toolbar name is available, send the voice label.
-								toolbarName &amp;&amp; output.push( '&lt;span id=&quot;', toolbarId, '_label&quot; class=&quot;cke_voice_label&quot;&gt;', toolbarName, '&lt;/span&gt;' );
-
-								output.push( '&lt;span class=&quot;cke_toolbar_start&quot;&gt;&lt;/span&gt;' );
-
-								// Add the toolbar to the &quot;editor.toolbox.toolbars&quot;
-								// array.
-								var index = toolbars.push( toolbarObj ) - 1;
-
-								// Create the next/previous reference.
-								if ( index &gt; 0 ) {
-									toolbarObj.previous = toolbars[ index - 1 ];
-									toolbarObj.previous.next = toolbarObj;
-								}
-							}
-
-							if ( canGroup ) {
-								if ( !groupStarted ) {
-									output.push( '&lt;span class=&quot;cke_toolgroup&quot; role=&quot;presentation&quot;&gt;' );
-									groupStarted = 1;
-								}
-							} else if ( groupStarted ) {
-								output.push( '&lt;/span&gt;' );
-								groupStarted = 0;
-							}
-
-							function addItem( item ) {
-								var itemObj = item.render( editor, output );
-								index = toolbarObj.items.push( itemObj ) - 1;
-
-								if ( index &gt; 0 ) {
-									itemObj.previous = toolbarObj.items[ index - 1 ];
-									itemObj.previous.next = itemObj;
-								}
-
-								itemObj.toolbar = toolbarObj;
-								itemObj.onkey = itemKeystroke;
-
-								// Fix for #3052:
-								// Prevent JAWS from focusing the toolbar after document load.
-								itemObj.onfocus = function() {
-									if ( !editor.toolbox.focusCommandExecuted )
-										editor.focus();
-								};
-							}
-
-							if ( pendingSeparator ) {
-								addItem( pendingSeparator );
-								pendingSeparator = 0;
-							}
-
-							addItem( item );
-						}
-					}
-
-					if ( groupStarted ) {
-						output.push( '&lt;/span&gt;' );
-						groupStarted = 0;
-						pendingSeparator = 0;
-					}
-
-					if ( toolbarObj )
-						output.push( '&lt;span class=&quot;cke_toolbar_end&quot;&gt;&lt;/span&gt;&lt;/span&gt;' );
+				if ( _.on &amp;&amp; menu ) {
+					menu.hide();
+					return;
 				}
 
-				if ( editor.config.toolbarCanCollapse )
-					output.push( '&lt;/span&gt;' );
+				_.previousState = _.state;
 
-				// Not toolbar collapser for inline mode.
-				if ( editor.config.toolbarCanCollapse &amp;&amp; editor.elementMode != CKEDITOR.ELEMENT_MODE_INLINE ) {
-					var collapserFn = CKEDITOR.tools.addFunction( function() {
-						editor.execCommand( 'toolbarCollapse' );
+				// Check if we already have a menu for it, otherwise just create it.
+				if ( !menu ) {
+					menu = _.menu = new CKEDITOR.menu( editor, {
+						panel: {
+							className: 'cke_menu_panel',
+							attributes: { 'aria-label': editor.lang.common.options }
+						}
 					} );
 
-					editor.on( 'destroy', function() {
-						CKEDITOR.tools.removeFunction( collapserFn );
-					} );
+					menu.onHide = CKEDITOR.tools.bind( function() {
+						var modes = this.command ? editor.getCommand( this.command ).modes : this.modes;
+						this.setState( !modes || modes[ editor.mode ] ? _.previousState : CKEDITOR.TRISTATE_DISABLED );
+						_.on = 0;
+					}, this );
 
-					editor.addCommand( 'toolbarCollapse', {
-						readOnly: 1,
-						exec: function( editor ) {
-							var collapser = editor.ui.space( 'toolbar_collapser' ),
-								toolbox = collapser.getPrevious(),
-								contents = editor.ui.space( 'contents' ),
-								toolboxContainer = toolbox.getParent(),
-								contentHeight = parseInt( contents.$.style.height, 10 ),
-								previousHeight = toolboxContainer.$.offsetHeight,
-								minClass = 'cke_toolbox_collapser_min',
-								collapsed = collapser.hasClass( minClass );
-
-							if ( !collapsed ) {
-								toolbox.hide();
-								collapser.addClass( minClass );
-								collapser.setAttribute( 'title', editor.lang.toolbar.toolbarExpand );
-							} else {
-								toolbox.show();
-								collapser.removeClass( minClass );
-								collapser.setAttribute( 'title', editor.lang.toolbar.toolbarCollapse );
-							}
-
-							// Update collapser symbol.
-							collapser.getFirst().setText( collapsed ? '\u25B2' : // BLACK UP-POINTING TRIANGLE
-							'\u25C0' ); // BLACK LEFT-POINTING TRIANGLE
-
-							var dy = toolboxContainer.$.offsetHeight - previousHeight;
-							contents.setStyle( 'height', ( contentHeight - dy ) + 'px' );
-
-							editor.fire( 'resize' );
-						},
-
-						modes: { wysiwyg: 1, source: 1 }
-					} );
-
-					editor.setKeystroke( CKEDITOR.ALT + ( CKEDITOR.env.ie || CKEDITOR.env.webkit ? 189 : 109 ) /*-*/, 'toolbarCollapse' );
-
-					output.push( '&lt;a title=&quot;' + ( expanded ? editor.lang.toolbar.toolbarCollapse : editor.lang.toolbar.toolbarExpand )
-						+ '&quot; id=&quot;' + editor.ui.spaceId( 'toolbar_collapser' )
-						+ '&quot; tabIndex=&quot;-1&quot; class=&quot;cke_toolbox_collapser' );
-
-					if ( !expanded )
-						output.push( ' cke_toolbox_collapser_min' );
-
-					output.push( '&quot; onclick=&quot;CKEDITOR.tools.callFunction(' + collapserFn + ')&quot;&gt;', '&lt;span class=&quot;cke_arrow&quot;&gt;&amp;#9650;&lt;/span&gt;', // BLACK UP-POINTING TRIANGLE
-						'&lt;/a&gt;' );
+					// Initialize the menu items at this point.
+					if ( this.onMenu )
+						menu.addListener( this.onMenu );
 				}
 
-				output.push( '&lt;/span&gt;' );
-				event.data.html += output.join( '' );
-			} );
+				this.setState( CKEDITOR.TRISTATE_ON );
+				_.on = 1;
 
-			editor.on( 'destroy', function() {
+				// This timeout is needed to give time for the panel get focus
+				// when JAWS is running. (#9842)
+				setTimeout( function() {
+					menu.show( CKEDITOR.document.getById( _.id ), 4 );
+				}, 0 );
+			};
 
-				if ( this.toolbox )
-				{
-					var toolbars,
-						index = 0,
-						i, items, instance;
-					toolbars = this.toolbox.toolbars;
-					for ( ; index &lt; toolbars.length; index++ ) {
-						items = toolbars[ index ].items;
-						for ( i = 0; i &lt; items.length; i++ ) {
-							instance = items[ i ];
-							if ( instance.clickFn )
-								CKEDITOR.tools.removeFunction( instance.clickFn );
-							if ( instance.keyDownFn )
-								CKEDITOR.tools.removeFunction( instance.keyDownFn );
-						}
-					}
-				}
-			} );
+<span id='CKEDITOR-ui-menuButton'>		/**
+</span>		 * @class
+		 * @extends CKEDITOR.ui.button
+		 * @todo
+		 */
+		CKEDITOR.ui.menuButton = CKEDITOR.tools.createClass( {
+			base: CKEDITOR.ui.button,
 
-			// Manage editor focus  when navigating the toolbar.
-			editor.on( 'uiReady', function() {
-				var toolbox = editor.ui.space( 'toolbox' );
-				toolbox &amp;&amp; editor.focusManager.add( toolbox, 1 );
-			} );
+<span id='CKEDITOR-ui-menuButton-method-constructor'>			/**
+</span>			 * Creates a menuButton class instance.
+			 *
+			 * @constructor
+			 * @param Object definition
+			 * @todo
+			 */
+			$: function( definition ) {
+				// We don't want the panel definition in this object.
+				var panelDefinition = definition.panel;
+				delete definition.panel;
 
-			editor.addCommand( 'toolbarFocus', commands.toolbarFocus );
-			editor.setKeystroke( CKEDITOR.ALT + 121 /*F10*/, 'toolbarFocus' );
+				this.base( definition );
 
-			editor.ui.add( '-', CKEDITOR.UI_SEPARATOR, {} );
-			editor.ui.addHandler( CKEDITOR.UI_SEPARATOR, {
-				create: function() {
-					return {
-						render: function( editor, output ) {
-							output.push( '&lt;span class=&quot;cke_toolbar_separator&quot; role=&quot;separator&quot;&gt;&lt;/span&gt;' );
-							return {};
-						}
-					};
-				}
-			} );
-		}
-	} );
+				this.hasArrow = true;
 
-	function getToolbarConfig( editor ) {
-		var removeButtons = editor.config.removeButtons;
+				this.click = clickFn;
+			},
 
-		removeButtons = removeButtons &amp;&amp; removeButtons.split( ',' );
-
-		function buildToolbarConfig() {
-
-			// Object containing all toolbar groups used by ui items.
-			var lookup = getItemDefinedGroups();
-
-			// Take the base for the new toolbar, which is basically a toolbar
-			// definition without items.
-			var toolbar = CKEDITOR.tools.clone( editor.config.toolbarGroups ) || getPrivateToolbarGroups( editor );
-
-			// Fill the toolbar groups with the available ui items.
-			for ( var i = 0; i &lt; toolbar.length; i++ ) {
-				var toolbarGroup = toolbar[ i ];
-
-				// Skip toolbar break.
-				if ( toolbarGroup == '/' )
-					continue;
-				// Handle simply group name item.
-				else if ( typeof toolbarGroup == 'string' )
-					toolbarGroup = toolbar[ i ] = { name: toolbarGroup };
-
-				var items, subGroups = toolbarGroup.groups;
-
-				// Look for items that match sub groups.
-				if ( subGroups ) {
-					for ( var j = 0, sub; j &lt; subGroups.length; j++ ) {
-						sub = subGroups[ j ];
-
-						// If any ui item is registered for this subgroup.
-						items = lookup[ sub ];
-						items &amp;&amp; fillGroup( toolbarGroup, items );
-					}
-				}
-
-				// Add the main group items as well.
-				items = lookup[ toolbarGroup.name ];
-				items &amp;&amp; fillGroup( toolbarGroup, items );
-			}
-
-			return toolbar;
-		}
-
-		// Returns an object containing all toolbar groups used by ui items.
-		function getItemDefinedGroups() {
-			var groups = {},
-				itemName, item, itemToolbar, group, order;
-
-			for ( itemName in editor.ui.items ) {
-				item = editor.ui.items[ itemName ];
-				itemToolbar = item.toolbar || 'others';
-				if ( itemToolbar ) {
-					// Break the toolbar property into its parts: &quot;group_name[,order]&quot;.
-					itemToolbar = itemToolbar.split( ',' );
-					group = itemToolbar[ 0 ];
-					order = parseInt( itemToolbar[ 1 ] || -1, 10 );
-
-					// Initialize the group, if necessary.
-					groups[ group ] || ( groups[ group ] = [] );
-
-					// Push the data used to build the toolbar later.
-					groups[ group ].push( { name: itemName, order: order } );
-				}
-			}
-
-			// Put the items in the right order.
-			for ( group in groups ) {
-				groups[ group ] = groups[ group ].sort( function( a, b ) {
-					return a.order == b.order ? 0 :
-						b.order &lt; 0 ? -1 :
-						a.order &lt; 0 ? 1 :
-						a.order &lt; b.order ? -1 :
-						1;
-				} );
-			}
-
-			return groups;
-		}
-
-		function fillGroup( toolbarGroup, uiItems ) {
-			if ( uiItems.length ) {
-				if ( toolbarGroup.items )
-					toolbarGroup.items.push( editor.ui.create( '-' ) );
-				else
-					toolbarGroup.items = [];
-
-				var item, name;
-				while ( ( item = uiItems.shift() ) ) {
-					name = typeof item == 'string' ? item : item.name;
-
-					// Ignore items that are configured to be removed.
-					if ( !removeButtons || CKEDITOR.tools.indexOf( removeButtons, name ) == -1 ) {
-						item = editor.ui.create( name );
-
-						if ( !item )
-							continue;
-
-						if ( !editor.addFeature( item ) )
-							continue;
-
-						toolbarGroup.items.push( item );
+			statics: {
+				handler: {
+					create: function( definition ) {
+						return new CKEDITOR.ui.menuButton( definition );
 					}
 				}
 			}
-		}
-
-		function populateToolbarConfig( config ) {
-			var toolbar = [],
-				i, group, newGroup;
-
-			for ( i = 0; i &lt; config.length; ++i ) {
-				group = config[ i ];
-				newGroup = {};
-
-				if ( group == '/' )
-					toolbar.push( group );
-				else if ( CKEDITOR.tools.isArray( group ) ) {
-					fillGroup( newGroup, CKEDITOR.tools.clone( group ) );
-					toolbar.push( newGroup );
-				}
-				else if ( group.items ) {
-					fillGroup( newGroup, CKEDITOR.tools.clone( group.items ) );
-					newGroup.name = group.name;
-					toolbar.push( newGroup );
-				}
-			}
-
-			return toolbar;
-		}
-
-		var toolbar = editor.config.toolbar;
-
-		// If it is a string, return the relative &quot;toolbar_name&quot; config.
-		if ( typeof toolbar == 'string' )
-			toolbar = editor.config[ 'toolbar_' + toolbar ];
-
-		return ( editor.toolbar = toolbar ? populateToolbarConfig( toolbar ) : buildToolbarConfig() );
+		} );
+	},
+	beforeInit: function( editor ) {
+		editor.ui.addHandler( CKEDITOR.UI_MENUBUTTON, CKEDITOR.ui.menuButton.handler );
 	}
+} );
 
-<span id='CKEDITOR-ui-method-addToolbarGroup'>	/**
-</span>	 * Add toolbar group. See {@link CKEDITOR.config#toolbarGroups} for more details.
-	 *
-	 * **Note:** This method won't modify toolbar groups set explicitly by
-	 * {@link CKEDITOR.config#toolbarGroups}. It will extend only default setting.
-	 *
-	 * @param {String} name Group name.
-	 * @param {Number/String} previous Name of group after which this one
-	 * should be added or `0` if this group should be the first one.
-	 * @param {String} [subgroupOf] Name of parent group.
-	 * @member CKEDITOR.ui
-	 */
-	CKEDITOR.ui.prototype.addToolbarGroup = function( name, previous, subgroupOf ) {
-		// The toolbarGroups from the privates is the one we gonna use for automatic toolbar creation.
-		var toolbarGroups = getPrivateToolbarGroups( this.editor ),
-			atStart = previous === 0,
-			newGroup = { name: name };
-
-		if ( subgroupOf ) {
-			// Transform the subgroupOf name in the real subgroup object.
-			subgroupOf = CKEDITOR.tools.search( toolbarGroups, function( group ) {
-				return group.name == subgroupOf;
-			} );
-
-			if ( subgroupOf ) {
-				!subgroupOf.groups &amp;&amp; ( subgroupOf.groups = [] ) ;
-
-				if ( previous ) {
-					// Search the &quot;previous&quot; item and add the new one after it.
-					previous = CKEDITOR.tools.indexOf( subgroupOf.groups, previous );
-					if ( previous &gt;= 0 ) {
-						subgroupOf.groups.splice( previous + 1, 0, name );
-						return;
-					}
-				}
-
-				// If no previous found.
-
-				if ( atStart )
-					subgroupOf.groups.splice( 0, 0, name );
-				else
-					subgroupOf.groups.push(  name );
-				return;
-			} else {
-				// Ignore &quot;previous&quot; if subgroupOf has not been found.
-				previous = null;
-			}
-		}
-
-		if ( previous ) {
-			// Transform the &quot;previous&quot; name into its index.
-			previous = CKEDITOR.tools.indexOf( toolbarGroups, function( group ) {
-				return group.name == previous;
-			} );
-		}
-
-		if ( atStart )
-			toolbarGroups.splice( 0, 0, name );
-		else if ( typeof previous == 'number' )
-			toolbarGroups.splice( previous + 1, 0, newGroup );
-		else
-			toolbarGroups.push( name );
-	};
-
-	function getPrivateToolbarGroups( editor ) {
-		return editor._.toolbarGroups || ( editor._.toolbarGroups = [
-			{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-			{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-			{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-			{ name: 'forms' },
-			'/',
-			{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-			{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-			{ name: 'links' },
-			{ name: 'insert' },
-			'/',
-			{ name: 'styles' },
-			{ name: 'colors' },
-			{ name: 'tools' },
-			{ name: 'others' },
-			{ name: 'about' }
-		] );
-	}
-} )();
-
-<span id='CKEDITOR-property-UI_SEPARATOR'>/**
-</span> * Separator UI element.
+<span id='CKEDITOR-property-UI_MENUBUTTON'>/**
+</span> * Button UI element.
  *
  * @readonly
- * @property {String} [='separator']
+ * @property {String} [='menubutton']
  * @member CKEDITOR
  */
-CKEDITOR.UI_SEPARATOR = 'separator';
-
-<span id='CKEDITOR-config-cfg-toolbarLocation'>/**
-</span> * The &quot;UI space&quot; to which rendering the toolbar. For the default editor implementation,
- * the recommended options are `'top'` and `'bottom'`.
- *
- *		config.toolbarLocation = 'bottom';
- *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.toolbarLocation = 'top';
-
-<span id='CKEDITOR-config-cfg-toolbar'>/**
-</span> * The toolbox (alias toolbar) definition. It is a toolbar name or an array of
- * toolbars (strips), each one being also an array, containing a list of UI items.
- *
- * If set to `null`, generate toolbar automatically using all available buttons
- * and {@link #toolbarGroups} as a toolbar groups layout.
- *
- *		// Defines a toolbar with only one strip containing the &quot;Source&quot; button, a
- *		// separator and the &quot;Bold&quot; and &quot;Italic&quot; buttons.
- *		config.toolbar = [
- *			[ 'Source', '-', 'Bold', 'Italic' ]
- *		];
- *
- *		// Similar to example the above, defines a &quot;Basic&quot; toolbar with only one strip containing three buttons.
- *		// Note that this setting is composed by &quot;toolbar_&quot; added by the toolbar name, which in this case is called &quot;Basic&quot;.
- *		// This second part of the setting name can be anything. You must use this name in the CKEDITOR.config.toolbar setting,
- *		// so you instruct the editor which toolbar_(name) setting to use.
- *		config.toolbar_Basic = [
- *			[ 'Source', '-', 'Bold', 'Italic' ]
- *		];
- *		// Load toolbar_Name where Name = Basic.
- *		config.toolbar = 'Basic';
- *
- * @cfg {Array/String} [toolbar=null]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-toolbarGroups'>/**
-</span> * The toolbar groups definition.
- *
- * If toolbar layout isn't explicitly defined by {@link #toolbar} setting, then
- * this setting is used to group all defined buttons (see {@link CKEDITOR.ui#addButton}).
- * Buttons are associated with toolbar groups by `toolbar` property in their definition objects.
- *
- * New groups may be dynamically added during the editor and plugins initialization by
- * {@link CKEDITOR.ui#addToolbarGroup}. Although only if default setting was used.
- *
- *		// Default setting.
- *		config.toolbarGroups = [
- *			{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
- *			{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
- *			{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
- *			{ name: 'forms' },
- *			'/',
- *			{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
- *			{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
- *			{ name: 'links' },
- *			{ name: 'insert' },
- *			'/',
- *			{ name: 'styles' },
- *			{ name: 'colors' },
- *			{ name: 'tools' },
- *			{ name: 'others' },
- *			{ name: 'about' }
- *		];
- *
- * @cfg {Array} [toolbarGroups=see example]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-toolbarCanCollapse'>/**
-</span> * Whether the toolbar can be collapsed by the user. If disabled, the collapser
- * button will not be displayed.
- *
- *		config.toolbarCanCollapse = true;
- *
- * @cfg {Boolean} [toolbarCanCollapse=false]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-toolbarStartupExpanded'>/**
-</span> * Whether the toolbar must start expanded when the editor is loaded.
- *
- * Setting this option to `false` will affect toolbar only when
- * {@link #toolbarCanCollapse} is set to `true`:
- *
- *		config.toolbarCanCollapse = true;
- *		config.toolbarStartupExpanded = false;
- *
- * @cfg {Boolean} [toolbarStartupExpanded=true]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-toolbarGroupCycling'>/**
-</span> * When enabled, makes the arrow keys navigation cycle within the current
- * toolbar group. Otherwise the arrows will move through all items available in
- * the toolbar. The *TAB* key will still be used to quickly jump among the
- * toolbar groups.
- *
- *		config.toolbarGroupCycling = false;
- *
- * @since 3.6
- * @cfg {Boolean} [toolbarGroupCycling=true]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-removeButtons'>/**
-</span> * List of toolbar button names that must not be rendered. This will work as
- * well for non-button toolbar items, like the Font combos.
- *
- *		config.removeButtons = 'Underline,JustifyCenter';
- *
- * This configuration should not be overused, having
- * {@link CKEDITOR.config#removePlugins} removing features from the editor. In
- * some cases though, a single plugin may define a set of toolbar buttons and
- * removeButtons may be useful when just a few of them are to be removed.
- *
- * @cfg {String} [removeButtons]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-editor-property-toolbar'>/**
-</span> * Toolbar definition used by the editor. It is crated from the
- * {@link CKEDITOR.config#toolbar} if it is set or automatically
- * based on {@link CKEDITOR.config#toolbarGroups}.
- *
- * @readonly
- * @property {Object} toolbar
- * @member CKEDITOR.editor
- */
+CKEDITOR.UI_MENUBUTTON = 'menubutton';
 </pre>
 </body>
 </html>

@@ -20,360 +20,231 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'htmlwriter', {
-	init: function( editor ) {
-		var writer = new CKEDITOR.htmlWriter();
+( function() {
+	function addCombo( editor, comboName, styleType, lang, entries, defaultLabel, styleDefinition, order ) {
+		var config = editor.config,
+			style = new CKEDITOR.style( styleDefinition );
 
-		writer.forceSimpleAmpersand = editor.config.forceSimpleAmpersand;
-		writer.indentationChars = editor.config.dataIndentationChars || '\t';
+		// Gets the list of fonts from the settings.
+		var names = entries.split( ';' ),
+			values = [];
 
-		// Overwrite default basicWriter initialized in hmtlDataProcessor constructor.
-		editor.dataProcessor.writer = writer;
-	}
-} );
+		// Create style objects for all fonts.
+		var styles = {};
+		for ( var i = 0; i &lt; names.length; i++ ) {
+			var parts = names[ i ];
 
-<span id='CKEDITOR-htmlWriter'>/**
-</span> * Class used to write HTML data.
- *
- *		var writer = new CKEDITOR.htmlWriter();
- *		writer.openTag( 'p' );
- *		writer.attribute( 'class', 'MyClass' );
- *		writer.openTagClose( 'p' );
- *		writer.text( 'Hello' );
- *		writer.closeTag( 'p' );
- *		alert( writer.getHtml() ); // '&lt;p class=&quot;MyClass&quot;&gt;Hello&lt;/p&gt;'
- *
- * @class
- * @extends CKEDITOR.htmlParser.basicWriter
- */
-CKEDITOR.htmlWriter = CKEDITOR.tools.createClass( {
-	base: CKEDITOR.htmlParser.basicWriter,
+			if ( parts ) {
+				parts = parts.split( '/' );
 
-<span id='CKEDITOR-htmlWriter-method-constructor'>	/**
-</span>	 * Creates a htmlWriter class instance.
-	 *
-	 * @constructor
-	 */
-	$: function() {
-		// Call the base contructor.
-		this.base();
+				var vars = {},
+					name = names[ i ] = parts[ 0 ];
 
-<span id='CKEDITOR-htmlWriter-property-indentationChars'>		/**
-</span>		 * The characters to be used for each identation step.
-		 *
-		 *		// Use tab for indentation.
-		 *		editorInstance.dataProcessor.writer.indentationChars = '\t';
-		 */
-		this.indentationChars = '\t';
+				vars[ styleType ] = values[ i ] = parts[ 1 ] || name;
 
-<span id='CKEDITOR-htmlWriter-property-selfClosingEnd'>		/**
-</span>		 * The characters to be used to close &quot;self-closing&quot; elements, like `&lt;br&gt;` or `&lt;img&gt;`.
-		 *
-		 *		// Use HTML4 notation for self-closing elements.
-		 *		editorInstance.dataProcessor.writer.selfClosingEnd = '&gt;';
-		 */
-		this.selfClosingEnd = ' /&gt;';
-
-<span id='CKEDITOR-htmlWriter-property-lineBreakChars'>		/**
-</span>		 * The characters to be used for line breaks.
-		 *
-		 *		// Use CRLF for line breaks.
-		 *		editorInstance.dataProcessor.writer.lineBreakChars = '\r\n';
-		 */
-		this.lineBreakChars = '\n';
-
-		this.sortAttributes = 1;
-
-		this._.indent = 0;
-		this._.indentation = '';
-		// Indicate preformatted block context status. (#5789)
-		this._.inPre = 0;
-		this._.rules = {};
-
-		var dtd = CKEDITOR.dtd;
-
-		for ( var e in CKEDITOR.tools.extend( {}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent ) ) {
-			this.setRules( e, {
-				indent: !dtd[ e ][ '#' ],
-				breakBeforeOpen: 1,
-				breakBeforeClose: !dtd[ e ][ '#' ],
-				breakAfterClose: 1,
-				needsSpace: ( e in dtd.$block ) &amp;&amp; !( e in { li: 1, dt: 1, dd: 1 } )
-			} );
+				styles[ name ] = new CKEDITOR.style( styleDefinition, vars );
+				styles[ name ]._.definition.name = name;
+			} else
+				names.splice( i--, 1 );
 		}
 
-		this.setRules( 'br', { breakAfterOpen: 1 } );
+		editor.ui.addRichCombo( comboName, {
+			label: lang.label,
+			title: lang.panelTitle,
+			toolbar: 'styles,' + order,
+			allowedContent: style,
+			requiredContent: style,
 
-		this.setRules( 'title', {
-			indent: 0,
-			breakAfterOpen: 0
+			panel: {
+				css: [ CKEDITOR.skin.getPath( 'editor' ) ].concat( config.contentsCss ),
+				multiSelect: false,
+				attributes: { 'aria-label': lang.panelTitle }
+			},
+
+			init: function() {
+				this.startGroup( lang.panelTitle );
+
+				for ( var i = 0; i &lt; names.length; i++ ) {
+					var name = names[ i ];
+
+					// Add the tag entry to the panel list.
+					this.add( name, styles[ name ].buildPreview(), name );
+				}
+			},
+
+			onClick: function( value ) {
+				editor.focus();
+				editor.fire( 'saveSnapshot' );
+
+				var style = styles[ value ];
+
+				editor[ this.getValue() == value ? 'removeStyle' : 'applyStyle' ]( style );
+				editor.fire( 'saveSnapshot' );
+			},
+
+			onRender: function() {
+				editor.on( 'selectionChange', function( ev ) {
+					var currentValue = this.getValue();
+
+					var elementPath = ev.data.path,
+						elements = elementPath.elements;
+
+					// For each element into the elements path.
+					for ( var i = 0, element; i &lt; elements.length; i++ ) {
+						element = elements[ i ];
+
+						// Check if the element is removable by any of
+						// the styles.
+						for ( var value in styles ) {
+							if ( styles[ value ].checkElementMatch( element, true ) ) {
+								if ( value != currentValue )
+									this.setValue( value );
+								return;
+							}
+						}
+					}
+
+					// If no styles match, just empty it.
+					this.setValue( '', defaultLabel );
+				}, this );
+			},
+
+			refresh: function() {
+				if ( !editor.activeFilter.check( style ) )
+					this.setState( CKEDITOR.TRISTATE_DISABLED );
+			}
 		} );
-
-		this.setRules( 'style', {
-			indent: 0,
-			breakBeforeClose: 1
-		} );
-
-		this.setRules( 'pre', {
-			breakAfterOpen: 1, // Keep line break after the opening tag
-			indent: 0 // Disable indentation on &lt;pre&gt;.
-		} );
-	},
-
-	proto: {
-<span id='CKEDITOR-htmlWriter-method-openTag'>		/**
-</span>		 * Writes the tag opening part for a opener tag.
-		 *
-		 *		// Writes '&lt;p'.
-		 *		writer.openTag( 'p', { class : 'MyClass', id : 'MyId' } );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 * @param {Object} attributes The attributes defined for this tag. The
-		 * attributes could be used to inspect the tag.
-		 */
-		openTag: function( tagName, attributes ) {
-			var rules = this._.rules[ tagName ];
-
-			if ( this._.afterCloser &amp;&amp; rules &amp;&amp; rules.needsSpace &amp;&amp; this._.needsSpace )
-				this._.output.push( '\n' );
-
-			if ( this._.indent )
-				this.indentation();
-			// Do not break if indenting.
-			else if ( rules &amp;&amp; rules.breakBeforeOpen ) {
-				this.lineBreak();
-				this.indentation();
-			}
-
-			this._.output.push( '&lt;', tagName );
-
-			this._.afterCloser = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-openTagClose'>		/**
-</span>		 * Writes the tag closing part for a opener tag.
-		 *
-		 *		// Writes '&gt;'.
-		 *		writer.openTagClose( 'p', false );
-		 *
-		 *		// Writes ' /&gt;'.
-		 *		writer.openTagClose( 'br', true );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 * @param {Boolean} isSelfClose Indicates that this is a self-closing tag,
-		 * like `&lt;br&gt;` or `&lt;img&gt;`.
-		 */
-		openTagClose: function( tagName, isSelfClose ) {
-			var rules = this._.rules[ tagName ];
-
-			if ( isSelfClose ) {
-				this._.output.push( this.selfClosingEnd );
-
-				if ( rules &amp;&amp; rules.breakAfterClose )
-					this._.needsSpace = rules.needsSpace;
-			} else {
-				this._.output.push( '&gt;' );
-
-				if ( rules &amp;&amp; rules.indent )
-					this._.indentation += this.indentationChars;
-			}
-
-			if ( rules &amp;&amp; rules.breakAfterOpen )
-				this.lineBreak();
-			tagName == 'pre' &amp;&amp; ( this._.inPre = 1 );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-attribute'>		/**
-</span>		 * Writes an attribute. This function should be called after opening the
-		 * tag with {@link #openTagClose}.
-		 *
-		 *		// Writes ' class=&quot;MyClass&quot;'.
-		 *		writer.attribute( 'class', 'MyClass' );
-		 *
-		 * @param {String} attName The attribute name.
-		 * @param {String} attValue The attribute value.
-		 */
-		attribute: function( attName, attValue ) {
-
-			if ( typeof attValue == 'string' ) {
-				this.forceSimpleAmpersand &amp;&amp; ( attValue = attValue.replace( /&amp;amp;/g, '&amp;' ) );
-				// Browsers don't always escape special character in attribute values. (#4683, #4719).
-				attValue = CKEDITOR.tools.htmlEncodeAttr( attValue );
-			}
-
-			this._.output.push( ' ', attName, '=&quot;', attValue, '&quot;' );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-closeTag'>		/**
-</span>		 * Writes a closer tag.
-		 *
-		 *		// Writes '&lt;/p&gt;'.
-		 *		writer.closeTag( 'p' );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 */
-		closeTag: function( tagName ) {
-			var rules = this._.rules[ tagName ];
-
-			if ( rules &amp;&amp; rules.indent )
-				this._.indentation = this._.indentation.substr( this.indentationChars.length );
-
-			if ( this._.indent )
-				this.indentation();
-			// Do not break if indenting.
-			else if ( rules &amp;&amp; rules.breakBeforeClose ) {
-				this.lineBreak();
-				this.indentation();
-			}
-
-			this._.output.push( '&lt;/', tagName, '&gt;' );
-			tagName == 'pre' &amp;&amp; ( this._.inPre = 0 );
-
-			if ( rules &amp;&amp; rules.breakAfterClose ) {
-				this.lineBreak();
-				this._.needsSpace = rules.needsSpace;
-			}
-
-			this._.afterCloser = 1;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-text'>		/**
-</span>		 * Writes text.
-		 *
-		 *		// Writes 'Hello Word'.
-		 *		writer.text( 'Hello Word' );
-		 *
-		 * @param {String} text The text value
-		 */
-		text: function( text ) {
-			if ( this._.indent ) {
-				this.indentation();
-				!this._.inPre &amp;&amp; ( text = CKEDITOR.tools.ltrim( text ) );
-			}
-
-			this._.output.push( text );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-comment'>		/**
-</span>		 * Writes a comment.
-		 *
-		 *		// Writes &quot;&lt;!-- My comment --&gt;&quot;.
-		 *		writer.comment( ' My comment ' );
-		 *
-		 * @param {String} comment The comment text.
-		 */
-		comment: function( comment ) {
-			if ( this._.indent )
-				this.indentation();
-
-			this._.output.push( '&lt;!--', comment, '--&gt;' );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-lineBreak'>		/**
-</span>		 * Writes a line break. It uses the {@link #lineBreakChars} property for it.
-		 *
-		 *		// Writes '\n' (e.g.).
-		 *		writer.lineBreak();
-		 */
-		lineBreak: function() {
-			if ( !this._.inPre &amp;&amp; this._.output.length &gt; 0 )
-				this._.output.push( this.lineBreakChars );
-			this._.indent = 1;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-indentation'>		/**
-</span>		 * Writes the current indentation chars. It uses the {@link #indentationChars}
-		 * property, repeating it for the current indentation steps.
-		 *
-		 *		// Writes '\t' (e.g.).
-		 *		writer.indentation();
-		 */
-		indentation: function() {
-			if ( !this._.inPre &amp;&amp; this._.indentation )
-				this._.output.push( this._.indentation );
-			this._.indent = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-reset'>		/**
-</span>		 * Empties the current output buffer. It also brings back the default
-		 * values of the writer flags.
-		 *
-		 *		writer.reset();
-		 */
-		reset: function() {
-			this._.output = [];
-			this._.indent = 0;
-			this._.indentation = '';
-			this._.afterCloser = 0;
-			this._.inPre = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-setRules'>		/**
-</span>		 * Sets formatting rules for a give element. The possible rules are:
-		 *
-		 * * `indent`: indent the element contents.
-		 * * `breakBeforeOpen`: break line before the opener tag for this element.
-		 * * `breakAfterOpen`: break line after the opener tag for this element.
-		 * * `breakBeforeClose`: break line before the closer tag for this element.
-		 * * `breakAfterClose`: break line after the closer tag for this element.
-		 *
-		 * All rules default to `false`. Each call to the function overrides
-		 * already present rules, leaving the undefined untouched.
-		 *
-		 * By default, all elements available in the {@link CKEDITOR.dtd#$block},
-		 * {@link CKEDITOR.dtd#$listItem} and {@link CKEDITOR.dtd#$tableContent}
-		 * lists have all the above rules set to `true`. Additionaly, the `&lt;br&gt;`
-		 * element has the `breakAfterOpen` set to `true`.
-		 *
-		 *		// Break line before and after &quot;img&quot; tags.
-		 *		writer.setRules( 'img', {
-		 *			breakBeforeOpen: true
-		 *			breakAfterOpen: true
-		 *		} );
-		 *
-		 *		// Reset the rules for the &quot;h1&quot; tag.
-		 *		writer.setRules( 'h1', {} );
-		 *
-		 * @param {String} tagName The element name to which set the rules.
-		 * @param {Object} rules An object containing the element rules.
-		 */
-		setRules: function( tagName, rules ) {
-			var currentRules = this._.rules[ tagName ];
-
-			if ( currentRules )
-				CKEDITOR.tools.extend( currentRules, rules, true );
-			else
-				this._.rules[ tagName ] = rules;
-		}
 	}
-} );
 
-<span id='CKEDITOR-config-cfg-forceSimpleAmpersand'>/**
-</span> * Whether to force using `'&amp;'` instead of `'&amp;amp;'` in elements attributes
- * values, it's not recommended to change this setting for compliance with the
- * W3C XHTML 1.0 standards ([C.12, XHTML 1.0](http://www.w3.org/TR/xhtml1/#C_12)).
+	CKEDITOR.plugins.add( 'font', {
+		requires: 'richcombo',
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			var config = editor.config;
+
+			addCombo( editor, 'Font', 'family', editor.lang.font, config.font_names, config.font_defaultLabel, config.font_style, 30 );
+			addCombo( editor, 'FontSize', 'size', editor.lang.font.fontSize, config.fontSize_sizes, config.fontSize_defaultLabel, config.fontSize_style, 40 );
+		}
+	} );
+} )();
+
+<span id='CKEDITOR-config-cfg-font_names'>/**
+</span> * The list of fonts names to be displayed in the Font combo in the toolbar.
+ * Entries are separated by semi-colons (`';'`), while it's possible to have more
+ * than one font for each entry, in the HTML way (separated by comma).
  *
- *		// Use `'&amp;'` instead of `'&amp;amp;'`
- *		CKEDITOR.config.forceSimpleAmpersand = true;
+ * A display name may be optionally defined by prefixing the entries with the
+ * name and the slash character. For example, `'Arial/Arial, Helvetica, sans-serif'`
+ * will be displayed as `'Arial'` in the list, but will be outputted as
+ * `'Arial, Helvetica, sans-serif'`.
  *
- * @cfg {Boolean} [forceSimpleAmpersand=false]
+ *		config.font_names =
+ *			'Arial/Arial, Helvetica, sans-serif;' +
+ *			'Times New Roman/Times New Roman, Times, serif;' +
+ *			'Verdana';
+ *
+ *		config.font_names = 'Arial;Times New Roman;Verdana';
+ *
+ * @cfg {String} [font_names=see source]
  * @member CKEDITOR.config
  */
+CKEDITOR.config.font_names = 'Arial/Arial, Helvetica, sans-serif;' +
+	'Comic Sans MS/Comic Sans MS, cursive;' +
+	'Courier New/Courier New, Courier, monospace;' +
+	'Georgia/Georgia, serif;' +
+	'Lucida Sans Unicode/Lucida Sans Unicode, Lucida Grande, sans-serif;' +
+	'Tahoma/Tahoma, Geneva, sans-serif;' +
+	'Times New Roman/Times New Roman, Times, serif;' +
+	'Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;' +
+	'Verdana/Verdana, Geneva, sans-serif';
 
-<span id='CKEDITOR-config-cfg-dataIndentationChars'>/**
-</span> * The characters to be used for indenting the HTML produced by the editor.
- * Using characters different than `' '` (space) and `'\t'` (tab) is definitely
- * a bad idea as it'll mess the code.
+<span id='CKEDITOR-config-cfg-font_defaultLabel'>/**
+</span> * The text to be displayed in the Font combo is none of the available values
+ * matches the current cursor position or text selection.
  *
- *		// No indentation.
- *		CKEDITOR.config.dataIndentationChars = '';
+ *		// If the default site font is Arial, we may making it more explicit to the end user.
+ *		config.font_defaultLabel = 'Arial';
  *
- *		// Use two spaces for indentation.
- *		CKEDITOR.config.dataIndentationChars = '  ';
- *
- * @cfg {String} [dataIndentationChars='\t']
+ * @cfg {String} [font_defaultLabel='']
  * @member CKEDITOR.config
  */
+CKEDITOR.config.font_defaultLabel = '';
+
+<span id='CKEDITOR-config-cfg-font_style'>/**
+</span> * The style definition to be used to apply the font in the text.
+ *
+ *		// This is actually the default value for it.
+ *		config.font_style = {
+ *			element:		'span',
+ *			styles:			{ 'font-family': '#(family)' },
+ *			overrides:		[ { element: 'font', attributes: { 'face': null } } ]
+ *     };
+ *
+ * @cfg {Object} [font_style=see example]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.font_style = {
+	element: 'span',
+	styles: { 'font-family': '#(family)' },
+	overrides: [ {
+		element: 'font', attributes: { 'face': null }
+	} ]
+};
+
+<span id='CKEDITOR-config-cfg-fontSize_sizes'>/**
+</span> * The list of fonts size to be displayed in the Font Size combo in the
+ * toolbar. Entries are separated by semi-colons (`';'`).
+ *
+ * Any kind of &quot;CSS like&quot; size can be used, like `'12px'`, `'2.3em'`, `'130%'`,
+ * `'larger'` or `'x-small'`.
+ *
+ * A display name may be optionally defined by prefixing the entries with the
+ * name and the slash character. For example, `'Bigger Font/14px'` will be
+ * displayed as `'Bigger Font'` in the list, but will be outputted as `'14px'`.
+ *
+ *		config.fontSize_sizes = '16/16px;24/24px;48/48px;';
+ *
+ *		config.fontSize_sizes = '12px;2.3em;130%;larger;x-small';
+ *
+ *		config.fontSize_sizes = '12 Pixels/12px;Big/2.3em;30 Percent More/130%;Bigger/larger;Very Small/x-small';
+ *
+ * @cfg {String} [fontSize_sizes=see source]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_sizes = '8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px';
+
+<span id='CKEDITOR-config-cfg-fontSize_defaultLabel'>/**
+</span> * The text to be displayed in the Font Size combo is none of the available
+ * values matches the current cursor position or text selection.
+ *
+ *		// If the default site font size is 12px, we may making it more explicit to the end user.
+ *		config.fontSize_defaultLabel = '12px';
+ *
+ * @cfg {String} [fontSize_defaultLabel='']
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_defaultLabel = '';
+
+<span id='CKEDITOR-config-cfg-fontSize_style'>/**
+</span> * The style definition to be used to apply the font size in the text.
+ *
+ *		// This is actually the default value for it.
+ *		config.fontSize_style = {
+ *			element:		'span',
+ *			styles:			{ 'font-size': '#(size)' },
+ *			overrides:		[ { element :'font', attributes: { 'size': null } } ]
+ *		};
+ *
+ * @cfg {Object} [fontSize_style=see example]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_style = {
+	element: 'span',
+	styles: { 'font-size': '#(size)' },
+	overrides: [ {
+		element: 'font', attributes: { 'size': null }
+	} ]
+};
 </pre>
 </body>
 </html>

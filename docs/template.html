@@ -13,14 +13,34 @@
 
   <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
   <link rel="stylesheet" href="resources/css/app-4689d2a5522dcd3c9e9923ca59c33f27.css" type="text/css" />
-  <link rel="stylesheet" href="styles-3eba09980fa05ead185cb17d9c0deb0f.css" type="text/css" />
+  <link rel="stylesheet" href="styles-8184dad50dadb76aad743829a7c19ed0.css" type="text/css" />
 
   <script type="text/javascript" src="extjs/ext-all.js"></script>
-  <script type="text/javascript" src="data-5bcf3fc29976b19bf557d76cfa7c2478.js"></script>
+  <script type="text/javascript" src="data-07415115979177ae4b6f0076f60c7e76.js"></script>
 
-  <script type="text/javascript" src="app-c8aee15727b937ad8e88f6f76f4b1f90.js"></script>
+  <script type="text/javascript" src="app-fc1031f48fbd7417b76d260067a5a388.js"></script>
 
-  <link rel="stylesheet" href="resources/css/ck.css" type="text/css" /><script src="resources/index.js"></script>
+  <link rel="stylesheet" href="resources/css/ck.css" type="text/css" />
+<script src="resources/index.js"></script>
+  <script>
+	// Loads GA only on docs.ckeditor.com.
+	if ( location.hostname == 'docs.ckeditor.com' ) {
+		function pageView() {
+			ga('send', 'pageview', location.pathname + location.search + location.hash );
+		}
+
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-271067-14', 'ckeditor.com');
+
+		pageView();
+
+		window.addEventListener( 'hashchange', pageView );
+	}
+</script>
 
 </head>
 <body id="ext-body">
@@ -324,6 +344,11 @@
             <h3>CKEditor 4 Developer's Guide</h3>
 <ul>
 <li><a href='#!/guide/dev_installation'>Quick Start Guide</a></li>
+<li><a href='#!/guide/dev_basics'>Basic CKEditor Concepts</a></li>
+<li><a href='#!/guide/dev_best_practices'>Best Practices</a></li>
+<li><a href='#!/guide/dev_ckeditor_js_load'>Loading CKEditor</a></li>
+<li><a href='#!/guide/dev_framed'>Classic Editing</a></li>
+<li><a href='#!/guide/dev_inline'>Inline Editing</a></li>
 <li><a href='#!/guide/dev_advanced_installation'>Introduction</a></li>
 <li><a href='#!/guide/dev_plugins'>Installing Plugins</a></li>
 <li><a href='#!/guide/dev_skins'>Installing Skins</a></li>
@@ -334,18 +359,18 @@
 <li><a href='#!/guide/dev_upgrade_fckeditor_2'>Upgrading from FCKeditor 2</a></li>
 <li><a href='#!/guide/dev_source'>Getting Source Code</a></li>
 <li><a href='#!/guide/dev_build'>Building from Source</a></li>
-<li><a href='#!/guide/dev_ckeditor_js_load'>Loading CKEditor</a></li>
-<li><a href='#!/guide/dev_framed'>Framed Editing</a></li>
-<li><a href='#!/guide/dev_inline'>Inline Editing</a></li>
+<li><a href='#!/guide/dev_package_managers'>Using Package Managers</a></li>
+<li><a href='#!/guide/dev_basepath'>Specifying Editor Path</a></li>
 <li><a href='#!/guide/dev_jquery'>jQuery Adapter</a></li>
-<li><a href='#!/guide/dev_configuration'>Setting Configurations</a></li>
-<li><a href='#!/guide/dev_toolbar'>Toolbar</a></li>
-<li><a href='#!/guide/dev_styles'>Styles</a></li>
-<li><a href='#!/guide/dev_output_format'>Output Formatting</a></li>
-<li><a href='#!/guide/dev_spellcheck'>Spell Checker</a></li>
 <li><a href='#!/guide/dev_file_browse_upload'>Introduction</a></li>
 <li><a href='#!/guide/dev_file_browser_api'>File Browser API</a></li>
-<li><a href='#!/guide/dev_dialog_add_file_browser'>Custom Dialog Usage</a></li>
+<li><a href='#!/guide/dev_dialog_add_file_browser'>Integrating with Dialogs</a></li>
+<li><a href='#!/guide/dev_configuration'>Setting Configuration</a></li>
+<li><a href='#!/guide/dev_toolbar'>Toolbar</a></li>
+<li><a href='#!/guide/dev_styles'>Styles Drop-down</a></li>
+<li><a href='#!/guide/dev_output_format'>Output Formatting</a></li>
+<li><a href='#!/guide/dev_spellcheck'>Spell Checker</a></li>
+<li><a href='#!/guide/dev_uicolor'>UI Color</a></li>
 <li><a href='#!/guide/dev_deep_dive'>Introduction</a></li>
 <li><a href='#!/guide/dev_advanced_content_filter'>Introduction</a></li>
 <li><a href='#!/guide/dev_allowed_content_rules'>Allowed Content Rules</a></li>
@@ -374,6 +399,7 @@
 <li><a href='#!/guide/plugin_sdk_sample_1'>Simple Plugin (Part 1)</a></li>
 <li><a href='#!/guide/plugin_sdk_sample_2'>Simple Plugin (Part 2)</a></li>
 <li><a href='#!/guide/plugin_sdk_integration_with_acf'>Integration with ACF</a></li>
+<li><a href='#!/guide/plugin_sdk_styles'>Plugin CSS Styles</a></li>
 </ul>
 <h3>CKEditor 4 Widget SDK</h3>
 <ul>

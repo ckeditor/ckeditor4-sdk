@@ -21,301 +21,379 @@
  */
 
 ( function() {
-	var meta = {
-		editorFocus: false,
-		modes: { wysiwyg: 1, source: 1 }
-	};
+	var floatSpaceTpl = CKEDITOR.addTemplate( 'floatcontainer', '&lt;div' +
+			' id=&quot;cke_{name}&quot;' +
+			' class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_float cke_{langDir} ' + CKEDITOR.env.cssClass + '&quot;' +
+			' dir=&quot;{langDir}&quot;' +
+			' title=&quot;' + ( CKEDITOR.env.gecko ? ' ' : '' ) + '&quot;' +
+			' lang=&quot;{langCode}&quot;' +
+			' role=&quot;application&quot;' +
+			' style=&quot;{style}&quot;' +
+			' aria-labelledby=&quot;cke_{name}_arialbl&quot;' +
+			'&gt;' +
+				'&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;' +
+				'&lt;div class=&quot;cke_inner&quot;&gt;' +
+					'&lt;div id=&quot;{topId}&quot; class=&quot;cke_top&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;' +
+				'&lt;/div&gt;' +
+			'&lt;/div&gt;' ),
+		win = CKEDITOR.document.getWindow(),
+		pixelate = CKEDITOR.tools.cssLength;
 
-	var blurCommand = {
-		exec: function( editor ) {
-			editor.container.focusNext( true, editor.tabIndex );
-		}
-	};
-
-	var blurBackCommand = {
-		exec: function( editor ) {
-			editor.container.focusPrevious( true, editor.tabIndex );
-		}
-	};
-
-	function selectNextCellCommand( backward ) {
-		return {
-			editorFocus: false,
-			canUndo: false,
-			modes: { wysiwyg: 1 },
-			exec: function( editor ) {
-				if ( editor.editable().hasFocus ) {
-					var sel = editor.getSelection(),
-						path = new CKEDITOR.dom.elementPath( sel.getCommonAncestor(), sel.root ),
-						cell;
-
-					if ( ( cell = path.contains( { td: 1, th: 1 }, 1 ) ) ) {
-						var resultRange = editor.createRange(),
-							next = CKEDITOR.tools.tryThese( function() {
-								var row = cell.getParent(),
-									next = row.$.cells[ cell.$.cellIndex + ( backward ? -1 : 1 ) ];
-
-								// Invalid any empty value.
-								next.parentNode.parentNode;
-								return next;
-							}, function() {
-								var row = cell.getParent(),
-									table = row.getAscendant( 'table' ),
-									nextRow = table.$.rows[ row.$.rowIndex + ( backward ? -1 : 1 ) ];
-
-								return nextRow.cells[ backward ? nextRow.cells.length - 1 : 0 ];
-							} );
-
-						// Clone one more row at the end of table and select the first newly established cell.
-						if ( !( next || backward ) ) {
-							var table = cell.getAscendant( 'table' ).$,
-								cells = cell.getParent().$.cells;
-
-							var newRow = new CKEDITOR.dom.element( table.insertRow( -1 ), editor.document );
-
-							for ( var i = 0, count = cells.length; i &lt; count; i++ ) {
-								var newCell = newRow.append( new CKEDITOR.dom.element( cells[ i ], editor.document ).clone( false, false ) );
-								newCell.appendBogus();
-							}
-
-							resultRange.moveToElementEditStart( newRow );
-						} else if ( next ) {
-							next = new CKEDITOR.dom.element( next );
-							resultRange.moveToElementEditStart( next );
-							// Avoid selecting empty block makes the cursor blind.
-							if ( !( resultRange.checkStartOfBlock() &amp;&amp; resultRange.checkEndOfBlock() ) )
-								resultRange.selectNodeContents( next );
-						} else
-							return true;
-
-						resultRange.select( true );
-						return true;
-					}
-				}
-
-				return false;
-			}
-		};
-	}
-
-	CKEDITOR.plugins.add( 'tab', {
+	CKEDITOR.plugins.add( 'floatingspace', {
 		init: function( editor ) {
-			var tabTools = editor.config.enableTabKeyTools !== false,
-				tabSpaces = editor.config.tabSpaces || 0,
-				tabText = '';
-
-			while ( tabSpaces-- )
-				tabText += '\xa0';
-
-			if ( tabText ) {
-				editor.on( 'key', function( ev ) {
-					if ( ev.data.keyCode == 9 ) // TAB
-					{
-						editor.insertHtml( tabText );
-						ev.cancel();
-					}
-				} );
-			}
-
-			if ( tabTools ) {
-				editor.on( 'key', function( ev ) {
-					if ( ev.data.keyCode == 9 &amp;&amp; editor.execCommand( 'selectNextCell' ) || // TAB
-					ev.data.keyCode == ( CKEDITOR.SHIFT + 9 ) &amp;&amp; editor.execCommand( 'selectPreviousCell' ) ) // SHIFT+TAB
-					ev.cancel();
-				} );
-			}
-
-			editor.addCommand( 'blur', CKEDITOR.tools.extend( blurCommand, meta ) );
-			editor.addCommand( 'blurBack', CKEDITOR.tools.extend( blurBackCommand, meta ) );
-			editor.addCommand( 'selectNextCell', selectNextCellCommand() );
-			editor.addCommand( 'selectPreviousCell', selectNextCellCommand( true ) );
+			// Add listener with lower priority than that in themedui creator.
+			// Thereby floatingspace will be created only if themedui wasn't used.
+			editor.on( 'loaded', function() {
+				attach( this );
+			}, null, null, 20 );
 		}
 	} );
+
+	function scrollOffset( side ) {
+		var pageOffset = side == 'left' ? 'pageXOffset' : 'pageYOffset',
+			docScrollOffset = side == 'left' ? 'scrollLeft' : 'scrollTop';
+
+		return ( pageOffset in win.$ ) ?
+				win.$[ pageOffset ]
+			:
+				CKEDITOR.document.$.documentElement[ docScrollOffset ];
+	}
+
+	function attach( editor ) {
+		var config = editor.config,
+
+			// Get the HTML for the predefined spaces.
+			topHtml = editor.fire( 'uiSpace', { space: 'top', html: '' } ).html,
+
+			// Re-positioning of the space.
+			layout = ( function() {
+				// Mode indicates the vertical aligning mode.
+				var mode, editable,
+					spaceRect, editorRect, viewRect, spaceHeight, pageScrollX,
+
+					// Allow minor adjustments of the float space from custom configs.
+					dockedOffsetX = config.floatSpaceDockedOffsetX || 0,
+					dockedOffsetY = config.floatSpaceDockedOffsetY || 0,
+					pinnedOffsetX = config.floatSpacePinnedOffsetX || 0,
+					pinnedOffsetY = config.floatSpacePinnedOffsetY || 0;
+
+				// Update the float space position.
+				function updatePos( pos, prop, val ) {
+					floatSpace.setStyle( prop, pixelate( val ) );
+					floatSpace.setStyle( 'position', pos );
+				}
+
+				// Change the current mode and update float space position accordingly.
+				function changeMode( newMode ) {
+					var editorPos = editable.getDocumentPosition();
+
+					switch ( newMode ) {
+						case 'top':
+							updatePos( 'absolute', 'top', editorPos.y - spaceHeight - dockedOffsetY );
+							break;
+						case 'pin':
+							updatePos( 'fixed', 'top', pinnedOffsetY );
+							break;
+						case 'bottom':
+							updatePos( 'absolute', 'top', editorPos.y + ( editorRect.height || editorRect.bottom - editorRect.top ) + dockedOffsetY );
+							break;
+					}
+
+					mode = newMode;
+				}
+
+				return function( evt ) {
+					// #10112 Do not fail on editable-less editor.
+					if ( !( editable = editor.editable() ) )
+						return;
+
+					// Show up the space on focus gain.
+					evt &amp;&amp; evt.name == 'focus' &amp;&amp; floatSpace.show();
+
+					// Reset the horizontal position for below measurement.
+					floatSpace.removeStyle( 'left' );
+					floatSpace.removeStyle( 'right' );
+
+					// Compute the screen position from the TextRectangle object would
+					// be very simple, even though the &quot;width&quot;/&quot;height&quot; property is not
+					// available for all, it's safe to figure that out from the rest.
+
+					// http://help.dottoro.com/ljgupwlp.php
+					spaceRect = floatSpace.getClientRect();
+					editorRect = editable.getClientRect();
+					viewRect = win.getViewPaneSize();
+					spaceHeight = spaceRect.height;
+					pageScrollX = scrollOffset( 'left' );
+
+					// We initialize it as pin mode.
+					if ( !mode ) {
+						mode = 'pin';
+						changeMode( 'pin' );
+						// Call for a refresh to the actual layout.
+						layout( evt );
+						return;
+					}
+
+					// +------------------------ Viewport -+ \
+					// |                                   |  |-&gt; floatSpaceDockedOffsetY
+					// | ................................. | /
+					// |                                   |
+					// |   +------ Space -+                |
+					// |   |              |                |
+					// |   +--------------+                |
+					// |   +------------------ Editor -+   |
+					// |   |                           |   |
+					//
+					if ( spaceHeight + dockedOffsetY &lt;= editorRect.top )
+						changeMode( 'top' );
+
+					//     +- - - - - - - - -  Editor -+
+					//     |                           |
+					// +------------------------ Viewport -+ \
+					// |   |                           |   |  |-&gt; floatSpacePinnedOffsetY
+					// | ................................. | /
+					// |   +------ Space -+            |   |
+					// |   |              |            |   |
+					// |   +--------------+            |   |
+					// |   |                           |   |
+					// |   +---------------------------+   |
+					// +-----------------------------------+
+					//
+					else if ( spaceHeight + dockedOffsetY &gt; viewRect.height - editorRect.bottom )
+						changeMode( 'pin' );
+
+					//     +- - - - - - - - -  Editor -+
+					//     |                           |
+					// +------------------------ Viewport -+ \
+					// |   |                           |   |  |-&gt; floatSpacePinnedOffsetY
+					// | ................................. | /
+					// |   |                           |   |
+					// |   |                           |   |
+					// |   +---------------------------+   |
+					// |   +------ Space -+                |
+					// |   |              |                |
+					// |   +--------------+                |
+					//
+					else
+						changeMode( 'bottom' );
+
+					var mid = viewRect.width / 2,
+						alignSide =
+								( editorRect.left &gt; 0 &amp;&amp; editorRect.right &lt; viewRect.width &amp;&amp; editorRect.width &gt; spaceRect.width ) ?
+										( editor.config.contentsLangDirection == 'rtl' ? 'right' : 'left' )
+									:
+										( mid - editorRect.left &gt; editorRect.right - mid ? 'left' : 'right' ),
+						offset;
+
+					// (#9769) If viewport width is less than space width,
+					// make sure space never cross the left boundary of the viewport.
+					// In other words: top-left corner of the space is always visible.
+					if ( spaceRect.width &gt; viewRect.width ) {
+						alignSide = 'left';
+						offset = 0;
+					}
+					else {
+						if ( alignSide == 'left' ) {
+							// If the space rect fits into viewport, align it
+							// to the left edge of editor:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |   +------------- Space -+         |
+							// |   |                     |         |
+							// |   +---------------------+         |
+							// |   +------------------ Editor -+   |
+							// |   |                           |   |
+							//
+							if ( editorRect.left &gt; 0 )
+								offset = editorRect.left;
+
+							// If the left part of the editor is cut off by the left
+							// edge of the viewport, stick the space to the viewport:
+							//
+							//       +------------------------ Viewport -+
+							//       |                                   |
+							//       +---------------- Space -+          |
+							//       |                        |          |
+							//       +------------------------+          |
+							//  +----|------------- Editor -+            |
+							//  |    |                      |            |
+							//
+							else
+								offset = 0;
+						}
+						else {
+							// If the space rect fits into viewport, align it
+							// to the right edge of editor:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |         +------------- Space -+   |
+							// |         |                     |   |
+							// |         +---------------------+   |
+							// |   +------------------ Editor -+   |
+							// |   |                           |   |
+							//
+							if ( editorRect.right &lt; viewRect.width )
+								offset = viewRect.width - editorRect.right;
+
+							// If the right part of the editor is cut off by the right
+							// edge of the viewport, stick the space to the viewport:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |             +------------- Space -+
+							// |             |                     |
+							// |             +---------------------+
+							// |                 +-----------------|- Editor -+
+							// |                 |                 |          |
+							//
+							else
+								offset = 0;
+						}
+
+						// (#9769) Finally, stick the space to the opposite side of
+						// the viewport when it's cut off horizontally on the left/right
+						// side like below.
+						//
+						// This trick reveals cut off space in some edge cases and
+						// hence it improves accessibility.
+						//
+						// +------------------------ Viewport -+
+						// |                                   |
+						// |              +--------------------|-- Space -+
+						// |              |                    |          |
+						// |              +--------------------|----------+
+						// |              +------- Editor -+   |
+						// |              |                |   |
+						//
+						//				becomes:
+						//
+						// +------------------------ Viewport -+
+						// |                                   |
+						// |   +----------------------- Space -+
+						// |   |                               |
+						// |   +-------------------------------+
+						// |              +------- Editor -+   |
+						// |              |                |   |
+						//
+						if ( offset + spaceRect.width &gt; viewRect.width ) {
+							alignSide = alignSide == 'left' ? 'right' : 'left';
+							offset = 0;
+						}
+					}
+
+					// Pin mode is fixed, so don't include scroll-x.
+					// (#9903) For mode is &quot;top&quot; or &quot;bottom&quot;, add opposite scroll-x for right-aligned space.
+					var scroll = mode == 'pin' ?
+							0
+						:
+							alignSide == 'left' ? pageScrollX : -pageScrollX;
+
+					floatSpace.setStyle( alignSide, pixelate( ( mode == 'pin' ? pinnedOffsetX : dockedOffsetX ) + offset + scroll ) );
+				};
+			} )();
+
+		if ( topHtml ) {
+			var floatSpace = CKEDITOR.document.getBody().append( CKEDITOR.dom.element.createFromHtml( floatSpaceTpl.output( {
+					content: topHtml,
+					id: editor.id,
+					langDir: editor.lang.dir,
+					langCode: editor.langCode,
+					name: editor.name,
+					style: 'display:none;z-index:' + ( config.baseFloatZIndex - 1 ),
+					topId: editor.ui.spaceId( 'top' ),
+					voiceLabel: editor.lang.editorPanel + ', ' + editor.name
+				} ) ) ),
+
+				// Use event buffers to reduce CPU load when tons of events are fired.
+				changeBuffer = CKEDITOR.tools.eventsBuffer( 500, layout ),
+				uiBuffer = CKEDITOR.tools.eventsBuffer( 100, layout );
+
+			// There's no need for the floatSpace to be selectable.
+			floatSpace.unselectable();
+
+			// Prevent clicking on non-buttons area of the space from blurring editor.
+			floatSpace.on( 'mousedown', function( evt ) {
+				evt = evt.data;
+				if ( !evt.getTarget().hasAscendant( 'a', 1 ) )
+					evt.preventDefault();
+			} );
+
+			editor.on( 'focus', function( evt ) {
+				layout( evt );
+				editor.on( 'change', changeBuffer.input );
+				win.on( 'scroll', uiBuffer.input );
+				win.on( 'resize', uiBuffer.input );
+			} );
+
+			editor.on( 'blur', function() {
+				floatSpace.hide();
+				editor.removeListener( 'change', changeBuffer.input );
+				win.removeListener( 'scroll', uiBuffer.input );
+				win.removeListener( 'resize', uiBuffer.input );
+			} );
+
+			editor.on( 'destroy', function() {
+				win.removeListener( 'scroll', uiBuffer.input );
+				win.removeListener( 'resize', uiBuffer.input );
+				floatSpace.clearCustomData();
+				floatSpace.remove();
+			} );
+
+			// Handle initial focus.
+			if ( editor.focusManager.hasFocus )
+				floatSpace.show();
+
+			// Register this UI space to the focus manager.
+			editor.focusManager.add( floatSpace, 1 );
+		}
+	}
 } )();
 
-<span id='CKEDITOR-dom-element-method-focusNext'>/**
-</span> * Moves the UI focus to the element following this element in the tabindex order.
+<span id='CKEDITOR-config-cfg-floatSpaceDockedOffsetX'>/**
+</span> * Along with {@link #floatSpaceDockedOffsetY} it defines the
+ * amount of offset (in pixels) between float space and the editable left/right
+ * boundaries when space element is docked at either side of the editable.
  *
- *		var element = CKEDITOR.document.getById( 'example' );
- *		element.focusNext();
+ *		config.floatSpaceDockedOffsetX = 10;
  *
- * @param {Boolean} [ignoreChildren=false]
- * @param {Number} [indexToUse]
- * @member CKEDITOR.dom.element
- */
-CKEDITOR.dom.element.prototype.focusNext = function( ignoreChildren, indexToUse ) {
-	var $ = this.$,
-		curTabIndex = ( indexToUse === undefined ? this.getTabIndex() : indexToUse ),
-		passedCurrent, enteredCurrent, elected, electedTabIndex, element, elementTabIndex;
-
-	if ( curTabIndex &lt;= 0 ) {
-		// If this element has tabindex &lt;= 0 then we must simply look for any
-		// element following it containing tabindex=0.
-
-		element = this.getNextSourceNode( ignoreChildren, CKEDITOR.NODE_ELEMENT );
-
-		while ( element ) {
-			if ( element.isVisible() &amp;&amp; element.getTabIndex() === 0 ) {
-				elected = element;
-				break;
-			}
-
-			element = element.getNextSourceNode( false, CKEDITOR.NODE_ELEMENT );
-		}
-	} else {
-		// If this element has tabindex &gt; 0 then we must look for:
-		//		1. An element following this element with the same tabindex.
-		//		2. The first element in source other with the lowest tabindex
-		//		   that is higher than this element tabindex.
-		//		3. The first element with tabindex=0.
-
-		element = this.getDocument().getBody().getFirst();
-
-		while ( ( element = element.getNextSourceNode( false, CKEDITOR.NODE_ELEMENT ) ) ) {
-			if ( !passedCurrent ) {
-				if ( !enteredCurrent &amp;&amp; element.equals( this ) ) {
-					enteredCurrent = true;
-
-					// Ignore this element, if required.
-					if ( ignoreChildren ) {
-						if ( !( element = element.getNextSourceNode( true, CKEDITOR.NODE_ELEMENT ) ) )
-							break;
-						passedCurrent = 1;
-					}
-				} else if ( enteredCurrent &amp;&amp; !this.contains( element ) )
-					passedCurrent = 1;
-			}
-
-			if ( !element.isVisible() || ( elementTabIndex = element.getTabIndex() ) &lt; 0 )
-				continue;
-
-			if ( passedCurrent &amp;&amp; elementTabIndex == curTabIndex ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &gt; curTabIndex &amp;&amp; ( !elected || !electedTabIndex || elementTabIndex &lt; electedTabIndex ) ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			} else if ( !elected &amp;&amp; elementTabIndex === 0 ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		}
-	}
-
-	if ( elected )
-		elected.focus();
-};
-
-<span id='CKEDITOR-dom-element-method-focusPrevious'>/**
-</span> * Moves the UI focus to the element before this element in the tabindex order.
- *
- *		var element = CKEDITOR.document.getById( 'example' );
- *		element.focusPrevious();
- *
- * @param {Boolean} [ignoreChildren=false]
- * @param {Number} [indexToUse]
- * @member CKEDITOR.dom.element
- */
-CKEDITOR.dom.element.prototype.focusPrevious = function( ignoreChildren, indexToUse ) {
-	var $ = this.$,
-		curTabIndex = ( indexToUse === undefined ? this.getTabIndex() : indexToUse ),
-		passedCurrent, enteredCurrent, elected,
-		electedTabIndex = 0,
-		elementTabIndex;
-
-	var element = this.getDocument().getBody().getLast();
-
-	while ( ( element = element.getPreviousSourceNode( false, CKEDITOR.NODE_ELEMENT ) ) ) {
-		if ( !passedCurrent ) {
-			if ( !enteredCurrent &amp;&amp; element.equals( this ) ) {
-				enteredCurrent = true;
-
-				// Ignore this element, if required.
-				if ( ignoreChildren ) {
-					if ( !( element = element.getPreviousSourceNode( true, CKEDITOR.NODE_ELEMENT ) ) )
-						break;
-					passedCurrent = 1;
-				}
-			} else if ( enteredCurrent &amp;&amp; !this.contains( element ) )
-				passedCurrent = 1;
-		}
-
-		if ( !element.isVisible() || ( elementTabIndex = element.getTabIndex() ) &lt; 0 )
-			continue;
-
-		if ( curTabIndex &lt;= 0 ) {
-			// If this element has tabindex &lt;= 0 then we must look for:
-			//		1. An element before this one containing tabindex=0.
-			//		2. The last element with the highest tabindex.
-
-			if ( passedCurrent &amp;&amp; elementTabIndex === 0 ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &gt; electedTabIndex ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		} else {
-			// If this element has tabindex &gt; 0 we must look for:
-			//		1. An element preceeding this one, with the same tabindex.
-			//		2. The last element in source other with the highest tabindex
-			//		   that is lower than this element tabindex.
-
-			if ( passedCurrent &amp;&amp; elementTabIndex == curTabIndex ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &lt; curTabIndex &amp;&amp; ( !elected || elementTabIndex &gt; electedTabIndex ) ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		}
-	}
-
-	if ( elected )
-		elected.focus();
-};
-
-<span id='CKEDITOR-config-cfg-tabSpaces'>/**
-</span> * Intructs the editor to add a number of spaces (`&amp;nbsp;`) to the text when
- * hitting the *TAB* key. If set to zero, the *TAB* key will be used to move the
- * cursor focus to the next element in the page, out of the editor focus.
- *
- *		config.tabSpaces = 4;
- *
- * @cfg {Number} [tabSpaces=0]
+ * @cfg {Number} [floatSpaceDockedOffsetX=0]
  * @member CKEDITOR.config
  */
 
-<span id='CKEDITOR-config-cfg-enableTabKeyTools'>/**
-</span> * Allow context-sensitive tab key behaviors, including the following scenarios:
+<span id='CKEDITOR-config-cfg-floatSpaceDockedOffsetY'>/**
+</span> * Along with {@link #floatSpaceDockedOffsetX} it defines the
+ * amount of offset (in pixels) between float space and the editable top/bottom
+ * boundaries when space element is docked at either side of the editable.
  *
- * When selection is anchored inside **table cells**:
+ *		config.floatSpaceDockedOffsetY = 10;
  *
- * * If *TAB* is pressed, select the contents of the &quot;next&quot; cell. If in the last
- *     cell in the table, add a new row to it and focus its first cell.
- * * If *SHIFT+TAB* is pressed, select the contents of the &quot;previous&quot; cell.
- *     Do nothing when it's in the first cell.
- *
- * Example:
- *
- *		config.enableTabKeyTools = false;
- *
- * @cfg {Boolean} [enableTabKeyTools=true]
+ * @cfg {Number} [floatSpaceDockedOffsetY=0]
  * @member CKEDITOR.config
  */
 
-// If the TAB key is not supposed to be enabled for navigation, the following
-// settings could be used alternatively:
-// config.keystrokes.push(
-//	[ CKEDITOR.ALT + 38 /*Arrow Up*/, 'selectPreviousCell' ],
-//	[ CKEDITOR.ALT + 40 /*Arrow Down*/, 'selectNextCell' ]
-// );
+<span id='CKEDITOR-config-cfg-floatSpacePinnedOffsetX'>/**
+</span> * Along with {@link #floatSpacePinnedOffsetY} it defines the
+ * amount of offset (in pixels) between float space and the view port boundaries
+ * when space element is pinned.
+ *
+ *		config.floatSpacePinnedOffsetX = 20;
+ *
+ * @cfg {Number} [floatSpacePinnedOffsetX=0]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-floatSpacePinnedOffsetY'>/**
+</span> * Along with {@link #floatSpacePinnedOffsetX} it defines the
+ * amount of offset (in pixels) between float space and the view port boundaries
+ * when space element is pinned.
+ *
+ *		config.floatSpacePinnedOffsetY = 20;
+ *
+ * @cfg {Number} [floatSpacePinnedOffsetY=0]
+ * @member CKEDITOR.config
+ */
 </pre>
 </body>
 </html>

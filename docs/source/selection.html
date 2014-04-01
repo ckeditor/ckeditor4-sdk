@@ -270,7 +270,8 @@
 
 		editor.editable().append( hiddenEl );
 
-		var sel = editor.getSelection(),
+			// Always use real selection to avoid overriding locked one (http://dev.ckeditor.com/ticket/11104#comment:13).
+		var sel = editor.getSelection( 1 ),
 			range = editor.createRange(),
 			// Cancel selectionchange fired by selectRanges - prevent from firing selectionChange.
 			listener = sel.root.on( 'selectionchange', function( evt ) {
@@ -430,6 +431,95 @@
 		}
 	}
 
+	// Extract only editable part or ranges.
+	// Note: this function modifies ranges list!
+	// @param {CKEDITOR.dom.rangeList} ranges
+	function extractEditableRanges( ranges ) {
+		for ( var i = 0; i &lt; ranges.length; i++ ) {
+			var range = ranges[ i ];
+
+			// Drop range spans inside one ready-only node.
+			var parent = range.getCommonAncestor();
+			if ( parent.isReadOnly() )
+				ranges.splice( i, 1 );
+
+			if ( range.collapsed )
+				continue;
+
+			// Range may start inside a non-editable element,
+			// replace the range start after it.
+			if ( range.startContainer.isReadOnly() ) {
+				var current = range.startContainer,
+					isElement;
+
+				while ( current ) {
+					isElement = current.type == CKEDITOR.NODE_ELEMENT;
+
+					if ( ( isElement &amp;&amp; current.is( 'body' ) ) || !current.isReadOnly() )
+						break;
+
+					if ( isElement &amp;&amp; current.getAttribute( 'contentEditable' ) == 'false' )
+						range.setStartAfter( current );
+
+					current = current.getParent();
+				}
+			}
+
+			var startContainer = range.startContainer,
+				endContainer = range.endContainer,
+				startOffset = range.startOffset,
+				endOffset = range.endOffset,
+				walkerRange = range.clone();
+
+			// Enlarge range start/end with text node to avoid walker
+			// being DOM destructive, it doesn't interfere our checking
+			// of elements below as well.
+			if ( startContainer &amp;&amp; startContainer.type == CKEDITOR.NODE_TEXT ) {
+				if ( startOffset &gt;= startContainer.getLength() )
+					walkerRange.setStartAfter( startContainer );
+				else
+					walkerRange.setStartBefore( startContainer );
+			}
+
+			if ( endContainer &amp;&amp; endContainer.type == CKEDITOR.NODE_TEXT ) {
+				if ( !endOffset )
+					walkerRange.setEndBefore( endContainer );
+				else
+					walkerRange.setEndAfter( endContainer );
+			}
+
+			// Looking for non-editable element inside the range.
+			var walker = new CKEDITOR.dom.walker( walkerRange );
+			walker.evaluator = function( node ) {
+				if ( node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.isReadOnly() ) {
+					var newRange = range.clone();
+					range.setEndBefore( node );
+
+					// Drop collapsed range around read-only elements,
+					// it make sure the range list empty when selecting
+					// only non-editable elements.
+					if ( range.collapsed )
+						ranges.splice( i--, 1 );
+
+					// Avoid creating invalid range.
+					if ( !( node.getPosition( walkerRange.endContainer ) &amp; CKEDITOR.POSITION_CONTAINS ) ) {
+						newRange.setStartAfter( node );
+						if ( !newRange.collapsed )
+							ranges.splice( i + 1, 0, newRange );
+					}
+
+					return true;
+				}
+
+				return false;
+			};
+
+			walker.next();
+		}
+
+		return ranges;
+	}
+
 	// Setup all editor instances for the necessary selection hooks.
 	CKEDITOR.on( 'instanceCreated', function( ev ) {
 		var editor = ev.editor;
@@ -514,7 +604,7 @@
 				} );
 			}
 
-			// The following selection related fixes applies to only framed editable.
+			// The following selection-related fixes only apply to classic (`iframe`-based) editable.
 			if ( CKEDITOR.env.ie &amp;&amp; !isInline ) {
 				var scroll;
 				editable.attachListener( editable, 'mousedown', function( evt ) {
@@ -650,7 +740,7 @@
 				editor.selectionChange( 1 );
 			} );
 
-			// #9699: On Webkit&amp;Gecko in inline editor and on Opera in framed editor we have to check selection
+			// #9699: On Webkit&amp;Gecko in inline editor and on Opera in classic (`iframe`-based) editor we have to check selection
 			// when it was changed by dragging and releasing mouse button outside editable. Dragging (mousedown)
 			// has to be initialized in editable, but for mouseup we listen on document element.
 			// On Opera, listening on document element, helps even if mouse button is released outside iframe.
@@ -1411,99 +1501,18 @@
 				};
 
 			return function( onlyEditables ) {
-				var cache = this._.cache;
-				if ( cache.ranges &amp;&amp; !onlyEditables )
-					return cache.ranges;
-				else if ( !cache.ranges )
-					cache.ranges = new CKEDITOR.dom.rangeList( func.call( this ) );
+				var cache = this._.cache,
+					ranges = cache.ranges;
+
+				if ( !ranges )
+					cache.ranges = ranges = new CKEDITOR.dom.rangeList( func.call( this ) );
+
+				if ( !onlyEditables )
+					return ranges;
 
 				// Split range into multiple by read-only nodes.
-				if ( onlyEditables ) {
-					var ranges = cache.ranges;
-					for ( var i = 0; i &lt; ranges.length; i++ ) {
-						var range = ranges[ i ];
-
-						// Drop range spans inside one ready-only node.
-						var parent = range.getCommonAncestor();
-						if ( parent.isReadOnly() )
-							ranges.splice( i, 1 );
-
-						if ( range.collapsed )
-							continue;
-
-						// Range may start inside a non-editable element,
-						// replace the range start after it.
-						if ( range.startContainer.isReadOnly() ) {
-							var current = range.startContainer,
-								isElement;
-
-							while ( current ) {
-								isElement = current.type == CKEDITOR.NODE_ELEMENT;
-
-								if ( ( isElement &amp;&amp; current.is( 'body' ) ) || !current.isReadOnly() )
-									break;
-
-								if ( isElement &amp;&amp; current.getAttribute( 'contentEditable' ) == 'false' )
-									range.setStartAfter( current );
-
-								current = current.getParent();
-							}
-						}
-
-						var startContainer = range.startContainer,
-							endContainer = range.endContainer,
-							startOffset = range.startOffset,
-							endOffset = range.endOffset,
-							walkerRange = range.clone();
-
-						// Enlarge range start/end with text node to avoid walker
-						// being DOM destructive, it doesn't interfere our checking
-						// of elements below as well.
-						if ( startContainer &amp;&amp; startContainer.type == CKEDITOR.NODE_TEXT ) {
-							if ( startOffset &gt;= startContainer.getLength() )
-								walkerRange.setStartAfter( startContainer );
-							else
-								walkerRange.setStartBefore( startContainer );
-						}
-
-						if ( endContainer &amp;&amp; endContainer.type == CKEDITOR.NODE_TEXT ) {
-							if ( !endOffset )
-								walkerRange.setEndBefore( endContainer );
-							else
-								walkerRange.setEndAfter( endContainer );
-						}
-
-						// Looking for non-editable element inside the range.
-						var walker = new CKEDITOR.dom.walker( walkerRange );
-						walker.evaluator = function( node ) {
-							if ( node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.isReadOnly() ) {
-								var newRange = range.clone();
-								range.setEndBefore( node );
-
-								// Drop collapsed range around read-only elements,
-								// it make sure the range list empty when selecting
-								// only non-editable elements.
-								if ( range.collapsed )
-									ranges.splice( i--, 1 );
-
-								// Avoid creating invalid range.
-								if ( !( node.getPosition( walkerRange.endContainer ) &amp; CKEDITOR.POSITION_CONTAINS ) ) {
-									newRange.setStartAfter( node );
-									if ( !newRange.collapsed )
-										ranges.splice( i + 1, 0, newRange );
-								}
-
-								return true;
-							}
-
-							return false;
-						};
-
-						walker.next();
-					}
-				}
-
-				return cache.ranges;
+				// Clone ranges array to avoid changing cached ranges (#11493).
+				return extractEditableRanges( new CKEDITOR.dom.rangeList( ranges.slice() ) );
 			};
 		} )(),
 
@@ -2159,6 +2168,10 @@
 </span>		 * Remove all the selection ranges from the document.
 		 */
 		removeAllRanges: function() {
+			// Don't clear selection outside this selection's root (#11500).
+			if ( this.getType() == CKEDITOR.SELECTION_NONE )
+				return;
+
 			var nativ = this.getNative();
 
 			try { nativ &amp;&amp; nativ[ isMSSelection ? 'empty' : 'removeAllRanges' ](); }

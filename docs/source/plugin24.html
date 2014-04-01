@@ -21,308 +21,236 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Handles the indentation of block elements.
+</span> * @fileOverview The &quot;elementspath&quot; plugin. It shows all elements in the DOM
+ *		parent tree relative to the current selection in the editing area.
  */
 
 ( function() {
-	'use strict';
+	var commands = {
+		toolbarFocus: {
+			editorFocus: false,
+			readOnly: 1,
+			exec: function( editor ) {
+				var idBase = editor._.elementsPath.idBase;
+				var element = CKEDITOR.document.getById( idBase + '0' );
 
-	var $listItem = CKEDITOR.dtd.$listItem,
-		$list = CKEDITOR.dtd.$list,
-		TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
-		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
-
-	CKEDITOR.plugins.add( 'indentblock', {
-		requires: 'indent',
-		init: function( editor ) {
-			var globalHelpers = CKEDITOR.plugins.indent,
-				classes = editor.config.indentClasses;
-
-			// Register commands.
-			globalHelpers.registerCommands( editor, {
-				indentblock: new commandDefinition( editor, 'indentblock', true ),
-				outdentblock: new commandDefinition( editor, 'outdentblock' )
-			} );
-
-			function commandDefinition( editor, name ) {
-				globalHelpers.specificDefinition.apply( this, arguments );
-
-				this.allowedContent = {
-					'div h1 h2 h3 h4 h5 h6 ol p pre ul': {
-						// Do not add elements, but only text-align style if element is validated by other rule.
-						propertiesOnly: true,
-						styles: !classes ? 'margin-left,margin-right' : null,
-						classes: classes || null
-					}
-				};
-
-				if ( this.enterBr )
-					this.allowedContent.div = true;
-
-				this.requiredContent = ( this.enterBr ? 'div' : 'p' ) +
-					( classes ?
-							'(' + classes.join( ',' ) + ')'
-						:
-							'{margin-left}' );
-
-				this.jobs = {
-					'20': {
-						refresh: function( editor, path ) {
-							var firstBlock = path.block || path.blockLimit;
-
-							// Switch context from list item to list
-							// because indentblock can indent entire list
-							// but not a single list element.
-
-							if ( firstBlock.is( $listItem ) )
-								firstBlock = firstBlock.getParent();
-
-							// If firstBlock isn't list item, but still there's
-							// some ascendant (i.e. &lt;ul&gt;), then this is not
-							// a job for indentblock, e.g.:
-							//
-							//		&lt;ul&gt;
-							//			&lt;li&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/li&gt;
-							//		&lt;/ul&gt;
-
-							else if ( firstBlock.getAscendant( $listItem ) )
-								return TRISTATE_DISABLED;
-
-							//	[-] Context in the path or ENTER_BR
-							//
-							//		Don't try to indent if the element is out of
-							//		this plugin's scope. This assertion is omitted
-							//		if ENTER_BR is in use since there may be no block
-							//		in the path.
-
-							if ( !this.enterBr &amp;&amp; !this.getContext( path ) )
-								return TRISTATE_DISABLED;
-
-							else if ( classes ) {
-
-								//	[+] Context in the path or ENTER_BR
-								//	[+] IndentClasses
-								//
-								//		If there are indentation classes, check if reached
-								//		the highest level of indentation. If so, disable
-								//		the command.
-
-								if ( indentClassLeft.call( this, firstBlock, classes ) )
-									return TRISTATE_OFF;
-								else
-									return TRISTATE_DISABLED;
-							} else {
-
-								//	[+] Context in the path or ENTER_BR
-								//	[-] IndentClasses
-								//	[+] Indenting
-								//
-								//		No indent-level limitations due to indent classes.
-								//		Indent-like command can always be executed.
-
-								if ( this.isIndent )
-									return TRISTATE_OFF;
-
-								//	[+] Context in the path or ENTER_BR
-								//	[-] IndentClasses
-								//	[-] Indenting
-								//	[-] Block in the path
-								//
-								//		No block in path. There's no element to apply indentation
-								//		so disable the command.
-
-								else if ( !firstBlock )
-									return TRISTATE_DISABLED;
-
-								//	[+] Context in the path or ENTER_BR
-								//	[-] IndentClasses
-								//	[-] Indenting
-								//	[+] Block in path.
-								//
-								//		Not using indentClasses but there is firstBlock.
-								//		We can calculate current indentation level and
-								//		try to increase/decrease it.
-
-								else {
-									return CKEDITOR[
-										( getIndent( firstBlock ) || 0 ) &lt;= 0 ?
-												'TRISTATE_DISABLED'
-											:
-												'TRISTATE_OFF' ];
-								}
-							}
-						},
-
-						exec: function( editor ) {
-							var selection = editor.getSelection(),
-								range = selection &amp;&amp; selection.getRanges()[ 0 ],
-								nearestListBlock;
-
-							// If there's some list in the path, then it will be
-							// a full-list indent by increasing or decreasing margin property.
-							if ( ( nearestListBlock = editor.elementPath().contains( $list ) ) )
-								indentElement.call( this, nearestListBlock, classes );
-
-							// If no list in the path, use iterator to indent all the possible
-							// paragraphs in the range, creating them if necessary.
-							else {
-								var iterator = range.createIterator(),
-									enterMode = editor.config.enterMode,
-									block;
-
-								iterator.enforceRealBlocks = true;
-								iterator.enlargeBr = enterMode != CKEDITOR.ENTER_BR;
-
-								while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) ) ) {
-									if ( !block.isReadOnly() )
-										indentElement.call( this, block, classes );
-								}
-							}
-
-							return true;
-						}
-					}
-				};
+				// Make the first button focus accessible for IE. (#3417)
+				// Adobe AIR instead need while of delay.
+				element &amp;&amp; element.focus( CKEDITOR.env.ie || CKEDITOR.env.air );
 			}
+		}
+	};
 
-			CKEDITOR.tools.extend( commandDefinition.prototype, globalHelpers.specificDefinition.prototype, {
-				// Elements that, if in an elementpath, will be handled by this
-				// command. They restrict the scope of the plugin.
-				context: { div: 1, dl: 1, h1: 1, h2: 1, h3: 1, h4: 1, h5: 1, h6: 1, ul: 1, ol: 1, p: 1, pre: 1, table: 1 },
+	var emptyHtml = '&lt;span class=&quot;cke_path_empty&quot;&gt;&amp;nbsp;&lt;/span&gt;';
 
-				// A regex built on config#indentClasses to detect whether an
-				// element has some indentClass or not.
-				classNameRegex: classes ?
-					new RegExp( '(?:^|\\s+)(' + classes.join( '|' ) + ')(?=$|\\s)' )
-						:
-					null
+	var extra = '';
+
+	// Some browsers don't cancel key events in the keydown but in the
+	// keypress.
+	// TODO: Check if really needed for Gecko+Mac.
+	if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
+		extra += ' onkeypress=&quot;return false;&quot;';
+
+	// With Firefox, we need to force the button to redraw, otherwise it
+	// will remain in the focus state.
+	if ( CKEDITOR.env.gecko )
+		extra += ' onblur=&quot;this.style.cssText = this.style.cssText;&quot;';
+
+	var pathItemTpl = CKEDITOR.addTemplate( 'pathItem', '&lt;a' +
+		' id=&quot;{id}&quot;' +
+		' href=&quot;{jsTitle}&quot;' +
+		' tabindex=&quot;-1&quot;' +
+		' class=&quot;cke_path_item&quot;' +
+		' title=&quot;{label}&quot;' +
+		( ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &lt; 10900 ) ? ' onfocus=&quot;event.preventBubble();&quot;' : '' ) +
+		extra +
+		' hidefocus=&quot;true&quot; ' +
+		' onkeydown=&quot;return CKEDITOR.tools.callFunction({keyDownFn},{index}, event );&quot;' +
+		' onclick=&quot;CKEDITOR.tools.callFunction({clickFn},{index}); return false;&quot;' +
+		' role=&quot;button&quot; aria-label=&quot;{label}&quot;&gt;' +
+		'{text}' +
+		'&lt;/a&gt;' );
+
+	CKEDITOR.plugins.add( 'elementspath', {
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			editor._.elementsPath = {
+				idBase: 'cke_elementspath_' + CKEDITOR.tools.getNextNumber() + '_',
+				filters: []
+			};
+
+			editor.on( 'uiSpace', function( event ) {
+				if ( event.data.space == 'bottom' )
+					initElementsPath( editor, event.data );
 			} );
 		}
 	} );
 
-	// Generic indentation procedure for indentation of any element
-	// either with margin property or config#indentClass.
-	function indentElement( element, classes, dir ) {
-		if ( element.getCustomData( 'indent_processed' ) )
-			return;
+	function initElementsPath( editor, bottomSpaceData ) {
+		var spaceId = editor.ui.spaceId( 'path' ),
+			spaceElement,
+			getSpaceElement = function() {
+				if ( !spaceElement )
+					spaceElement = CKEDITOR.document.getById( spaceId );
+				return spaceElement;
+			},
+			elementsPath = editor._.elementsPath,
+			idBase = elementsPath.idBase;
 
-		var editor = this.editor,
-			isIndent = this.isIndent;
+		bottomSpaceData.html += '&lt;span id=&quot;' + spaceId + '_label&quot; class=&quot;cke_voice_label&quot;&gt;' + editor.lang.elementspath.eleLabel + '&lt;/span&gt;' +
+			'&lt;span id=&quot;' + spaceId + '&quot; class=&quot;cke_path&quot; role=&quot;group&quot; aria-labelledby=&quot;' + spaceId + '_label&quot;&gt;' + emptyHtml + '&lt;/span&gt;';
 
-		if ( classes ) {
-			// Transform current class f to indent step index.
-			var indentClass = element.$.className.match( this.classNameRegex ),
-				indentStep = 0;
+		// Register the ui element to the focus manager.
+		editor.on( 'uiReady', function() {
+			var element = editor.ui.space( 'path' );
+			element &amp;&amp; editor.focusManager.add( element, 1 );
+		} );
 
-			if ( indentClass ) {
-				indentClass = indentClass[ 1 ];
-				indentStep = CKEDITOR.tools.indexOf( classes, indentClass ) + 1;
-			}
+		function onClick( elementIndex ) {
+			var element = elementsPath.list[ elementIndex ];
+			if ( element.equals( editor.editable() ) || element.getAttribute( 'contenteditable' ) == 'true' ) {
+				var range = editor.createRange();
+				range.selectNodeContents( element );
+				range.select();
+			} else
+				editor.getSelection().selectElement( element );
 
-			// Operate on indent step index, transform indent step index
-			// back to class name.
-			if ( ( indentStep += isIndent ? 1 : -1 ) &lt; 0 )
-				return;
-
-			indentStep = Math.min( indentStep, classes.length );
-			indentStep = Math.max( indentStep, 0 );
-			element.$.className = CKEDITOR.tools.ltrim( element.$.className.replace( this.classNameRegex, '' ) );
-
-			if ( indentStep &gt; 0 )
-				element.addClass( classes[ indentStep - 1 ] );
-		} else {
-			var indentCssProperty = getIndentCss( element, dir ),
-				currentOffset = parseInt( element.getStyle( indentCssProperty ), 10 ),
-				indentOffset = editor.config.indentOffset || 40;
-
-			if ( isNaN( currentOffset ) )
-				currentOffset = 0;
-
-			currentOffset += ( isIndent ? 1 : -1 ) * indentOffset;
-
-			if ( currentOffset &lt; 0 )
-				return;
-
-			currentOffset = Math.max( currentOffset, 0 );
-			currentOffset = Math.ceil( currentOffset / indentOffset ) * indentOffset;
-
-			element.setStyle( indentCssProperty, currentOffset ?
-					currentOffset + ( editor.config.indentUnit || 'px' )
-				:
-					'' );
-
-			if ( element.getAttribute( 'style' ) === '' )
-				element.removeAttribute( 'style' );
+			// It is important to focus() *after* the above selection
+			// manipulation, otherwise Firefox will have troubles. #10119
+			editor.focus();
 		}
 
-		CKEDITOR.dom.element.setMarker( this.database, element, 'indent_processed', 1 );
+		elementsPath.onClick = onClick;
 
-		return;
-	}
+		var onClickHanlder = CKEDITOR.tools.addFunction( onClick ),
+			onKeyDownHandler = CKEDITOR.tools.addFunction( function( elementIndex, ev ) {
+				var idBase = elementsPath.idBase,
+					element;
 
-	// Method that checks if current indentation level for an element
-	// reached the limit determined by config#indentClasses.
-	function indentClassLeft( node, classes ) {
-		var indentClass = node.$.className.match( this.classNameRegex ),
-			isIndent = this.isIndent;
+				ev = new CKEDITOR.dom.event( ev );
 
-		// If node has one of the indentClasses:
-		//	* If it holds the topmost indentClass, then
-		//	  no more classes have left.
-		//	* If it holds any other indentClass, it can use the next one
-		//	  or the previous one.
-		//	* Outdent is always possible. We can remove indentClass.
-		if ( indentClass )
-			return isIndent ? indentClass[ 1 ] != classes.slice( -1 ) : true;
+				var rtl = editor.lang.dir == 'rtl';
+				switch ( ev.getKeystroke() ) {
+					case rtl ? 39 : 37: // LEFT-ARROW
+					case 9: // TAB
+						element = CKEDITOR.document.getById( idBase + ( elementIndex + 1 ) );
+						if ( !element )
+							element = CKEDITOR.document.getById( idBase + '0' );
+						element.focus();
+						return false;
 
-		// If node has no class which belongs to indentClasses,
-		// then it is at 0-level. It can be indented but not outdented.
-		else
-			return isIndent;
-	}
+					case rtl ? 37 : 39: // RIGHT-ARROW
+					case CKEDITOR.SHIFT + 9: // SHIFT + TAB
+						element = CKEDITOR.document.getById( idBase + ( elementIndex - 1 ) );
+						if ( !element )
+							element = CKEDITOR.document.getById( idBase + ( elementsPath.list.length - 1 ) );
+						element.focus();
+						return false;
 
-	// Determines indent CSS property for an element according to
-	// what is the direction of such element. It can be either `margin-left`
-	// or `margin-right`.
-	function getIndentCss( element, dir ) {
-		return ( dir || element.getComputedStyle( 'direction' ) ) == 'ltr' ? 'margin-left' : 'margin-right';
-	}
+					case 27: // ESC
+						editor.focus();
+						return false;
 
-	// Return the numerical indent value of margin-left|right of an element,
-	// considering element's direction. If element has no margin specified,
-	// NaN is returned.
-	function getIndent( element ) {
-		return parseInt( element.getStyle( getIndentCss( element ) ), 10 );
+					case 13: // ENTER	// Opera
+					case 32: // SPACE
+						onClick( elementIndex );
+						return false;
+				}
+				return true;
+			} );
+
+		editor.on( 'selectionChange', function( ev ) {
+			var env = CKEDITOR.env,
+				editable = editor.editable(),
+				selection = ev.data.selection,
+				html = [],
+				elementsList = elementsPath.list = [],
+				namesList = [],
+				filters = elementsPath.filters,
+				isContentEditable = true,
+
+				// Use elementPath to consider children of editable only (#11124).
+				elementsChain = editor.elementPath().elements,
+				name;
+
+			// Starts iteration from body element, skipping html.
+			for ( var j = elementsChain.length; j--; ) {
+				var element = elementsChain[ j ],
+					ignore = 0;
+
+				if ( element.data( 'cke-display-name' ) )
+					name = element.data( 'cke-display-name' );
+				else if ( element.data( 'cke-real-element-type' ) )
+					name = element.data( 'cke-real-element-type' );
+				else
+					name = element.getName();
+
+				isContentEditable = element.hasAttribute( 'contenteditable' ) ?
+					element.getAttribute( 'contenteditable' ) == 'true' : isContentEditable;
+
+				// If elem is non-contenteditable, and it's not specifying contenteditable
+				// attribute - then elem should be ignored.
+				if ( !isContentEditable &amp;&amp; !element.hasAttribute( 'contenteditable' ) )
+					ignore = 1;
+
+				for ( var i = 0; i &lt; filters.length; i++ ) {
+					var ret = filters[ i ]( element, name );
+					if ( ret === false ) {
+						ignore = 1;
+						break;
+					}
+					name = ret || name;
+				}
+
+				if ( !ignore ) {
+					elementsList.unshift( element );
+					namesList.unshift( name );
+				}
+			}
+
+			for ( var iterationLimit = elementsList.length, index = 0; index &lt; iterationLimit; index++ ) {
+				name = namesList[ index ];
+				var label = editor.lang.elementspath.eleTitle.replace( /%1/, name ),
+					item = pathItemTpl.output( {
+						id: idBase + index,
+						label: label,
+						text: name,
+						jsTitle: 'javascript:void(\'' + name + '\')',
+						index: index,
+						keyDownFn: onKeyDownHandler,
+						clickFn: onClickHanlder
+					} );
+
+				html.unshift( item );
+			}
+
+			var space = getSpaceElement();
+			space.setHtml( html.join( '' ) + emptyHtml );
+			editor.fire( 'elementsPathUpdate', { space: space } );
+		} );
+
+		function empty() {
+			spaceElement &amp;&amp; spaceElement.setHtml( emptyHtml );
+			delete elementsPath.list;
+		}
+
+		editor.on( 'readOnly', empty );
+		editor.on( 'contentDomUnload', empty );
+
+		editor.addCommand( 'elementsPathFocus', commands.toolbarFocus );
+		editor.setKeystroke( CKEDITOR.ALT + 122 /*F11*/, 'elementsPathFocus' );
 	}
 } )();
 
-<span id='CKEDITOR-config-cfg-indentClasses'>/**
-</span> * A list of classes to use for indenting the contents. If set to `null`, no classes will be used
- * and instead the {@link #indentUnit} and {@link #indentOffset} properties will be used.
+<span id='CKEDITOR-editor-event-elementsPathUpdate'>/**
+</span> * Fired when the contents of the elementsPath are changed.
  *
- *		// Use the 'Indent1', 'Indent2', 'Indent3' classes.
- *		config.indentClasses = ['Indent1', 'Indent2', 'Indent3'];
- *
- * @cfg {Array} [indentClasses=null]
- * @member CKEDITOR.config
+ * @event elementsPathUpdate
+ * @member CKEDITOR.editor
+ * @param {CKEDITOR.editor} editor This editor instance.
+ * @param data
+ * @param {CKEDITOR.dom.element} data.space The elementsPath container.
  */
-
-<span id='CKEDITOR-config-cfg-indentOffset'>/**
-</span> * The size in {@link CKEDITOR.config#indentUnit indentation units} of each indentation step.
- *
- *		config.indentOffset = 4;
- *
- * @cfg {Number} [indentOffset=40]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-indentUnit'>/**
-</span> * The unit used for {@link CKEDITOR.config#indentOffset indentation offset}.
- *
- *		config.indentUnit = 'em';
- *
- * @cfg {String} [indentUnit='px']
- * @member CKEDITOR.config
- */</pre>
+</pre>
 </body>
 </html>

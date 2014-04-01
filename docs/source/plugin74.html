@@ -20,92 +20,175 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
+<span id='global-property-'>/**
+</span> * @fileOverview The &quot;show border&quot; plugin. The command display visible outline
+ * border line around all table elements if table doesn't have a none-zero 'border' attribute specified.
+ */
+
 ( function() {
-	CKEDITOR.plugins.add( 'templates', {
-		requires: 'dialog',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'templates,templates-rtl', // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
+	var commandDefinition = {
+		preserveState: true,
+		editorFocus: false,
+		readOnly: 1,
+
+		exec: function( editor ) {
+			this.toggleState();
+			this.refresh( editor );
+		},
+
+		refresh: function( editor ) {
+			if ( editor.document ) {
+				var funcName = ( this.state == CKEDITOR.TRISTATE_ON ) ? 'attachClass' : 'removeClass';
+				editor.editable()[ funcName ]( 'cke_show_borders' );
+			}
+		}
+	};
+
+	var showBorderClassName = 'cke_show_border';
+
+	CKEDITOR.plugins.add( 'showborders', {
+		modes: { 'wysiwyg': 1 },
+
+		onLoad: function() {
+			var cssStyleText,
+				cssTemplate =
+			// TODO: For IE6, we don't have child selector support,
+			// where nested table cells could be incorrect.
+			( CKEDITOR.env.ie6Compat ? [
+				'.%1 table.%2,',
+					'.%1 table.%2 td, .%1 table.%2 th',
+					'{',
+					'border : #d3d3d3 1px dotted',
+					'}'
+				] : [
+				'.%1 table.%2,',
+				'.%1 table.%2 &gt; tr &gt; td, .%1 table.%2 &gt; tr &gt; th,',
+				'.%1 table.%2 &gt; tbody &gt; tr &gt; td, .%1 table.%2 &gt; tbody &gt; tr &gt; th,',
+				'.%1 table.%2 &gt; thead &gt; tr &gt; td, .%1 table.%2 &gt; thead &gt; tr &gt; th,',
+				'.%1 table.%2 &gt; tfoot &gt; tr &gt; td, .%1 table.%2 &gt; tfoot &gt; tr &gt; th',
+				'{',
+					'border : #d3d3d3 1px dotted',
+				'}'
+				] ).join( '' );
+
+			cssStyleText = cssTemplate.replace( /%2/g, showBorderClassName ).replace( /%1/g, 'cke_show_borders ' );
+
+			CKEDITOR.addCss( cssStyleText );
+		},
+
 		init: function( editor ) {
-			CKEDITOR.dialog.add( 'templates', CKEDITOR.getUrl( this.path + 'dialogs/templates.js' ) );
 
-			editor.addCommand( 'templates', new CKEDITOR.dialogCommand( 'templates' ) );
+			var command = editor.addCommand( 'showborders', commandDefinition );
+			command.canUndo = false;
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Templates', {
-				label: editor.lang.templates.button,
-				command: 'templates',
-				toolbar: 'doctools,10'
+			if ( editor.config.startupShowBorders !== false )
+				command.setState( CKEDITOR.TRISTATE_ON );
+
+			// Refresh the command on setData.
+			editor.on( 'mode', function() {
+				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
+					command.refresh( editor );
+			}, null, null, 100 );
+
+			// Refresh the command on wysiwyg frame reloads.
+			editor.on( 'contentDom', function() {
+				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
+					command.refresh( editor );
 			} );
+
+			editor.on( 'removeFormatCleanup', function( evt ) {
+				var element = evt.data;
+				if ( editor.getCommand( 'showborders' ).state == CKEDITOR.TRISTATE_ON &amp;&amp; element.is( 'table' ) &amp;&amp; ( !element.hasAttribute( 'border' ) || parseInt( element.getAttribute( 'border' ), 10 ) &lt;= 0 ) )
+					element.addClass( showBorderClassName );
+			} );
+		},
+
+		afterInit: function( editor ) {
+			var dataProcessor = editor.dataProcessor,
+				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter,
+				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter;
+
+			if ( dataFilter ) {
+				dataFilter.addRules( {
+					elements: {
+						'table': function( element ) {
+							var attributes = element.attributes,
+								cssClass = attributes[ 'class' ],
+								border = parseInt( attributes.border, 10 );
+
+							if ( ( !border || border &lt;= 0 ) &amp;&amp; ( !cssClass || cssClass.indexOf( showBorderClassName ) == -1 ) )
+								attributes[ 'class' ] = ( cssClass || '' ) + ' ' + showBorderClassName;
+						}
+					}
+				} );
+			}
+
+			if ( htmlFilter ) {
+				htmlFilter.addRules( {
+					elements: {
+						'table': function( table ) {
+							var attributes = table.attributes,
+								cssClass = attributes[ 'class' ];
+
+							cssClass &amp;&amp; ( attributes[ 'class' ] = cssClass.replace( showBorderClassName, '' ).replace( /\s{2}/, ' ' ).replace( /^\s+|\s+$/, '' ) );
+						}
+					}
+				} );
+			}
 		}
 	} );
 
-	var templates = {},
-		loadedTemplatesFiles = {};
+	// Table dialog must be aware of it.
+	CKEDITOR.on( 'dialogDefinition', function( ev ) {
+		var dialogName = ev.data.name;
 
-	CKEDITOR.addTemplates = function( name, definition ) {
-		templates[ name ] = definition;
-	};
+		if ( dialogName == 'table' || dialogName == 'tableProperties' ) {
+			var dialogDefinition = ev.data.definition,
+				infoTab = dialogDefinition.getContents( 'info' ),
+				borderField = infoTab.get( 'txtBorder' ),
+				originalCommit = borderField.commit;
 
-	CKEDITOR.getTemplates = function( name ) {
-		return templates[ name ];
-	};
+			borderField.commit = CKEDITOR.tools.override( originalCommit, function( org ) {
+				return function( data, selectedTable ) {
+					org.apply( this, arguments );
+					var value = parseInt( this.getValue(), 10 );
+					selectedTable[ ( !value || value &lt;= 0 ) ? 'addClass' : 'removeClass' ]( showBorderClassName );
+				};
+			} );
 
-	CKEDITOR.loadTemplates = function( templateFiles, callback ) {
-		// Holds the templates files to be loaded.
-		var toLoad = [];
+			var advTab = dialogDefinition.getContents( 'advanced' ),
+				classField = advTab &amp;&amp; advTab.get( 'advCSSClasses' );
 
-		// Look for pending template files to get loaded.
-		for ( var i = 0, count = templateFiles.length; i &lt; count; i++ ) {
-			if ( !loadedTemplatesFiles[ templateFiles[ i ] ] ) {
-				toLoad.push( templateFiles[ i ] );
-				loadedTemplatesFiles[ templateFiles[ i ] ] = 1;
+			if ( classField ) {
+				classField.setup = CKEDITOR.tools.override( classField.setup, function( originalSetup ) {
+					return function() {
+						originalSetup.apply( this, arguments );
+						this.setValue( this.getValue().replace( /cke_show_border/, '' ) );
+					};
+				} );
+
+				classField.commit = CKEDITOR.tools.override( classField.commit, function( originalCommit ) {
+					return function( data, element ) {
+						originalCommit.apply( this, arguments );
+
+						if ( !parseInt( element.getAttribute( 'border' ), 10 ) )
+							element.addClass( 'cke_show_border' );
+					};
+				} );
 			}
 		}
+	} );
 
-		if ( toLoad.length )
-			CKEDITOR.scriptLoader.load( toLoad, callback );
-		else
-			setTimeout( callback, 0 );
-	};
 } )();
 
-
-
-<span id='CKEDITOR-config-cfg-templates'>/**
-</span> * The templates definition set to use. It accepts a list of names separated by
- * comma. It must match definitions loaded with the {@link #templates_files} setting.
+<span id='CKEDITOR-config-cfg-startupShowBorders'>/**
+</span> * Whether to automatically enable the &quot;show borders&quot; command when the editor loads.
  *
- *		config.templates = 'my_templates';
+ *		config.startupShowBorders = false;
  *
- * @cfg {String} [templates='default']
+ * @cfg {Boolean} [startupShowBorders=true]
  * @member CKEDITOR.config
  */
-
-<span id='CKEDITOR-config-cfg-templates_files'>/**
-</span> * The list of templates definition files to load.
- *
- *		config.templates_files = [
- *			'/editor_templates/site_default.js',
- *			'http://www.example.com/user_templates.js
- *		];
- *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.templates_files = [
-	CKEDITOR.getUrl( 'plugins/templates/templates/default.js' )
-];
-
-<span id='CKEDITOR-config-cfg-templates_replaceContent'>/**
-</span> * Whether the &quot;Replace actual contents&quot; checkbox is checked by default in the
- * Templates dialog.
- *
- *		config.templates_replaceContent = false;
- *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.templates_replaceContent = true;
 </pre>
 </body>
 </html>

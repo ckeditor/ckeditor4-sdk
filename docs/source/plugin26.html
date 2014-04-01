@@ -20,141 +20,240 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview Preview plugin.
- */
-
 ( function() {
-	var pluginPath;
+	// Base HTML entities.
+	var htmlbase = 'nbsp,gt,lt,amp';
 
-	var previewCmd = { modes: { wysiwyg: 1, source: 1 },
-		canUndo: false,
-		readOnly: 1,
-		exec: function( editor ) {
-			var sHTML,
-				config = editor.config,
-				baseTag = config.baseHref ? '&lt;base href=&quot;' + config.baseHref + '&quot;/&gt;' : '',
-				eventData;
+	var entities =
+	// Latin-1 Entities
+	'quot,iexcl,cent,pound,curren,yen,brvbar,sect,uml,copy,ordf,laquo,' +
+		'not,shy,reg,macr,deg,plusmn,sup2,sup3,acute,micro,para,middot,' +
+		'cedil,sup1,ordm,raquo,frac14,frac12,frac34,iquest,times,divide,' +
 
-			if ( config.fullPage )
-				sHTML = editor.getData().replace( /&lt;head&gt;/, '$&amp;' + baseTag ).replace( /[^&gt;]*(?=&lt;\/title&gt;)/, '$&amp; &amp;mdash; ' + editor.lang.preview.preview );
-			else {
-				var bodyHtml = '&lt;body ',
-					body = editor.document &amp;&amp; editor.document.getBody();
+		// Symbols
+		'fnof,bull,hellip,prime,Prime,oline,frasl,weierp,image,real,trade,' +
+		'alefsym,larr,uarr,rarr,darr,harr,crarr,lArr,uArr,rArr,dArr,hArr,' +
+		'forall,part,exist,empty,nabla,isin,notin,ni,prod,sum,minus,lowast,' +
+		'radic,prop,infin,ang,and,or,cap,cup,int,there4,sim,cong,asymp,ne,' +
+		'equiv,le,ge,sub,sup,nsub,sube,supe,oplus,otimes,perp,sdot,lceil,' +
+		'rceil,lfloor,rfloor,lang,rang,loz,spades,clubs,hearts,diams,' +
 
-				if ( body ) {
-					if ( body.getAttribute( 'id' ) )
-						bodyHtml += 'id=&quot;' + body.getAttribute( 'id' ) + '&quot; ';
-					if ( body.getAttribute( 'class' ) )
-						bodyHtml += 'class=&quot;' + body.getAttribute( 'class' ) + '&quot; ';
+		// Other Special Characters
+		'circ,tilde,ensp,emsp,thinsp,zwnj,zwj,lrm,rlm,ndash,mdash,lsquo,' +
+		'rsquo,sbquo,ldquo,rdquo,bdquo,dagger,Dagger,permil,lsaquo,rsaquo,' +
+		'euro';
+
+	// Latin Letters Entities
+	var latin = 'Agrave,Aacute,Acirc,Atilde,Auml,Aring,AElig,Ccedil,Egrave,Eacute,' +
+		'Ecirc,Euml,Igrave,Iacute,Icirc,Iuml,ETH,Ntilde,Ograve,Oacute,Ocirc,' +
+		'Otilde,Ouml,Oslash,Ugrave,Uacute,Ucirc,Uuml,Yacute,THORN,szlig,' +
+		'agrave,aacute,acirc,atilde,auml,aring,aelig,ccedil,egrave,eacute,' +
+		'ecirc,euml,igrave,iacute,icirc,iuml,eth,ntilde,ograve,oacute,ocirc,' +
+		'otilde,ouml,oslash,ugrave,uacute,ucirc,uuml,yacute,thorn,yuml,' +
+		'OElig,oelig,Scaron,scaron,Yuml';
+
+	// Greek Letters Entities.
+	var greek = 'Alpha,Beta,Gamma,Delta,Epsilon,Zeta,Eta,Theta,Iota,Kappa,Lambda,Mu,' +
+		'Nu,Xi,Omicron,Pi,Rho,Sigma,Tau,Upsilon,Phi,Chi,Psi,Omega,alpha,' +
+		'beta,gamma,delta,epsilon,zeta,eta,theta,iota,kappa,lambda,mu,nu,xi,' +
+		'omicron,pi,rho,sigmaf,sigma,tau,upsilon,phi,chi,psi,omega,thetasym,' +
+		'upsih,piv';
+
+	// Create a mapping table between one character and its entity form from a list of entity names.
+	// @param reverse {Boolean} Whether to create a reverse map from the entity string form to an actual character.
+	function buildTable( entities, reverse ) {
+		var table = {},
+			regex = [];
+
+		// Entities that the browsers DOM don't transform to the final char
+		// automatically.
+		var specialTable = {
+			nbsp: '\u00A0', // IE | FF
+			shy: '\u00AD', // IE
+			gt: '\u003E', // IE | FF |   --   | Opera
+			lt: '\u003C', // IE | FF | Safari | Opera
+			amp: '\u0026', // ALL
+			apos: '\u0027', // IE
+			quot: '\u0022' // IE
+		};
+
+		entities = entities.replace( /\b(nbsp|shy|gt|lt|amp|apos|quot)(?:,|$)/g, function( match, entity ) {
+			var org = reverse ? '&amp;' + entity + ';' : specialTable[ entity ],
+				result = reverse ? specialTable[ entity ] : '&amp;' + entity + ';';
+
+			table[ org ] = result;
+			regex.push( org );
+			return '';
+		} );
+
+		if ( !reverse &amp;&amp; entities ) {
+			// Transforms the entities string into an array.
+			entities = entities.split( ',' );
+
+			// Put all entities inside a DOM element, transforming them to their
+			// final chars.
+			var div = document.createElement( 'div' ),
+				chars;
+			div.innerHTML = '&amp;' + entities.join( ';&amp;' ) + ';';
+			chars = div.innerHTML;
+			div = null;
+
+			// Add all chars to the table.
+			for ( var i = 0; i &lt; chars.length; i++ ) {
+				var charAt = chars.charAt( i );
+				table[ charAt ] = '&amp;' + entities[ i ] + ';';
+				regex.push( charAt );
+			}
+		}
+
+		table.regex = regex.join( reverse ? '|' : '' );
+
+		return table;
+	}
+
+	CKEDITOR.plugins.add( 'entities', {
+		afterInit: function( editor ) {
+			var config = editor.config;
+
+			var dataProcessor = editor.dataProcessor,
+				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter;
+
+			if ( htmlFilter ) {
+				// Mandatory HTML base entities.
+				var selectedEntities = [];
+
+				if ( config.basicEntities !== false )
+					selectedEntities.push( htmlbase );
+
+				if ( config.entities ) {
+					if ( selectedEntities.length )
+						selectedEntities.push( entities );
+
+					if ( config.entities_latin )
+						selectedEntities.push( latin );
+
+					if ( config.entities_greek )
+						selectedEntities.push( greek );
+
+					if ( config.entities_additional )
+						selectedEntities.push( config.entities_additional );
 				}
 
-				bodyHtml += '&gt;';
+				var entitiesTable = buildTable( selectedEntities.join( ',' ) );
 
-				sHTML = editor.config.docType + '&lt;html dir=&quot;' + editor.config.contentsLangDirection + '&quot;&gt;' +
-					'&lt;head&gt;' +
-						baseTag +
-						'&lt;title&gt;' + editor.lang.preview.preview + '&lt;/title&gt;' +
-						CKEDITOR.tools.buildStyleHtml( editor.config.contentsCss ) +
-					'&lt;/head&gt;' + bodyHtml +
-						editor.getData() +
-					'&lt;/body&gt;&lt;/html&gt;';
+				// Create the Regex used to find entities in the text, leave it matches nothing if entities are empty.
+				var entitiesRegex = entitiesTable.regex ? '[' + entitiesTable.regex + ']' : 'a^';
+				delete entitiesTable.regex;
+
+				if ( config.entities &amp;&amp; config.entities_processNumerical )
+					entitiesRegex = '[^ -~]|' + entitiesRegex;
+
+				entitiesRegex = new RegExp( entitiesRegex, 'g' );
+
+				function getEntity( character ) {
+					return config.entities_processNumerical == 'force' || !entitiesTable[ character ] ? '&amp;#' + character.charCodeAt( 0 ) + ';'
+						: entitiesTable[ character ];
+				}
+
+				// Decode entities that the browsers has transformed
+				// at first place.
+				var baseEntitiesTable = buildTable( [ htmlbase, 'shy' ].join( ',' ), true ),
+					baseEntitiesRegex = new RegExp( baseEntitiesTable.regex, 'g' );
+
+				function getChar( character ) {
+					return baseEntitiesTable[ character ];
+				}
+
+				htmlFilter.addRules( {
+					text: function( text ) {
+						return text.replace( baseEntitiesRegex, getChar ).replace( entitiesRegex, getEntity );
+					}
+				}, {
+					applyToAll: true,
+					excludeNestedEditable: true
+				} );
 			}
-
-			var iWidth = 640,
-				// 800 * 0.8,
-				iHeight = 420,
-				// 600 * 0.7,
-				iLeft = 80; // (800 - 0.8 * 800) /2 = 800 * 0.1.
-			try {
-				var screen = window.screen;
-				iWidth = Math.round( screen.width * 0.8 );
-				iHeight = Math.round( screen.height * 0.7 );
-				iLeft = Math.round( screen.width * 0.1 );
-			} catch ( e ) {}
-
-			// (#9907) Allow data manipulation before preview is displayed.
-			// Also don't open the preview window when event cancelled.
-			if ( !editor.fire( 'contentPreview', eventData = { dataValue: sHTML } ) )
-				return false;
-
-			var sOpenUrl = '',
-				ieLocation;
-
-			if ( CKEDITOR.env.ie ) {
-				window._cke_htmlToLoad = eventData.dataValue;
-				ieLocation = 'javascript:void( (function(){' +
-					'document.open();' +
-					// Support for custom document.domain.
-					// Strip comments and replace parent with window.opener in the function body.
-					( '(' + CKEDITOR.tools.fixDomain + ')();' ).replace( /\/\/.*?\n/g, '' ).replace( /parent\./g, 'window.opener.' ) +
-					'document.write( window.opener._cke_htmlToLoad );' +
-					'document.close();' +
-					'window.opener._cke_htmlToLoad = null;' +
-				'})() )';
-				// For IE we should use window.location rather than setting url in window.open. (#11146)
-				sOpenUrl = '';
-			}
-
-			// With Firefox only, we need to open a special preview page, so
-			// anchors will work properly on it. (#9047)
-			if ( CKEDITOR.env.gecko ) {
-				window._cke_htmlToLoad = eventData.dataValue;
-				sOpenUrl = pluginPath + 'preview.html';
-			}
-
-			var oWindow = window.open( sOpenUrl, null, 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
-				iWidth + ',height=' + iHeight + ',left=' + iLeft );
-
-			if ( CKEDITOR.env.ie )
-				oWindow.location = ieLocation;
-
-			if ( !CKEDITOR.env.ie &amp;&amp; !CKEDITOR.env.gecko ) {
-				var doc = oWindow.document;
-				doc.open();
-				doc.write( eventData.dataValue );
-				doc.close();
-			}
-
-			return true;
-		}
-	};
-
-	var pluginName = 'preview';
-
-	// Register a plugin named &quot;preview&quot;.
-	CKEDITOR.plugins.add( pluginName, {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'preview,preview-rtl', // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
-		init: function( editor ) {
-
-			// Preview is not used for the inline creator.
-			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
-				return;
-
-			pluginPath = this.path;
-
-			editor.addCommand( pluginName, previewCmd );
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Preview', {
-				label: editor.lang.preview.preview,
-				command: pluginName,
-				toolbar: 'document,40'
-			} );
 		}
 	} );
 } )();
 
-<span id='CKEDITOR-event-contentPreview'>/**
-</span> * Event fired when executing `preview` command, which allows additional data manipulation.
- * With this event, the raw HTML content of the preview window to be displayed can be altered
- * or modified.
+<span id='CKEDITOR-config-cfg-basicEntities'>/**
+</span> * Whether to escape basic HTML entities in the document, including:
  *
- * @event contentPreview
- * @member CKEDITOR
- * @param {CKEDITOR.editor} editor This editor instance.
- * @param data
- * @param {String} data.dataValue The data that will go to the preview.
- */</pre>
+ * * `nbsp`
+ * * `gt`
+ * * `lt`
+ * * `amp`
+ *
+ * **Note:** It should not be subject to change unless when outputting a non-HTML data format like BBCode.
+ *
+ *		config.basicEntities = false;
+ *
+ * @cfg {Boolean} [basicEntities=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.basicEntities = true;
+
+<span id='CKEDITOR-config-cfg-entities'>/**
+</span> * Whether to use HTML entities in the output.
+ *
+ *		config.entities = false;
+ *
+ * @cfg {Boolean} [entities=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities = true;
+
+<span id='CKEDITOR-config-cfg-entities_latin'>/**
+</span> * Whether to convert some Latin characters (Latin alphabet No. 1, ISO 8859-1)
+ * to HTML entities. The list of entities can be found in the
+ * [W3C HTML 4.01 Specification, section 24.2.1](http://www.w3.org/TR/html4/sgml/entities.html#h-24.2.1).
+ *
+ *		config.entities_latin = false;
+ *
+ * @cfg {Boolean} [entities_latin=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities_latin = true;
+
+<span id='CKEDITOR-config-cfg-entities_greek'>/**
+</span> * Whether to convert some symbols, mathematical symbols, and Greek letters to
+ * HTML entities. This may be more relevant for users typing text written in Greek.
+ * The list of entities can be found in the
+ * [W3C HTML 4.01 Specification, section 24.3.1(http://www.w3.org/TR/html4/sgml/entities.html#h-24.3.1).
+ *
+ *		config.entities_greek = false;
+ *
+ * @cfg {Boolean} [entities_greek=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities_greek = true;
+
+<span id='CKEDITOR-config-cfg-entities_processNumerical'>/**
+</span> * Whether to convert all remaining characters not included in the ASCII
+ * character table to their relative decimal numeric representation of HTML entity.
+ * When set to `force`, it will convert all entities into this format.
+ *
+ * For example the phrase `'This is Chinese: 汉语.'` is output
+ * as `'This is Chinese: &amp;#27721;&amp;#35821;.'`
+ *
+ *		config.entities_processNumerical = true;
+ *		config.entities_processNumerical = 'force'; // Converts from '&amp;nbsp;' into '&amp;#160;';
+ *
+ * @cfg {Boolean/String} [entities_processNumerical=false]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-entities_additional'>/**
+</span> * A comma separated list of  additional entities to be used. Entity names
+ * or numbers must be used in a form that excludes the `'&amp;amp;'` prefix and the `';'` ending.
+ *
+ *		config.entities_additional = '#1049'; // Adds Cyrillic capital letter Short I (Й).
+ *
+ * @cfg {String} [entities_additional='#39' (The single quote (') character)]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities_additional = '#39';
+</pre>
 </body>
 </html>

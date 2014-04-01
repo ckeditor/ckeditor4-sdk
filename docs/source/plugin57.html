@@ -21,74 +21,49 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Paste as plain text plugin.
+</span> * @fileOverview Horizontal Page Break.
  */
 
-( function() {
-	// The pastetext command definition.
-	var pasteTextCmd = {
-		// Snapshots are done manually by editable.insertXXX methods.
-		canUndo: false,
-		async: true,
+// Register a plugin named &quot;newpage&quot;.
+CKEDITOR.plugins.add( 'newpage', {
+	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+	icons: 'newpage,newpage-rtl', // %REMOVE_LINE_CORE%
+	hidpi: true, // %REMOVE_LINE_CORE%
+	init: function( editor ) {
+		editor.addCommand( 'newpage', { modes: { wysiwyg: 1, source: 1 },
 
-		exec: function( editor ) {
-			editor.getClipboardData( { title: editor.lang.pastetext.title }, function( data ) {
-				// Do not use editor#paste, because it would start from beforePaste event.
-				data &amp;&amp; editor.fire( 'paste', { type: 'text', dataValue: data.dataValue } );
+			exec: function( editor ) {
+				var command = this;
+				editor.setData( editor.config.newpage_html || '', function() {
+					editor.focus();
+					// Save the undo snapshot after all document changes are affected. (#4889)
+					setTimeout( function() {
+						editor.fire( 'afterCommandExec', {
+							name: 'newpage',
+							command: command
+						} );
+						editor.selectionChange();
 
-				editor.fire( 'afterCommandExec', {
-					name: 'pastetext',
-					command: pasteTextCmd,
-					returnValue: !!data
+					}, 200 );
 				} );
-			} );
-		}
-	};
+			},
+			async: true
+		} );
 
-	// Register the plugin.
-	CKEDITOR.plugins.add( 'pastetext', {
-		requires: 'clipboard',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'pastetext,pastetext-rtl', // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
-		init: function( editor ) {
-			var commandName = 'pastetext';
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'NewPage', {
+			label: editor.lang.newpage.toolbar,
+			command: 'newpage',
+			toolbar: 'document,20'
+		} );
+	}
+} );
 
-			editor.addCommand( commandName, pasteTextCmd );
-
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'PasteText', {
-				label: editor.lang.pastetext.button,
-				command: commandName,
-				toolbar: 'clipboard,40'
-			} );
-
-			if ( editor.config.forcePasteAsPlainText ) {
-				editor.on( 'beforePaste', function( evt ) {
-					// Do NOT overwrite if HTML format is explicitly requested.
-					// This allows pastefromword dominates over pastetext.
-					if ( evt.data.type != 'html' )
-						evt.data.type = 'text';
-				} );
-			}
-
-			editor.on( 'pasteState', function( evt ) {
-				editor.getCommand( commandName ).setState( evt.data );
-			} );
-		}
-	} );
-} )();
-
-
-<span id='CKEDITOR-config-cfg-forcePasteAsPlainText'>/**
-</span> * Whether to force all pasting operations to insert on plain text into the
- * editor, loosing any formatting information possibly available in the source
- * text.
+<span id='CKEDITOR-config-cfg-newpage_html'>/**
+</span> * The HTML to load in the editor when the &quot;new page&quot; command is executed.
  *
- * **Note:** paste from word (dialog) is not affected by this configuration.
+ *		config.newpage_html = '&lt;p&gt;Type your text here.&lt;/p&gt;';
  *
- *		config.forcePasteAsPlainText = true;
- *
- * @cfg {Boolean} [forcePasteAsPlainText=false]
+ * @cfg {String} [newpage_html='']
  * @member CKEDITOR.config
  */
 </pre>

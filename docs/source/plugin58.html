@@ -20,241 +20,158 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'listblock', {
-	requires: 'panel',
+<span id='global-property-use strict'>/**
+</span> * @fileOverview Horizontal Page Break
+ */
 
-	onLoad: function() {
-		var list = CKEDITOR.addTemplate( 'panel-list', '&lt;ul role=&quot;presentation&quot; class=&quot;cke_panel_list&quot;&gt;{items}&lt;/ul&gt;' ),
-			listItem = CKEDITOR.addTemplate( 'panel-list-item', '&lt;li id=&quot;{id}&quot; class=&quot;cke_panel_listItem&quot; role=presentation&gt;' +
-				'&lt;a id=&quot;{id}_option&quot; _cke_focus=1 hidefocus=true' +
-					' title=&quot;{title}&quot;' +
-					' href=&quot;javascript:void(\'{val}\')&quot; ' +
-					' {onclick}=&quot;CKEDITOR.tools.callFunction({clickFn},\'{val}\'); return false;&quot;' + // #188
-						' role=&quot;option&quot;&gt;' +
-					'{text}' +
-				'&lt;/a&gt;' +
-				'&lt;/li&gt;' ),
-			listGroup = CKEDITOR.addTemplate( 'panel-list-group', '&lt;h1 id=&quot;{id}&quot; class=&quot;cke_panel_grouptitle&quot; role=&quot;presentation&quot; &gt;{label}&lt;/h1&gt;' ),
-			reSingleQuote = /\'/g,
-			escapeSingleQuotes = function( str ) {
-				return str.replace( reSingleQuote, '\\\'' );
-			};
+'use strict';
 
-		CKEDITOR.ui.panel.prototype.addListBlock = function( name, definition ) {
-			return this.addBlock( name, new CKEDITOR.ui.listBlock( this.getHolderElement(), definition ) );
-		};
+( function() {
+	// Register a plugin named &quot;pagebreak&quot;.
+	CKEDITOR.plugins.add( 'pagebreak', {
+		requires: 'fakeobjects',
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		icons: 'pagebreak,pagebreak-rtl', // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		onLoad: function() {
+			var cssStyles = (
+					'background:url(' + CKEDITOR.getUrl( this.path + 'images/pagebreak.gif' ) + ') no-repeat center center;' +
+					'clear:both;' +
+					'width:100%;' +
+					'border-top:#999 1px dotted;' +
+					'border-bottom:#999 1px dotted;' +
+					'padding:0;' +
+					'height:5px;' +
+					'cursor:default;'
+				).replace( /;/g, ' !important;' ); // Increase specificity to override other styles, e.g. block outline.
 
-		CKEDITOR.ui.listBlock = CKEDITOR.tools.createClass( {
-			base: CKEDITOR.ui.panel.block,
+			// Add the style that renders our placeholder.
+			CKEDITOR.addCss( 'div.cke_pagebreak{' + cssStyles + '}' );
+		},
 
-			$: function( blockHolder, blockDefinition ) {
-				blockDefinition = blockDefinition || {};
+		init: function( editor ) {
+			if ( editor.blockless )
+				return;
 
-				var attribs = blockDefinition.attributes || ( blockDefinition.attributes = {} );
-				( this.multiSelect = !!blockDefinition.multiSelect ) &amp;&amp; ( attribs[ 'aria-multiselectable' ] = true );
-				// Provide default role of 'listbox'.
-				!attribs.role &amp;&amp; ( attribs.role = 'listbox' );
+			// Register the command.
+			editor.addCommand( 'pagebreak', CKEDITOR.plugins.pagebreakCmd );
 
-				// Call the base contructor.
-				this.base.apply( this, arguments );
+			// Register the toolbar button.
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'PageBreak', {
+				label: editor.lang.pagebreak.toolbar,
+				command: 'pagebreak',
+				toolbar: 'insert,70'
+			} );
 
-				// Set the proper a11y attributes.
-				this.element.setAttribute( 'role', attribs.role );
+			// Opera and webkit based browsers needs help to select the page-break.
+			( CKEDITOR.env.opera || CKEDITOR.env.webkit ) &amp;&amp; editor.on( 'contentDom', function() {
+				editor.document.on( 'click', function( evt ) {
+					var target = evt.data.getTarget();
+					if ( target.is( 'div' ) &amp;&amp; target.hasClass( 'cke_pagebreak' ) )
+						editor.getSelection().selectElement( target );
+				} );
+			} );
+		},
 
-				var keys = this.keys;
-				keys[ 40 ] = 'next'; // ARROW-DOWN
-				keys[ 9 ] = 'next'; // TAB
-				keys[ 38 ] = 'prev'; // ARROW-UP
-				keys[ CKEDITOR.SHIFT + 9 ] = 'prev'; // SHIFT + TAB
-				keys[ 32 ] = CKEDITOR.env.ie ? 'mouseup' : 'click'; // SPACE
-				CKEDITOR.env.ie &amp;&amp; ( keys[ 13 ] = 'mouseup' ); // Manage ENTER, since onclick is blocked in IE (#8041).
+		afterInit: function( editor ) {
+			// Register a filter to displaying placeholders after mode change.
+			var dataProcessor = editor.dataProcessor,
+				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter,
+				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter,
+				styleRegex = /page-break-after\s*:\s*always/i,
+				childStyleRegex = /display\s*:\s*none/i;
 
-				this._.pendingHtml = [];
-				this._.pendingList = [];
-				this._.items = {};
-				this._.groups = {};
-			},
+			function upcastPageBreak( element ) {
+				CKEDITOR.tools.extend( element.attributes, attributesSet( editor.lang.pagebreak.alt ), true );
 
-			_: {
-				close: function() {
-					if ( this._.started ) {
-						var output = list.output( { items: this._.pendingList.join( '' ) } );
-						this._.pendingList = [];
-						this._.pendingHtml.push( output );
-						delete this._.started;
+				element.children.length = 0;
+			}
+
+			if ( htmlFilter ) {
+				htmlFilter.addRules( {
+					attributes: {
+						'class': function( value, element ) {
+							var className = value.replace( 'cke_pagebreak', '' );
+							if ( className != value ) {
+								var span = CKEDITOR.htmlParser.fragment.fromHtml( '&lt;span style=&quot;display: none;&quot;&gt;&amp;nbsp;&lt;/span&gt;' ).children[ 0 ];
+								element.children.length = 0;
+								element.add( span );
+								var attrs = element.attributes;
+								delete attrs[ 'aria-label' ];
+								delete attrs.contenteditable;
+								delete attrs.title;
+							}
+							return className;
+						}
 					}
-				},
+				}, { applyToAll: true, priority: 5 } );
+			}
 
-				getClick: function() {
-					if ( !this._.click ) {
-						this._.click = CKEDITOR.tools.addFunction( function( value ) {
-							var marked = this.toggle( value );
-							if ( this.onClick )
-								this.onClick( value, marked );
-						}, this );
-					}
-					return this._.click;
-				}
-			},
+			if ( dataFilter ) {
+				dataFilter.addRules( {
+					elements: {
+						div: function( element ) {
+							// The &quot;internal form&quot; of a pagebreak is pasted from clipboard.
+							// ACF may have distorted the HTML because &quot;internal form&quot; is
+							// different than &quot;data form&quot;. Make sure that element remains valid
+							// by re-upcasting it (#11133).
+							if ( element.attributes[ 'data-cke-pagebreak' ] )
+								upcastPageBreak( element );
 
-			proto: {
-				add: function( value, html, title ) {
-					var id = CKEDITOR.tools.getNextId();
+							// Check for &quot;data form&quot; of the pagebreak. If both element and
+							// descendants match, convert them to internal form.
+							else if ( styleRegex.test( element.attributes.style ) ) {
+								var child = element.children[ 0 ];
 
-					if ( !this._.started ) {
-						this._.started = 1;
-						this._.size = this._.size || 0;
-					}
-
-					this._.items[ value ] = id;
-
-					var data = {
-						id: id,
-						val: escapeSingleQuotes( CKEDITOR.tools.htmlEncodeAttr( value ) ),
-						onclick: CKEDITOR.env.ie ? 'onclick=&quot;return false;&quot; onmouseup' : 'onclick',
-						clickFn: this._.getClick(),
-						title: CKEDITOR.tools.htmlEncodeAttr( title || value ),
-						text: html || value
-					};
-
-					this._.pendingList.push( listItem.output( data ) );
-				},
-
-				startGroup: function( title ) {
-					this._.close();
-
-					var id = CKEDITOR.tools.getNextId();
-
-					this._.groups[ title ] = id;
-
-					this._.pendingHtml.push( listGroup.output( { id: id, label: title } ) );
-				},
-
-				commit: function() {
-					this._.close();
-					this.element.appendHtml( this._.pendingHtml.join( '' ) );
-					delete this._.size;
-
-					this._.pendingHtml = [];
-				},
-
-				toggle: function( value ) {
-					var isMarked = this.isMarked( value );
-
-					if ( isMarked )
-						this.unmark( value );
-					else
-						this.mark( value );
-
-					return !isMarked;
-				},
-
-				hideGroup: function( groupTitle ) {
-					var group = this.element.getDocument().getById( this._.groups[ groupTitle ] ),
-						list = group &amp;&amp; group.getNext();
-
-					if ( group ) {
-						group.setStyle( 'display', 'none' );
-
-						if ( list &amp;&amp; list.getName() == 'ul' )
-							list.setStyle( 'display', 'none' );
-					}
-				},
-
-				hideItem: function( value ) {
-					this.element.getDocument().getById( this._.items[ value ] ).setStyle( 'display', 'none' );
-				},
-
-				showAll: function() {
-					var items = this._.items,
-						groups = this._.groups,
-						doc = this.element.getDocument();
-
-					for ( var value in items ) {
-						doc.getById( items[ value ] ).setStyle( 'display', '' );
-					}
-
-					for ( var title in groups ) {
-						var group = doc.getById( groups[ title ] ),
-							list = group.getNext();
-
-						group.setStyle( 'display', '' );
-
-						if ( list &amp;&amp; list.getName() == 'ul' )
-							list.setStyle( 'display', '' );
-					}
-				},
-
-				mark: function( value ) {
-					if ( !this.multiSelect )
-						this.unmarkAll();
-
-					var itemId = this._.items[ value ],
-						item = this.element.getDocument().getById( itemId );
-					item.addClass( 'cke_selected' );
-
-					this.element.getDocument().getById( itemId + '_option' ).setAttribute( 'aria-selected', true );
-					this.onMark &amp;&amp; this.onMark( item );
-				},
-
-				unmark: function( value ) {
-					var doc = this.element.getDocument(),
-						itemId = this._.items[ value ],
-						item = doc.getById( itemId );
-
-					item.removeClass( 'cke_selected' );
-					doc.getById( itemId + '_option' ).removeAttribute( 'aria-selected' );
-
-					this.onUnmark &amp;&amp; this.onUnmark( item );
-				},
-
-				unmarkAll: function() {
-					var items = this._.items,
-						doc = this.element.getDocument();
-
-					for ( var value in items ) {
-						var itemId = items[ value ];
-
-						doc.getById( itemId ).removeClass( 'cke_selected' );
-						doc.getById( itemId + '_option' ).removeAttribute( 'aria-selected' );
-					}
-
-					this.onUnmark &amp;&amp; this.onUnmark();
-				},
-
-				isMarked: function( value ) {
-					return this.element.getDocument().getById( this._.items[ value ] ).hasClass( 'cke_selected' );
-				},
-
-				focus: function( value ) {
-					this._.focusIndex = -1;
-
-					var links = this.element.getElementsByTag( 'a' ),
-						link,
-						selected,
-						i = -1;
-
-					if ( value ) {
-						selected = this.element.getDocument().getById( this._.items[ value ] ).getFirst();
-
-						while ( ( link = links.getItem( ++i ) ) ) {
-							if ( link.equals( selected ) ) {
-								this._.focusIndex = i;
-								break;
+								if ( child &amp;&amp; child.name == 'span' &amp;&amp; childStyleRegex.test( child.attributes.style ) )
+									upcastPageBreak( element );
 							}
 						}
 					}
-					else
-						this.element.focus();
-
-					selected &amp;&amp; setTimeout( function() {
-						selected.focus();
-					}, 0 );
-				}
+				} );
 			}
-		} );
+		}
+	} );
+
+	// TODO Much probably there's no need to expose this object as public object.
+	CKEDITOR.plugins.pagebreakCmd = {
+		exec: function( editor ) {
+			// Create read-only element that represents a print break.
+			var pagebreak = editor.document.createElement( 'div', {
+				attributes: attributesSet( editor.lang.pagebreak.alt )
+			} );
+
+			editor.insertElement( pagebreak );
+		},
+		context: 'div',
+		allowedContent: {
+			div: {
+				styles: '!page-break-after'
+			},
+			span: {
+				match: function( element ) {
+					var parent = element.parent;
+					return parent &amp;&amp; parent.name == 'div' &amp;&amp; parent.styles[ 'page-break-after' ];
+				},
+				styles: 'display'
+			}
+		},
+		requiredContent: 'div{page-break-after}'
+	};
+
+	// Returns an object representing all the attributes
+	// of the &quot;internal form&quot; of the pagebreak element.
+	function attributesSet( label ) {
+		return {
+			'aria-label': label,
+			'class': 'cke_pagebreak',
+			contenteditable: 'false',
+			'data-cke-display-name': 'pagebreak',
+			'data-cke-pagebreak': 1,
+			style: 'page-break-after: always',
+			title: label
+		};
 	}
-} );
-</pre>
+} )();</pre>
 </body>
 </html>

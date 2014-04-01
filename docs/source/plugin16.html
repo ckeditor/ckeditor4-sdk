@@ -20,287 +20,144 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview The &quot;colorbutton&quot; plugin that makes it possible to assign
- *               text and background colors to editor contents.
- *
- */
-CKEDITOR.plugins.add( 'colorbutton', {
-	requires: 'panelbutton,floatpanel',
+CKEDITOR.plugins.add( 'contextmenu', {
+	requires: 'menu',
 	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'bgcolor,textcolor', // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	init: function( editor ) {
-		var config = editor.config,
-			lang = editor.lang.colorbutton;
 
-		var clickFn;
+	// Make sure the base class (CKEDITOR.menu) is loaded before it (#3318).
+	onLoad: function() {
+<span id='CKEDITOR-plugins-contextMenu'>		/**
+</span>		 * Class replacing the non-configurable native context menu with configurable CKEditor's equivalent.
+		 *
+		 * @class
+		 * @extends CKEDITOR.menu
+		 */
+		CKEDITOR.plugins.contextMenu = CKEDITOR.tools.createClass( {
+			base: CKEDITOR.menu,
 
-		if ( !CKEDITOR.env.hc ) {
-			addButton( 'TextColor', 'fore', lang.textColorTitle, 10 );
-			addButton( 'BGColor', 'back', lang.bgColorTitle, 20 );
-		}
-
-		function addButton( name, type, title, order ) {
-			var style = new CKEDITOR.style( config[ 'colorButton_' + type + 'Style' ] ),
-				colorBoxId = CKEDITOR.tools.getNextId() + '_colorBox';
-
-			editor.ui.add( name, CKEDITOR.UI_PANELBUTTON, {
-				label: title,
-				title: title,
-				modes: { wysiwyg: 1 },
-				editorFocus: 0,
-				toolbar: 'colors,' + order,
-				allowedContent: style,
-				requiredContent: style,
-
-				panel: {
-					css: CKEDITOR.skin.getPath( 'editor' ),
-					attributes: { role: 'listbox', 'aria-label': lang.panelTitle }
-				},
-
-				onBlock: function( panel, block ) {
-					block.autoSize = true;
-					block.element.addClass( 'cke_colorblock' );
-					block.element.setHtml( renderColors( panel, type, colorBoxId ) );
-					// The block should not have scrollbars (#5933, #6056)
-					block.element.getDocument().getBody().setStyle( 'overflow', 'hidden' );
-
-					CKEDITOR.ui.fire( 'ready', this );
-
-					var keys = block.keys;
-					var rtl = editor.lang.dir == 'rtl';
-					keys[ rtl ? 37 : 39 ] = 'next'; // ARROW-RIGHT
-					keys[ 40 ] = 'next'; // ARROW-DOWN
-					keys[ 9 ] = 'next'; // TAB
-					keys[ rtl ? 39 : 37 ] = 'prev'; // ARROW-LEFT
-					keys[ 38 ] = 'prev'; // ARROW-UP
-					keys[ CKEDITOR.SHIFT + 9 ] = 'prev'; // SHIFT + TAB
-					keys[ 32 ] = 'click'; // SPACE
-				},
-
-				refresh: function() {
-					if ( !editor.activeFilter.check( style ) )
-						this.setState( CKEDITOR.TRISTATE_DISABLED );
-				},
-
-				// The automatic colorbox should represent the real color (#6010)
-				onOpen: function() {
-
-					var selection = editor.getSelection(),
-						block = selection &amp;&amp; selection.getStartElement(),
-						path = editor.elementPath( block ),
-						color;
-
-					if ( !path )
-						return;
-
-					// Find the closest block element.
-					block = path.block || path.blockLimit || editor.document.getBody();
-
-					// The background color might be transparent. In that case, look up the color in the DOM tree.
-					do {
-						color = block &amp;&amp; block.getComputedStyle( type == 'back' ? 'background-color' : 'color' ) || 'transparent';
+<span id='CKEDITOR-plugins-contextMenu-method-constructor'>			/**
+</span>			 * Creates the CKEDITOR.plugins.contextMenu class instance.
+			 *
+			 * @constructor
+			 * @param {CKEDITOR.editor} editor
+			 */
+			$: function( editor ) {
+				this.base.call( this, editor, {
+					panel: {
+						className: 'cke_menu_panel',
+						attributes: {
+							'aria-label': editor.lang.contextmenu.options
+						}
 					}
-					while ( type == 'back' &amp;&amp; color == 'transparent' &amp;&amp; block &amp;&amp; ( block = block.getParent() ) );
+				} );
+			},
 
-					// The box should never be transparent.
-					if ( !color || color == 'transparent' )
-						color = '#ffffff';
+			proto: {
+<span id='CKEDITOR-plugins-contextMenu-method-addTarget'>				/**
+</span>				 * Starts watching on native context menu triggers (option key, right click) on given element.
+				 *
+				 * @param {CKEDITOR.dom.element} element
+				 * @param {Boolean} [nativeContextMenuOnCtrl] Whether to open native context menu if
+				 * *Ctrl* key is hold on opening the context menu. See {@link CKEDITOR.config#browserContextMenuOnCtrl}.
+				 */
+				addTarget: function( element, nativeContextMenuOnCtrl ) {
+					element.on( 'contextmenu', function( event ) {
+						var domEvent = event.data,
+							isCtrlKeyDown =
+								// Safari on Windows always show 'ctrlKey' as true in 'contextmenu' event,
+								// which make this property unreliable. (#4826)
+								( CKEDITOR.env.webkit ? holdCtrlKey : ( CKEDITOR.env.mac ? domEvent.$.metaKey : domEvent.$.ctrlKey ) );
 
-					this._.panel._.iframe.getFrameDocument().getById( colorBoxId ).setStyle( 'background-color', color );
+						if ( nativeContextMenuOnCtrl &amp;&amp; isCtrlKeyDown )
+							return;
 
-					return color;
-				}
-			} );
-		}
+						// Cancel the browser context menu.
+						domEvent.preventDefault();
 
+						var doc = domEvent.getTarget().getDocument(),
+							offsetParent = domEvent.getTarget().getDocument().getDocumentElement(),
+							fromFrame = !doc.equals( CKEDITOR.document ),
+							scroll = doc.getWindow().getScrollPosition(),
+							offsetX = fromFrame ? domEvent.$.clientX : domEvent.$.pageX || scroll.x + domEvent.$.clientX,
+							offsetY = fromFrame ? domEvent.$.clientY : domEvent.$.pageY || scroll.y + domEvent.$.clientY;
 
-		function renderColors( panel, type, colorBoxId ) {
-			var output = [],
-				colors = config.colorButton_colors.split( ',' );
+						CKEDITOR.tools.setTimeout( function() {
+							this.open( offsetParent, null, offsetX, offsetY );
 
-			var clickFn = CKEDITOR.tools.addFunction( function( color, type ) {
-				if ( color == '?' ) {
-					var applyColorStyle = arguments.callee;
+							// IE needs a short while to allow selection change before opening menu. (#7908)
+						}, CKEDITOR.env.ie ? 200 : 0, this );
+					}, this );
 
-					function onColorDialogClose( evt ) {
-						this.removeListener( 'ok', onColorDialogClose );
-						this.removeListener( 'cancel', onColorDialogClose );
+					if ( CKEDITOR.env.webkit ) {
+						var holdCtrlKey,
+							onKeyDown = function( event ) {
+								holdCtrlKey = CKEDITOR.env.mac ? event.data.$.metaKey : event.data.$.ctrlKey;
+							},
+							resetOnKeyUp = function() {
+								holdCtrlKey = 0;
+							};
 
-						evt.name == 'ok' &amp;&amp; applyColorStyle( this.getContentElement( 'picker', 'selectedColor' ).getValue(), type );
+						element.on( 'keydown', onKeyDown );
+						element.on( 'keyup', resetOnKeyUp );
+						element.on( 'contextmenu', resetOnKeyUp );
 					}
+				},
 
-					editor.openDialog( 'colordialog', function() {
-						this.on( 'ok', onColorDialogClose );
-						this.on( 'cancel', onColorDialogClose );
-					} );
+<span id='CKEDITOR-plugins-contextMenu-method-open'>				/**
+</span>				 * Opens context menu in given location. See the {@link CKEDITOR.menu#show} method.
+				 *
+				 * @param {CKEDITOR.dom.element} offsetParent
+				 * @param {Number} [corner]
+				 * @param {Number} [offsetX]
+				 * @param {Number} [offsetY]
+				 */
+				open: function( offsetParent, corner, offsetX, offsetY ) {
+					this.editor.focus();
+					offsetParent = offsetParent || CKEDITOR.document.getDocumentElement();
 
-					return;
+					// #9362: Force selection check to update commands' states in the new context.
+					this.editor.selectionChange( 1 );
+
+					this.show( offsetParent, corner, offsetX, offsetY );
 				}
-
-				editor.focus();
-
-				panel.hide();
-
-				editor.fire( 'saveSnapshot' );
-
-				// Clean up any conflicting style within the range.
-				editor.removeStyle( new CKEDITOR.style( config[ 'colorButton_' + type + 'Style' ], { color: 'inherit' } ) );
-
-				if ( color ) {
-					var colorStyle = config[ 'colorButton_' + type + 'Style' ];
-
-					colorStyle.childRule = type == 'back' ?
-					function( element ) {
-						// It's better to apply background color as the innermost style. (#3599)
-						// Except for &quot;unstylable elements&quot;. (#6103)
-						return isUnstylable( element );
-					} : function( element ) {
-						// Fore color style must be applied inside links instead of around it. (#4772,#6908)
-						return !( element.is( 'a' ) || element.getElementsByTag( 'a' ).count() ) || isUnstylable( element );
-					};
-
-					editor.applyStyle( new CKEDITOR.style( colorStyle, { color: color } ) );
-				}
-
-				editor.fire( 'saveSnapshot' );
-			} );
-
-			// Render the &quot;Automatic&quot; button.
-			output.push( '&lt;a class=&quot;cke_colorauto&quot; _cke_focus=1 hidefocus=true' +
-				' title=&quot;', lang.auto, '&quot;' +
-				' onclick=&quot;CKEDITOR.tools.callFunction(', clickFn, ',null,\'', type, '\');return false;&quot;' +
-				' href=&quot;javascript:void(\'', lang.auto, '\')&quot;' +
-				' role=&quot;option&quot;&gt;' +
-				'&lt;table role=&quot;presentation&quot; cellspacing=0 cellpadding=0 width=&quot;100%&quot;&gt;' +
-					'&lt;tr&gt;' +
-						'&lt;td&gt;' +
-							'&lt;span class=&quot;cke_colorbox&quot; id=&quot;', colorBoxId, '&quot;&gt;&lt;/span&gt;' +
-						'&lt;/td&gt;' +
-						'&lt;td colspan=7 align=center&gt;', lang.auto, '&lt;/td&gt;' +
-					'&lt;/tr&gt;' +
-				'&lt;/table&gt;' +
-				'&lt;/a&gt;' +
-				'&lt;table role=&quot;presentation&quot; cellspacing=0 cellpadding=0 width=&quot;100%&quot;&gt;' );
-
-			// Render the color boxes.
-			for ( var i = 0; i &lt; colors.length; i++ ) {
-				if ( ( i % 8 ) === 0 )
-					output.push( '&lt;/tr&gt;&lt;tr&gt;' );
-
-				var parts = colors[ i ].split( '/' ),
-					colorName = parts[ 0 ],
-					colorCode = parts[ 1 ] || colorName;
-
-				// The data can be only a color code (without #) or colorName + color code
-				// If only a color code is provided, then the colorName is the color with the hash
-				// Convert the color from RGB to RRGGBB for better compatibility with IE and &lt;font&gt;. See #5676
-				if ( !parts[ 1 ] )
-					colorName = '#' + colorName.replace( /^(.)(.)(.)$/, '$1$1$2$2$3$3' );
-
-				var colorLabel = editor.lang.colorbutton.colors[ colorCode ] || colorCode;
-				output.push( '&lt;td&gt;' +
-					'&lt;a class=&quot;cke_colorbox&quot; _cke_focus=1 hidefocus=true' +
-						' title=&quot;', colorLabel, '&quot;' +
-						' onclick=&quot;CKEDITOR.tools.callFunction(', clickFn, ',\'', colorName, '\',\'', type, '\'); return false;&quot;' +
-						' href=&quot;javascript:void(\'', colorLabel, '\')&quot;' +
-						' role=&quot;option&quot;&gt;' +
-						'&lt;span class=&quot;cke_colorbox&quot; style=&quot;background-color:#', colorCode, '&quot;&gt;&lt;/span&gt;' +
-					'&lt;/a&gt;' +
-					'&lt;/td&gt;' );
 			}
+		} );
+	},
 
-			// Render the &quot;More Colors&quot; button.
-			if ( editor.plugins.colordialog &amp;&amp; config.colorButton_enableMore === undefined || config.colorButton_enableMore ) {
-				output.push( '&lt;/tr&gt;' +
-					'&lt;tr&gt;' +
-						'&lt;td colspan=8 align=center&gt;' +
-							'&lt;a class=&quot;cke_colormore&quot; _cke_focus=1 hidefocus=true' +
-								' title=&quot;', lang.more, '&quot;' +
-								' onclick=&quot;CKEDITOR.tools.callFunction(', clickFn, ',\'?\',\'', type, '\');return false;&quot;' +
-								' href=&quot;javascript:void(\'', lang.more, '\')&quot;', ' role=&quot;option&quot;&gt;', lang.more, '&lt;/a&gt;' +
-						'&lt;/td&gt;' ); // tr is later in the code.
+	beforeInit: function( editor ) {
+<span id='CKEDITOR-editor-property-contextMenu'>		/**
+</span>		 * @readonly
+		 * @property {CKEDITOR.plugins.contextMenu} contextMenu
+		 * @member CKEDITOR.editor
+		 */
+		var contextMenu = editor.contextMenu = new CKEDITOR.plugins.contextMenu( editor );
+
+		editor.on( 'contentDom', function() {
+			contextMenu.addTarget( editor.editable(), editor.config.browserContextMenuOnCtrl !== false );
+		} );
+
+		editor.addCommand( 'contextMenu', {
+			exec: function() {
+				editor.contextMenu.open( editor.document.getBody() );
 			}
+		} );
 
-			output.push( '&lt;/tr&gt;&lt;/table&gt;' );
-
-			return output.join( '' );
-		}
-
-		function isUnstylable( ele ) {
-			return ( ele.getAttribute( 'contentEditable' ) == 'false' ) || ele.getAttribute( 'data-nostyle' );
-		}
+		editor.setKeystroke( CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
+		editor.setKeystroke( CKEDITOR.CTRL + CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
 	}
 } );
 
-<span id='CKEDITOR-config-cfg-colorButton_enableMore'>/**
-</span> * Whether to enable the **More Colors*** button in the color selectors.
+<span id='CKEDITOR-config-cfg-browserContextMenuOnCtrl'>/**
+</span> * Whether to show the browser native context menu when the *Ctrl* or
+ * *Meta* (Mac) key is pressed on opening the context menu with the
+ * right mouse button click or the *Menu* key.
  *
- *		config.colorButton_enableMore = false;
+ *		config.browserContextMenuOnCtrl = false;
  *
- * @cfg {Boolean} [colorButton_enableMore=true]
+ * @since 3.0.2
+ * @cfg {Boolean} [browserContextMenuOnCtrl=true]
  * @member CKEDITOR.config
  */
-
-<span id='CKEDITOR-config-cfg-colorButton_colors'>/**
-</span> * Defines the colors to be displayed in the color selectors. This is a string
- * containing hexadecimal notation for HTML colors, without the `'#'` prefix.
- *
- * **Since 3.3:** A color name may optionally be defined by prefixing the entries with
- * a name and the slash character. For example, `'FontColor1/FF9900'` will be
- * displayed as the color `#FF9900` in the selector, but will be output as `'FontColor1'`.
- *
- *		// Brazil colors only.
- *		config.colorButton_colors = '00923E,F8C100,28166F';
- *
- *		config.colorButton_colors = 'FontColor1/FF9900,FontColor2/0066CC,FontColor3/F00';
- *
- * @cfg {String} [colorButton_colors=see source]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.colorButton_colors = '000,800000,8B4513,2F4F4F,008080,000080,4B0082,696969,' +
-	'B22222,A52A2A,DAA520,006400,40E0D0,0000CD,800080,808080,' +
-	'F00,FF8C00,FFD700,008000,0FF,00F,EE82EE,A9A9A9,' +
-	'FFA07A,FFA500,FFFF00,00FF00,AFEEEE,ADD8E6,DDA0DD,D3D3D3,' +
-	'FFF0F5,FAEBD7,FFFFE0,F0FFF0,F0FFFF,F0F8FF,E6E6FA,FFF';
-
-<span id='CKEDITOR-config-cfg-colorButton_foreStyle'>/**
-</span> * Stores the style definition that applies the text foreground color.
- *
- *		// This is actually the default value.
- *		config.colorButton_foreStyle = {
- *			element: 'span',
- *			styles: { color: '#(color)' }
- *		};
- *
- * @cfg [colorButton_foreStyle=see source]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.colorButton_foreStyle = {
-	element: 'span',
-	styles: { 'color': '#(color)' },
-	overrides: [ {
-		element: 'font', attributes: { 'color': null }
-	} ]
-};
-
-<span id='CKEDITOR-config-cfg-colorButton_backStyle'>/**
-</span> * Stores the style definition that applies the text background color.
- *
- *		// This is actually the default value.
- *		config.colorButton_backStyle = {
- *			element: 'span',
- *			styles: { 'background-color': '#(color)' }
- *		};
- *
- * @cfg [colorButton_backStyle=see source]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.colorButton_backStyle = {
-	element: 'span',
-	styles: { 'background-color': '#(color)' }
-};
 </pre>
 </body>
 </html>

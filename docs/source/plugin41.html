@@ -15,791 +15,1046 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+  <pre class="prettyprint lang-js"><span id='global-property-use strict'>/**
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
+'use strict';
+
 ( function() {
-	CKEDITOR.on( 'dialogDefinition', function( ev ) {
-		var tab,
-			name = ev.data.name,
-			definition = ev.data.definition;
 
-		if ( name == 'link' ) {
-			definition.removeContents( 'target' );
-			definition.removeContents( 'upload' );
-			definition.removeContents( 'advanced' );
-			tab = definition.getContents( 'info' );
-			tab.remove( 'emailSubject' );
-			tab.remove( 'emailBody' );
-		} else if ( name == 'image' ) {
-			definition.removeContents( 'advanced' );
-			tab = definition.getContents( 'Link' );
-			tab.remove( 'cmbTarget' );
-			tab = definition.getContents( 'info' );
-			tab.remove( 'txtAlt' );
-			tab.remove( 'basic' );
-		}
-	} );
-
-	var bbcodeMap = { b: 'strong', u: 'u', i: 'em', color: 'span', size: 'span', quote: 'blockquote', code: 'code', url: 'a', email: 'span', img: 'span', '*': 'li', list: 'ol' },
-		convertMap = { strong: 'b', b: 'b', u: 'u', em: 'i', i: 'i', code: 'code', li: '*' },
-		tagnameMap = { strong: 'b', em: 'i', u: 'u', li: '*', ul: 'list', ol: 'list', code: 'code', a: 'link', img: 'img', blockquote: 'quote' },
-		stylesMap = { color: 'color', size: 'font-size' },
-		attributesMap = { url: 'href', email: 'mailhref', quote: 'cite', list: 'listType' };
-
-	// List of block-like tags.
-	var dtd = CKEDITOR.dtd,
-		blockLikeTags = CKEDITOR.tools.extend( { table: 1 }, dtd.$block, dtd.$listItem, dtd.$tableContent, dtd.$list );
-
-	var semicolonFixRegex = /\s*(?:;\s*|$)/;
-
-	function serializeStyleText( stylesObject ) {
-		var styleText = '';
-		for ( var style in stylesObject ) {
-			var styleVal = stylesObject[ style ],
-				text = ( style + ':' + styleVal ).replace( semicolonFixRegex, ';' );
-
-			styleText += text;
-		}
-		return styleText;
-	}
-
-	// Maintain the map of smiley-to-description.
-	var smileyMap = { smiley: ':)', sad: ':(', wink: ';)', laugh: ':D', cheeky: ':P', blush: ':*)', surprise: ':-o', indecision: ':|', angry: '&gt;:(', angel: 'o:)', cool: '8-)', devil: '&gt;:-)', crying: ';(', kiss: ':-*' },
-		smileyReverseMap = {},
-		smileyRegExp = [];
-
-	// Build regexp for the list of smiley text.
-	for ( var i in smileyMap ) {
-		smileyReverseMap[ smileyMap[ i ] ] = i;
-		smileyRegExp.push( smileyMap[ i ].replace( /\(|\)|\:|\/|\*|\-|\|/g, function( match ) {
-			return '\\' + match;
-		} ) );
-	}
-
-	smileyRegExp = new RegExp( smileyRegExp.join( '|' ), 'g' );
-
-	var decodeHtml = ( function() {
-		var regex = [],
-			entities = {
-				nbsp: '\u00A0', // IE | FF
-				shy: '\u00AD', // IE
-				gt: '\u003E', // IE | FF |   --   | Opera
-				lt: '\u003C' // IE | FF | Safari | Opera
-			};
-
-		for ( var entity in entities )
-			regex.push( entity );
-
-		regex = new RegExp( '&amp;(' + regex.join( '|' ) + ');', 'g' );
-
-		return function( html ) {
-			return html.replace( regex, function( match, entity ) {
-				return entities[ entity ];
-			} );
-		};
-	} )();
-
-	CKEDITOR.BBCodeParser = function() {
-		this._ = {
-			bbcPartsRegex: /(?:\[([^\/\]=]*?)(?:=([^\]]*?))?\])|(?:\[\/([a-z]{1,16})\])/ig
-		};
-	};
-
-	CKEDITOR.BBCodeParser.prototype = {
-		parse: function( bbcode ) {
-			var parts, part,
-				lastIndex = 0;
-
-			while ( ( parts = this._.bbcPartsRegex.exec( bbcode ) ) ) {
-				var tagIndex = parts.index;
-				if ( tagIndex &gt; lastIndex ) {
-					var text = bbcode.substring( lastIndex, tagIndex );
-					this.onText( text, 1 );
-				}
-
-				lastIndex = this._.bbcPartsRegex.lastIndex;
-
-				// &quot;parts&quot; is an array with the following items:
-				// 0 : The entire match for opening/closing tags and line-break;
-				// 1 : line-break;
-				// 2 : open of tag excludes option;
-				// 3 : tag option;
-				// 4 : close of tag;
-
-				part = ( parts[ 1 ] || parts[ 3 ] || '' ).toLowerCase();
-				// Unrecognized tags should be delivered as a simple text (#7860).
-				if ( part &amp;&amp; !bbcodeMap[ part ] ) {
-					this.onText( parts[ 0 ] );
-					continue;
-				}
-
-				// Opening tag
-				if ( parts[ 1 ] ) {
-					var tagName = bbcodeMap[ part ],
-						attribs = {},
-						styles = {},
-						optionPart = parts[ 2 ];
-
-					if ( optionPart ) {
-						if ( part == 'list' ) {
-							if ( !isNaN( optionPart ) )
-								optionPart = 'decimal';
-							else if ( /^[a-z]+$/.test( optionPart ) )
-								optionPart = 'lower-alpha';
-							else if ( /^[A-Z]+$/.test( optionPart ) )
-								optionPart = 'upper-alpha';
-						}
-
-						if ( stylesMap[ part ] ) {
-							// Font size represents percentage.
-							if ( part == 'size' )
-								optionPart += '%';
-
-							styles[ stylesMap[ part ] ] = optionPart;
-							attribs.style = serializeStyleText( styles );
-						} else if ( attributesMap[ part ] )
-							attribs[ attributesMap[ part ] ] = optionPart;
-					}
-
-					// Two special handling - image and email, protect them
-					// as &quot;span&quot; with an attribute marker.
-					if ( part == 'email' || part == 'img' )
-						attribs[ 'bbcode' ] = part;
-
-					this.onTagOpen( tagName, attribs, CKEDITOR.dtd.$empty[ tagName ] );
-				}
-				// Closing tag
-				else if ( parts[ 3 ] )
-					this.onTagClose( bbcodeMap[ part ] );
-			}
-
-			if ( bbcode.length &gt; lastIndex )
-				this.onText( bbcode.substring( lastIndex, bbcode.length ), 1 );
-		}
-	};
-
-<span id='CKEDITOR-htmlParser-fragment-static-method-fromBBCode'>	/**
-</span>	 * Creates a {@link CKEDITOR.htmlParser.fragment} from an HTML string.
-	 *
-	 *		var fragment = CKEDITOR.htmlParser.fragment.fromHtml( '&lt;b&gt;Sample&lt;/b&gt; Text' );
-	 *		alert( fragment.children[ 0 ].name );		// 'b'
-	 *		alert( fragment.children[ 1 ].value );	// ' Text'
-	 *
-	 * @static
-	 * @member CKEDITOR.htmlParser.fragment
-	 * @param {String} source The HTML to be parsed, filling the fragment.
-	 * @returns {CKEDITOR.htmlParser.fragment} The fragment created.
-	 */
-	CKEDITOR.htmlParser.fragment.fromBBCode = function( source ) {
-		var parser = new CKEDITOR.BBCodeParser(),
-			fragment = new CKEDITOR.htmlParser.fragment(),
-			pendingInline = [],
-			pendingBrs = 0,
-			currentNode = fragment,
-			returnPoint;
-
-		function checkPending( newTagName ) {
-			if ( pendingInline.length &gt; 0 ) {
-				for ( var i = 0; i &lt; pendingInline.length; i++ ) {
-					var pendingElement = pendingInline[ i ],
-						pendingName = pendingElement.name,
-						pendingDtd = CKEDITOR.dtd[ pendingName ],
-						currentDtd = currentNode.name &amp;&amp; CKEDITOR.dtd[ currentNode.name ];
-
-					if ( ( !currentDtd || currentDtd[ pendingName ] ) &amp;&amp; ( !newTagName || !pendingDtd || pendingDtd[ newTagName ] || !CKEDITOR.dtd[ newTagName ] ) ) {
-						// Get a clone for the pending element.
-						pendingElement = pendingElement.clone();
-
-						// Add it to the current node and make it the current,
-						// so the new element will be added inside of it.
-						pendingElement.parent = currentNode;
-						currentNode = pendingElement;
-
-						// Remove the pending element (back the index by one
-						// to properly process the next entry).
-						pendingInline.splice( i, 1 );
-						i--;
-					}
-				}
-			}
-		}
-
-		function checkPendingBrs( tagName, closing ) {
-			var len = currentNode.children.length,
-				previous = len &gt; 0 &amp;&amp; currentNode.children[ len - 1 ],
-				lineBreakParent = !previous &amp;&amp; writer.getRule( tagnameMap[ currentNode.name ], 'breakAfterOpen' ),
-				lineBreakPrevious = previous &amp;&amp; previous.type == CKEDITOR.NODE_ELEMENT &amp;&amp; writer.getRule( tagnameMap[ previous.name ], 'breakAfterClose' ),
-				lineBreakCurrent = tagName &amp;&amp; writer.getRule( tagnameMap[ tagName ], closing ? 'breakBeforeClose' : 'breakBeforeOpen' );
-
-			if ( pendingBrs &amp;&amp; ( lineBreakParent || lineBreakPrevious || lineBreakCurrent ) )
-				pendingBrs--;
-
-			// 1. Either we're at the end of block, where it requires us to compensate the br filler
-			// removing logic (from htmldataprocessor).
-			// 2. Or we're at the end of pseudo block, where it requires us to compensate
-			// the bogus br effect.
-			if ( pendingBrs &amp;&amp; tagName in blockLikeTags )
-				pendingBrs++;
-
-			while ( pendingBrs &amp;&amp; pendingBrs-- )
-				currentNode.children.push( previous = new CKEDITOR.htmlParser.element( 'br' ) );
-		}
-
-		function addElement( node, target ) {
-			checkPendingBrs( node.name, 1 );
-
-			target = target || currentNode || fragment;
-
-			var len = target.children.length,
-				previous = len &gt; 0 &amp;&amp; target.children[ len - 1 ] || null;
-
-			node.previous = previous;
-			node.parent = target;
-
-			target.children.push( node );
-
-			if ( node.returnPoint ) {
-				currentNode = node.returnPoint;
-				delete node.returnPoint;
-			}
-		}
-
-		parser.onTagOpen = function( tagName, attributes, selfClosing ) {
-			var element = new CKEDITOR.htmlParser.element( tagName, attributes );
-
-			// This is a tag to be removed if empty, so do not add it immediately.
-			if ( CKEDITOR.dtd.$removeEmpty[ tagName ] ) {
-				pendingInline.push( element );
-				return;
-			}
-
-			var currentName = currentNode.name;
-
-			var currentDtd = currentName &amp;&amp; ( CKEDITOR.dtd[ currentName ] || ( currentNode._.isBlockLike ? CKEDITOR.dtd.div : CKEDITOR.dtd.span ) );
-
-			// If the element cannot be child of the current element.
-			if ( currentDtd &amp;&amp; !currentDtd[ tagName ] ) {
-				var reApply = false,
-					addPoint; // New position to start adding nodes.
-
-				// If the element name is the same as the current element name,
-				// then just close the current one and append the new one to the
-				// parent. This situation usually happens with &lt;p&gt;, &lt;li&gt;, &lt;dt&gt; and
-				// &lt;dd&gt;, specially in IE. Do not enter in this if block in this case.
-				if ( tagName == currentName )
-					addElement( currentNode, currentNode.parent );
-				else if ( tagName in CKEDITOR.dtd.$listItem ) {
-					parser.onTagOpen( 'ul', {} );
-					addPoint = currentNode;
-					reApply = true;
-				} else {
-					addElement( currentNode, currentNode.parent );
-
-					// The current element is an inline element, which
-					// cannot hold the new one. Put it in the pending list,
-					// and try adding the new one after it.
-					pendingInline.unshift( currentNode );
-					reApply = true;
-				}
-
-				if ( addPoint )
-					currentNode = addPoint;
-				// Try adding it to the return point, or the parent element.
-				else
-					currentNode = currentNode.returnPoint || currentNode.parent;
-
-				if ( reApply ) {
-					parser.onTagOpen.apply( this, arguments );
-					return;
-				}
-			}
-
-			checkPending( tagName );
-			checkPendingBrs( tagName );
-
-			element.parent = currentNode;
-			element.returnPoint = returnPoint;
-			returnPoint = 0;
-
-			if ( element.isEmpty )
-				addElement( element );
-			else
-				currentNode = element;
-		};
-
-		parser.onTagClose = function( tagName ) {
-			// Check if there is any pending tag to be closed.
-			for ( var i = pendingInline.length - 1; i &gt;= 0; i-- ) {
-				// If found, just remove it from the list.
-				if ( tagName == pendingInline[ i ].name ) {
-					pendingInline.splice( i, 1 );
-					return;
-				}
-			}
-
-			var pendingAdd = [],
-				newPendingInline = [],
-				candidate = currentNode;
-
-			while ( candidate.type &amp;&amp; candidate.name != tagName ) {
-				// If this is an inline element, add it to the pending list, if we're
-				// really closing one of the parents element later, they will continue
-				// after it.
-				if ( !candidate._.isBlockLike )
-					newPendingInline.unshift( candidate );
-
-				// This node should be added to it's parent at this point. But,
-				// it should happen only if the closing tag is really closing
-				// one of the nodes. So, for now, we just cache it.
-				pendingAdd.push( candidate );
-
-				candidate = candidate.parent;
-			}
-
-			if ( candidate.type ) {
-				// Add all elements that have been found in the above loop.
-				for ( i = 0; i &lt; pendingAdd.length; i++ ) {
-					var node = pendingAdd[ i ];
-					addElement( node, node.parent );
-				}
-
-				currentNode = candidate;
-
-
-				addElement( candidate, candidate.parent );
-
-				// The parent should start receiving new nodes now, except if
-				// addElement changed the currentNode.
-				if ( candidate == currentNode )
-					currentNode = currentNode.parent;
-
-				pendingInline = pendingInline.concat( newPendingInline );
-			}
-		};
-
-		parser.onText = function( text ) {
-			var currentDtd = CKEDITOR.dtd[ currentNode.name ];
-			if ( !currentDtd || currentDtd[ '#' ] ) {
-				checkPendingBrs();
-				checkPending();
-
-				text.replace( /(\r\n|[\r\n])|[^\r\n]*/g, function( piece, lineBreak ) {
-					if ( lineBreak !== undefined &amp;&amp; lineBreak.length )
-						pendingBrs++;
-					else if ( piece.length ) {
-						var lastIndex = 0;
-
-						// Create smiley from text emotion.
-						piece.replace( smileyRegExp, function( match, index ) {
-							addElement( new CKEDITOR.htmlParser.text( piece.substring( lastIndex, index ) ), currentNode );
-							addElement( new CKEDITOR.htmlParser.element( 'smiley', { desc: smileyReverseMap[ match ] } ), currentNode );
-							lastIndex = index + match.length;
-						} );
-
-						if ( lastIndex != piece.length )
-							addElement( new CKEDITOR.htmlParser.text( piece.substring( lastIndex, piece.length ) ), currentNode );
-					}
-				} );
-			}
-		};
-
-		// Parse it.
-		parser.parse( CKEDITOR.tools.htmlEncode( source ) );
-
-		// Close all hanging nodes.
-		while ( currentNode.type != CKEDITOR.NODE_DOCUMENT_FRAGMENT ) {
-			var parent = currentNode.parent,
-				node = currentNode;
-
-			addElement( node, parent );
-			currentNode = parent;
-		}
-
-		return fragment;
-	};
-
-	var BBCodeWriter = CKEDITOR.tools.createClass( {
-		$: function() {
-			this._ = {
-				output: [],
-				rules: []
-			};
-
-			// List and list item.
-			this.setRules( 'list', { breakBeforeOpen: 1, breakAfterOpen: 1, breakBeforeClose: 1, breakAfterClose: 1 } );
-
-			this.setRules( '*', {
-				breakBeforeOpen: 1,
-				breakAfterOpen: 0,
-				breakBeforeClose: 1,
-				breakAfterClose: 0
-			} );
-
-			this.setRules( 'quote', {
-				breakBeforeOpen: 1,
-				breakAfterOpen: 0,
-				breakBeforeClose: 0,
-				breakAfterClose: 1
-			} );
-		},
-
-		proto: {
-			//
-			// Sets formatting rules for a given tag. The possible rules are:
-			// &lt;ul&gt;
-			//	&lt;li&gt;&lt;b&gt;breakBeforeOpen&lt;/b&gt;: break line before the opener tag for this element.&lt;/li&gt;
-			//	&lt;li&gt;&lt;b&gt;breakAfterOpen&lt;/b&gt;: break line after the opener tag for this element.&lt;/li&gt;
-			//	&lt;li&gt;&lt;b&gt;breakBeforeClose&lt;/b&gt;: break line before the closer tag for this element.&lt;/li&gt;
-			//	&lt;li&gt;&lt;b&gt;breakAfterClose&lt;/b&gt;: break line after the closer tag for this element.&lt;/li&gt;
-			// &lt;/ul&gt;
-			//
-			// All rules default to &quot;false&quot;. Each call to the function overrides
-			// already present rules, leaving the undefined untouched.
-			//
-			// @param {String} tagName The tag name to which set the rules.
-			// @param {Object} rules An object containing the element rules.
-			// @example
-			// // Break line before and after &quot;img&quot; tags.
-			// writer.setRules( 'list',
-			//		 {
-			//				 breakBeforeOpen : true
-			//				 breakAfterOpen : true
-			//		 });
-			setRules: function( tagName, rules ) {
-				var currentRules = this._.rules[ tagName ];
-
-				if ( currentRules )
-					CKEDITOR.tools.extend( currentRules, rules, true );
-				else
-					this._.rules[ tagName ] = rules;
-			},
-
-			getRule: function( tagName, ruleName ) {
-				return this._.rules[ tagName ] &amp;&amp; this._.rules[ tagName ][ ruleName ];
-			},
-
-			openTag : function( tag ) {
-				if ( tag in bbcodeMap ) {
-					if ( this.getRule( tag, 'breakBeforeOpen' ) )
-						this.lineBreak( 1 );
-
-					this.write( '[', tag );
-				}
-			},
-
-			openTagClose : function( tag ) {
-				if ( tag == 'br' )
-					this._.output.push( '\n' );
-				else if ( tag in bbcodeMap ) {
-					this.write( ']' );
-					if ( this.getRule( tag, 'breakAfterOpen' ) )
-						this.lineBreak( 1 );
-				}
-			},
-
-			attribute : function( name, val ) {
-				if ( name == 'option' ) {
-					// Force simply ampersand in attributes.
-					if ( typeof val == 'string' )
-						val = val.replace( /&amp;amp;/g, '&amp;' );
-
-					this.write( '=', val );
-				}
-			},
-
-			closeTag: function( tag ) {
-				if ( tag in bbcodeMap ) {
-					if ( this.getRule( tag, 'breakBeforeClose' ) )
-						this.lineBreak( 1 );
-
-					tag != '*' &amp;&amp; this.write( '[/', tag, ']' );
-
-					if ( this.getRule( tag, 'breakAfterClose' ) )
-						this.lineBreak( 1 );
-				}
-			},
-
-			text: function( text ) {
-				this.write( text );
-			},
-
-			comment: function() {},
-
-			// Output line-break for formatting.
-			lineBreak: function() {
-				// Avoid line break when:
-				// 1) Previous tag already put one.
-				// 2) We're at output start.
-				if ( !this._.hasLineBreak &amp;&amp; this._.output.length ) {
-					this.write( '\n' );
-					this._.hasLineBreak = 1;
-				}
-			},
-
-			write: function() {
-				this._.hasLineBreak = 0;
-				var data = Array.prototype.join.call( arguments, '' );
-				this._.output.push( data );
-			},
-
-			reset: function() {
-				this._.output = [];
-				this._.hasLineBreak = 0;
-			},
-
-			getHtml: function( reset ) {
-				var bbcode = this._.output.join( '' );
-
-				if ( reset )
-					this.reset();
-
-				return decodeHtml( bbcode );
-			}
-		}
-	} );
-
-	var writer = new BBCodeWriter();
-
-	CKEDITOR.plugins.add( 'bbcode', {
-		requires: 'entities',
-
-		// Adapt some critical editor configuration for better support
-		// of BBCode environment.
-		beforeInit: function( editor ) {
-			var config = editor.config;
-
-			CKEDITOR.tools.extend( config, {
-				// This one is for backwards compatibility only as
-				// editor#enterMode is already set at this stage (#11202).
-				enterMode: CKEDITOR.ENTER_BR,
-				basicEntities: false,
-				entities: false,
-				fillEmptyBlocks: false
-			}, true );
-
-			editor.filter.disable();
-
-			// Since CKEditor 4.3, editor#(active)enterMode is set before
-			// beforeInit. Properties got to be updated (#11202).
-			editor.activeEnterMode = editor.enterMode = CKEDITOR.ENTER_BR;
+	var template = '&lt;img alt=&quot;&quot; src=&quot;&quot; /&gt;',
+		templateBlock = '&lt;figure class=&quot;caption&quot;&gt;' +
+				template +
+				'&lt;figcaption&gt;Caption&lt;/figcaption&gt;' +
+			'&lt;/figure&gt;',
+		regexPercent = /^\s*(\d+\%)\s*$/i;
+
+	CKEDITOR.plugins.add( 'image2', {
+		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		requires: 'widget,dialog',
+		icons: 'image',
+		hidpi: true,
+
+		onLoad: function( editor ) {
+			CKEDITOR.addCss(
+			'.cke_editable.cke_image_sw, .cke_editable.cke_image_sw *{cursor:sw-resize !important}' +
+			'.cke_editable.cke_image_se, .cke_editable.cke_image_se *{cursor:se-resize !important}' +
+			'.cke_image_resizer{' +
+				'display:none;' +
+				'position:absolute;' +
+				'width:10px;' +
+				'height:10px;' +
+				'bottom:-5px;' +
+				'right:-5px;' +
+				'background:#000;' +
+				'outline:1px solid #fff;' +
+				// Prevent drag handler from being misplaced (#11207).
+				'line-height:0;' +
+				'cursor:se-resize;' +
+			'}' +
+			'.cke_image_resizer_wrapper{' +
+				'position:relative;' +
+				'display:inline-block;' +
+				'line-height:0;' +
+			'}' +
+			// Bottom-left corner style of the resizer.
+			'.cke_image_resizer.cke_image_resizer_left{' +
+				'right:auto;' +
+				'left:-5px;' +
+				'cursor:sw-resize;' +
+			'}' +
+			'.cke_widget_wrapper:hover .cke_image_resizer,' +
+			'.cke_image_resizer.cke_image_resizing{' +
+				'display:block' +
+			'}' );
 		},
 
 		init: function( editor ) {
-			var config = editor.config;
+			// Adapts configuration from original image plugin. Should be removed
+			// when we'll rename image2 to image.
+			var config = editor.config,
+				lang = editor.lang.image2,
+				image = widgetDef( editor );
 
-			function BBCodeToHtml( code ) {
-				var fragment = CKEDITOR.htmlParser.fragment.fromBBCode( code ),
-					writer = new CKEDITOR.htmlParser.basicWriter();
+			// Since filebrowser plugin discovers config properties by dialog (plugin?)
+			// names (sic!), this hack will be necessary as long as Image2 is not named
+			// Image. And since Image2 will never be Image, for sure some filebrowser logic
+			// got to be refined.
+			config.filebrowserImage2BrowseUrl = config.filebrowserImageBrowseUrl;
+			config.filebrowserImage2UploadUrl = config.filebrowserImageUploadUrl;
 
-				fragment.writeHtml( writer, bbcodeFilter );
-				return writer.getHtml( true );
-			}
+			// Add custom elementspath names to widget definition.
+			image.pathName = lang.pathName;
+			image.editables.caption.pathName = lang.pathNameCaption;
 
-			var bbcodeFilter = new CKEDITOR.htmlParser.filter();
-			bbcodeFilter.addRules( {
-				elements: {
-					blockquote: function( element ) {
-						var quoted = new CKEDITOR.htmlParser.element( 'div' );
-						quoted.children = element.children;
-						element.children = [ quoted ];
-						var citeText = element.attributes.cite;
-						if ( citeText ) {
-							var cite = new CKEDITOR.htmlParser.element( 'cite' );
-							cite.add( new CKEDITOR.htmlParser.text( citeText.replace( /^&quot;|&quot;$/g, '' ) ) );
-							delete element.attributes.cite;
-							element.children.unshift( cite );
-						}
-					},
-					span: function( element ) {
-						var bbcode;
-						if ( ( bbcode = element.attributes.bbcode ) ) {
-							if ( bbcode == 'img' ) {
-								element.name = 'img';
-								element.attributes.src = element.children[ 0 ].value;
-								element.children = [];
-							} else if ( bbcode == 'email' ) {
-								element.name = 'a';
-								element.attributes.href = 'mailto:' + element.children[ 0 ].value;
-							}
+			// Register the widget.
+			editor.widgets.add( 'image', image );
 
-							delete element.attributes.bbcode;
-						}
-					},
-					ol: function( element ) {
-						if ( element.attributes.listType ) {
-							if ( element.attributes.listType != 'decimal' )
-								element.attributes.style = 'list-style-type:' + element.attributes.listType;
-						} else
-							element.name = 'ul';
-
-						delete element.attributes.listType;
-					},
-					a: function( element ) {
-						if ( !element.attributes.href )
-							element.attributes.href = element.children[ 0 ].value;
-					},
-					smiley: function( element ) {
-						element.name = 'img';
-
-						var description = element.attributes.desc,
-							image = config.smiley_images[ CKEDITOR.tools.indexOf( config.smiley_descriptions, description ) ],
-							src = CKEDITOR.tools.htmlEncode( config.smiley_path + image );
-
-						element.attributes = {
-							src: src,
-							'data-cke-saved-src': src,
-							title: description,
-							alt: description
-						};
-					}
-				}
+			// Add toolbar button for this plugin.
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Image', {
+				label: editor.lang.common.image,
+				command: 'image',
+				toolbar: 'insert,10'
 			} );
 
-			editor.dataProcessor.htmlFilter.addRules( {
-				elements: {
-					$: function( element ) {
-						var attributes = element.attributes,
-							style = CKEDITOR.tools.parseCssText( attributes.style, 1 ),
-							value;
+			// Register context menu option for editing widget.
+			if ( editor.contextMenu ) {
+				editor.addMenuGroup( 'image', 10 );
 
-						var tagName = element.name;
-						if ( tagName in convertMap )
-							tagName = convertMap[ tagName ];
-						else if ( tagName == 'span' ) {
-							if ( ( value = style.color ) ) {
-								tagName = 'color';
-								value = CKEDITOR.tools.convertRgbToHex( value );
-							} else if ( ( value = style[ 'font-size' ] ) ) {
-								var percentValue = value.match( /(\d+)%$/ );
-								if ( percentValue ) {
-									value = percentValue[ 1 ];
-									tagName = 'size';
-								}
-							}
-						} else if ( tagName == 'ol' || tagName == 'ul' ) {
-							if ( ( value = style[ 'list-style-type' ] ) ) {
-								switch ( value ) {
-									case 'lower-alpha':
-										value = 'a';
-										break;
-									case 'upper-alpha':
-										value = 'A';
-										break;
-								}
-							} else if ( tagName == 'ol' )
-								value = 1;
-
-							tagName = 'list';
-						} else if ( tagName == 'blockquote' ) {
-							try {
-								var cite = element.children[ 0 ],
-									quoted = element.children[ 1 ],
-									citeText = cite.name == 'cite' &amp;&amp; cite.children[ 0 ].value;
-
-								if ( citeText ) {
-									value = '&quot;' + citeText + '&quot;';
-									element.children = quoted.children;
-								}
-
-							} catch ( er ) {}
-
-							tagName = 'quote';
-						} else if ( tagName == 'a' ) {
-							if ( ( value = attributes.href ) ) {
-								if ( value.indexOf( 'mailto:' ) !== -1 ) {
-									tagName = 'email';
-									// [email] should have a single text child with email address.
-									element.children = [ new CKEDITOR.htmlParser.text( value.replace( 'mailto:', '' ) ) ];
-									value = '';
-								} else {
-									var singleton = element.children.length == 1 &amp;&amp; element.children[ 0 ];
-									if ( singleton &amp;&amp; singleton.type == CKEDITOR.NODE_TEXT &amp;&amp; singleton.value == value )
-										value = '';
-
-									tagName = 'url';
-								}
-							}
-						} else if ( tagName == 'img' ) {
-							element.isEmpty = 0;
-
-							// Translate smiley (image) to text emotion.
-							var src = attributes[ 'data-cke-saved-src' ] || attributes.src,
-								alt = attributes.alt;
-
-							if ( src &amp;&amp; src.indexOf( editor.config.smiley_path ) != -1 &amp;&amp; alt )
-								return new CKEDITOR.htmlParser.text( smileyMap[ alt ] );
-							else
-								element.children = [ new CKEDITOR.htmlParser.text( src ) ];
-						}
-
-						element.name = tagName;
-						value &amp;&amp; ( element.attributes.option = value );
-
-						return null;
-					},
-
-					// Remove any bogus br from the end of a pseudo block,
-					// e.g. &lt;div&gt;some text&lt;br /&gt;&lt;p&gt;paragraph&lt;/p&gt;&lt;/div&gt;
-					br: function( element ) {
-						var next = element.next;
-						if ( next &amp;&amp; next.name in blockLikeTags )
-							return false;
-					}
-				}
-			}, 1 );
-
-			editor.dataProcessor.writer = writer;
-
-			function onSetData( evt ) {
-				var bbcode = evt.data.dataValue;
-				evt.data.dataValue = BBCodeToHtml( bbcode );
+				editor.addMenuItem( 'image', {
+					label: lang.menu,
+					command: 'image',
+					group: 'image'
+				} );
 			}
 
-			// Skip the first &quot;setData&quot; call from inline creator, to allow content of
-			// HTML to be loaded from the page element.
-			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
-				editor.once( 'contentDom', function() {
-					editor.on( 'setData', onSetData );
-				} );
-			else
-				editor.on( 'setData', onSetData );
-
+			CKEDITOR.dialog.add( 'image2', this.path + 'dialogs/image2.js' );
 		},
 
 		afterInit: function( editor ) {
-			var filters;
-			if ( editor._.elementsPath ) {
-				// Eliminate irrelevant elements from displaying, e.g body and p.
-				if ( ( filters = editor._.elementsPath.filters ) ) {
-					filters.push( function( element ) {
-						var htmlName = element.getName(),
-							name = tagnameMap[ htmlName ] || false;
+			var align = { left: 1, right: 1, center: 1, block: 1 },
+				integrate = alignCommandIntegrator( editor );
 
-						// Specialized anchor presents as email.
-						if ( name == 'link' &amp;&amp; element.getAttribute( 'href' ).indexOf( 'mailto:' ) === 0 )
-							name = 'email';
-						// Styled span could be either size or color.
-						else if ( htmlName == 'span' ) {
-							if ( element.getStyle( 'font-size' ) )
-								name = 'size';
-							else if ( element.getStyle( 'color' ) )
-								name = 'color';
-						} else if ( name == 'img' ) {
-							var src = element.data( 'cke-saved-src' ) || element.getAttribute( 'src' );
-							if ( src &amp;&amp; src.indexOf( editor.config.smiley_path ) === 0 )
-								name = 'smiley';
-						}
-
-						return name;
-					} );
-				}
-			}
+			for ( var value in align )
+				integrate( value );
 		}
 	} );
 
+	// @param {CKEDITOR.editor}
+	// @returns {Object}
+	function widgetDef( editor ) {
+		return {
+			// Widget-specific rules for Allowed Content Filter.
+			allowedContent: {
+				// This widget may need &lt;div&gt; centering wrapper.
+				div: {
+					match: centerWrapperChecker( editor ),
+					styles: 'text-align'
+				},
+				figcaption: true,
+				figure: {
+					classes: '!caption',
+					styles: 'float,display'
+				},
+				img: {
+					attributes: '!src,alt,width,height',
+					styles: 'float'
+				},
+				// This widget may need &lt;p&gt; centering wrapper.
+				p: {
+					match: centerWrapperChecker( editor ),
+					styles: 'text-align'
+				}
+			},
+
+			requiredContent: 'img[src,alt]',
+
+			// Note: The following may not cover all the possible cases since
+			// requiredContent supports a single tag only.
+			features: {
+				dimension: {
+					requiredContent: 'img[width,height]'
+				},
+				align: {
+					requiredContent: 'img{float}'
+				},
+				caption: {
+					requiredContent: 'figcaption'
+				}
+			},
+
+			// This widget converts style-driven dimensions to attributes.
+			contentTransformations: [
+				[ 'img[width]: sizeToAttribute' ]
+			],
+
+			// This widget has an editable caption.
+			editables: {
+				caption: {
+					selector: 'figcaption',
+					allowedContent: 'br em strong sub sup u s; a[!href]'
+				}
+			},
+
+			parts: {
+				image: 'img',
+				caption: 'figcaption'
+			},
+
+			// The name of this widget's dialog.
+			dialog: 'image2',
+
+			// Template of the widget: plain image.
+			template: template,
+
+			data: function() {
+				var widget = this,
+					editor = widget.editor,
+					doc = editor.document,
+					editable = editor.editable(),
+					oldState = widget.oldData,
+					newState = widget.data,
+					features = this.features;
+
+				// Image can't be captioned when figcaption is disallowed (#11004).
+				if ( newState.hasCaption &amp;&amp; !editor.filter.checkFeature( features.caption ) )
+					newState.hasCaption = false;
+
+				// Image can't be aligned when floating is disallowed (#11004).
+				if ( newState.align != 'none' &amp;&amp; !editor.filter.checkFeature( features.align ) )
+					newState.align = 'none';
+
+				// Convert the internal form of the widget from the old state to the new one.
+				widget.shiftState( {
+					element: widget.element,
+					oldState: oldState,
+					newState: newState,
+
+					// Destroy the widget.
+					destroy: function() {
+						if ( this.destroyed )
+							return;
+
+						// Remember whether widget was focused before destroyed.
+						if ( editor.widgets.focused == widget )
+							this.focused = true;
+
+						editor.widgets.destroy( widget );
+
+						// Mark widget was destroyed.
+						this.destroyed = true;
+					},
+
+					init: function( element ) {
+						// Create a new widget. This widget will be either captioned
+						// non-captioned, block or inline according to what is the
+						// new state of the widget.
+						if ( this.destroyed ) {
+							widget = editor.widgets.initOn( element, 'image', widget.data );
+
+							// Once widget was re-created, it may become an inline element without
+							// block wrapper (i.e. when unaligned, end not captioned). Let's do some
+							// sort of autoparagraphing here (#10853).
+							if ( widget.inline &amp;&amp; !( new CKEDITOR.dom.elementPath( widget.wrapper, editable ).block ) ) {
+								var block = doc.createElement( editor.activeEnterMode == CKEDITOR.ENTER_P ? 'p' : 'div' );
+								block.replace( widget.wrapper );
+								widget.wrapper.move( block );
+							}
+
+							// The focus must be transferred from the old one (destroyed)
+							// to the new one (just created).
+							if ( this.focused ) {
+								widget.focus();
+								delete this.focused;
+							}
+
+							delete this.destroyed;
+						}
+
+						// If now widget was destroyed just update wrapper's alignment.
+						// According to the new state.
+						else
+							setWrapperAlign( widget );
+
+					}
+				} );
+
+				widget.parts.image.setAttributes( {
+					src: widget.data.src,
+
+					// This internal is required by the editor.
+					'data-cke-saved-src': widget.data.src,
+
+					alt: widget.data.alt
+				} );
+
+				// Set dimensions of the image according to gathered data.
+				// Do it only when the attributes are allowed (#11004).
+				if ( editor.filter.checkFeature( features.dimension ) )
+					setDimensions( widget );
+
+				// Cache current data.
+				widget.oldData = CKEDITOR.tools.extend( {}, widget.data );
+			},
+
+			init: function() {
+				var helpers = CKEDITOR.plugins.image2,
+					image = this.parts.image,
+					data = {
+						hasCaption: !!this.parts.caption,
+						src: image.getAttribute( 'src' ),
+						alt: image.getAttribute( 'alt' ) || '',
+						width: image.getAttribute( 'width' ) || '',
+						height: image.getAttribute( 'height' ) || '',
+
+						// Lock ratio is on by default (#10833).
+						lock: this.ready ? helpers.checkHasNaturalRatio( image ) : true
+					};
+
+				// Read initial float style from figure/image and
+				// then remove it. This style will be set on wrapper in #data listener.
+				if ( !data.align ) {
+					data.align = this.element.getStyle( 'float' ) || image.getStyle( 'float' ) || 'none';
+					this.element.removeStyle( 'float' );
+					image.removeStyle( 'float' );
+				}
+
+				// Get rid of extra vertical space when there's no caption.
+				// It will improve the look of the resizer.
+				if ( !data.hasCaption )
+					this.wrapper.setStyle( 'line-height', '0' );
+
+				this.setData( data );
+
+				// Setup dynamic image resizing with mouse.
+				// Don't initialize resizer when dimensions are disallowed (#11004).
+				if ( editor.filter.checkFeature( this.features.dimension ) )
+					setupResizer( this );
+
+				this.shiftState = helpers.stateShifter( this.editor );
+
+				// Add widget editing option to its context menu.
+				this.on( 'contextMenu', function( evt ) {
+					evt.data.image = CKEDITOR.TRISTATE_OFF;
+				} );
+
+				// Pass the reference to this widget to the dialog.
+				this.on( 'dialog', function( evt ) {
+					evt.data.widget = this;
+				}, this );
+			},
+
+			upcast: upcastWidgetElement( editor ),
+			downcast: downcastWidgetElement
+		};
+	}
+
+	CKEDITOR.plugins.image2 = {
+		stateShifter: function( editor ) {
+			// Tag name used for centering non-captioned widgets.
+			var doc = editor.document,
+				editable = editor.editable(),
+
+				// The order that stateActions get executed. It matters!
+				shiftables = [ 'hasCaption', 'align' ],
+
+				// Atomic procedures, one per state variable.
+				stateActions = {
+					align: function( data, oldValue, newValue ) {
+						var hasCaptionAfter = data.newState.hasCaption,
+							element = data.element;
+
+						// Alignment changed.
+						if ( changed( data, 'align' ) ) {
+							// No caption in the new state.
+							if ( !hasCaptionAfter ) {
+								// Changed to &quot;center&quot; (non-captioned).
+								if ( newValue == 'center' ) {
+									data.destroy();
+									data.element = wrapInCentering( editor, element );
+								}
+
+								// Changed to &quot;non-center&quot; from &quot;center&quot; while caption removed.
+								if ( !changed( data, 'hasCaption' ) &amp;&amp; oldValue == 'center' &amp;&amp; newValue != 'center' ) {
+									data.destroy();
+									data.element = unwrapFromCentering( element );
+								}
+							}
+						}
+
+						// Alignment remains and &quot;center&quot; removed caption.
+						else if ( newValue == 'center' &amp;&amp; changed( data, 'hasCaption' ) &amp;&amp; !hasCaptionAfter ) {
+							data.destroy();
+							data.element = wrapInCentering( editor, element );
+						}
+
+						// Finally set display for figure.
+						if ( element.is( 'figure' ) ) {
+							if ( newValue == 'center' )
+								element.setStyle( 'display', 'inline-block' );
+							else
+								element.removeStyle( 'display' );
+						}
+					},
+
+					hasCaption:	function( data, oldValue, newValue ) {
+						// This action is for real state change only.
+						if ( !changed( data, 'hasCaption' ) )
+							return;
+
+						var element = data.element,
+							oldState = data.oldState,
+							newState = data.newState,
+							img;
+
+						// Switching hasCaption always destroys the widget.
+						data.destroy();
+
+						// There was no caption, but the caption is to be added.
+						if ( newValue ) {
+							// Get &lt;img&gt; from element. As element may be either
+							// &lt;img&gt; or centering &lt;p&gt;, consider it now.
+							img = element.findOne( 'img' ) || element;
+
+							// Create new &lt;figure&gt; from widget template.
+							var figure = CKEDITOR.dom.element.createFromHtml( templateBlock, doc );
+
+							// Replace element with &lt;figure&gt;.
+							replaceSafely( figure, element );
+
+							// Use old &lt;img&gt; instead of the one from the template,
+							// so we won't lose additional attributes.
+							img.replace( figure.findOne( 'img' ) );
+
+							// Update widget's element.
+							data.element = figure;
+						}
+
+						// The caption was present, but now it's to be removed.
+						else {
+							// Unwrap &lt;img&gt; from figure.
+							img = element.findOne( 'img' );
+							img.replace( element );
+
+							// Update widget's element.
+							data.element = img;
+						}
+					}
+				};
+
+			function getValue( state, name ) {
+				return state &amp;&amp; state[ name ] !== undefined ? state[ name ] : null;
+			}
+
+			function changed( data, name ) {
+				if ( !data.oldState )
+					return false;
+				else
+					return data.oldState[ name ] !== data.newState[ name ];
+			}
+
+			function wrapInCentering( editor, element ) {
+				// When widget gets centered. Wrapper must be created.
+				// Create new &lt;p|div&gt; with text-align:center.
+				var center = doc.createElement( editor.activeEnterMode == CKEDITOR.ENTER_P ? 'p' : 'div', {
+					styles: { 'text-align': 'center' }
+				} );
+
+				// Replace element with centering wrapper.
+				replaceSafely( center, element );
+				element.move( center );
+
+				return center;
+			}
+
+			function unwrapFromCentering( element ) {
+				var img = element.findOne( 'img' );
+
+				img.replace( element );
+
+				return img;
+			}
+
+			function replaceSafely( replacing, replaced ) {
+				if ( replaced.getParent() ) {
+					var range = editor.createRange();
+
+					range.moveToPosition( replaced, CKEDITOR.POSITION_BEFORE_START );
+
+					// Remove old element. Do it before insertion to avoid a case when
+					// element is moved from 'replaced' element before it, what creates
+					// a tricky case which insertElementIntorRange does not handle.
+					replaced.remove();
+
+					editable.insertElementIntoRange( replacing, range );
+				}
+				else
+					replacing.replace( replaced );
+			}
+
+			return function( data ) {
+				var oldState = data.oldState,
+					newState = data.newState,
+					name;
+
+				// Iterate over possible state variables.
+				for ( var i = 0; i &lt; shiftables.length; i++ ) {
+					name = shiftables[ i ];
+
+					stateActions[ name ]( data,
+						oldState ? oldState[ name ] : null,
+						newState[ name ] );
+				}
+
+				data.init( data.element );
+			};
+		},
+
+		// Checks whether current ratio of the image match the natural one.
+		// by comparing dimensions.
+		// @param {CKEDITOR.dom.element} image
+		// @returns {Boolean}
+		checkHasNaturalRatio: function( image ) {
+			var $ = image.$,
+				natural = this.getNatural( image );
+
+			// The reason for two alternative comparisons is that the rounding can come from
+			// both dimensions, e.g. there are two cases:
+			// 	1. height is computed as a rounded relation of the real height and the value of width,
+			//	2. width is computed as a rounded relation of the real width and the value of heigh.
+			return Math.round( $.clientWidth / natural.width * natural.height ) == $.clientHeight ||
+				Math.round( $.clientHeight / natural.height * natural.width ) == $.clientWidth;
+		},
+
+		// Returns natural dimensions of the image. For modern browsers
+		// it uses natural(Width|Height) for old ones (IE8), creates
+		// a new image and reads dimensions.
+		// @param {CKEDITOR.dom.element} image
+		// @returns {Object}
+		getNatural: function( image ) {
+			var dimensions;
+
+			if ( image.$.naturalWidth ) {
+				dimensions = {
+					width: image.$.naturalWidth,
+					height: image.$.naturalHeight
+				};
+			} else {
+				var img = new Image();
+				img.src = image.getAttribute( 'src' );
+
+				dimensions = {
+					width: img.width,
+					height: img.height
+				};
+			}
+
+			return dimensions;
+		}
+	};
+
+	function setWrapperAlign( widget ) {
+		var wrapper = widget.wrapper,
+			align = widget.data.align;
+
+		if ( align == 'center' ) {
+			if ( !widget.inline )
+				wrapper.setStyle( 'text-align', 'center' );
+
+			wrapper.removeStyle( 'float' );
+		} else {
+			if ( !widget.inline )
+				wrapper.removeStyle( 'text-align' );
+
+			if ( align == 'none' )
+				wrapper.removeStyle( 'float' );
+			else
+				wrapper.setStyle( 'float', align );
+		}
+	}
+
+	// Returns a function that creates widgets from all &lt;img&gt; and
+	// &lt;figure class=&quot;{config.image2_captionedClass}&quot;&gt; elements.
+	//
+	// @param {CKEDITOR.editor} editor
+	// @returns {Function}
+	function upcastWidgetElement( editor ) {
+		var isCenterWrapper = centerWrapperChecker( editor );
+
+		// @param {CKEDITOR.htmlParser.element} el
+		// @param {Object} data
+		return function( el, data ) {
+			var dimensions = { width: 1, height: 1 },
+				name = el.name,
+				image;
+
+			// #11110 Don't initialize on pasted fake objects.
+			if ( el.attributes[ 'data-cke-realelement' ] )
+				return;
+
+			// If a center wrapper is found, there are 3 possible cases:
+			//
+			// 1. &lt;div style=&quot;text-align:center&quot;&gt;&lt;figure&gt;...&lt;/figure&gt;&lt;/div&gt;.
+			//    In this case centering is done with a class set on widget.wrapper.
+			//    Simply replace centering wrapper with figure (it's no longer necessary).
+			//
+			// 2. &lt;p style=&quot;text-align:center&quot;&gt;&lt;img/&gt;&lt;/p&gt;.
+			//    Nothing to do here: &lt;p&gt; remains for styling purposes.
+			//
+			// 3. &lt;div style=&quot;text-align:center&quot;&gt;&lt;img/&gt;&lt;/div&gt;.
+			//    Nothing to do here (2.) but that case is only possible in enterMode different
+			//    than ENTER_P.
+			if ( isCenterWrapper( el ) ) {
+				if ( name == 'div' ) {
+					var figure = el.getFirst( 'figure' );
+
+					// Case #1.
+					if ( figure ) {
+						el.replaceWith( figure );
+						el = figure;
+					}
+				}
+				// Cases #2 and #3 (handled transparently)
+
+				// If there's a centering wrapper, save it in data.
+				data.align = 'center';
+
+				image = el.getFirst( 'img' );
+			}
+
+			// No center wrapper has been found.
+			else if ( name == 'figure' &amp;&amp; el.hasClass( 'caption' ) )
+				image = el.getFirst( 'img' );
+
+			// Inline widget from plain img.
+			else if ( name == 'img' )
+				image = el;
+
+			if ( !image )
+				return;
+
+			// If there's an image, then cool, we got a widget.
+			// Now just remove dimension attributes expressed with %.
+			for ( var d in dimensions ) {
+				var dimension = image.attributes[ d ];
+
+				if ( dimension &amp;&amp; dimension.match( regexPercent ) )
+					delete image.attributes[ d ];
+			}
+
+			return el;
+		};
+	}
+
+	// Transforms the widget to the external format according to the current configuration.
+	//
+	// @param {CKEDITOR.htmlParser.element} el
+	function downcastWidgetElement( el ) {
+		var attrs = el.attributes,
+			align = this.data.align;
+
+		// De-wrap the image from resize handle wrapper.
+		// Only block widgets have one.
+		if ( !this.inline ) {
+			var resizeWrapper = el.getFirst( 'span' ),
+				img;
+
+			if ( resizeWrapper ) {
+				img = resizeWrapper.getFirst( 'img' );
+				resizeWrapper.replaceWith( img );
+			} else
+				img = el.getFirst( 'img' );
+		}
+
+		if ( align &amp;&amp; align != 'none' ) {
+			var styles = CKEDITOR.tools.parseCssText( attrs.style || '' );
+
+			// When the widget is captioned (&lt;figure&gt;) and internally centering is done
+			// with widget's wrapper inline style, in the external data representation,
+			// &lt;figure&gt; must be wrapped with an element holding an inline style:
+			//
+			//   &lt;div style=&quot;text-align:center&quot;&gt;
+			//     &lt;figure class=&quot;image&quot; style=&quot;display:inline-block&quot;&gt;
+			//      &lt;img alt=&quot;A&quot; src=&quot;B&quot; /&gt;
+			//       &lt;figcaption&gt;C&lt;/figcaption&gt;
+			//     &lt;/figure&gt;
+			//   &lt;/div&gt;
+			if ( align == 'center' &amp;&amp; el.name == 'figure' )
+				el = el.wrapWith( new CKEDITOR.htmlParser.element( 'div', { style: 'text-align:center' } ) );
+
+			// If left/right, add float style to the downcasted element.
+			else if ( align in { left: 1, right: 1 } )
+				styles[ 'float' ] = align;
+
+			// Update element styles.
+			if ( !CKEDITOR.tools.isEmpty( styles ) )
+				attrs.style = CKEDITOR.tools.writeCssText( styles );
+		}
+
+		return el;
+	}
+
+	// Returns a function that checks if an element is a centering wrapper.
+	//
+	// @param {CKEDITOR.editor} editor
+	// @returns {Function}
+	function centerWrapperChecker( editor ) {
+		return function( el ) {
+			// Wrapper must be either &lt;div&gt; or &lt;p&gt;.
+			if ( !( el.name in { div: 1, p: 1 } ) )
+				return false;
+
+			var children = el.children;
+
+			// Centering wrapper can have only one child.
+			if ( children.length !== 1 )
+				return false;
+
+			var child = children[ 0 ],
+				childName = child.name;
+
+			// Only &lt;figure&gt; or &lt;img /&gt; can be first (only) child of centering wrapper,
+			// regardless of its type.
+			if ( childName != 'figure' &amp;&amp; childName != 'img' )
+				return false;
+
+			// If centering wrapper is &lt;p&gt;, only &lt;img /&gt; can be the child.
+			//   &lt;p style=&quot;text-align:center&quot;&gt;&lt;img /&gt;&lt;/p&gt;
+			if ( el.name == 'p' ) {
+				if ( childName != 'img' )
+					return false;
+			}
+			// Centering &lt;div&gt; can hold &lt;img/&gt; or &lt;figure&gt;, depending on enterMode.
+			else {
+				// If a &lt;figure&gt; is the first (only) child, it must have a class.
+				//   &lt;div style=&quot;text-align:center&quot;&gt;&lt;figure&gt;...&lt;/figure&gt;&lt;div&gt;
+				if ( childName == 'figure' &amp;&amp; !child.hasClass( 'caption' ) )
+					return false;
+
+				// Centering &lt;div&gt; can hold &lt;img /&gt; only when enterMode is ENTER_(BR|DIV).
+				//   &lt;div style=&quot;text-align:center&quot;&gt;&lt;img /&gt;&lt;/div&gt;
+				if ( childName == 'img' &amp;&amp; editor.enterMode == CKEDITOR.ENTER_P )
+					return false;
+			}
+
+			var styles = CKEDITOR.tools.parseCssText( el.attributes.style || '', true );
+
+			// Centering wrapper got to be... centering.
+			if ( styles[ 'text-align' ] == 'center' )
+				return true;
+
+			return false;
+		};
+	}
+
+	// Sets width and height of the widget image according to current widget data.
+	//
+	// @param {CKEDITOR.plugins.widget} widget
+	function setDimensions( widget ) {
+		var data = widget.data,
+			dimensions = { width: data.width, height: data.height },
+			image = widget.parts.image;
+
+		for ( var d in dimensions ) {
+			if ( dimensions[ d ] )
+				image.setAttribute( d, dimensions[ d ] );
+			else
+				image.removeAttribute( d );
+		}
+	}
+
+	// Defines all features related to drag-driven image resizing.
+	//
+	// @param {CKEDITOR.plugins.widget} widget
+	function setupResizer( widget ) {
+		var editor = widget.editor,
+			editable = editor.editable(),
+			doc = editor.document,
+
+			// Store the resizer in a widget for testing (#11004).
+			resizer = widget.resizer = doc.createElement( 'span' );
+
+		resizer.addClass( 'cke_image_resizer' );
+		resizer.setAttribute( 'title', editor.lang.image2.resizer );
+		resizer.append( new CKEDITOR.dom.text( '\u200b', doc ) );
+
+		// Inline widgets don't need a resizer wrapper as an image spans the entire widget.
+		if ( !widget.inline ) {
+			var oldResizeWrapper = widget.element.getFirst(),
+				resizeWrapper = doc.createElement( 'span' );
+
+			resizeWrapper.addClass( 'cke_image_resizer_wrapper' );
+			resizeWrapper.append( widget.parts.image );
+			resizeWrapper.append( resizer );
+			widget.element.append( resizeWrapper, true );
+
+			// Remove the old wrapper which could came from e.g. pasted HTML
+			// and which could be corrupted (e.g. resizer span has been lost).
+			if ( oldResizeWrapper.is( 'span' ) )
+				oldResizeWrapper.remove();
+		} else
+			widget.wrapper.append( resizer );
+
+		// Calculate values of size variables and mouse offsets.
+		resizer.on( 'mousedown', function( evt ) {
+			var image = widget.parts.image,
+
+				// &quot;factor&quot; can be either 1 or -1. I.e.: For right-aligned images, we need to
+				// subtract the difference to get proper width, etc. Without &quot;factor&quot;,
+				// resizer starts working the opposite way.
+				factor = widget.data.align == 'right' ? -1 : 1,
+
+				// The x-coordinate of the mouse relative to the screen
+				// when button gets pressed.
+				startX = evt.data.$.screenX,
+				startY = evt.data.$.screenY,
+
+				// The initial dimensions and aspect ratio of the image.
+				startWidth = image.$.clientWidth,
+				startHeight = image.$.clientHeight,
+				ratio = startWidth / startHeight,
+
+				listeners = [],
+
+				// A class applied to editable during resizing.
+				cursorClass = 'cke_image_s' + ( !~factor ? 'w' : 'e' ),
+
+				nativeEvt, newWidth, newHeight, updateData,
+				moveDiffX, moveDiffY, moveRatio;
+
+			// Save the undo snapshot first: before resizing.
+			editor.fire( 'saveSnapshot' );
+
+			// Mousemove listeners are removed on mouseup.
+			attachToDocuments( 'mousemove', onMouseMove, listeners );
+
+			// Clean up the mousemove listener. Update widget data if valid.
+			attachToDocuments( 'mouseup', onMouseUp, listeners );
+
+			// The entire editable will have the special cursor while resizing goes on.
+			editable.addClass( cursorClass );
+
+			// This is to always keep the resizer element visible while resizing.
+			resizer.addClass( 'cke_image_resizing' );
+
+			// Attaches an event to a global document if inline editor.
+			// Additionally, if classic (`iframe`-based) editor, also attaches the same event to `iframe`'s document.
+			function attachToDocuments( name, callback, collection ) {
+				var globalDoc = CKEDITOR.document,
+					listeners = [];
+
+				if ( !doc.equals( globalDoc ) )
+					listeners.push( globalDoc.on( name, callback ) );
+
+				listeners.push( doc.on( name, callback ) );
+
+				if ( collection ) {
+					for ( var i = listeners.length; i--; )
+						collection.push( listeners.pop() );
+				}
+			}
+
+			// Calculate with first, and then adjust height, preserving ratio.
+			function adjustToX() {
+				newWidth = startWidth + factor * moveDiffX;
+				newHeight = Math.round( newWidth / ratio );
+			}
+
+			// Calculate height first, and then adjust width, preserving ratio.
+			function adjustToY() {
+				newHeight = startHeight - moveDiffY;
+				newWidth = Math.round( newHeight * ratio );
+			}
+
+			// This is how variables refer to the geometry.
+			// Note: x corresponds to moveOffset, this is the position of mouse
+			// Note: o corresponds to [startX, startY].
+			//
+			// 	+--------------+--------------+
+			// 	|              |              |
+			// 	|      I       |      II      |
+			// 	|              |              |
+			// 	+------------- o -------------+ _ _ _
+			// 	|              |              |      ^
+			// 	|      VI      |     III      |      | moveDiffY
+			// 	|              |         x _ _ _ _ _ v
+			// 	+--------------+---------|----+
+			// 	               |         |
+			// 	                &lt;-------&gt;
+			// 	                moveDiffX
+			function onMouseMove( evt ) {
+				nativeEvt = evt.data.$;
+
+				// This is how far the mouse is from the point the button was pressed.
+				moveDiffX = nativeEvt.screenX - startX;
+				moveDiffY = startY - nativeEvt.screenY;
+
+				// This is the aspect ratio of the move difference.
+				moveRatio = Math.abs( moveDiffX / moveDiffY );
+
+				// Left, center or none-aligned widget.
+				if ( factor == 1 ) {
+					if ( moveDiffX &lt;= 0 ) {
+						// Case: IV.
+						if ( moveDiffY &lt;= 0 )
+							adjustToX();
+
+						// Case: I.
+						else {
+							if ( moveRatio &gt;= ratio )
+								adjustToX();
+							else
+								adjustToY();
+						}
+					} else {
+						// Case: III.
+						if ( moveDiffY &lt;= 0 ) {
+							if ( moveRatio &gt;= ratio )
+								adjustToY();
+							else
+								adjustToX();
+						}
+
+						// Case: II.
+						else
+							adjustToY();
+					}
+				}
+
+				// Right-aligned widget. It mirrors behaviours, so I becomes II,
+				// IV becomes III and vice-versa.
+				else {
+					if ( moveDiffX &lt;= 0 ) {
+						// Case: IV.
+						if ( moveDiffY &lt;= 0 ) {
+							if ( moveRatio &gt;= ratio )
+								adjustToY();
+							else
+								adjustToX();
+						}
+
+						// Case: I.
+						else
+							adjustToY();
+					} else {
+						// Case: III.
+						if ( moveDiffY &lt;= 0 )
+							adjustToX();
+
+						// Case: II.
+						else {
+							if ( moveRatio &gt;= ratio )
+								adjustToX();
+							else
+								adjustToY();
+						}
+					}
+				}
+
+				// Don't update attributes if less than 10.
+				// This is to prevent images to visually disappear.
+				if ( newWidth &gt;= 15 &amp;&amp; newHeight &gt;= 15 ) {
+					image.setAttributes( { width: newWidth, height: newHeight } );
+					updateData = true;
+				} else
+					updateData = false;
+			}
+
+			function onMouseUp( evt ) {
+				var l;
+
+				while ( ( l = listeners.pop() ) )
+					l.removeListener();
+
+				// Restore default cursor by removing special class.
+				editable.removeClass( cursorClass );
+
+				// This is to bring back the regular behaviour of the resizer.
+				resizer.removeClass( 'cke_image_resizing' );
+
+				if ( updateData ) {
+					widget.setData( { width: newWidth, height: newHeight } );
+
+					// Save another undo snapshot: after resizing.
+					editor.fire( 'saveSnapshot' );
+				}
+
+				// Don't update data twice or more.
+				updateData = false;
+			}
+		} );
+
+		// Change the position of the widget resizer when data changes.
+		widget.on( 'data', function() {
+			resizer[ widget.data.align == 'right' ? 'addClass' : 'removeClass' ]( 'cke_image_resizer_left' );
+		} );
+	}
+
+	// Integrates widget alignment setting with justify
+	// plugin's commands (execution and refreshment).
+	// @param {CKEDITOR.editor} editor
+	// @param {String} value 'left', 'right', 'center' or 'block'
+	function alignCommandIntegrator( editor ) {
+		var execCallbacks = [],
+			enabled;
+
+		return function( value ) {
+			var command = editor.getCommand( 'justify' + value );
+
+			// Most likely, the justify plugin isn't loaded.
+			if ( !command )
+				return;
+
+			// This command will be manually refreshed along with
+			// other commands after exec.
+			execCallbacks.push( function() {
+				command.refresh( editor, editor.elementPath() );
+			} );
+
+			if ( value in { right: 1, left: 1, center: 1 } ) {
+				command.on( 'exec', function( evt ) {
+					var widget = getFocusedWidget( editor );
+
+					if ( widget ) {
+						widget.setData( 'align', value );
+
+						// Once the widget changed its align, all the align commands
+						// must be refreshed: the event is to be cancelled.
+						for ( var i = execCallbacks.length; i--; )
+							execCallbacks[ i ]();
+
+						evt.cancel();
+					}
+				} );
+			}
+
+			command.on( 'refresh', function( evt ) {
+				var widget = getFocusedWidget( editor ),
+					allowed = { right: 1, left: 1, center: 1 };
+
+				if ( !widget )
+					return;
+
+				// Cache &quot;enabled&quot; on first use. This is because filter#checkFeature may
+				// not be available during plugin's afterInit in the future — a moment when
+				// alignCommandIntegrator is called.
+				if ( enabled == undefined )
+					enabled = editor.filter.checkFeature( editor.widgets.registered.image.features.align );
+
+				// Don't allow justify commands when widget alignment is disabled (#11004).
+				if ( !enabled )
+					this.setState( CKEDITOR.TRISTATE_DISABLED );
+				else {
+					this.setState(
+						( widget.data.align == value ) ?
+								CKEDITOR.TRISTATE_ON
+							:
+								( value in allowed ) ?
+										CKEDITOR.TRISTATE_OFF
+									:
+										CKEDITOR.TRISTATE_DISABLED );
+				}
+
+				evt.cancel();
+			} );
+		};
+	}
+
+	// Returns the focused widget, if of the type specific for this plugin.
+	// If no widget is focused, `null` is returned.
+	//
+	// @param {CKEDITOR.editor}
+	// @returns {CKEDITOR.plugins.widget}
+	function getFocusedWidget( editor ) {
+		var widget = editor.widgets.focused;
+
+		if ( widget &amp;&amp; widget.name == 'image' )
+			return widget;
+
+		return null;
+	}
 } )();
 </pre>
 </body>

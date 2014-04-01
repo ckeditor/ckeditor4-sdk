@@ -15,13 +15,17 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js">/*
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.md or http://ckeditor.com/license
-*/
-CKEDITOR.plugins.setLang( 'pastetext', 'hr', {
-	button: 'Zalijepi kao čisti tekst',
-	title: 'Zalijepi kao čisti tekst'
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+CKEDITOR.plugins.setLang( 'placeholder', 'hr', {
+	title: 'Svojstva rezerviranog mjesta',
+	toolbar: 'Napravi rezervirano mjesto',
+	name: 'Ime rezerviranog mjesta',
+	invalidName: 'Rezervirano mjesto ne može biti prazno niti može sadržavati ijedan od sljedećih znakova: [, ], &lt;, &gt;',
+	pathName: 'rezervirano mjesto'
 } );
 </pre>
 </body>

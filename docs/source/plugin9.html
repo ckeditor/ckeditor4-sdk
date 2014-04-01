@@ -20,298 +20,787 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview Handles the indentation of lists.
- */
-
 ( function() {
-	'use strict';
+	CKEDITOR.on( 'dialogDefinition', function( ev ) {
+		var tab,
+			name = ev.data.name,
+			definition = ev.data.definition;
 
-	var isNotWhitespaces = CKEDITOR.dom.walker.whitespaces( true ),
-		isNotBookmark = CKEDITOR.dom.walker.bookmark( false, true ),
-		TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
-		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
-
-	CKEDITOR.plugins.add( 'indentlist', {
-		requires: 'indent',
-		init: function( editor ) {
-			var globalHelpers = CKEDITOR.plugins.indent,
-				editable = editor;
-
-			// Register commands.
-			globalHelpers.registerCommands( editor, {
-				indentlist: new commandDefinition( editor, 'indentlist', true ),
-				outdentlist: new commandDefinition( editor, 'outdentlist' )
-			} );
-
-			function commandDefinition( editor, name ) {
-				globalHelpers.specificDefinition.apply( this, arguments );
-
-				// Require ul OR ol list.
-				this.requiredContent = [ 'ul', 'ol' ];
-
-				// Indent and outdent lists with TAB/SHIFT+TAB key. Indenting can
-				// be done for any list item that isn't the first child of the parent.
-				editor.on( 'key', function( evt ) {
-					if ( editor.mode != 'wysiwyg' )
-						return;
-
-					if ( evt.data.keyCode == this.indentKey ) {
-						var list = this.getContext( editor.elementPath() );
-
-						if ( list ) {
-							// Don't indent if in first list item of the parent.
-							// Outdent, however, can always be done to collapse
-							// the list into a paragraph (div).
-							if ( this.isIndent &amp;&amp; firstItemInPath.call( this, editor.elementPath(), list ) )
-								return;
-
-							// Exec related global indentation command. Global
-							// commands take care of bookmarks and selection,
-							// so it's much easier to use them instead of
-							// content-specific commands.
-							editor.execCommand( this.relatedGlobal );
-
-							// Cancel the key event so editor doesn't lose focus.
-							evt.cancel();
-						}
-					}
-				}, this );
-
-				// There are two different jobs for this plugin:
-				//
-				//	* Indent job (priority=10), before indentblock.
-				//
-				//	  This job is before indentblock because, if this plugin is
-				//	  loaded it has higher priority over indentblock. It means that,
-				//	  if possible, nesting is performed, and then block manipulation,
-				//	  if necessary.
-				//
-				//	* Outdent job (priority=30), after outdentblock.
-				//
-				//	  This job got to be after outdentblock because in some cases
-				//	  (margin, config#indentClass on list) outdent must be done on
-				//	  block-level.
-
-				this.jobs[ this.isIndent ? 10 : 30 ] = {
-					refresh: this.isIndent ?
-							function( editor, path ) {
-								var list = this.getContext( path ),
-									inFirstListItem = firstItemInPath.call( this, path, list );
-
-								if ( !list || !this.isIndent || inFirstListItem )
-									return TRISTATE_DISABLED;
-
-								return TRISTATE_OFF;
-							}
-						:
-							function( editor, path ) {
-								var list = this.getContext( path );
-
-								if ( !list || this.isIndent )
-									return TRISTATE_DISABLED;
-
-								return TRISTATE_OFF;
-							},
-
-					exec: CKEDITOR.tools.bind( indentList, this )
-				};
-			}
-
-			CKEDITOR.tools.extend( commandDefinition.prototype, globalHelpers.specificDefinition.prototype, {
-				// Elements that, if in an elementpath, will be handled by this
-				// command. They restrict the scope of the plugin.
-				context: { ol: 1, ul: 1 }
-			} );
+		if ( name == 'link' ) {
+			definition.removeContents( 'target' );
+			definition.removeContents( 'upload' );
+			definition.removeContents( 'advanced' );
+			tab = definition.getContents( 'info' );
+			tab.remove( 'emailSubject' );
+			tab.remove( 'emailBody' );
+		} else if ( name == 'image' ) {
+			definition.removeContents( 'advanced' );
+			tab = definition.getContents( 'Link' );
+			tab.remove( 'cmbTarget' );
+			tab = definition.getContents( 'info' );
+			tab.remove( 'txtAlt' );
+			tab.remove( 'basic' );
 		}
 	} );
 
-	function indentList( editor ) {
-		var that = this,
-			database = this.database,
-			context = this.context;
+	var bbcodeMap = { b: 'strong', u: 'u', i: 'em', color: 'span', size: 'span', quote: 'blockquote', code: 'code', url: 'a', email: 'span', img: 'span', '*': 'li', list: 'ol' },
+		convertMap = { strong: 'b', b: 'b', u: 'u', em: 'i', i: 'i', code: 'code', li: '*' },
+		tagnameMap = { strong: 'b', em: 'i', u: 'u', li: '*', ul: 'list', ol: 'list', code: 'code', a: 'link', img: 'img', blockquote: 'quote' },
+		stylesMap = { color: 'color', size: 'font-size' },
+		attributesMap = { url: 'href', email: 'mailhref', quote: 'cite', list: 'listType' };
 
-		function indent( listNode ) {
-			// Our starting and ending points of the range might be inside some blocks under a list item...
-			// So before playing with the iterator, we need to expand the block to include the list items.
-			var startContainer = range.startContainer,
-				endContainer = range.endContainer;
-			while ( startContainer &amp;&amp; !startContainer.getParent().equals( listNode ) )
-				startContainer = startContainer.getParent();
-			while ( endContainer &amp;&amp; !endContainer.getParent().equals( listNode ) )
-				endContainer = endContainer.getParent();
+	// List of block-like tags.
+	var dtd = CKEDITOR.dtd,
+		blockLikeTags = CKEDITOR.tools.extend( { table: 1 }, dtd.$block, dtd.$listItem, dtd.$tableContent, dtd.$list );
 
-			if ( !startContainer || !endContainer )
-				return false;
+	var semicolonFixRegex = /\s*(?:;\s*|$)/;
 
-			// Now we can iterate over the individual items on the same tree depth.
-			var block = startContainer,
-				itemsToMove = [],
-				stopFlag = false;
+	function serializeStyleText( stylesObject ) {
+		var styleText = '';
+		for ( var style in stylesObject ) {
+			var styleVal = stylesObject[ style ],
+				text = ( style + ':' + styleVal ).replace( semicolonFixRegex, ';' );
 
-			while ( !stopFlag ) {
-				if ( block.equals( endContainer ) )
-					stopFlag = true;
+			styleText += text;
+		}
+		return styleText;
+	}
 
-				itemsToMove.push( block );
-				block = block.getNext();
-			}
+	// Maintain the map of smiley-to-description.
+	var smileyMap = { smiley: ':)', sad: ':(', wink: ';)', laugh: ':D', cheeky: ':P', blush: ':*)', surprise: ':-o', indecision: ':|', angry: '&gt;:(', angel: 'o:)', cool: '8-)', devil: '&gt;:-)', crying: ';(', kiss: ':-*' },
+		smileyReverseMap = {},
+		smileyRegExp = [];
 
-			if ( itemsToMove.length &lt; 1 )
-				return false;
+	// Build regexp for the list of smiley text.
+	for ( var i in smileyMap ) {
+		smileyReverseMap[ smileyMap[ i ] ] = i;
+		smileyRegExp.push( smileyMap[ i ].replace( /\(|\)|\:|\/|\*|\-|\|/g, function( match ) {
+			return '\\' + match;
+		} ) );
+	}
 
-			// Do indent or outdent operations on the array model of the list, not the
-			// list's DOM tree itself. The array model demands that it knows as much as
-			// possible about the surrounding lists, we need to feed it the further
-			// ancestor node that is still a list.
-			var listParents = listNode.getParents( true );
-			for ( var i = 0; i &lt; listParents.length; i++ ) {
-				if ( listParents[ i ].getName &amp;&amp; context[ listParents[ i ].getName() ] ) {
-					listNode = listParents[ i ];
-					break;
+	smileyRegExp = new RegExp( smileyRegExp.join( '|' ), 'g' );
+
+	var decodeHtml = ( function() {
+		var regex = [],
+			entities = {
+				nbsp: '\u00A0', // IE | FF
+				shy: '\u00AD', // IE
+				gt: '\u003E', // IE | FF |   --   | Opera
+				lt: '\u003C' // IE | FF | Safari | Opera
+			};
+
+		for ( var entity in entities )
+			regex.push( entity );
+
+		regex = new RegExp( '&amp;(' + regex.join( '|' ) + ');', 'g' );
+
+		return function( html ) {
+			return html.replace( regex, function( match, entity ) {
+				return entities[ entity ];
+			} );
+		};
+	} )();
+
+	CKEDITOR.BBCodeParser = function() {
+		this._ = {
+			bbcPartsRegex: /(?:\[([^\/\]=]*?)(?:=([^\]]*?))?\])|(?:\[\/([a-z]{1,16})\])/ig
+		};
+	};
+
+	CKEDITOR.BBCodeParser.prototype = {
+		parse: function( bbcode ) {
+			var parts, part,
+				lastIndex = 0;
+
+			while ( ( parts = this._.bbcPartsRegex.exec( bbcode ) ) ) {
+				var tagIndex = parts.index;
+				if ( tagIndex &gt; lastIndex ) {
+					var text = bbcode.substring( lastIndex, tagIndex );
+					this.onText( text, 1 );
 				}
-			}
 
-			var indentOffset = that.isIndent ? 1 : -1,
-				startItem = itemsToMove[ 0 ],
-				lastItem = itemsToMove[ itemsToMove.length - 1 ],
+				lastIndex = this._.bbcPartsRegex.lastIndex;
 
-				// Convert the list DOM tree into a one dimensional array.
-				listArray = CKEDITOR.plugins.list.listToArray( listNode, database ),
+				// &quot;parts&quot; is an array with the following items:
+				// 0 : The entire match for opening/closing tags and line-break;
+				// 1 : line-break;
+				// 2 : open of tag excludes option;
+				// 3 : tag option;
+				// 4 : close of tag;
 
-				// Apply indenting or outdenting on the array.
-				baseIndent = listArray[ lastItem.getCustomData( 'listarray_index' ) ].indent;
-
-			for ( i = startItem.getCustomData( 'listarray_index' ); i &lt;= lastItem.getCustomData( 'listarray_index' ); i++ ) {
-				listArray[ i ].indent += indentOffset;
-				// Make sure the newly created sublist get a brand-new element of the same type. (#5372)
-				if ( indentOffset &gt; 0 ) {
-					var listRoot = listArray[ i ].parent;
-					listArray[ i ].parent = new CKEDITOR.dom.element( listRoot.getName(), listRoot.getDocument() );
+				part = ( parts[ 1 ] || parts[ 3 ] || '' ).toLowerCase();
+				// Unrecognized tags should be delivered as a simple text (#7860).
+				if ( part &amp;&amp; !bbcodeMap[ part ] ) {
+					this.onText( parts[ 0 ] );
+					continue;
 				}
+
+				// Opening tag
+				if ( parts[ 1 ] ) {
+					var tagName = bbcodeMap[ part ],
+						attribs = {},
+						styles = {},
+						optionPart = parts[ 2 ];
+
+					if ( optionPart ) {
+						if ( part == 'list' ) {
+							if ( !isNaN( optionPart ) )
+								optionPart = 'decimal';
+							else if ( /^[a-z]+$/.test( optionPart ) )
+								optionPart = 'lower-alpha';
+							else if ( /^[A-Z]+$/.test( optionPart ) )
+								optionPart = 'upper-alpha';
+						}
+
+						if ( stylesMap[ part ] ) {
+							// Font size represents percentage.
+							if ( part == 'size' )
+								optionPart += '%';
+
+							styles[ stylesMap[ part ] ] = optionPart;
+							attribs.style = serializeStyleText( styles );
+						} else if ( attributesMap[ part ] )
+							attribs[ attributesMap[ part ] ] = optionPart;
+					}
+
+					// Two special handling - image and email, protect them
+					// as &quot;span&quot; with an attribute marker.
+					if ( part == 'email' || part == 'img' )
+						attribs[ 'bbcode' ] = part;
+
+					this.onTagOpen( tagName, attribs, CKEDITOR.dtd.$empty[ tagName ] );
+				}
+				// Closing tag
+				else if ( parts[ 3 ] )
+					this.onTagClose( bbcodeMap[ part ] );
 			}
 
-			for ( i = lastItem.getCustomData( 'listarray_index' ) + 1; i &lt; listArray.length &amp;&amp; listArray[ i ].indent &gt; baseIndent; i++ )
-				listArray[ i ].indent += indentOffset;
+			if ( bbcode.length &gt; lastIndex )
+				this.onText( bbcode.substring( lastIndex, bbcode.length ), 1 );
+		}
+	};
 
-			// Convert the array back to a DOM forest (yes we might have a few subtrees now).
-			// And replace the old list with the new forest.
-			var newList = CKEDITOR.plugins.list.arrayToList( listArray, database, null, editor.config.enterMode, listNode.getDirection() );
+<span id='CKEDITOR-htmlParser-fragment-static-method-fromBBCode'>	/**
+</span>	 * Creates a {@link CKEDITOR.htmlParser.fragment} from an HTML string.
+	 *
+	 *		var fragment = CKEDITOR.htmlParser.fragment.fromHtml( '&lt;b&gt;Sample&lt;/b&gt; Text' );
+	 *		alert( fragment.children[ 0 ].name );		// 'b'
+	 *		alert( fragment.children[ 1 ].value );	// ' Text'
+	 *
+	 * @static
+	 * @member CKEDITOR.htmlParser.fragment
+	 * @param {String} source The HTML to be parsed, filling the fragment.
+	 * @returns {CKEDITOR.htmlParser.fragment} The fragment created.
+	 */
+	CKEDITOR.htmlParser.fragment.fromBBCode = function( source ) {
+		var parser = new CKEDITOR.BBCodeParser(),
+			fragment = new CKEDITOR.htmlParser.fragment(),
+			pendingInline = [],
+			pendingBrs = 0,
+			currentNode = fragment,
+			returnPoint;
 
-			// Avoid nested &lt;li&gt; after outdent even they're visually same,
-			// recording them for later refactoring.(#3982)
-			if ( !that.isIndent ) {
-				var parentLiElement;
-				if ( ( parentLiElement = listNode.getParent() ) &amp;&amp; parentLiElement.is( 'li' ) ) {
-					var children = newList.listNode.getChildren(),
-						pendingLis = [],
-						count = children.count(),
-						child;
+		function checkPending( newTagName ) {
+			if ( pendingInline.length &gt; 0 ) {
+				for ( var i = 0; i &lt; pendingInline.length; i++ ) {
+					var pendingElement = pendingInline[ i ],
+						pendingName = pendingElement.name,
+						pendingDtd = CKEDITOR.dtd[ pendingName ],
+						currentDtd = currentNode.name &amp;&amp; CKEDITOR.dtd[ currentNode.name ];
 
-					for ( i = count - 1; i &gt;= 0; i-- ) {
-						if ( ( child = children.getItem( i ) ) &amp;&amp; child.is &amp;&amp; child.is( 'li' ) )
-							pendingLis.push( child );
+					if ( ( !currentDtd || currentDtd[ pendingName ] ) &amp;&amp; ( !newTagName || !pendingDtd || pendingDtd[ newTagName ] || !CKEDITOR.dtd[ newTagName ] ) ) {
+						// Get a clone for the pending element.
+						pendingElement = pendingElement.clone();
+
+						// Add it to the current node and make it the current,
+						// so the new element will be added inside of it.
+						pendingElement.parent = currentNode;
+						currentNode = pendingElement;
+
+						// Remove the pending element (back the index by one
+						// to properly process the next entry).
+						pendingInline.splice( i, 1 );
+						i--;
 					}
 				}
 			}
+		}
 
-			if ( newList )
-				newList.listNode.replace( listNode );
+		function checkPendingBrs( tagName, closing ) {
+			var len = currentNode.children.length,
+				previous = len &gt; 0 &amp;&amp; currentNode.children[ len - 1 ],
+				lineBreakParent = !previous &amp;&amp; writer.getRule( tagnameMap[ currentNode.name ], 'breakAfterOpen' ),
+				lineBreakPrevious = previous &amp;&amp; previous.type == CKEDITOR.NODE_ELEMENT &amp;&amp; writer.getRule( tagnameMap[ previous.name ], 'breakAfterClose' ),
+				lineBreakCurrent = tagName &amp;&amp; writer.getRule( tagnameMap[ tagName ], closing ? 'breakBeforeClose' : 'breakBeforeOpen' );
 
-			// Move the nested &lt;li&gt; to be appeared after the parent.
-			if ( pendingLis &amp;&amp; pendingLis.length ) {
-				for ( i = 0; i &lt; pendingLis.length; i++ ) {
-					var li = pendingLis[ i ],
-						followingList = li;
+			if ( pendingBrs &amp;&amp; ( lineBreakParent || lineBreakPrevious || lineBreakCurrent ) )
+				pendingBrs--;
 
-					// Nest preceding &lt;ul&gt;/&lt;ol&gt; inside current &lt;li&gt; if any.
-					while ( ( followingList = followingList.getNext() ) &amp;&amp; followingList.is &amp;&amp; followingList.getName() in context ) {
-						// IE requires a filler NBSP for nested list inside empty list item,
-						// otherwise the list item will be inaccessiable. (#4476)
-						if ( CKEDITOR.env.needsNbspFiller &amp;&amp; !li.getFirst( neitherWhitespacesNorBookmark ) )
-							li.append( range.document.createText( '\u00a0' ) );
+			// 1. Either we're at the end of block, where it requires us to compensate the br filler
+			// removing logic (from htmldataprocessor).
+			// 2. Or we're at the end of pseudo block, where it requires us to compensate
+			// the bogus br effect.
+			if ( pendingBrs &amp;&amp; tagName in blockLikeTags )
+				pendingBrs++;
 
-						li.append( followingList );
+			while ( pendingBrs &amp;&amp; pendingBrs-- )
+				currentNode.children.push( previous = new CKEDITOR.htmlParser.element( 'br' ) );
+		}
+
+		function addElement( node, target ) {
+			checkPendingBrs( node.name, 1 );
+
+			target = target || currentNode || fragment;
+
+			var len = target.children.length,
+				previous = len &gt; 0 &amp;&amp; target.children[ len - 1 ] || null;
+
+			node.previous = previous;
+			node.parent = target;
+
+			target.children.push( node );
+
+			if ( node.returnPoint ) {
+				currentNode = node.returnPoint;
+				delete node.returnPoint;
+			}
+		}
+
+		parser.onTagOpen = function( tagName, attributes, selfClosing ) {
+			var element = new CKEDITOR.htmlParser.element( tagName, attributes );
+
+			// This is a tag to be removed if empty, so do not add it immediately.
+			if ( CKEDITOR.dtd.$removeEmpty[ tagName ] ) {
+				pendingInline.push( element );
+				return;
+			}
+
+			var currentName = currentNode.name;
+
+			var currentDtd = currentName &amp;&amp; ( CKEDITOR.dtd[ currentName ] || ( currentNode._.isBlockLike ? CKEDITOR.dtd.div : CKEDITOR.dtd.span ) );
+
+			// If the element cannot be child of the current element.
+			if ( currentDtd &amp;&amp; !currentDtd[ tagName ] ) {
+				var reApply = false,
+					addPoint; // New position to start adding nodes.
+
+				// If the element name is the same as the current element name,
+				// then just close the current one and append the new one to the
+				// parent. This situation usually happens with &lt;p&gt;, &lt;li&gt;, &lt;dt&gt; and
+				// &lt;dd&gt;, specially in IE. Do not enter in this if block in this case.
+				if ( tagName == currentName )
+					addElement( currentNode, currentNode.parent );
+				else if ( tagName in CKEDITOR.dtd.$listItem ) {
+					parser.onTagOpen( 'ul', {} );
+					addPoint = currentNode;
+					reApply = true;
+				} else {
+					addElement( currentNode, currentNode.parent );
+
+					// The current element is an inline element, which
+					// cannot hold the new one. Put it in the pending list,
+					// and try adding the new one after it.
+					pendingInline.unshift( currentNode );
+					reApply = true;
+				}
+
+				if ( addPoint )
+					currentNode = addPoint;
+				// Try adding it to the return point, or the parent element.
+				else
+					currentNode = currentNode.returnPoint || currentNode.parent;
+
+				if ( reApply ) {
+					parser.onTagOpen.apply( this, arguments );
+					return;
+				}
+			}
+
+			checkPending( tagName );
+			checkPendingBrs( tagName );
+
+			element.parent = currentNode;
+			element.returnPoint = returnPoint;
+			returnPoint = 0;
+
+			if ( element.isEmpty )
+				addElement( element );
+			else
+				currentNode = element;
+		};
+
+		parser.onTagClose = function( tagName ) {
+			// Check if there is any pending tag to be closed.
+			for ( var i = pendingInline.length - 1; i &gt;= 0; i-- ) {
+				// If found, just remove it from the list.
+				if ( tagName == pendingInline[ i ].name ) {
+					pendingInline.splice( i, 1 );
+					return;
+				}
+			}
+
+			var pendingAdd = [],
+				newPendingInline = [],
+				candidate = currentNode;
+
+			while ( candidate.type &amp;&amp; candidate.name != tagName ) {
+				// If this is an inline element, add it to the pending list, if we're
+				// really closing one of the parents element later, they will continue
+				// after it.
+				if ( !candidate._.isBlockLike )
+					newPendingInline.unshift( candidate );
+
+				// This node should be added to it's parent at this point. But,
+				// it should happen only if the closing tag is really closing
+				// one of the nodes. So, for now, we just cache it.
+				pendingAdd.push( candidate );
+
+				candidate = candidate.parent;
+			}
+
+			if ( candidate.type ) {
+				// Add all elements that have been found in the above loop.
+				for ( i = 0; i &lt; pendingAdd.length; i++ ) {
+					var node = pendingAdd[ i ];
+					addElement( node, node.parent );
+				}
+
+				currentNode = candidate;
+
+
+				addElement( candidate, candidate.parent );
+
+				// The parent should start receiving new nodes now, except if
+				// addElement changed the currentNode.
+				if ( candidate == currentNode )
+					currentNode = currentNode.parent;
+
+				pendingInline = pendingInline.concat( newPendingInline );
+			}
+		};
+
+		parser.onText = function( text ) {
+			var currentDtd = CKEDITOR.dtd[ currentNode.name ];
+			if ( !currentDtd || currentDtd[ '#' ] ) {
+				checkPendingBrs();
+				checkPending();
+
+				text.replace( /(\r\n|[\r\n])|[^\r\n]*/g, function( piece, lineBreak ) {
+					if ( lineBreak !== undefined &amp;&amp; lineBreak.length )
+						pendingBrs++;
+					else if ( piece.length ) {
+						var lastIndex = 0;
+
+						// Create smiley from text emotion.
+						piece.replace( smileyRegExp, function( match, index ) {
+							addElement( new CKEDITOR.htmlParser.text( piece.substring( lastIndex, index ) ), currentNode );
+							addElement( new CKEDITOR.htmlParser.element( 'smiley', { desc: smileyReverseMap[ match ] } ), currentNode );
+							lastIndex = index + match.length;
+						} );
+
+						if ( lastIndex != piece.length )
+							addElement( new CKEDITOR.htmlParser.text( piece.substring( lastIndex, piece.length ) ), currentNode );
 					}
-
-					li.insertAfter( parentLiElement );
-				}
+				} );
 			}
+		};
 
-			if ( newList )
-				editor.fire( 'contentDomInvalidated' );
+		// Parse it.
+		parser.parse( CKEDITOR.tools.htmlEncode( source ) );
 
-			return true;
+		// Close all hanging nodes.
+		while ( currentNode.type != CKEDITOR.NODE_DOCUMENT_FRAGMENT ) {
+			var parent = currentNode.parent,
+				node = currentNode;
+
+			addElement( node, parent );
+			currentNode = parent;
 		}
 
-		var selection = editor.getSelection(),
-			ranges = selection &amp;&amp; selection.getRanges(),
-			iterator = ranges.createIterator(),
-			range;
+		return fragment;
+	};
 
-		while ( ( range = iterator.getNextRange() ) ) {
-			var rangeRoot = range.getCommonAncestor(),
-				nearestListBlock = rangeRoot;
+	var BBCodeWriter = CKEDITOR.tools.createClass( {
+		$: function() {
+			this._ = {
+				output: [],
+				rules: []
+			};
 
-			while ( nearestListBlock &amp;&amp; !( nearestListBlock.type == CKEDITOR.NODE_ELEMENT &amp;&amp; context[ nearestListBlock.getName() ] ) )
-				nearestListBlock = nearestListBlock.getParent();
+			// List and list item.
+			this.setRules( 'list', { breakBeforeOpen: 1, breakAfterOpen: 1, breakBeforeClose: 1, breakAfterClose: 1 } );
 
-			// Avoid having selection boundaries out of the list.
-			// &lt;ul&gt;&lt;li&gt;[...&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;...]&lt;/p&gt; =&gt; &lt;ul&gt;&lt;li&gt;[...]&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;...&lt;/p&gt;
-			if ( !nearestListBlock ) {
-				if ( ( nearestListBlock = range.startPath().contains( context ) ) )
-					range.setEndAt( nearestListBlock, CKEDITOR.POSITION_BEFORE_END );
+			this.setRules( '*', {
+				breakBeforeOpen: 1,
+				breakAfterOpen: 0,
+				breakBeforeClose: 1,
+				breakAfterClose: 0
+			} );
+
+			this.setRules( 'quote', {
+				breakBeforeOpen: 1,
+				breakAfterOpen: 0,
+				breakBeforeClose: 0,
+				breakAfterClose: 1
+			} );
+		},
+
+		proto: {
+			//
+			// Sets formatting rules for a given tag. The possible rules are:
+			// &lt;ul&gt;
+			//	&lt;li&gt;&lt;b&gt;breakBeforeOpen&lt;/b&gt;: break line before the opener tag for this element.&lt;/li&gt;
+			//	&lt;li&gt;&lt;b&gt;breakAfterOpen&lt;/b&gt;: break line after the opener tag for this element.&lt;/li&gt;
+			//	&lt;li&gt;&lt;b&gt;breakBeforeClose&lt;/b&gt;: break line before the closer tag for this element.&lt;/li&gt;
+			//	&lt;li&gt;&lt;b&gt;breakAfterClose&lt;/b&gt;: break line after the closer tag for this element.&lt;/li&gt;
+			// &lt;/ul&gt;
+			//
+			// All rules default to &quot;false&quot;. Each call to the function overrides
+			// already present rules, leaving the undefined untouched.
+			//
+			// @param {String} tagName The tag name to which set the rules.
+			// @param {Object} rules An object containing the element rules.
+			// @example
+			// // Break line before and after &quot;img&quot; tags.
+			// writer.setRules( 'list',
+			//		 {
+			//				 breakBeforeOpen : true
+			//				 breakAfterOpen : true
+			//		 });
+			setRules: function( tagName, rules ) {
+				var currentRules = this._.rules[ tagName ];
+
+				if ( currentRules )
+					CKEDITOR.tools.extend( currentRules, rules, true );
+				else
+					this._.rules[ tagName ] = rules;
+			},
+
+			getRule: function( tagName, ruleName ) {
+				return this._.rules[ tagName ] &amp;&amp; this._.rules[ tagName ][ ruleName ];
+			},
+
+			openTag : function( tag ) {
+				if ( tag in bbcodeMap ) {
+					if ( this.getRule( tag, 'breakBeforeOpen' ) )
+						this.lineBreak( 1 );
+
+					this.write( '[', tag );
+				}
+			},
+
+			openTagClose : function( tag ) {
+				if ( tag == 'br' )
+					this._.output.push( '\n' );
+				else if ( tag in bbcodeMap ) {
+					this.write( ']' );
+					if ( this.getRule( tag, 'breakAfterOpen' ) )
+						this.lineBreak( 1 );
+				}
+			},
+
+			attribute : function( name, val ) {
+				if ( name == 'option' ) {
+					// Force simply ampersand in attributes.
+					if ( typeof val == 'string' )
+						val = val.replace( /&amp;amp;/g, '&amp;' );
+
+					this.write( '=', val );
+				}
+			},
+
+			closeTag: function( tag ) {
+				if ( tag in bbcodeMap ) {
+					if ( this.getRule( tag, 'breakBeforeClose' ) )
+						this.lineBreak( 1 );
+
+					tag != '*' &amp;&amp; this.write( '[/', tag, ']' );
+
+					if ( this.getRule( tag, 'breakAfterClose' ) )
+						this.lineBreak( 1 );
+				}
+			},
+
+			text: function( text ) {
+				this.write( text );
+			},
+
+			comment: function() {},
+
+			// Output line-break for formatting.
+			lineBreak: function() {
+				// Avoid line break when:
+				// 1) Previous tag already put one.
+				// 2) We're at output start.
+				if ( !this._.hasLineBreak &amp;&amp; this._.output.length ) {
+					this.write( '\n' );
+					this._.hasLineBreak = 1;
+				}
+			},
+
+			write: function() {
+				this._.hasLineBreak = 0;
+				var data = Array.prototype.join.call( arguments, '' );
+				this._.output.push( data );
+			},
+
+			reset: function() {
+				this._.output = [];
+				this._.hasLineBreak = 0;
+			},
+
+			getHtml: function( reset ) {
+				var bbcode = this._.output.join( '' );
+
+				if ( reset )
+					this.reset();
+
+				return decodeHtml( bbcode );
+			}
+		}
+	} );
+
+	var writer = new BBCodeWriter();
+
+	CKEDITOR.plugins.add( 'bbcode', {
+		requires: 'entities',
+
+		// Adapt some critical editor configuration for better support
+		// of BBCode environment.
+		beforeInit: function( editor ) {
+			var config = editor.config;
+
+			CKEDITOR.tools.extend( config, {
+				// This one is for backwards compatibility only as
+				// editor#enterMode is already set at this stage (#11202).
+				enterMode: CKEDITOR.ENTER_BR,
+				basicEntities: false,
+				entities: false,
+				fillEmptyBlocks: false
+			}, true );
+
+			editor.filter.disable();
+
+			// Since CKEditor 4.3, editor#(active)enterMode is set before
+			// beforeInit. Properties got to be updated (#11202).
+			editor.activeEnterMode = editor.enterMode = CKEDITOR.ENTER_BR;
+		},
+
+		init: function( editor ) {
+			var config = editor.config;
+
+			function BBCodeToHtml( code ) {
+				var fragment = CKEDITOR.htmlParser.fragment.fromBBCode( code ),
+					writer = new CKEDITOR.htmlParser.basicWriter();
+
+				fragment.writeHtml( writer, bbcodeFilter );
+				return writer.getHtml( true );
 			}
 
-			// Avoid having selection enclose the entire list. (#6138)
-			// [&lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;] =&gt;&lt;ul&gt;&lt;li&gt;[...]&lt;/li&gt;&lt;/ul&gt;
-			if ( !nearestListBlock ) {
-				var selectedNode = range.getEnclosedNode();
-				if ( selectedNode &amp;&amp; selectedNode.type == CKEDITOR.NODE_ELEMENT &amp;&amp; selectedNode.getName() in context ) {
-					range.setStartAt( selectedNode, CKEDITOR.POSITION_AFTER_START );
-					range.setEndAt( selectedNode, CKEDITOR.POSITION_BEFORE_END );
-					nearestListBlock = selectedNode;
+			var bbcodeFilter = new CKEDITOR.htmlParser.filter();
+			bbcodeFilter.addRules( {
+				elements: {
+					blockquote: function( element ) {
+						var quoted = new CKEDITOR.htmlParser.element( 'div' );
+						quoted.children = element.children;
+						element.children = [ quoted ];
+						var citeText = element.attributes.cite;
+						if ( citeText ) {
+							var cite = new CKEDITOR.htmlParser.element( 'cite' );
+							cite.add( new CKEDITOR.htmlParser.text( citeText.replace( /^&quot;|&quot;$/g, '' ) ) );
+							delete element.attributes.cite;
+							element.children.unshift( cite );
+						}
+					},
+					span: function( element ) {
+						var bbcode;
+						if ( ( bbcode = element.attributes.bbcode ) ) {
+							if ( bbcode == 'img' ) {
+								element.name = 'img';
+								element.attributes.src = element.children[ 0 ].value;
+								element.children = [];
+							} else if ( bbcode == 'email' ) {
+								element.name = 'a';
+								element.attributes.href = 'mailto:' + element.children[ 0 ].value;
+							}
+
+							delete element.attributes.bbcode;
+						}
+					},
+					ol: function( element ) {
+						if ( element.attributes.listType ) {
+							if ( element.attributes.listType != 'decimal' )
+								element.attributes.style = 'list-style-type:' + element.attributes.listType;
+						} else
+							element.name = 'ul';
+
+						delete element.attributes.listType;
+					},
+					a: function( element ) {
+						if ( !element.attributes.href )
+							element.attributes.href = element.children[ 0 ].value;
+					},
+					smiley: function( element ) {
+						element.name = 'img';
+
+						var description = element.attributes.desc,
+							image = config.smiley_images[ CKEDITOR.tools.indexOf( config.smiley_descriptions, description ) ],
+							src = CKEDITOR.tools.htmlEncode( config.smiley_path + image );
+
+						element.attributes = {
+							src: src,
+							'data-cke-saved-src': src,
+							title: description,
+							alt: description
+						};
+					}
+				}
+			} );
+
+			editor.dataProcessor.htmlFilter.addRules( {
+				elements: {
+					$: function( element ) {
+						var attributes = element.attributes,
+							style = CKEDITOR.tools.parseCssText( attributes.style, 1 ),
+							value;
+
+						var tagName = element.name;
+						if ( tagName in convertMap )
+							tagName = convertMap[ tagName ];
+						else if ( tagName == 'span' ) {
+							if ( ( value = style.color ) ) {
+								tagName = 'color';
+								value = CKEDITOR.tools.convertRgbToHex( value );
+							} else if ( ( value = style[ 'font-size' ] ) ) {
+								var percentValue = value.match( /(\d+)%$/ );
+								if ( percentValue ) {
+									value = percentValue[ 1 ];
+									tagName = 'size';
+								}
+							}
+						} else if ( tagName == 'ol' || tagName == 'ul' ) {
+							if ( ( value = style[ 'list-style-type' ] ) ) {
+								switch ( value ) {
+									case 'lower-alpha':
+										value = 'a';
+										break;
+									case 'upper-alpha':
+										value = 'A';
+										break;
+								}
+							} else if ( tagName == 'ol' )
+								value = 1;
+
+							tagName = 'list';
+						} else if ( tagName == 'blockquote' ) {
+							try {
+								var cite = element.children[ 0 ],
+									quoted = element.children[ 1 ],
+									citeText = cite.name == 'cite' &amp;&amp; cite.children[ 0 ].value;
+
+								if ( citeText ) {
+									value = '&quot;' + citeText + '&quot;';
+									element.children = quoted.children;
+								}
+
+							} catch ( er ) {}
+
+							tagName = 'quote';
+						} else if ( tagName == 'a' ) {
+							if ( ( value = attributes.href ) ) {
+								if ( value.indexOf( 'mailto:' ) !== -1 ) {
+									tagName = 'email';
+									// [email] should have a single text child with email address.
+									element.children = [ new CKEDITOR.htmlParser.text( value.replace( 'mailto:', '' ) ) ];
+									value = '';
+								} else {
+									var singleton = element.children.length == 1 &amp;&amp; element.children[ 0 ];
+									if ( singleton &amp;&amp; singleton.type == CKEDITOR.NODE_TEXT &amp;&amp; singleton.value == value )
+										value = '';
+
+									tagName = 'url';
+								}
+							}
+						} else if ( tagName == 'img' ) {
+							element.isEmpty = 0;
+
+							// Translate smiley (image) to text emotion.
+							var src = attributes[ 'data-cke-saved-src' ] || attributes.src,
+								alt = attributes.alt;
+
+							if ( src &amp;&amp; src.indexOf( editor.config.smiley_path ) != -1 &amp;&amp; alt )
+								return new CKEDITOR.htmlParser.text( smileyMap[ alt ] );
+							else
+								element.children = [ new CKEDITOR.htmlParser.text( src ) ];
+						}
+
+						element.name = tagName;
+						value &amp;&amp; ( element.attributes.option = value );
+
+						return null;
+					},
+
+					// Remove any bogus br from the end of a pseudo block,
+					// e.g. &lt;div&gt;some text&lt;br /&gt;&lt;p&gt;paragraph&lt;/p&gt;&lt;/div&gt;
+					br: function( element ) {
+						var next = element.next;
+						if ( next &amp;&amp; next.name in blockLikeTags )
+							return false;
+					}
+				}
+			}, 1 );
+
+			editor.dataProcessor.writer = writer;
+
+			function onSetData( evt ) {
+				var bbcode = evt.data.dataValue;
+				evt.data.dataValue = BBCodeToHtml( bbcode );
+			}
+
+			// Skip the first &quot;setData&quot; call from inline creator, to allow content of
+			// HTML to be loaded from the page element.
+			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
+				editor.once( 'contentDom', function() {
+					editor.on( 'setData', onSetData );
+				} );
+			else
+				editor.on( 'setData', onSetData );
+
+		},
+
+		afterInit: function( editor ) {
+			var filters;
+			if ( editor._.elementsPath ) {
+				// Eliminate irrelevant elements from displaying, e.g body and p.
+				if ( ( filters = editor._.elementsPath.filters ) ) {
+					filters.push( function( element ) {
+						var htmlName = element.getName(),
+							name = tagnameMap[ htmlName ] || false;
+
+						// Specialized anchor presents as email.
+						if ( name == 'link' &amp;&amp; element.getAttribute( 'href' ).indexOf( 'mailto:' ) === 0 )
+							name = 'email';
+						// Styled span could be either size or color.
+						else if ( htmlName == 'span' ) {
+							if ( element.getStyle( 'font-size' ) )
+								name = 'size';
+							else if ( element.getStyle( 'color' ) )
+								name = 'color';
+						} else if ( name == 'img' ) {
+							var src = element.data( 'cke-saved-src' ) || element.getAttribute( 'src' );
+							if ( src &amp;&amp; src.indexOf( editor.config.smiley_path ) === 0 )
+								name = 'smiley';
+						}
+
+						return name;
+					} );
 				}
 			}
-
-			// Avoid selection anchors under list root.
-			// &lt;ul&gt;[&lt;li&gt;...&lt;/li&gt;]&lt;/ul&gt; =&gt;	&lt;ul&gt;&lt;li&gt;[...]&lt;/li&gt;&lt;/ul&gt;
-			if ( nearestListBlock &amp;&amp; range.startContainer.type == CKEDITOR.NODE_ELEMENT &amp;&amp; range.startContainer.getName() in context ) {
-				var walker = new CKEDITOR.dom.walker( range );
-				walker.evaluator = listItem;
-				range.startContainer = walker.next();
-			}
-
-			if ( nearestListBlock &amp;&amp; range.endContainer.type == CKEDITOR.NODE_ELEMENT &amp;&amp; range.endContainer.getName() in context ) {
-				walker = new CKEDITOR.dom.walker( range );
-				walker.evaluator = listItem;
-				range.endContainer = walker.previous();
-			}
-
-			if ( nearestListBlock )
-				return indent( nearestListBlock );
 		}
-		return 0;
-	}
+	} );
 
-	// Check whether a first child of a list is in the path.
-	// The list can be extracted from path or given explicitly
-	// e.g. for better performance if cached.
-	function firstItemInPath( path, list ) {
-		if ( !list )
-			list = path.contains( this.context );
-
-		return list &amp;&amp; path.block &amp;&amp; path.block.equals( list.getFirst( listItem ) );
-	}
-
-	// Determines whether a node is a list &lt;li&gt; element.
-	function listItem( node ) {
-		return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( 'li' );
-	}
-
-	function neitherWhitespacesNorBookmark( node ) {
-		return isNotWhitespaces( node ) &amp;&amp; isNotBookmark( node );
-	}
-} )();</pre>
+} )();
+</pre>
 </body>
 </html>

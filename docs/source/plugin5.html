@@ -21,244 +21,184 @@
  */
 
 ( function() {
-	function noBlockLeft( bqBlock ) {
-		for ( var i = 0, length = bqBlock.getChildCount(), child; i &lt; length &amp;&amp; ( child = bqBlock.getChild( i ) ); i++ ) {
-			if ( child.type == CKEDITOR.NODE_ELEMENT &amp;&amp; child.isBlockBoundary() )
-				return false;
+	var eventNameList = [ 'click', 'keydown', 'mousedown', 'keypress', 'mouseover', 'mouseout' ];
+
+	// Inline event callbacks assigned via innerHTML/outerHTML, such as
+	// onclick/onmouseover, are ignored in AIR.
+	// Use DOM2 event listeners to substitue inline handlers instead.
+	function convertInlineHandlers( container ) {
+		// TODO: document.querySelectorAll is not supported in AIR.
+		var children = container.getElementsByTag( '*' ),
+			count = children.count(),
+			child;
+
+		for ( var i = 0; i &lt; count; i++ ) {
+			child = children.getItem( i );
+
+			( function( node ) {
+				for ( var j = 0; j &lt; eventNameList.length; j++ ) {
+					( function( eventName ) {
+						var inlineEventHandler = node.getAttribute( 'on' + eventName );
+						if ( node.hasAttribute( 'on' + eventName ) ) {
+							node.removeAttribute( 'on' + eventName );
+							node.on( eventName, function( evt ) {
+								var callFunc = /(return\s*)?CKEDITOR\.tools\.callFunction\(([^)]+)\)/.exec( inlineEventHandler ),
+									hasReturn = callFunc &amp;&amp; callFunc[ 1 ],
+									callFuncArgs = callFunc &amp;&amp; callFunc[ 2 ].split( ',' ),
+									preventDefault = /return false;/.test( inlineEventHandler );
+
+								if ( callFuncArgs ) {
+									var nums = callFuncArgs.length,
+										argName;
+
+									for ( var i = 0; i &lt; nums; i++ ) {
+										// Trim spaces around param.
+										callFuncArgs[ i ] = argName = CKEDITOR.tools.trim( callFuncArgs[ i ] );
+
+										// String form param.
+										var strPattern = argName.match( /^([&quot;'])([^&quot;']*?)\1$/ );
+										if ( strPattern ) {
+											callFuncArgs[ i ] = strPattern[ 2 ];
+											continue;
+										}
+
+										// Integer form param.
+										if ( argName.match( /\d+/ ) ) {
+											callFuncArgs[ i ] = parseInt( argName, 10 );
+											continue;
+										}
+
+										// Speical variables.
+										switch ( argName ) {
+											case 'this':
+												callFuncArgs[ i ] = node.$;
+												break;
+											case 'event':
+												callFuncArgs[ i ] = evt.data.$;
+												break;
+											case 'null':
+												callFuncArgs[ i ] = null;
+												break;
+										}
+									}
+
+									var retval = CKEDITOR.tools.callFunction.apply( window, callFuncArgs );
+									if ( hasReturn &amp;&amp; retval === false )
+										preventDefault = 1;
+								}
+
+								if ( preventDefault )
+									evt.data.preventDefault();
+							} );
+						}
+					} )( eventNameList[ j ] );
+				}
+			} )( child );
 		}
-		return true;
 	}
 
-	var commandObject = {
-		exec: function( editor ) {
-			var state = editor.getCommand( 'blockquote' ).state,
-				selection = editor.getSelection(),
-				range = selection &amp;&amp; selection.getRanges()[ 0 ];
-
-			if ( !range )
+	CKEDITOR.plugins.add( 'adobeair', {
+		onLoad: function() {
+			if ( !CKEDITOR.env.air )
 				return;
 
-			var bookmarks = selection.createBookmarks();
-
-			// Kludge for #1592: if the bookmark nodes are in the beginning of
-			// blockquote, then move them to the nearest block element in the
-			// blockquote.
-			if ( CKEDITOR.env.ie ) {
-				var bookmarkStart = bookmarks[ 0 ].startNode,
-					bookmarkEnd = bookmarks[ 0 ].endNode,
-					cursor;
-
-				if ( bookmarkStart &amp;&amp; bookmarkStart.getParent().getName() == 'blockquote' ) {
-					cursor = bookmarkStart;
-					while ( ( cursor = cursor.getNext() ) ) {
-						if ( cursor.type == CKEDITOR.NODE_ELEMENT &amp;&amp; cursor.isBlockBoundary() ) {
-							bookmarkStart.move( cursor, true );
-							break;
-						}
-					}
+			CKEDITOR.dom.document.prototype.write = CKEDITOR.tools.override( CKEDITOR.dom.document.prototype.write, function( original_write ) {
+				function appendElement( parent, tagName, fullTag, text ) {
+					var node = parent.append( tagName ),
+						attrs = CKEDITOR.htmlParser.fragment.fromHtml( fullTag ).children[ 0 ].attributes;
+					attrs &amp;&amp; node.setAttributes( attrs );
+					text &amp;&amp; node.append( parent.getDocument().createText( text ) );
 				}
 
-				if ( bookmarkEnd &amp;&amp; bookmarkEnd.getParent().getName() == 'blockquote' ) {
-					cursor = bookmarkEnd;
-					while ( ( cursor = cursor.getPrevious() ) ) {
-						if ( cursor.type == CKEDITOR.NODE_ELEMENT &amp;&amp; cursor.isBlockBoundary() ) {
-							bookmarkEnd.move( cursor );
-							break;
-						}
-					}
-				}
-			}
+				return function( html, mode ) {
+					// document.write() or document.writeln() fail silently after
+					// the page load event in Adobe AIR.
+					// DOM manipulation could be used instead.
+					if ( this.getBody() ) {
+						// We're taking the below extra work only because innerHTML
+						// on &lt;html&gt; element doesn't work as expected.
+						var doc = this,
+							head = this.getHead();
 
-			var iterator = range.createIterator(),
-				block;
-			iterator.enlargeBr = editor.config.enterMode != CKEDITOR.ENTER_BR;
+						// Create style nodes for inline css. ( &lt;style&gt; content doesn't applied when setting via innerHTML )
+						html = html.replace( /(&lt;style[^&gt;]*&gt;)([\s\S]*?)&lt;\/style&gt;/gi, function( match, startTag, styleText ) {
+							appendElement( head, 'style', startTag, styleText );
+							return '';
+						} );
 
-			if ( state == CKEDITOR.TRISTATE_OFF ) {
-				var paragraphs = [];
-				while ( ( block = iterator.getNextParagraph() ) )
-					paragraphs.push( block );
+						html = html.replace( /&lt;base\b[^&gt;]*\/&gt;/i, function( match ) {
+							appendElement( head, 'base', match );
+							return '';
+						} );
 
-				// If no paragraphs, create one from the current selection position.
-				if ( paragraphs.length &lt; 1 ) {
-					var para = editor.document.createElement( editor.config.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ),
-						firstBookmark = bookmarks.shift();
-					range.insertNode( para );
-					para.append( new CKEDITOR.dom.text( '\ufeff', editor.document ) );
-					range.moveToBookmark( firstBookmark );
-					range.selectNodeContents( para );
-					range.collapse( true );
-					firstBookmark = range.createBookmark();
-					paragraphs.push( para );
-					bookmarks.unshift( firstBookmark );
-				}
+						html = html.replace( /&lt;title&gt;([\s\S]*)&lt;\/title&gt;/i, function( match, title ) {
+							doc.$.title = title;
+							return '';
+						} );
 
-				// Make sure all paragraphs have the same parent.
-				var commonParent = paragraphs[ 0 ].getParent(),
-					tmp = [];
-				for ( var i = 0; i &lt; paragraphs.length; i++ ) {
-					block = paragraphs[ i ];
-					commonParent = commonParent.getCommonAncestor( block.getParent() );
-				}
+						// Move the rest of head stuff.
+						html = html.replace( /&lt;head&gt;([\s\S]*)&lt;\/head&gt;/i, function( headHtml ) {
+							// Inject the &lt;head&gt; HTML inside a &lt;div&gt;.
+							// Do that before getDocumentHead because WebKit moves
+							// &lt;link css&gt; elements to the &lt;head&gt; at this point.
+							var div = new CKEDITOR.dom.element( 'div', doc );
+							div.setHtml( headHtml );
+							// Move the &lt;div&gt; nodes to &lt;head&gt;.
+							div.moveChildren( head );
+							return '';
+						} );
 
-				// The common parent must not be the following tags: table, tbody, tr, ol, ul.
-				var denyTags = { table: 1, tbody: 1, tr: 1, ol: 1, ul: 1 };
-				while ( denyTags[ commonParent.getName() ] )
-					commonParent = commonParent.getParent();
-
-				// Reconstruct the block list to be processed such that all resulting blocks
-				// satisfy parentNode.equals( commonParent ).
-				var lastBlock = null;
-				while ( paragraphs.length &gt; 0 ) {
-					block = paragraphs.shift();
-					while ( !block.getParent().equals( commonParent ) )
-						block = block.getParent();
-					if ( !block.equals( lastBlock ) )
-						tmp.push( block );
-					lastBlock = block;
-				}
-
-				// If any of the selected blocks is a blockquote, remove it to prevent
-				// nested blockquotes.
-				while ( tmp.length &gt; 0 ) {
-					block = tmp.shift();
-					if ( block.getName() == 'blockquote' ) {
-						var docFrag = new CKEDITOR.dom.documentFragment( editor.document );
-						while ( block.getFirst() ) {
-							docFrag.append( block.getFirst().remove() );
-							paragraphs.push( docFrag.getLast() );
-						}
-
-						docFrag.replace( block );
+						html.replace( /(&lt;body[^&gt;]*&gt;)([\s\S]*)(?=$|&lt;\/body&gt;)/i, function( match, startTag, innerHTML ) {
+							doc.getBody().setHtml( innerHTML );
+							var attrs = CKEDITOR.htmlParser.fragment.fromHtml( startTag ).children[ 0 ].attributes;
+							attrs &amp;&amp; doc.getBody().setAttributes( attrs );
+						} );
 					} else
-						paragraphs.push( block );
-				}
+						original_write.apply( this, arguments );
+				};
+			} );
 
-				// Now we have all the blocks to be included in a new blockquote node.
-				var bqBlock = editor.document.createElement( 'blockquote' );
-				bqBlock.insertBefore( paragraphs[ 0 ] );
-				while ( paragraphs.length &gt; 0 ) {
-					block = paragraphs.shift();
-					bqBlock.append( block );
-				}
-			} else if ( state == CKEDITOR.TRISTATE_ON ) {
-				var moveOutNodes = [],
-					database = {};
+			// Body doesn't get default margin on AIR.
+			CKEDITOR.addCss( 'body.cke_editable { padding: 8px }' );
+			CKEDITOR.ui.on( 'ready', function( evt ) {
+				var ui = evt.data;
+				// richcombo, panelbutton and menu
+				if ( ui._.panel ) {
+					var panel = ui._.panel._.panel,
+						holder;
 
-				while ( ( block = iterator.getNextParagraph() ) ) {
-					var bqParent = null,
-						bqChild = null;
-					while ( block.getParent() ) {
-						if ( block.getParent().getName() == 'blockquote' ) {
-							bqParent = block.getParent();
-							bqChild = block;
-							break;
+					( function() {
+						// Adding dom event listeners off-line are not supported in AIR,
+						// waiting for panel iframe loaded.
+						if ( !panel.isLoaded ) {
+							setTimeout( arguments.callee, 30 );
+							return;
 						}
-						block = block.getParent();
-					}
-
-					// Remember the blocks that were recorded down in the moveOutNodes array
-					// to prevent duplicates.
-					if ( bqParent &amp;&amp; bqChild &amp;&amp; !bqChild.getCustomData( 'blockquote_moveout' ) ) {
-						moveOutNodes.push( bqChild );
-						CKEDITOR.dom.element.setMarker( database, bqChild, 'blockquote_moveout', true );
-					}
-				}
-
-				CKEDITOR.dom.element.clearAllMarkers( database );
-
-				var movedNodes = [],
-					processedBlockquoteBlocks = [];
-
-				database = {};
-				while ( moveOutNodes.length &gt; 0 ) {
-					var node = moveOutNodes.shift();
-					bqBlock = node.getParent();
-
-					// If the node is located at the beginning or the end, just take it out
-					// without splitting. Otherwise, split the blockquote node and move the
-					// paragraph in between the two blockquote nodes.
-					if ( !node.getPrevious() )
-						node.remove().insertBefore( bqBlock );
-					else if ( !node.getNext() )
-						node.remove().insertAfter( bqBlock );
-					else {
-						node.breakParent( node.getParent() );
-						processedBlockquoteBlocks.push( node.getNext() );
-					}
-
-					// Remember the blockquote node so we can clear it later (if it becomes empty).
-					if ( !bqBlock.getCustomData( 'blockquote_processed' ) ) {
-						processedBlockquoteBlocks.push( bqBlock );
-						CKEDITOR.dom.element.setMarker( database, bqBlock, 'blockquote_processed', true );
-					}
-
-					movedNodes.push( node );
-				}
-
-				CKEDITOR.dom.element.clearAllMarkers( database );
-
-				// Clear blockquote nodes that have become empty.
-				for ( i = processedBlockquoteBlocks.length - 1; i &gt;= 0; i-- ) {
-					bqBlock = processedBlockquoteBlocks[ i ];
-					if ( noBlockLeft( bqBlock ) )
-						bqBlock.remove();
-				}
-
-				if ( editor.config.enterMode == CKEDITOR.ENTER_BR ) {
-					var firstTime = true;
-					while ( movedNodes.length ) {
-						node = movedNodes.shift();
-
-						if ( node.getName() == 'div' ) {
-							docFrag = new CKEDITOR.dom.documentFragment( editor.document );
-							var needBeginBr = firstTime &amp;&amp; node.getPrevious() &amp;&amp; !( node.getPrevious().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getPrevious().isBlockBoundary() );
-							if ( needBeginBr )
-								docFrag.append( editor.document.createElement( 'br' ) );
-
-							var needEndBr = node.getNext() &amp;&amp; !( node.getNext().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getNext().isBlockBoundary() );
-							while ( node.getFirst() )
-								node.getFirst().remove().appendTo( docFrag );
-
-							if ( needEndBr )
-								docFrag.append( editor.document.createElement( 'br' ) );
-
-							docFrag.replace( node );
-							firstTime = false;
-						}
-					}
-				}
-			}
-
-			selection.selectBookmarks( bookmarks );
-			editor.focus();
+						holder = panel._.holder;
+						convertInlineHandlers( holder );
+					} )();
+				} else if ( ui instanceof CKEDITOR.dialog )
+					convertInlineHandlers( ui._.element );
+			} );
 		},
-
-		refresh: function( editor, path ) {
-			// Check if inside of blockquote.
-			var firstBlock = path.block || path.blockLimit;
-			this.setState( editor.elementPath( firstBlock ).contains( 'blockquote', 1 ) ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
-		},
-
-		context: 'blockquote',
-
-		allowedContent: 'blockquote',
-		requiredContent: 'blockquote'
-	};
-
-	CKEDITOR.plugins.add( 'blockquote', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'blockquote', // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			if ( editor.blockless )
+			if ( !CKEDITOR.env.air )
 				return;
 
-			editor.addCommand( 'blockquote', commandObject );
+			editor.on( 'uiReady', function() {
+				convertInlineHandlers( editor.container );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Blockquote', {
-				label: editor.lang.blockquote.toolbar,
-				command: 'blockquote',
-				toolbar: 'blocks,10'
+				editor.on( 'elementsPathUpdate', function( evt ) {
+					convertInlineHandlers( evt.data.space );
+				} );
+			} );
+
+			editor.on( 'contentDom', function() {
+				// Hyperlinks are enabled in editable documents in Adobe
+				// AIR. Prevent their click behavior.
+				editor.document.on( 'click', function( ev ) {
+					ev.data.preventDefault( true );
+				} );
 			} );
 		}
 	} );

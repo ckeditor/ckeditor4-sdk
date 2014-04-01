@@ -20,170 +20,139 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'resize', {
-	init: function( editor ) {
-		var config = editor.config;
-		var spaceId = editor.ui.spaceId( 'resizer' );
+CKEDITOR.plugins.add( 'panelbutton', {
+	requires: 'button',
+	onLoad: function() {
+		function clickFn( editor ) {
+			var _ = this._;
 
-		// Resize in the same direction of chrome,
-		// which is identical to dir of editor element. (#6614)
-		var resizeDir = editor.element ? editor.element.getDirection( 1 ) : 'ltr';
+			if ( _.state == CKEDITOR.TRISTATE_DISABLED )
+				return;
 
-		!config.resize_dir &amp;&amp; ( config.resize_dir = 'vertical' );
-		( config.resize_maxWidth == undefined ) &amp;&amp; ( config.resize_maxWidth = 3000 );
-		( config.resize_maxHeight == undefined ) &amp;&amp; ( config.resize_maxHeight = 3000 );
-		( config.resize_minWidth == undefined ) &amp;&amp; ( config.resize_minWidth = 750 );
-		( config.resize_minHeight == undefined ) &amp;&amp; ( config.resize_minHeight = 250 );
+			this.createPanel( editor );
 
-		if ( config.resize_enabled !== false ) {
-			var container = null,
-				origin, startSize,
-				resizeHorizontal = ( config.resize_dir == 'both' || config.resize_dir == 'horizontal' ) &amp;&amp; ( config.resize_minWidth != config.resize_maxWidth ),
-				resizeVertical = ( config.resize_dir == 'both' || config.resize_dir == 'vertical' ) &amp;&amp; ( config.resize_minHeight != config.resize_maxHeight );
-
-			function dragHandler( evt ) {
-				var dx = evt.data.$.screenX - origin.x,
-					dy = evt.data.$.screenY - origin.y,
-					width = startSize.width,
-					height = startSize.height,
-					internalWidth = width + dx * ( resizeDir == 'rtl' ? -1 : 1 ),
-					internalHeight = height + dy;
-
-				if ( resizeHorizontal )
-					width = Math.max( config.resize_minWidth, Math.min( internalWidth, config.resize_maxWidth ) );
-
-				if ( resizeVertical )
-					height = Math.max( config.resize_minHeight, Math.min( internalHeight, config.resize_maxHeight ) );
-
-				// DO NOT impose fixed size with single direction resize. (#6308)
-				editor.resize( resizeHorizontal ? width : null, height );
+			if ( _.on ) {
+				_.panel.hide();
+				return;
 			}
 
-			function dragEndHandler( evt ) {
-				CKEDITOR.document.removeListener( 'mousemove', dragHandler );
-				CKEDITOR.document.removeListener( 'mouseup', dragEndHandler );
-
-				if ( editor.document ) {
-					editor.document.removeListener( 'mousemove', dragHandler );
-					editor.document.removeListener( 'mouseup', dragEndHandler );
-				}
-			}
-
-			var mouseDownFn = CKEDITOR.tools.addFunction( function( $event ) {
-				if ( !container )
-					container = editor.getResizable();
-
-				startSize = { width: container.$.offsetWidth || 0, height: container.$.offsetHeight || 0 };
-				origin = { x: $event.screenX, y: $event.screenY };
-
-				config.resize_minWidth &gt; startSize.width &amp;&amp; ( config.resize_minWidth = startSize.width );
-				config.resize_minHeight &gt; startSize.height &amp;&amp; ( config.resize_minHeight = startSize.height );
-
-				CKEDITOR.document.on( 'mousemove', dragHandler );
-				CKEDITOR.document.on( 'mouseup', dragEndHandler );
-
-				if ( editor.document ) {
-					editor.document.on( 'mousemove', dragHandler );
-					editor.document.on( 'mouseup', dragEndHandler );
-				}
-
-				$event.preventDefault &amp;&amp; $event.preventDefault();
-			} );
-
-			editor.on( 'destroy', function() {
-				CKEDITOR.tools.removeFunction( mouseDownFn );
-			} );
-
-			editor.on( 'uiSpace', function( event ) {
-				if ( event.data.space == 'bottom' ) {
-					var direction = '';
-					if ( resizeHorizontal &amp;&amp; !resizeVertical )
-						direction = ' cke_resizer_horizontal';
-					if ( !resizeHorizontal &amp;&amp; resizeVertical )
-						direction = ' cke_resizer_vertical';
-
-					var resizerHtml =
-						'&lt;span' +
-						' id=&quot;' + spaceId + '&quot;' +
-						' class=&quot;cke_resizer' + direction + ' cke_resizer_' + resizeDir + '&quot;' +
-						' title=&quot;' + CKEDITOR.tools.htmlEncode( editor.lang.common.resize ) + '&quot;' +
-						' onmousedown=&quot;CKEDITOR.tools.callFunction(' + mouseDownFn + ', event)&quot;' +
-						'&gt;' +
-						// BLACK LOWER RIGHT TRIANGLE (ltr)
-						// BLACK LOWER LEFT TRIANGLE (rtl)
-						( resizeDir == 'ltr' ? '\u25E2' : '\u25E3' ) +
-						'&lt;/span&gt;';
-
-					// Always sticks the corner of botttom space.
-					resizeDir == 'ltr' &amp;&amp; direction == 'ltr' ? event.data.html += resizerHtml : event.data.html = resizerHtml + event.data.html;
-				}
-			}, editor, null, 100 );
-
-			// Toggle the visibility of the resizer when an editor is being maximized or minimized.
-			editor.on( 'maximize', function( event ) {
-				editor.ui.space( 'resizer' )[ event.data == CKEDITOR.TRISTATE_ON ? 'hide' : 'show' ]();
-			} );
+			_.panel.showBlock( this._.id, this.document.getById( this._.id ), 4 );
 		}
+
+<span id='CKEDITOR-ui-panelButton'>		/**
+</span>		 * @class
+		 * @extends CKEDITOR.ui.button
+		 * @todo class and methods
+		 */
+		CKEDITOR.ui.panelButton = CKEDITOR.tools.createClass( {
+			base: CKEDITOR.ui.button,
+
+<span id='CKEDITOR-ui-panelButton-method-constructor'>			/**
+</span>			 * Creates a panelButton class instance.
+			 *
+			 * @constructor
+			 */
+			$: function( definition ) {
+				// We don't want the panel definition in this object.
+				var panelDefinition = definition.panel || {};
+				delete definition.panel;
+
+				this.base( definition );
+
+				this.document = ( panelDefinition.parent &amp;&amp; panelDefinition.parent.getDocument() ) || CKEDITOR.document;
+
+				panelDefinition.block = {
+					attributes: panelDefinition.attributes
+				};
+				panelDefinition.toolbarRelated = true;
+
+				this.hasArrow = true;
+
+				this.click = clickFn;
+
+				this._ = {
+					panelDefinition: panelDefinition
+				};
+			},
+
+			statics: {
+				handler: {
+					create: function( definition ) {
+						return new CKEDITOR.ui.panelButton( definition );
+					}
+				}
+			},
+
+			proto: {
+				createPanel: function( editor ) {
+					var _ = this._;
+
+					if ( _.panel )
+						return;
+
+					var panelDefinition = this._.panelDefinition,
+						panelBlockDefinition = this._.panelDefinition.block,
+						panelParentElement = panelDefinition.parent || CKEDITOR.document.getBody(),
+						panel = this._.panel = new CKEDITOR.ui.floatPanel( editor, panelParentElement, panelDefinition ),
+						block = panel.addBlock( _.id, panelBlockDefinition ),
+						me = this;
+
+					panel.onShow = function() {
+						if ( me.className )
+							this.element.addClass( me.className + '_panel' );
+
+						me.setState( CKEDITOR.TRISTATE_ON );
+
+						_.on = 1;
+
+						me.editorFocus &amp;&amp; editor.focus();
+
+						if ( me.onOpen )
+							me.onOpen();
+					};
+
+					panel.onHide = function( preventOnClose ) {
+						if ( me.className )
+							this.element.getFirst().removeClass( me.className + '_panel' );
+
+						me.setState( me.modes &amp;&amp; me.modes[ editor.mode ] ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+
+						_.on = 0;
+
+						if ( !preventOnClose &amp;&amp; me.onClose )
+							me.onClose();
+					};
+
+					panel.onEscape = function() {
+						panel.hide( 1 );
+						me.document.getById( _.id ).focus();
+					};
+
+					if ( this.onBlock )
+						this.onBlock( panel, block );
+
+					block.onHide = function() {
+						_.on = 0;
+						me.setState( CKEDITOR.TRISTATE_OFF );
+					};
+				}
+			}
+		} );
+
+	},
+	beforeInit: function( editor ) {
+		editor.ui.addHandler( CKEDITOR.UI_PANELBUTTON, CKEDITOR.ui.panelButton.handler );
 	}
 } );
 
-<span id='CKEDITOR-config-cfg-resize_minWidth'>/**
-</span> * The minimum editor width, in pixels, when resizing the editor interface by using the resize handle.
- * Note: It falls back to editor's actual width if it is smaller than the default value.
+<span id='CKEDITOR-property-UI_PANELBUTTON'>/**
+</span> * Button UI element.
  *
- *		config.resize_minWidth = 500;
- *
- * @cfg {Number} [resize_minWidth=750]
- * @member CKEDITOR.config
+ * @readonly
+ * @property {String} [='panelbutton']
+ * @member CKEDITOR
  */
-
-<span id='CKEDITOR-config-cfg-resize_minHeight'>/**
-</span> * The minimum editor height, in pixels, when resizing the editor interface by using the resize handle.
- * Note: It falls back to editor's actual height if it is smaller than the default value.
- *
- *		config.resize_minHeight = 600;
- *
- * @cfg {Number} [resize_minHeight=250]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_maxWidth'>/**
-</span> * The maximum editor width, in pixels, when resizing the editor interface by using the resize handle.
- *
- *		config.resize_maxWidth = 750;
- *
- * @cfg {Number} [resize_maxWidth=3000]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_maxHeight'>/**
-</span> * The maximum editor height, in pixels, when resizing the editor interface by using the resize handle.
- *
- *		config.resize_maxHeight = 600;
- *
- * @cfg {Number} [resize_maxHeight=3000]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_enabled'>/**
-</span> * Whether to enable the resizing feature. If this feature is disabled, the resize handle will not be visible.
- *
- *		config.resize_enabled = false;
- *
- * @cfg {Boolean} [resize_enabled=true]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_dir'>/**
-</span> * The dimensions for which the editor resizing is enabled. Possible values
- * are `both`, `vertical`, and `horizontal`.
- *
- *		config.resize_dir = 'both';
- *
- * @since 3.3
- * @cfg {String} [resize_dir='vertical']
- * @member CKEDITOR.config
- */
+CKEDITOR.UI_PANELBUTTON = 'panelbutton';
 </pre>
 </body>
 </html>

@@ -15,535 +15,75 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+  <pre class="prettyprint lang-js"><span id='global-property-colordialog'>/**
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-( function() {
-	CKEDITOR.plugins.add( 'enterkey', {
-		init: function( editor ) {
-			editor.addCommand( 'enter', {
-				modes: { wysiwyg: 1 },
-				editorFocus: false,
-				exec: function( editor ) {
-					enter( editor );
-				}
-			} );
+CKEDITOR.plugins.colordialog = {
+	requires: 'dialog',
+	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+	init: function( editor ) {
+		var cmd = new CKEDITOR.dialogCommand( 'colordialog' );
+		cmd.editorFocus = false;
 
-			editor.addCommand( 'shiftEnter', {
-				modes: { wysiwyg: 1 },
-				editorFocus: false,
-				exec: function( editor ) {
-					shiftEnter( editor );
-				}
-			} );
+		editor.addCommand( 'colordialog', cmd );
 
-			editor.setKeystroke( [
-				[ 13, 'enter' ],
-				[ CKEDITOR.SHIFT + 13, 'shiftEnter' ]
-			] );
-		}
-	} );
+		CKEDITOR.dialog.add( 'colordialog', this.path + 'dialogs/colordialog.js' );
 
-	var whitespaces = CKEDITOR.dom.walker.whitespaces(),
-		bookmark = CKEDITOR.dom.walker.bookmark();
+<span id='CKEDITOR-editor-method-getColorFromDialog'>		/**
+</span>		 * Open up color dialog and to receive the selected color.
+		 *
+		 * @param {Function} callback The callback when color dialog is closed
+		 * @param {String} callback.color The color value received if selected on the dialog.
+		 * @param [scope] The scope in which the callback will be bound.
+		 * @member CKEDITOR.editor
+		 */
+		editor.getColorFromDialog = function( callback, scope ) {
+			var onClose = function( evt ) {
+				releaseHandlers( this );
+				var color = evt.name == 'ok' ? this.getValueOf( 'picker', 'selectedColor' ) : null;
+				callback.call( scope, color );
+			};
+			var releaseHandlers = function( dialog ) {
+				dialog.removeListener( 'ok', onClose );
+				dialog.removeListener( 'cancel', onClose );
+			};
+			var bindToDialog = function( dialog ) {
+				dialog.on( 'ok', onClose );
+				dialog.on( 'cancel', onClose );
+			};
 
-	CKEDITOR.plugins.enterkey = {
-		enterBlock: function( editor, mode, range, forceMode ) {
-			// Get the range for the current selection.
-			range = range || getRange( editor );
+			editor.execCommand( 'colordialog' );
 
-			// We may not have valid ranges to work on, like when inside a
-			// contenteditable=false element.
-			if ( !range )
-				return;
+			if ( editor._.storedDialogs &amp;&amp; editor._.storedDialogs.colordialog )
+				bindToDialog( editor._.storedDialogs.colordialog );
+			else {
+				CKEDITOR.on( 'dialogDefinition', function( e ) {
+					if ( e.data.name != 'colordialog' )
+						return;
 
-			var doc = range.document;
+					var definition = e.data.definition;
 
-			var atBlockStart = range.checkStartOfBlock(),
-				atBlockEnd = range.checkEndOfBlock(),
-				path = editor.elementPath( range.startContainer ),
-				block = path.block,
-
-				// Determine the block element to be used.
-				blockTag = ( mode == CKEDITOR.ENTER_DIV ? 'div' : 'p' ),
-
-				newBlock;
-
-			// Exit the list when we're inside an empty list item block. (#5376)
-			if ( atBlockStart &amp;&amp; atBlockEnd ) {
-				// Exit the list when we're inside an empty list item block. (#5376)
-				if ( block &amp;&amp; ( block.is( 'li' ) || block.getParent().is( 'li' ) ) ) {
-					var blockParent = block.getParent(),
-						blockGrandParent = blockParent.getParent(),
-
-						firstChild = !block.hasPrevious(),
-						lastChild = !block.hasNext(),
-
-						selection = editor.getSelection(),
-						bookmarks = selection.createBookmarks(),
-
-						orgDir = block.getDirection( 1 ),
-						className = block.getAttribute( 'class' ),
-						style = block.getAttribute( 'style' ),
-						dirLoose = blockGrandParent.getDirection( 1 ) != orgDir,
-
-						enterMode = editor.enterMode,
-						needsBlock = enterMode != CKEDITOR.ENTER_BR || dirLoose || style || className,
-
-						child;
-
-					if ( blockGrandParent.is( 'li' ) ) {
-
-						// If block is the first or the last child of the parent
-						// list, degrade it and move to the outer list:
-						// before the parent list if block is first child and after
-						// the parent list if block is the last child, respectively.
-						//
-						//  &lt;ul&gt;                         =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;                     =&gt;          &lt;li&gt;
-						//          &lt;ul&gt;                 =&gt;              &lt;ul&gt;
-						//              &lt;li&gt;x&lt;/li&gt;       =&gt;                  &lt;li&gt;x&lt;/li&gt;
-						//              &lt;li&gt;^&lt;/li&gt;       =&gt;              &lt;/ul&gt;
-						//          &lt;/ul&gt;                =&gt;          &lt;/li&gt;
-						//      &lt;/li&gt;                    =&gt;          &lt;li&gt;^&lt;/li&gt;
-						//  &lt;/ul&gt;                        =&gt;      &lt;/ul&gt;
-						//
-						//                              AND
-						//
-						//  &lt;ul&gt;                         =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;                     =&gt;          &lt;li&gt;^&lt;/li&gt;
-						//          &lt;ul&gt;                 =&gt;          &lt;li&gt;
-						//              &lt;li&gt;^&lt;/li&gt;       =&gt;              &lt;ul&gt;
-						//              &lt;li&gt;x&lt;/li&gt;       =&gt;                  &lt;li&gt;x&lt;/li&gt;
-						//          &lt;/ul&gt;                =&gt;              &lt;/ul&gt;
-						//      &lt;/li&gt;                    =&gt;          &lt;/li&gt;
-						//  &lt;/ul&gt;                        =&gt;      &lt;/ul&gt;
-
-						if ( firstChild || lastChild )
-							block[ firstChild ? 'insertBefore' : 'insertAfter' ]( blockGrandParent );
-
-						// If the empty block is neither first nor last child
-						// then split the list and the block as an element
-						// of outer list.
-						//
-						//                              =&gt;      &lt;ul&gt;
-						//                              =&gt;          &lt;li&gt;
-						//  &lt;ul&gt;                        =&gt;              &lt;ul&gt;
-						//      &lt;li&gt;                    =&gt;                  &lt;li&gt;x&lt;/li&gt;
-						//          &lt;ul&gt;                =&gt;              &lt;/ul&gt;
-						//              &lt;li&gt;x&lt;/li&gt;      =&gt;          &lt;/li&gt;
-						//              &lt;li&gt;^&lt;/li&gt;      =&gt;          &lt;li&gt;^&lt;/li&gt;
-						//              &lt;li&gt;y&lt;/li&gt;      =&gt;          &lt;li&gt;
-						//          &lt;/ul&gt;               =&gt;              &lt;ul&gt;
-						//      &lt;/li&gt;                   =&gt;                  &lt;li&gt;y&lt;/li&gt;
-						//  &lt;/ul&gt;                       =&gt;              &lt;/ul&gt;
-						//                              =&gt;          &lt;/li&gt;
-						//                              =&gt;      &lt;/ul&gt;
-
-						else
-							block.breakParent( blockGrandParent );
-					}
-
-					else if ( !needsBlock ) {
-						block.appendBogus( true );
-
-						// If block is the first or last child of the parent
-						// list, move all block's children out of the list:
-						// before the list if block is first child and after the list
-						// if block is the last child, respectively.
-						//
-						//  &lt;ul&gt;                       =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;x&lt;/li&gt;             =&gt;          &lt;li&gt;x&lt;/li&gt;
-						//      &lt;li&gt;^&lt;/li&gt;             =&gt;      &lt;/ul&gt;
-						//  &lt;/ul&gt;                      =&gt;      ^
-						//
-						//                            AND
-						//
-						//  &lt;ul&gt;                       =&gt;      ^
-						//      &lt;li&gt;^&lt;/li&gt;             =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;x&lt;/li&gt;             =&gt;          &lt;li&gt;x&lt;/li&gt;
-						//  &lt;/ul&gt;                      =&gt;      &lt;/ul&gt;
-
-						if ( firstChild || lastChild ) {
-							while ( ( child = block[ firstChild ? 'getFirst' : 'getLast' ]() ) )
-								child[ firstChild ? 'insertBefore' : 'insertAfter' ]( blockParent );
-						}
-
-						// If the empty block is neither first nor last child
-						// then split the list and put all the block contents
-						// between two lists.
-						//
-						//  &lt;ul&gt;                       =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;x&lt;/li&gt;             =&gt;          &lt;li&gt;x&lt;/li&gt;
-						//      &lt;li&gt;^&lt;/li&gt;             =&gt;      &lt;/ul&gt;
-						//      &lt;li&gt;y&lt;/li&gt;             =&gt;      ^
-						//  &lt;/ul&gt;                      =&gt;      &lt;ul&gt;
-						//                             =&gt;          &lt;li&gt;y&lt;/li&gt;
-						//                             =&gt;      &lt;/ul&gt;
-
-						else {
-							block.breakParent( blockParent );
-
-							while ( ( child = block.getLast() ) )
-								child.insertAfter( blockParent );
-						}
-
-						block.remove();
-					} else {
-						// Use &lt;div&gt; block for ENTER_BR and ENTER_DIV.
-						newBlock = doc.createElement( mode == CKEDITOR.ENTER_P ? 'p' : 'div' );
-
-						if ( dirLoose )
-							newBlock.setAttribute( 'dir', orgDir );
-
-						style &amp;&amp; newBlock.setAttribute( 'style', style );
-						className &amp;&amp; newBlock.setAttribute( 'class', className );
-
-						// Move all the child nodes to the new block.
-						block.moveChildren( newBlock );
-
-						// If block is the first or last child of the parent
-						// list, move it out of the list:
-						// before the list if block is first child and after the list
-						// if block is the last child, respectively.
-						//
-						//  &lt;ul&gt;                       =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;x&lt;/li&gt;             =&gt;          &lt;li&gt;x&lt;/li&gt;
-						//      &lt;li&gt;^&lt;/li&gt;             =&gt;      &lt;/ul&gt;
-						//  &lt;/ul&gt;                      =&gt;      &lt;p&gt;^&lt;/p&gt;
-						//
-						//                            AND
-						//
-						//  &lt;ul&gt;                       =&gt;      &lt;p&gt;^&lt;/p&gt;
-						//      &lt;li&gt;^&lt;/li&gt;             =&gt;      &lt;ul&gt;
-						//      &lt;li&gt;x&lt;/li&gt;             =&gt;          &lt;li&gt;x&lt;/li&gt;
-						//  &lt;/ul&gt;                      =&gt;      &lt;/ul&gt;
-
-						if ( firstChild || lastChild )
-							newBlock[ firstChild ? 'insertBefore' : 'insertAfter' ]( blockParent );
-
-						// If the empty block is neither first nor last child
-						// then split the list and put the new block between
-						// two lists.
-						//
-						//                             =&gt;       &lt;ul&gt;
-						//     &lt;ul&gt;                    =&gt;           &lt;li&gt;x&lt;/li&gt;
-						//         &lt;li&gt;x&lt;/li&gt;          =&gt;       &lt;/ul&gt;
-						//         &lt;li&gt;^&lt;/li&gt;          =&gt;       &lt;p&gt;^&lt;/p&gt;
-						//         &lt;li&gt;y&lt;/li&gt;          =&gt;       &lt;ul&gt;
-						//     &lt;/ul&gt;                   =&gt;           &lt;li&gt;y&lt;/li&gt;
-						//                             =&gt;       &lt;/ul&gt;
-
-						else {
-							block.breakParent( blockParent );
-							newBlock.insertAfter( blockParent );
-						}
-
-						block.remove();
-					}
-
-					selection.selectBookmarks( bookmarks );
-
-					return;
-				}
-
-				if ( block &amp;&amp; block.getParent().is( 'blockquote' ) ) {
-					block.breakParent( block.getParent() );
-
-					// If we were at the start of &lt;blockquote&gt;, there will be an empty element before it now.
-					if ( !block.getPrevious().getFirst( CKEDITOR.dom.walker.invisible( 1 ) ) )
-						block.getPrevious().remove();
-
-					// If we were at the end of &lt;blockquote&gt;, there will be an empty element after it now.
-					if ( !block.getNext().getFirst( CKEDITOR.dom.walker.invisible( 1 ) ) )
-						block.getNext().remove();
-
-					range.moveToElementEditStart( block );
-					range.select();
-					return;
-				}
+					e.removeListener();
+					definition.onLoad = CKEDITOR.tools.override( definition.onLoad,
+						function( orginal ) {
+							return function() {
+								bindToDialog( this );
+								definition.onLoad = orginal;
+								if ( typeof orginal == 'function' )
+									orginal.call( this );
+							};
+						} );
+				} );
 			}
-			// Don't split &lt;pre&gt; if we're in the middle of it, act as shift enter key.
-			else if ( block &amp;&amp; block.is( 'pre' ) ) {
-				if ( !atBlockEnd ) {
-					enterBr( editor, mode, range, forceMode );
-					return;
-				}
-			}
+		};
 
-			// Split the range.
-			var splitInfo = range.splitBlock( blockTag );
 
-			if ( !splitInfo )
-				return;
-
-			// Get the current blocks.
-			var previousBlock = splitInfo.previousBlock,
-				nextBlock = splitInfo.nextBlock;
-
-			var isStartOfBlock = splitInfo.wasStartOfBlock,
-				isEndOfBlock = splitInfo.wasEndOfBlock;
-
-			var node;
-
-			// If this is a block under a list item, split it as well. (#1647)
-			if ( nextBlock ) {
-				node = nextBlock.getParent();
-				if ( node.is( 'li' ) ) {
-					nextBlock.breakParent( node );
-					nextBlock.move( nextBlock.getNext(), 1 );
-				}
-			} else if ( previousBlock &amp;&amp; ( node = previousBlock.getParent() ) &amp;&amp; node.is( 'li' ) ) {
-				previousBlock.breakParent( node );
-				node = previousBlock.getNext();
-				range.moveToElementEditStart( node );
-				previousBlock.move( previousBlock.getPrevious() );
-			}
-
-			// If we have both the previous and next blocks, it means that the
-			// boundaries were on separated blocks, or none of them where on the
-			// block limits (start/end).
-			if ( !isStartOfBlock &amp;&amp; !isEndOfBlock ) {
-				// If the next block is an &lt;li&gt; with another list tree as the first
-				// child, we'll need to append a filler (&lt;br&gt;/NBSP) or the list item
-				// wouldn't be editable. (#1420)
-				if ( nextBlock.is( 'li' ) ) {
-					var walkerRange = range.clone();
-					walkerRange.selectNodeContents( nextBlock );
-					var walker = new CKEDITOR.dom.walker( walkerRange );
-					walker.evaluator = function( node ) {
-						return !( bookmark( node ) || whitespaces( node ) || node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getName() in CKEDITOR.dtd.$inline &amp;&amp; !( node.getName() in CKEDITOR.dtd.$empty ) );
-					};
-
-					node = walker.next();
-					if ( node &amp;&amp; node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( 'ul', 'ol' ) )
-						( CKEDITOR.env.needsBrFiller ? doc.createElement( 'br' ) : doc.createText( '\xa0' ) ).insertBefore( node );
-				}
-
-				// Move the selection to the end block.
-				if ( nextBlock )
-					range.moveToElementEditStart( nextBlock );
-			} else {
-				var newBlockDir;
-
-				if ( previousBlock ) {
-					// Do not enter this block if it's a header tag, or we are in
-					// a Shift+Enter (#77). Create a new block element instead
-					// (later in the code).
-					if ( previousBlock.is( 'li' ) || !( headerTagRegex.test( previousBlock.getName() ) || previousBlock.is( 'pre' ) ) ) {
-						// Otherwise, duplicate the previous block.
-						newBlock = previousBlock.clone();
-					}
-				} else if ( nextBlock )
-					newBlock = nextBlock.clone();
-
-				if ( !newBlock ) {
-					// We have already created a new list item. (#6849)
-					if ( node &amp;&amp; node.is( 'li' ) )
-						newBlock = node;
-					else {
-						newBlock = doc.createElement( blockTag );
-						if ( previousBlock &amp;&amp; ( newBlockDir = previousBlock.getDirection() ) )
-							newBlock.setAttribute( 'dir', newBlockDir );
-					}
-				}
-				// Force the enter block unless we're talking of a list item.
-				else if ( forceMode &amp;&amp; !newBlock.is( 'li' ) )
-					newBlock.renameNode( blockTag );
-
-				// Recreate the inline elements tree, which was available
-				// before hitting enter, so the same styles will be available in
-				// the new block.
-				var elementPath = splitInfo.elementPath;
-				if ( elementPath ) {
-					for ( var i = 0, len = elementPath.elements.length; i &lt; len; i++ ) {
-						var element = elementPath.elements[ i ];
-
-						if ( element.equals( elementPath.block ) || element.equals( elementPath.blockLimit ) )
-							break;
-
-						if ( CKEDITOR.dtd.$removeEmpty[ element.getName() ] ) {
-							element = element.clone();
-							newBlock.moveChildren( element );
-							newBlock.append( element );
-						}
-					}
-				}
-
-				newBlock.appendBogus();
-
-				if ( !newBlock.getParent() )
-					range.insertNode( newBlock );
-
-				// list item start number should not be duplicated (#7330), but we need
-				// to remove the attribute after it's onto the DOM tree because of old IEs (#7581).
-				newBlock.is( 'li' ) &amp;&amp; newBlock.removeAttribute( 'value' );
-
-				// This is tricky, but to make the new block visible correctly
-				// we must select it.
-				// The previousBlock check has been included because it may be
-				// empty if we have fixed a block-less space (like ENTER into an
-				// empty table cell).
-				if ( CKEDITOR.env.ie &amp;&amp; isStartOfBlock &amp;&amp; ( !isEndOfBlock || !previousBlock.getChildCount() ) ) {
-					// Move the selection to the new block.
-					range.moveToElementEditStart( isEndOfBlock ? previousBlock : newBlock );
-					range.select();
-				}
-
-				// Move the selection to the new block.
-				range.moveToElementEditStart( isStartOfBlock &amp;&amp; !isEndOfBlock ? nextBlock : newBlock );
-			}
-
-			range.select();
-			range.scrollIntoView();
-		},
-
-		enterBr: function( editor, mode, range, forceMode ) {
-			// Get the range for the current selection.
-			range = range || getRange( editor );
-
-			// We may not have valid ranges to work on, like when inside a
-			// contenteditable=false element.
-			if ( !range )
-				return;
-
-			var doc = range.document;
-
-			// Determine the block element to be used.
-			var blockTag = ( mode == CKEDITOR.ENTER_DIV ? 'div' : 'p' );
-
-			var isEndOfBlock = range.checkEndOfBlock();
-
-			var elementPath = new CKEDITOR.dom.elementPath( editor.getSelection().getStartElement() );
-
-			var startBlock = elementPath.block,
-				startBlockTag = startBlock &amp;&amp; elementPath.block.getName();
-
-			var isPre = false;
-
-			if ( !forceMode &amp;&amp; startBlockTag == 'li' ) {
-				enterBlock( editor, mode, range, forceMode );
-				return;
-			}
-
-			// If we are at the end of a header block.
-			if ( !forceMode &amp;&amp; isEndOfBlock &amp;&amp; headerTagRegex.test( startBlockTag ) ) {
-				var newBlock, newBlockDir;
-
-				if ( ( newBlockDir = startBlock.getDirection() ) ) {
-					newBlock = doc.createElement( 'div' );
-					newBlock.setAttribute( 'dir', newBlockDir );
-					newBlock.insertAfter( startBlock );
-					range.setStart( newBlock, 0 );
-				} else {
-					// Insert a &lt;br&gt; after the current paragraph.
-					doc.createElement( 'br' ).insertAfter( startBlock );
-
-					// A text node is required by Gecko only to make the cursor blink.
-					if ( CKEDITOR.env.gecko )
-						doc.createText( '' ).insertAfter( startBlock );
-
-					// IE has different behaviors regarding position.
-					range.setStartAt( startBlock.getNext(), CKEDITOR.env.ie ? CKEDITOR.POSITION_BEFORE_START : CKEDITOR.POSITION_AFTER_START );
-				}
-			} else {
-				var lineBreak;
-
-				// IE&lt;8 prefers text node as line-break inside of &lt;pre&gt; (#4711).
-				if ( startBlockTag == 'pre' &amp;&amp; CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 8 )
-					lineBreak = doc.createText( '\r' );
-				else
-					lineBreak = doc.createElement( 'br' );
-
-				range.deleteContents();
-				range.insertNode( lineBreak );
-
-				// Old IEs have different behavior regarding position.
-				if ( !CKEDITOR.env.needsBrFiller )
-					range.setStartAt( lineBreak, CKEDITOR.POSITION_AFTER_END );
-				else {
-					// A text node is required by Gecko only to make the cursor blink.
-					// We need some text inside of it, so the bogus &lt;br&gt; is properly
-					// created.
-					doc.createText( '\ufeff' ).insertAfter( lineBreak );
-
-					// If we are at the end of a block, we must be sure the bogus node is available in that block.
-					if ( isEndOfBlock )
-						lineBreak.getParent().appendBogus();
-
-					// Now we can remove the text node contents, so the caret doesn't
-					// stop on it.
-					lineBreak.getNext().$.nodeValue = '';
-
-					range.setStartAt( lineBreak.getNext(), CKEDITOR.POSITION_AFTER_START );
-
-				}
-			}
-
-			// This collapse guarantees the cursor will be blinking.
-			range.collapse( true );
-
-			range.select();
-			range.scrollIntoView();
-		}
-	};
-
-	var plugin = CKEDITOR.plugins.enterkey,
-		enterBr = plugin.enterBr,
-		enterBlock = plugin.enterBlock,
-		headerTagRegex = /^h[1-6]$/;
-
-	function shiftEnter( editor ) {
-		// On SHIFT+ENTER:
-		// 1. We want to enforce the mode to be respected, instead
-		// of cloning the current block. (#77)
-		return enter( editor, editor.activeShiftEnterMode, 1 );
 	}
+};
 
-	function enter( editor, mode, forceMode ) {
-		forceMode = editor.config.forceEnterMode || forceMode;
-
-		// Only effective within document.
-		if ( editor.mode != 'wysiwyg' )
-			return;
-
-		if ( !mode )
-			mode = editor.activeEnterMode;
-
-		// TODO this should be handled by setting editor.activeEnterMode on selection change.
-		// Check path block specialities:
-		// 1. Cannot be a un-splittable element, e.g. table caption;
-		var path = editor.elementPath();
-		if ( !path.isContextFor( 'p' ) ) {
-			mode = CKEDITOR.ENTER_BR;
-			forceMode = 1;
-		}
-
-		editor.fire( 'saveSnapshot' ); // Save undo step.
-
-		if ( mode == CKEDITOR.ENTER_BR )
-			enterBr( editor, mode, null, forceMode );
-		else
-			enterBlock( editor, mode, null, forceMode );
-
-		editor.fire( 'saveSnapshot' );
-	}
-
-	function getRange( editor ) {
-		// Get the selection ranges.
-		var ranges = editor.getSelection().getRanges( true );
-
-		// Delete the contents of all ranges except the first one.
-		for ( var i = ranges.length - 1; i &gt; 0; i-- ) {
-			ranges[ i ].deleteContents();
-		}
-
-		// Return the first range.
-		return ranges[ 0 ];
-	}
-} )();
+CKEDITOR.plugins.add( 'colordialog', CKEDITOR.plugins.colordialog );
 </pre>
 </body>
 </html>
