@@ -30,16 +30,16 @@
 		CKEDITOR.env.hc = false;
 	else {
 		// Check whether high contrast is active by creating a colored border.
-		var hcDetect = CKEDITOR.dom.element.createFromHtml( '&lt;div style=&quot;width:0;height:0;position:absolute;left:-10000px;' +
-			'border:1px solid;border-color:red blue&quot;&gt;&lt;/div&gt;', CKEDITOR.document );
+		var hcDetect = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div style=&quot;width:0;height:0;position:absolute;left:-10000px;&#39; +
+			&#39;border:1px solid;border-color:red blue&quot;&gt;&lt;/div&gt;&#39;, CKEDITOR.document );
 
 		hcDetect.appendTo( CKEDITOR.document.getHead() );
 
 		// Update CKEDITOR.env.
 		// Catch exception needed sometimes for FF. (#4230)
 		try {
-			var top = hcDetect.getComputedStyle( 'border-top-color' ),
-				right = hcDetect.getComputedStyle( 'border-right-color' );
+			var top = hcDetect.getComputedStyle( &#39;border-top-color&#39; ),
+				right = hcDetect.getComputedStyle( &#39;border-right-color&#39; );
 
 			// We need to check if getComputedStyle returned any value, because on FF
 			// it returnes empty string if CKEditor is loaded in hidden iframe. (#11121)
@@ -52,14 +52,14 @@
 	}
 
 	if ( CKEDITOR.env.hc )
-		CKEDITOR.env.cssClass += ' cke_hc';
+		CKEDITOR.env.cssClass += &#39; cke_hc&#39;;
 
 	// Initially hide UI spaces when relevant skins are loading, later restored by skin css.
-	CKEDITOR.document.appendStyleText( '.cke{visibility:hidden;}' );
+	CKEDITOR.document.appendStyleText( &#39;.cke{visibility:hidden;}&#39; );
 
 	// Mark the editor as fully loaded.
-	CKEDITOR.status = 'loaded';
-	CKEDITOR.fireOnce( 'loaded' );
+	CKEDITOR.status = &#39;loaded&#39;;
+	CKEDITOR.fireOnce( &#39;loaded&#39; );
 
 	// Process all instances created by the &quot;basic&quot; implementation.
 	var pending = CKEDITOR._.pending;
@@ -77,7 +77,7 @@
 </span> * Indicates that CKEditor is running on a High Contrast environment.
  *
  *		if ( CKEDITOR.env.hc )
- *			alert( 'You\'re running on High Contrast mode. The editor interface will get adapted to provide you a better experience.' );
+ *			alert( &#39;You\&#39;re running on High Contrast mode. The editor interface will get adapted to provide you a better experience.&#39; );
  *
  * @property {Boolean} hc
  * @member CKEDITOR.env

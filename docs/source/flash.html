@@ -26,9 +26,9 @@
 	// 2. As param tags under the object tag.
 	// 3. As attributes in the embed tag.
 	// It is possible for a single attribute to be present in more than one place.
-	// So let's define a mapping between a sementic attribute and its syntactic
+	// So let&#39;s define a mapping between a sementic attribute and its syntactic
 	// equivalents.
-	// Then we'll set and retrieve attribute values according to the mapping,
+	// Then we&#39;ll set and retrieve attribute values according to the mapping,
 	// instead of having to check and set each syntactic attribute every time.
 	//
 	// Reference: http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_12701
@@ -38,75 +38,75 @@
 
 	var attributesMap = {
 		id: [ {
-			type: ATTRTYPE_OBJECT, name: 'id'
+			type: ATTRTYPE_OBJECT, name: &#39;id&#39;
 		} ],
 		classid: [ {
-			type: ATTRTYPE_OBJECT, name: 'classid'
+			type: ATTRTYPE_OBJECT, name: &#39;classid&#39;
 		} ],
 		codebase: [ {
-			type: ATTRTYPE_OBJECT, name: 'codebase'
+			type: ATTRTYPE_OBJECT, name: &#39;codebase&#39;
 		} ],
 		pluginspage: [ {
-			type: ATTRTYPE_EMBED, name: 'pluginspage'
+			type: ATTRTYPE_EMBED, name: &#39;pluginspage&#39;
 		} ],
 		src: [ {
-			type: ATTRTYPE_PARAM, name: 'movie'
+			type: ATTRTYPE_PARAM, name: &#39;movie&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'src'
+			type: ATTRTYPE_EMBED, name: &#39;src&#39;
 		}, {
-			type: ATTRTYPE_OBJECT, name: 'data'
+			type: ATTRTYPE_OBJECT, name: &#39;data&#39;
 		} ],
 		name: [ {
-			type: ATTRTYPE_EMBED, name: 'name'
+			type: ATTRTYPE_EMBED, name: &#39;name&#39;
 		} ],
 		align: [ {
-			type: ATTRTYPE_OBJECT, name: 'align'
+			type: ATTRTYPE_OBJECT, name: &#39;align&#39;
 		} ],
-		'class': [ {
-			type: ATTRTYPE_OBJECT, name: 'class'
+		&#39;class&#39;: [ {
+			type: ATTRTYPE_OBJECT, name: &#39;class&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'class'
+			type: ATTRTYPE_EMBED, name: &#39;class&#39;
 		} ],
 		width: [ {
-			type: ATTRTYPE_OBJECT, name: 'width'
+			type: ATTRTYPE_OBJECT, name: &#39;width&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'width'
+			type: ATTRTYPE_EMBED, name: &#39;width&#39;
 		} ],
 		height: [ {
-			type: ATTRTYPE_OBJECT, name: 'height'
+			type: ATTRTYPE_OBJECT, name: &#39;height&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'height'
+			type: ATTRTYPE_EMBED, name: &#39;height&#39;
 		} ],
 		hSpace: [ {
-			type: ATTRTYPE_OBJECT, name: 'hSpace'
+			type: ATTRTYPE_OBJECT, name: &#39;hSpace&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'hSpace'
+			type: ATTRTYPE_EMBED, name: &#39;hSpace&#39;
 		} ],
 		vSpace: [ {
-			type: ATTRTYPE_OBJECT, name: 'vSpace'
+			type: ATTRTYPE_OBJECT, name: &#39;vSpace&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'vSpace'
+			type: ATTRTYPE_EMBED, name: &#39;vSpace&#39;
 		} ],
 		style: [ {
-			type: ATTRTYPE_OBJECT, name: 'style'
+			type: ATTRTYPE_OBJECT, name: &#39;style&#39;
 		}, {
-			type: ATTRTYPE_EMBED, name: 'style'
+			type: ATTRTYPE_EMBED, name: &#39;style&#39;
 		} ],
 		type: [ {
-			type: ATTRTYPE_EMBED, name: 'type'
+			type: ATTRTYPE_EMBED, name: &#39;type&#39;
 		} ]
 	};
 
-	var names = [ 'play', 'loop', 'menu', 'quality', 'scale', 'salign', 'wmode', 'bgcolor', 'base', 'flashvars', 'allowScriptAccess', 'allowFullScreen' ];
+	var names = [ &#39;play&#39;, &#39;loop&#39;, &#39;menu&#39;, &#39;quality&#39;, &#39;scale&#39;, &#39;salign&#39;, &#39;wmode&#39;, &#39;bgcolor&#39;, &#39;base&#39;, &#39;flashvars&#39;, &#39;allowScriptAccess&#39;, &#39;allowFullScreen&#39; ];
 	for ( var i = 0; i &lt; names.length; i++ )
 		attributesMap[ names[ i ] ] = [ {
 		type: ATTRTYPE_EMBED, name: names[ i ]
 	}, {
 		type: ATTRTYPE_PARAM, name: names[ i ]
 	} ];
-	names = [ 'allowFullScreen', 'play', 'loop', 'menu' ];
+	names = [ &#39;allowFullScreen&#39;, &#39;play&#39;, &#39;loop&#39;, &#39;menu&#39; ];
 	for ( i = 0; i &lt; names.length; i++ )
-		attributesMap[ names[ i ] ][ 0 ][ 'default' ] = attributesMap[ names[ i ] ][ 1 ][ 'default' ] = true;
+		attributesMap[ names[ i ] ][ 0 ][ &#39;default&#39; ] = attributesMap[ names[ i ] ][ 1 ][ &#39;default&#39; ] = true;
 
 	var defaultToPixel = CKEDITOR.tools.cssLength;
 
@@ -125,12 +125,12 @@
 					if ( objectNode.getAttribute( attrDef.name ) !== null ) {
 						var value = objectNode.getAttribute( attrDef.name );
 						if ( isCheckbox )
-							this.setValue( value.toLowerCase() == 'true' );
+							this.setValue( value.toLowerCase() == &#39;true&#39; );
 						else
 							this.setValue( value );
 						return;
 					} else if ( isCheckbox )
-						this.setValue( !!attrDef[ 'default' ] );
+						this.setValue( !!attrDef[ &#39;default&#39; ] );
 					break;
 				case ATTRTYPE_PARAM:
 					if ( !objectNode )
@@ -138,12 +138,12 @@
 					if ( attrDef.name in paramMap ) {
 						value = paramMap[ attrDef.name ];
 						if ( isCheckbox )
-							this.setValue( value.toLowerCase() == 'true' );
+							this.setValue( value.toLowerCase() == &#39;true&#39; );
 						else
 							this.setValue( value );
 						return;
 					} else if ( isCheckbox )
-						this.setValue( !!attrDef[ 'default' ] );
+						this.setValue( !!attrDef[ &#39;default&#39; ] );
 					break;
 				case ATTRTYPE_EMBED:
 					if ( !embedNode )
@@ -151,12 +151,12 @@
 					if ( embedNode.getAttribute( attrDef.name ) ) {
 						value = embedNode.getAttribute( attrDef.name );
 						if ( isCheckbox )
-							this.setValue( value.toLowerCase() == 'true' );
+							this.setValue( value.toLowerCase() == &#39;true&#39; );
 						else
 							this.setValue( value );
 						return;
 					} else if ( isCheckbox )
-						this.setValue( !!attrDef[ 'default' ] );
+						this.setValue( !!attrDef[ &#39;default&#39; ] );
 			}
 		}
 	}
@@ -166,7 +166,7 @@
 		if ( !attributes )
 			return;
 
-		var isRemove = ( this.getValue() === '' ),
+		var isRemove = ( this.getValue() === &#39;&#39; ),
 			isCheckbox = ( this instanceof CKEDITOR.ui.dialog.checkbox );
 
 		for ( var i = 0; i &lt; attributes.length; i++ ) {
@@ -174,10 +174,10 @@
 			switch ( attrDef.type ) {
 				case ATTRTYPE_OBJECT:
 					// Avoid applying the data attribute when not needed (#7733)
-					if ( !objectNode || ( attrDef.name == 'data' &amp;&amp; embedNode &amp;&amp; !objectNode.hasAttribute( 'data' ) ) )
+					if ( !objectNode || ( attrDef.name == &#39;data&#39; &amp;&amp; embedNode &amp;&amp; !objectNode.hasAttribute( &#39;data&#39; ) ) )
 						continue;
 					var value = this.getValue();
-					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ 'default' ] )
+					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ &#39;default&#39; ] )
 						objectNode.removeAttribute( attrDef.name );
 					else
 						objectNode.setAttribute( attrDef.name, value );
@@ -186,14 +186,14 @@
 					if ( !objectNode )
 						continue;
 					value = this.getValue();
-					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ 'default' ] ) {
+					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ &#39;default&#39; ] ) {
 						if ( attrDef.name in paramMap )
 							paramMap[ attrDef.name ].remove();
 					} else {
 						if ( attrDef.name in paramMap )
-							paramMap[ attrDef.name ].setAttribute( 'value', value );
+							paramMap[ attrDef.name ].setAttribute( &#39;value&#39;, value );
 						else {
-							var param = CKEDITOR.dom.element.createFromHtml( '&lt;cke:param&gt;&lt;/cke:param&gt;', objectNode.getDocument() );
+							var param = CKEDITOR.dom.element.createFromHtml( &#39;&lt;cke:param&gt;&lt;/cke:param&gt;&#39;, objectNode.getDocument() );
 							param.setAttributes( { name: attrDef.name, value: value } );
 							if ( objectNode.getChildCount() &lt; 1 )
 								param.appendTo( objectNode );
@@ -206,7 +206,7 @@
 					if ( !embedNode )
 						continue;
 					value = this.getValue();
-					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ 'default' ] )
+					if ( isRemove || isCheckbox &amp;&amp; value === attrDef[ &#39;default&#39; ] )
 						embedNode.removeAttribute( attrDef.name );
 					else
 						embedNode.setAttribute( attrDef.name, value );
@@ -214,14 +214,14 @@
 		}
 	}
 
-	CKEDITOR.dialog.add( 'flash', function( editor ) {
+	CKEDITOR.dialog.add( &#39;flash&#39;, function( editor ) {
 		var makeObjectTag = !editor.config.flashEmbedTagOnly,
 			makeEmbedTag = editor.config.flashAddEmbedTag || editor.config.flashEmbedTagOnly;
 
 		var previewPreloader,
-			previewAreaHtml = '&lt;div&gt;' + CKEDITOR.tools.htmlEncode( editor.lang.common.preview ) + '&lt;br&gt;' +
-			'&lt;div id=&quot;cke_FlashPreviewLoader' + CKEDITOR.tools.getNextNumber() + '&quot; style=&quot;display:none&quot;&gt;&lt;div class=&quot;loading&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;/div&gt;' +
-			'&lt;div id=&quot;cke_FlashPreviewBox' + CKEDITOR.tools.getNextNumber() + '&quot; class=&quot;FlashPreviewBox&quot;&gt;&lt;/div&gt;&lt;/div&gt;';
+			previewAreaHtml = &#39;&lt;div&gt;&#39; + CKEDITOR.tools.htmlEncode( editor.lang.common.preview ) + &#39;&lt;br&gt;&#39; +
+			&#39;&lt;div id=&quot;cke_FlashPreviewLoader&#39; + CKEDITOR.tools.getNextNumber() + &#39;&quot; style=&quot;display:none&quot;&gt;&lt;div class=&quot;loading&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;/div&gt;&#39; +
+			&#39;&lt;div id=&quot;cke_FlashPreviewBox&#39; + CKEDITOR.tools.getNextNumber() + &#39;&quot; class=&quot;FlashPreviewBox&quot;&gt;&lt;/div&gt;&lt;/div&gt;&#39;;
 
 		return {
 			title: editor.lang.flash.title,
@@ -230,30 +230,30 @@
 			onShow: function() {
 				// Clear previously saved elements.
 				this.fakeImage = this.objectNode = this.embedNode = null;
-				previewPreloader = new CKEDITOR.dom.element( 'embed', editor.document );
+				previewPreloader = new CKEDITOR.dom.element( &#39;embed&#39;, editor.document );
 
 				// Try to detect any embed or object tag that has Flash parameters.
 				var fakeImage = this.getSelectedElement();
-				if ( fakeImage &amp;&amp; fakeImage.data( 'cke-real-element-type' ) &amp;&amp; fakeImage.data( 'cke-real-element-type' ) == 'flash' ) {
+				if ( fakeImage &amp;&amp; fakeImage.data( &#39;cke-real-element-type&#39; ) &amp;&amp; fakeImage.data( &#39;cke-real-element-type&#39; ) == &#39;flash&#39; ) {
 					this.fakeImage = fakeImage;
 
 					var realElement = editor.restoreRealElement( fakeImage ),
 						objectNode = null,
 						embedNode = null,
 						paramMap = {};
-					if ( realElement.getName() == 'cke:object' ) {
+					if ( realElement.getName() == &#39;cke:object&#39; ) {
 						objectNode = realElement;
-						var embedList = objectNode.getElementsByTag( 'embed', 'cke' );
+						var embedList = objectNode.getElementsByTag( &#39;embed&#39;, &#39;cke&#39; );
 						if ( embedList.count() &gt; 0 )
 							embedNode = embedList.getItem( 0 );
-						var paramList = objectNode.getElementsByTag( 'param', 'cke' );
+						var paramList = objectNode.getElementsByTag( &#39;param&#39;, &#39;cke&#39; );
 						for ( var i = 0, length = paramList.count(); i &lt; length; i++ ) {
 							var item = paramList.getItem( i ),
-								name = item.getAttribute( 'name' ),
-								value = item.getAttribute( 'value' );
+								name = item.getAttribute( &#39;name&#39; ),
+								value = item.getAttribute( &#39;value&#39; );
 							paramMap[ name ] = value;
 						}
-					} else if ( realElement.getName() == 'cke:embed' )
+					} else if ( realElement.getName() == &#39;cke:embed&#39; )
 						embedNode = realElement;
 
 					this.objectNode = objectNode;
@@ -263,25 +263,25 @@
 				}
 			},
 			onOk: function() {
-				// If there's no selected object or embed, create one. Otherwise, reuse the
+				// If there&#39;s no selected object or embed, create one. Otherwise, reuse the
 				// selected object and embed nodes.
 				var objectNode = null,
 					embedNode = null,
 					paramMap = null;
 				if ( !this.fakeImage ) {
 					if ( makeObjectTag ) {
-						objectNode = CKEDITOR.dom.element.createFromHtml( '&lt;cke:object&gt;&lt;/cke:object&gt;', editor.document );
+						objectNode = CKEDITOR.dom.element.createFromHtml( &#39;&lt;cke:object&gt;&lt;/cke:object&gt;&#39;, editor.document );
 						var attributes = {
-							classid: 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000',
-							codebase: 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0'
+							classid: &#39;clsid:d27cdb6e-ae6d-11cf-96b8-444553540000&#39;,
+							codebase: &#39;http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0&#39;
 						};
 						objectNode.setAttributes( attributes );
 					}
 					if ( makeEmbedTag ) {
-						embedNode = CKEDITOR.dom.element.createFromHtml( '&lt;cke:embed&gt;&lt;/cke:embed&gt;', editor.document );
+						embedNode = CKEDITOR.dom.element.createFromHtml( &#39;&lt;cke:embed&gt;&lt;/cke:embed&gt;&#39;, editor.document );
 						embedNode.setAttributes( {
-							type: 'application/x-shockwave-flash',
-							pluginspage: 'http://www.macromedia.com/go/getflashplayer'
+							type: &#39;application/x-shockwave-flash&#39;,
+							pluginspage: &#39;http://www.macromedia.com/go/getflashplayer&#39;
 						} );
 						if ( objectNode )
 							embedNode.appendTo( objectNode );
@@ -291,12 +291,12 @@
 					embedNode = this.embedNode;
 				}
 
-				// Produce the paramMap if there's an object tag.
+				// Produce the paramMap if there&#39;s an object tag.
 				if ( objectNode ) {
 					paramMap = {};
-					var paramList = objectNode.getElementsByTag( 'param', 'cke' );
+					var paramList = objectNode.getElementsByTag( &#39;param&#39;, &#39;cke&#39; );
 					for ( var i = 0, length = paramList.count(); i &lt; length; i++ )
-						paramMap[ paramList.getItem( i ).getAttribute( 'name' ) ] = paramList.getItem( i );
+						paramMap[ paramList.getItem( i ).getAttribute( &#39;name&#39; ) ] = paramList.getItem( i );
 				}
 
 				// A subset of the specified attributes/styles
@@ -307,7 +307,7 @@
 				this.commitContent( objectNode, embedNode, paramMap, extraStyles, extraAttributes );
 
 				// Refresh the fake image.
-				var newFakeImage = editor.createFakeElement( objectNode || embedNode, 'cke_flash', 'flash', true );
+				var newFakeImage = editor.createFakeElement( objectNode || embedNode, &#39;cke_flash&#39;, &#39;flash&#39;, true );
 				newFakeImage.setAttributes( extraAttributes );
 				newFakeImage.setStyles( extraStyles );
 				if ( this.fakeImage ) {
@@ -319,27 +319,27 @@
 
 			onHide: function() {
 				if ( this.preview )
-					this.preview.setHtml( '' );
+					this.preview.setHtml( &#39;&#39; );
 			},
 
 			contents: [
 				{
-				id: 'info',
+				id: &#39;info&#39;,
 				label: editor.lang.common.generalTab,
-				accessKey: 'I',
+				accessKey: &#39;I&#39;,
 				elements: [
 					{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					padding: 0,
 					children: [
 						{
-						type: 'hbox',
-						widths: [ '280px', '110px' ],
-						align: 'right',
+						type: &#39;hbox&#39;,
+						widths: [ &#39;280px&#39;, &#39;110px&#39; ],
+						align: &#39;right&#39;,
 						children: [
 							{
-							id: 'src',
-							type: 'text',
+							id: &#39;src&#39;,
+							type: &#39;text&#39;,
 							label: editor.lang.common.url,
 							required: true,
 							validate: CKEDITOR.dialog.validate.notEmpty( editor.lang.flash.validateSrc ),
@@ -349,34 +349,34 @@
 								var dialog = this.getDialog(),
 									updatePreview = function( src ) {
 										// Query the preloader to figure out the url impacted by based href.
-										previewPreloader.setAttribute( 'src', src );
-										dialog.preview.setHtml( '&lt;embed height=&quot;100%&quot; width=&quot;100%&quot; src=&quot;' + CKEDITOR.tools.htmlEncode( previewPreloader.getAttribute( 'src' ) )
-											+ '&quot; type=&quot;application/x-shockwave-flash&quot;&gt;&lt;/embed&gt;' );
+										previewPreloader.setAttribute( &#39;src&#39;, src );
+										dialog.preview.setHtml( &#39;&lt;embed height=&quot;100%&quot; width=&quot;100%&quot; src=&quot;&#39; + CKEDITOR.tools.htmlEncode( previewPreloader.getAttribute( &#39;src&#39; ) )
+											+ &#39;&quot; type=&quot;application/x-shockwave-flash&quot;&gt;&lt;/embed&gt;&#39; );
 									};
 								// Preview element
-								dialog.preview = dialog.getContentElement( 'info', 'preview' ).getElement().getChild( 3 );
+								dialog.preview = dialog.getContentElement( &#39;info&#39;, &#39;preview&#39; ).getElement().getChild( 3 );
 
 								// Sync on inital value loaded.
-								this.on( 'change', function( evt ) {
+								this.on( &#39;change&#39;, function( evt ) {
 
 									if ( evt.data &amp;&amp; evt.data.value )
 										updatePreview( evt.data.value );
 								} );
 								// Sync when input value changed.
-								this.getInputElement().on( 'change', function( evt ) {
+								this.getInputElement().on( &#39;change&#39;, function( evt ) {
 
 									updatePreview( this.getValue() );
 								}, this );
 							}
 						},
 							{
-							type: 'button',
-							id: 'browse',
-							filebrowser: 'info:src',
+							type: &#39;button&#39;,
+							id: &#39;browse&#39;,
+							filebrowser: &#39;info:src&#39;,
 							hidden: true,
-							// v-align with the 'src' field.
+							// v-align with the &#39;src&#39; field.
 							// TODO: We need something better than a fixed size here.
-							style: 'display:inline-block;margin-top:10px;',
+							style: &#39;display:inline-block;margin-top:10px;&#39;,
 							label: editor.lang.common.browseServer
 						}
 						]
@@ -384,44 +384,44 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '25%', '25%', '25%', '25%', '25%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;25%&#39;, &#39;25%&#39;, &#39;25%&#39;, &#39;25%&#39;, &#39;25%&#39; ],
 					children: [
 						{
-						type: 'text',
-						id: 'width',
-						requiredContent: 'embed[width]',
-						style: 'width:95px',
+						type: &#39;text&#39;,
+						id: &#39;width&#39;,
+						requiredContent: &#39;embed[width]&#39;,
+						style: &#39;width:95px&#39;,
 						label: editor.lang.common.width,
-						validate: CKEDITOR.dialog.validate.htmlLength( editor.lang.common.invalidHtmlLength.replace( '%1', editor.lang.common.width ) ),
+						validate: CKEDITOR.dialog.validate.htmlLength( editor.lang.common.invalidHtmlLength.replace( &#39;%1&#39;, editor.lang.common.width ) ),
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						type: 'text',
-						id: 'height',
-						requiredContent: 'embed[height]',
-						style: 'width:95px',
+						type: &#39;text&#39;,
+						id: &#39;height&#39;,
+						requiredContent: &#39;embed[height]&#39;,
+						style: &#39;width:95px&#39;,
 						label: editor.lang.common.height,
-						validate: CKEDITOR.dialog.validate.htmlLength( editor.lang.common.invalidHtmlLength.replace( '%1', editor.lang.common.height ) ),
+						validate: CKEDITOR.dialog.validate.htmlLength( editor.lang.common.invalidHtmlLength.replace( &#39;%1&#39;, editor.lang.common.height ) ),
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						type: 'text',
-						id: 'hSpace',
-						requiredContent: 'embed[hspace]',
-						style: 'width:95px',
+						type: &#39;text&#39;,
+						id: &#39;hSpace&#39;,
+						requiredContent: &#39;embed[hspace]&#39;,
+						style: &#39;width:95px&#39;,
 						label: editor.lang.flash.hSpace,
 						validate: CKEDITOR.dialog.validate.integer( editor.lang.flash.validateHSpace ),
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						type: 'text',
-						id: 'vSpace',
-						requiredContent: 'embed[vspace]',
-						style: 'width:95px',
+						type: &#39;text&#39;,
+						id: &#39;vSpace&#39;,
+						requiredContent: &#39;embed[vspace]&#39;,
+						style: &#39;width:95px&#39;,
 						label: editor.lang.flash.vSpace,
 						validate: CKEDITOR.dialog.validate.integer( editor.lang.flash.validateVSpace ),
 						setup: loadValue,
@@ -431,12 +431,12 @@
 				},
 
 					{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					children: [
 						{
-						type: 'html',
-						id: 'preview',
-						style: 'width:95%;',
+						type: &#39;html&#39;,
+						id: &#39;preview&#39;,
+						style: &#39;width:95%;&#39;,
 						html: previewAreaHtml
 					}
 					]
@@ -444,62 +444,62 @@
 				]
 			},
 				{
-				id: 'Upload',
+				id: &#39;Upload&#39;,
 				hidden: true,
-				filebrowser: 'uploadButton',
+				filebrowser: &#39;uploadButton&#39;,
 				label: editor.lang.common.upload,
 				elements: [
 					{
-					type: 'file',
-					id: 'upload',
+					type: &#39;file&#39;,
+					id: &#39;upload&#39;,
 					label: editor.lang.common.upload,
 					size: 38
 				},
 					{
-					type: 'fileButton',
-					id: 'uploadButton',
+					type: &#39;fileButton&#39;,
+					id: &#39;uploadButton&#39;,
 					label: editor.lang.common.uploadSubmit,
-					filebrowser: 'info:src',
-					'for': [ 'Upload', 'upload' ]
+					filebrowser: &#39;info:src&#39;,
+					&#39;for&#39;: [ &#39;Upload&#39;, &#39;upload&#39; ]
 				}
 				]
 			},
 				{
-				id: 'properties',
+				id: &#39;properties&#39;,
 				label: editor.lang.flash.propertiesTab,
 				elements: [
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'scale',
-						type: 'select',
-						requiredContent: 'embed[scale]',
+						id: &#39;scale&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;embed[scale]&#39;,
 						label: editor.lang.flash.scale,
-						'default': '',
-						style: 'width : 100%;',
+						&#39;default&#39;: &#39;&#39;,
+						style: &#39;width : 100%;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
-							[ editor.lang.flash.scaleAll, 'showall' ],
-							[ editor.lang.flash.scaleNoBorder, 'noborder' ],
-							[ editor.lang.flash.scaleFit, 'exactfit' ]
+							[ editor.lang.common.notSet, &#39;&#39; ],
+							[ editor.lang.flash.scaleAll, &#39;showall&#39; ],
+							[ editor.lang.flash.scaleNoBorder, &#39;noborder&#39; ],
+							[ editor.lang.flash.scaleFit, &#39;exactfit&#39; ]
 							],
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'allowScriptAccess',
-						type: 'select',
-						requiredContent: 'embed[allowscriptaccess]',
+						id: &#39;allowScriptAccess&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;embed[allowscriptaccess]&#39;,
 						label: editor.lang.flash.access,
-						'default': '',
-						style: 'width : 100%;',
+						&#39;default&#39;: &#39;&#39;,
+						style: &#39;width : 100%;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
-							[ editor.lang.flash.accessAlways, 'always' ],
-							[ editor.lang.flash.accessSameDomain, 'samedomain' ],
-							[ editor.lang.flash.accessNever, 'never' ]
+							[ editor.lang.common.notSet, &#39;&#39; ],
+							[ editor.lang.flash.accessAlways, &#39;always&#39; ],
+							[ editor.lang.flash.accessSameDomain, &#39;samedomain&#39; ],
+							[ editor.lang.flash.accessNever, &#39;never&#39; ]
 							],
 						setup: loadValue,
 						commit: commitValue
@@ -507,40 +507,40 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'wmode',
-						type: 'select',
-						requiredContent: 'embed[wmode]',
+						id: &#39;wmode&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;embed[wmode]&#39;,
 						label: editor.lang.flash.windowMode,
-						'default': '',
-						style: 'width : 100%;',
+						&#39;default&#39;: &#39;&#39;,
+						style: &#39;width : 100%;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
-							[ editor.lang.flash.windowModeWindow, 'window' ],
-							[ editor.lang.flash.windowModeOpaque, 'opaque' ],
-							[ editor.lang.flash.windowModeTransparent, 'transparent' ]
+							[ editor.lang.common.notSet, &#39;&#39; ],
+							[ editor.lang.flash.windowModeWindow, &#39;window&#39; ],
+							[ editor.lang.flash.windowModeOpaque, &#39;opaque&#39; ],
+							[ editor.lang.flash.windowModeTransparent, &#39;transparent&#39; ]
 							],
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'quality',
-						type: 'select',
-						requiredContent: 'embed[quality]',
+						id: &#39;quality&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;embed[quality]&#39;,
 						label: editor.lang.flash.quality,
-						'default': 'high',
-						style: 'width : 100%;',
+						&#39;default&#39;: &#39;high&#39;,
+						style: &#39;width : 100%;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
-							[ editor.lang.flash.qualityBest, 'best' ],
-							[ editor.lang.flash.qualityHigh, 'high' ],
-							[ editor.lang.flash.qualityAutoHigh, 'autohigh' ],
-							[ editor.lang.flash.qualityMedium, 'medium' ],
-							[ editor.lang.flash.qualityAutoLow, 'autolow' ],
-							[ editor.lang.flash.qualityLow, 'low' ]
+							[ editor.lang.common.notSet, &#39;&#39; ],
+							[ editor.lang.flash.qualityBest, &#39;best&#39; ],
+							[ editor.lang.flash.qualityHigh, &#39;high&#39; ],
+							[ editor.lang.flash.qualityAutoHigh, &#39;autohigh&#39; ],
+							[ editor.lang.flash.qualityMedium, &#39;medium&#39; ],
+							[ editor.lang.flash.qualityAutoLow, &#39;autolow&#39; ],
+							[ editor.lang.flash.qualityLow, &#39;low&#39; ]
 							],
 						setup: loadValue,
 						commit: commitValue
@@ -548,27 +548,27 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'align',
-						type: 'select',
-						requiredContent: 'object[align]',
+						id: &#39;align&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;object[align]&#39;,
 						label: editor.lang.common.align,
-						'default': '',
-						style: 'width : 100%;',
+						&#39;default&#39;: &#39;&#39;,
+						style: &#39;width : 100%;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
-							[ editor.lang.common.alignLeft, 'left' ],
-							[ editor.lang.flash.alignAbsBottom, 'absBottom' ],
-							[ editor.lang.flash.alignAbsMiddle, 'absMiddle' ],
-							[ editor.lang.flash.alignBaseline, 'baseline' ],
-							[ editor.lang.common.alignBottom, 'bottom' ],
-							[ editor.lang.common.alignMiddle, 'middle' ],
-							[ editor.lang.common.alignRight, 'right' ],
-							[ editor.lang.flash.alignTextTop, 'textTop' ],
-							[ editor.lang.common.alignTop, 'top' ]
+							[ editor.lang.common.notSet, &#39;&#39; ],
+							[ editor.lang.common.alignLeft, &#39;left&#39; ],
+							[ editor.lang.flash.alignAbsBottom, &#39;absBottom&#39; ],
+							[ editor.lang.flash.alignAbsMiddle, &#39;absMiddle&#39; ],
+							[ editor.lang.flash.alignBaseline, &#39;baseline&#39; ],
+							[ editor.lang.common.alignBottom, &#39;bottom&#39; ],
+							[ editor.lang.common.alignMiddle, &#39;middle&#39; ],
+							[ editor.lang.common.alignRight, &#39;right&#39; ],
+							[ editor.lang.flash.alignTextTop, &#39;textTop&#39; ],
+							[ editor.lang.common.alignTop, &#39;top&#39; ]
 							],
 						setup: loadValue,
 						commit: function( objectNode, embedNode, paramMap, extraStyles, extraAttributes ) {
@@ -578,48 +578,48 @@
 						}
 					},
 						{
-						type: 'html',
-						html: '&lt;div&gt;&lt;/div&gt;'
+						type: &#39;html&#39;,
+						html: &#39;&lt;div&gt;&lt;/div&gt;&#39;
 					}
 					]
 				},
 					{
-					type: 'fieldset',
+					type: &#39;fieldset&#39;,
 					label: CKEDITOR.tools.htmlEncode( editor.lang.flash.flashvars ),
 					children: [
 						{
-						type: 'vbox',
+						type: &#39;vbox&#39;,
 						padding: 0,
 						children: [
 							{
-							type: 'checkbox',
-							id: 'menu',
+							type: &#39;checkbox&#39;,
+							id: &#39;menu&#39;,
 							label: editor.lang.flash.chkMenu,
-							'default': true,
+							&#39;default&#39;: true,
 							setup: loadValue,
 							commit: commitValue
 						},
 							{
-							type: 'checkbox',
-							id: 'play',
+							type: &#39;checkbox&#39;,
+							id: &#39;play&#39;,
 							label: editor.lang.flash.chkPlay,
-							'default': true,
+							&#39;default&#39;: true,
 							setup: loadValue,
 							commit: commitValue
 						},
 							{
-							type: 'checkbox',
-							id: 'loop',
+							type: &#39;checkbox&#39;,
+							id: &#39;loop&#39;,
 							label: editor.lang.flash.chkLoop,
-							'default': true,
+							&#39;default&#39;: true,
 							setup: loadValue,
 							commit: commitValue
 						},
 							{
-							type: 'checkbox',
-							id: 'allowFullScreen',
+							type: &#39;checkbox&#39;,
+							id: &#39;allowFullScreen&#39;,
 							label: editor.lang.flash.chkFull,
-							'default': true,
+							&#39;default&#39;: true,
 							setup: loadValue,
 							commit: commitValue
 						}
@@ -630,16 +630,16 @@
 				]
 			},
 				{
-				id: 'advanced',
+				id: &#39;advanced&#39;,
 				label: editor.lang.common.advancedTab,
 				elements: [
 					{
-					type: 'hbox',
+					type: &#39;hbox&#39;,
 					children: [
 						{
-						type: 'text',
-						id: 'id',
-						requiredContent: 'object[id]',
+						type: &#39;text&#39;,
+						id: &#39;id&#39;,
+						requiredContent: &#39;object[id]&#39;,
 						label: editor.lang.common.id,
 						setup: loadValue,
 						commit: commitValue
@@ -647,21 +647,21 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '45%', '55%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;45%&#39;, &#39;55%&#39; ],
 					children: [
 						{
-						type: 'text',
-						id: 'bgcolor',
-						requiredContent: 'embed[bgcolor]',
+						type: &#39;text&#39;,
+						id: &#39;bgcolor&#39;,
+						requiredContent: &#39;embed[bgcolor]&#39;,
 						label: editor.lang.flash.bgcolor,
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						type: 'text',
-						id: 'class',
-						requiredContent: 'embed(cke-xyz)', // Random text like 'xyz' will check if all are allowed.
+						type: &#39;text&#39;,
+						id: &#39;class&#39;,
+						requiredContent: &#39;embed(cke-xyz)&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
 						label: editor.lang.common.cssClass,
 						setup: loadValue,
 						commit: commitValue
@@ -669,9 +669,9 @@
 					]
 				},
 					{
-					type: 'text',
-					id: 'style',
-					requiredContent: 'embed{cke-xyz}', // Random text like 'xyz' will check if all are allowed.
+					type: &#39;text&#39;,
+					id: &#39;style&#39;,
+					requiredContent: &#39;embed{cke-xyz}&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
 					validate: CKEDITOR.dialog.validate.inlineStyle( editor.lang.common.invalidInlineStyle ),
 					label: editor.lang.common.cssStyle,
 					setup: loadValue,

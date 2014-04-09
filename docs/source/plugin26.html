@@ -22,42 +22,42 @@
 
 ( function() {
 	// Base HTML entities.
-	var htmlbase = 'nbsp,gt,lt,amp';
+	var htmlbase = &#39;nbsp,gt,lt,amp&#39;;
 
 	var entities =
 	// Latin-1 Entities
-	'quot,iexcl,cent,pound,curren,yen,brvbar,sect,uml,copy,ordf,laquo,' +
-		'not,shy,reg,macr,deg,plusmn,sup2,sup3,acute,micro,para,middot,' +
-		'cedil,sup1,ordm,raquo,frac14,frac12,frac34,iquest,times,divide,' +
+	&#39;quot,iexcl,cent,pound,curren,yen,brvbar,sect,uml,copy,ordf,laquo,&#39; +
+		&#39;not,shy,reg,macr,deg,plusmn,sup2,sup3,acute,micro,para,middot,&#39; +
+		&#39;cedil,sup1,ordm,raquo,frac14,frac12,frac34,iquest,times,divide,&#39; +
 
 		// Symbols
-		'fnof,bull,hellip,prime,Prime,oline,frasl,weierp,image,real,trade,' +
-		'alefsym,larr,uarr,rarr,darr,harr,crarr,lArr,uArr,rArr,dArr,hArr,' +
-		'forall,part,exist,empty,nabla,isin,notin,ni,prod,sum,minus,lowast,' +
-		'radic,prop,infin,ang,and,or,cap,cup,int,there4,sim,cong,asymp,ne,' +
-		'equiv,le,ge,sub,sup,nsub,sube,supe,oplus,otimes,perp,sdot,lceil,' +
-		'rceil,lfloor,rfloor,lang,rang,loz,spades,clubs,hearts,diams,' +
+		&#39;fnof,bull,hellip,prime,Prime,oline,frasl,weierp,image,real,trade,&#39; +
+		&#39;alefsym,larr,uarr,rarr,darr,harr,crarr,lArr,uArr,rArr,dArr,hArr,&#39; +
+		&#39;forall,part,exist,empty,nabla,isin,notin,ni,prod,sum,minus,lowast,&#39; +
+		&#39;radic,prop,infin,ang,and,or,cap,cup,int,there4,sim,cong,asymp,ne,&#39; +
+		&#39;equiv,le,ge,sub,sup,nsub,sube,supe,oplus,otimes,perp,sdot,lceil,&#39; +
+		&#39;rceil,lfloor,rfloor,lang,rang,loz,spades,clubs,hearts,diams,&#39; +
 
 		// Other Special Characters
-		'circ,tilde,ensp,emsp,thinsp,zwnj,zwj,lrm,rlm,ndash,mdash,lsquo,' +
-		'rsquo,sbquo,ldquo,rdquo,bdquo,dagger,Dagger,permil,lsaquo,rsaquo,' +
-		'euro';
+		&#39;circ,tilde,ensp,emsp,thinsp,zwnj,zwj,lrm,rlm,ndash,mdash,lsquo,&#39; +
+		&#39;rsquo,sbquo,ldquo,rdquo,bdquo,dagger,Dagger,permil,lsaquo,rsaquo,&#39; +
+		&#39;euro&#39;;
 
 	// Latin Letters Entities
-	var latin = 'Agrave,Aacute,Acirc,Atilde,Auml,Aring,AElig,Ccedil,Egrave,Eacute,' +
-		'Ecirc,Euml,Igrave,Iacute,Icirc,Iuml,ETH,Ntilde,Ograve,Oacute,Ocirc,' +
-		'Otilde,Ouml,Oslash,Ugrave,Uacute,Ucirc,Uuml,Yacute,THORN,szlig,' +
-		'agrave,aacute,acirc,atilde,auml,aring,aelig,ccedil,egrave,eacute,' +
-		'ecirc,euml,igrave,iacute,icirc,iuml,eth,ntilde,ograve,oacute,ocirc,' +
-		'otilde,ouml,oslash,ugrave,uacute,ucirc,uuml,yacute,thorn,yuml,' +
-		'OElig,oelig,Scaron,scaron,Yuml';
+	var latin = &#39;Agrave,Aacute,Acirc,Atilde,Auml,Aring,AElig,Ccedil,Egrave,Eacute,&#39; +
+		&#39;Ecirc,Euml,Igrave,Iacute,Icirc,Iuml,ETH,Ntilde,Ograve,Oacute,Ocirc,&#39; +
+		&#39;Otilde,Ouml,Oslash,Ugrave,Uacute,Ucirc,Uuml,Yacute,THORN,szlig,&#39; +
+		&#39;agrave,aacute,acirc,atilde,auml,aring,aelig,ccedil,egrave,eacute,&#39; +
+		&#39;ecirc,euml,igrave,iacute,icirc,iuml,eth,ntilde,ograve,oacute,ocirc,&#39; +
+		&#39;otilde,ouml,oslash,ugrave,uacute,ucirc,uuml,yacute,thorn,yuml,&#39; +
+		&#39;OElig,oelig,Scaron,scaron,Yuml&#39;;
 
 	// Greek Letters Entities.
-	var greek = 'Alpha,Beta,Gamma,Delta,Epsilon,Zeta,Eta,Theta,Iota,Kappa,Lambda,Mu,' +
-		'Nu,Xi,Omicron,Pi,Rho,Sigma,Tau,Upsilon,Phi,Chi,Psi,Omega,alpha,' +
-		'beta,gamma,delta,epsilon,zeta,eta,theta,iota,kappa,lambda,mu,nu,xi,' +
-		'omicron,pi,rho,sigmaf,sigma,tau,upsilon,phi,chi,psi,omega,thetasym,' +
-		'upsih,piv';
+	var greek = &#39;Alpha,Beta,Gamma,Delta,Epsilon,Zeta,Eta,Theta,Iota,Kappa,Lambda,Mu,&#39; +
+		&#39;Nu,Xi,Omicron,Pi,Rho,Sigma,Tau,Upsilon,Phi,Chi,Psi,Omega,alpha,&#39; +
+		&#39;beta,gamma,delta,epsilon,zeta,eta,theta,iota,kappa,lambda,mu,nu,xi,&#39; +
+		&#39;omicron,pi,rho,sigmaf,sigma,tau,upsilon,phi,chi,psi,omega,thetasym,&#39; +
+		&#39;upsih,piv&#39;;
 
 	// Create a mapping table between one character and its entity form from a list of entity names.
 	// @param reverse {Boolean} Whether to create a reverse map from the entity string form to an actual character.
@@ -65,53 +65,53 @@
 		var table = {},
 			regex = [];
 
-		// Entities that the browsers DOM don't transform to the final char
+		// Entities that the browsers DOM don&#39;t transform to the final char
 		// automatically.
 		var specialTable = {
-			nbsp: '\u00A0', // IE | FF
-			shy: '\u00AD', // IE
-			gt: '\u003E', // IE | FF |   --   | Opera
-			lt: '\u003C', // IE | FF | Safari | Opera
-			amp: '\u0026', // ALL
-			apos: '\u0027', // IE
-			quot: '\u0022' // IE
+			nbsp: &#39;\u00A0&#39;, // IE | FF
+			shy: &#39;\u00AD&#39;, // IE
+			gt: &#39;\u003E&#39;, // IE | FF |   --   | Opera
+			lt: &#39;\u003C&#39;, // IE | FF | Safari | Opera
+			amp: &#39;\u0026&#39;, // ALL
+			apos: &#39;\u0027&#39;, // IE
+			quot: &#39;\u0022&#39; // IE
 		};
 
 		entities = entities.replace( /\b(nbsp|shy|gt|lt|amp|apos|quot)(?:,|$)/g, function( match, entity ) {
-			var org = reverse ? '&amp;' + entity + ';' : specialTable[ entity ],
-				result = reverse ? specialTable[ entity ] : '&amp;' + entity + ';';
+			var org = reverse ? &#39;&amp;&#39; + entity + &#39;;&#39; : specialTable[ entity ],
+				result = reverse ? specialTable[ entity ] : &#39;&amp;&#39; + entity + &#39;;&#39;;
 
 			table[ org ] = result;
 			regex.push( org );
-			return '';
+			return &#39;&#39;;
 		} );
 
 		if ( !reverse &amp;&amp; entities ) {
 			// Transforms the entities string into an array.
-			entities = entities.split( ',' );
+			entities = entities.split( &#39;,&#39; );
 
 			// Put all entities inside a DOM element, transforming them to their
 			// final chars.
-			var div = document.createElement( 'div' ),
+			var div = document.createElement( &#39;div&#39; ),
 				chars;
-			div.innerHTML = '&amp;' + entities.join( ';&amp;' ) + ';';
+			div.innerHTML = &#39;&amp;&#39; + entities.join( &#39;;&amp;&#39; ) + &#39;;&#39;;
 			chars = div.innerHTML;
 			div = null;
 
 			// Add all chars to the table.
 			for ( var i = 0; i &lt; chars.length; i++ ) {
 				var charAt = chars.charAt( i );
-				table[ charAt ] = '&amp;' + entities[ i ] + ';';
+				table[ charAt ] = &#39;&amp;&#39; + entities[ i ] + &#39;;&#39;;
 				regex.push( charAt );
 			}
 		}
 
-		table.regex = regex.join( reverse ? '|' : '' );
+		table.regex = regex.join( reverse ? &#39;|&#39; : &#39;&#39; );
 
 		return table;
 	}
 
-	CKEDITOR.plugins.add( 'entities', {
+	CKEDITOR.plugins.add( &#39;entities&#39;, {
 		afterInit: function( editor ) {
 			var config = editor.config;
 
@@ -139,26 +139,26 @@
 						selectedEntities.push( config.entities_additional );
 				}
 
-				var entitiesTable = buildTable( selectedEntities.join( ',' ) );
+				var entitiesTable = buildTable( selectedEntities.join( &#39;,&#39; ) );
 
 				// Create the Regex used to find entities in the text, leave it matches nothing if entities are empty.
-				var entitiesRegex = entitiesTable.regex ? '[' + entitiesTable.regex + ']' : 'a^';
+				var entitiesRegex = entitiesTable.regex ? &#39;[&#39; + entitiesTable.regex + &#39;]&#39; : &#39;a^&#39;;
 				delete entitiesTable.regex;
 
 				if ( config.entities &amp;&amp; config.entities_processNumerical )
-					entitiesRegex = '[^ -~]|' + entitiesRegex;
+					entitiesRegex = &#39;[^ -~]|&#39; + entitiesRegex;
 
-				entitiesRegex = new RegExp( entitiesRegex, 'g' );
+				entitiesRegex = new RegExp( entitiesRegex, &#39;g&#39; );
 
 				function getEntity( character ) {
-					return config.entities_processNumerical == 'force' || !entitiesTable[ character ] ? '&amp;#' + character.charCodeAt( 0 ) + ';'
+					return config.entities_processNumerical == &#39;force&#39; || !entitiesTable[ character ] ? &#39;&amp;#&#39; + character.charCodeAt( 0 ) + &#39;;&#39;
 						: entitiesTable[ character ];
 				}
 
 				// Decode entities that the browsers has transformed
 				// at first place.
-				var baseEntitiesTable = buildTable( [ htmlbase, 'shy' ].join( ',' ), true ),
-					baseEntitiesRegex = new RegExp( baseEntitiesTable.regex, 'g' );
+				var baseEntitiesTable = buildTable( [ htmlbase, &#39;shy&#39; ].join( &#39;,&#39; ), true ),
+					baseEntitiesRegex = new RegExp( baseEntitiesTable.regex, &#39;g&#39; );
 
 				function getChar( character ) {
 					return baseEntitiesTable[ character ];
@@ -234,11 +234,11 @@ CKEDITOR.config.entities_greek = true;
  * character table to their relative decimal numeric representation of HTML entity.
  * When set to `force`, it will convert all entities into this format.
  *
- * For example the phrase `'This is Chinese: 汉语.'` is output
- * as `'This is Chinese: &amp;#27721;&amp;#35821;.'`
+ * For example the phrase `&#39;This is Chinese: 汉语.&#39;` is output
+ * as `&#39;This is Chinese: &amp;#27721;&amp;#35821;.&#39;`
  *
  *		config.entities_processNumerical = true;
- *		config.entities_processNumerical = 'force'; // Converts from '&amp;nbsp;' into '&amp;#160;';
+ *		config.entities_processNumerical = &#39;force&#39;; // Converts from &#39;&amp;nbsp;&#39; into &#39;&amp;#160;&#39;;
  *
  * @cfg {Boolean/String} [entities_processNumerical=false]
  * @member CKEDITOR.config
@@ -246,14 +246,14 @@ CKEDITOR.config.entities_greek = true;
 
 <span id='CKEDITOR-config-cfg-entities_additional'>/**
 </span> * A comma separated list of  additional entities to be used. Entity names
- * or numbers must be used in a form that excludes the `'&amp;amp;'` prefix and the `';'` ending.
+ * or numbers must be used in a form that excludes the `&#39;&amp;amp;&#39;` prefix and the `&#39;;&#39;` ending.
  *
- *		config.entities_additional = '#1049'; // Adds Cyrillic capital letter Short I (Й).
+ *		config.entities_additional = &#39;#1049&#39;; // Adds Cyrillic capital letter Short I (Й).
  *
- * @cfg {String} [entities_additional='#39' (The single quote (') character)]
+ * @cfg {String} [entities_additional=&#39;#39&#39; (The single quote (&#39;) character)]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.entities_additional = '#39';
+CKEDITOR.config.entities_additional = &#39;#39&#39;;
 </pre>
 </body>
 </html>

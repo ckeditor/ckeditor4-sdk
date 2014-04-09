@@ -22,26 +22,26 @@
 
 ( function() {
 
-	'use strict';
+	&#39;use strict&#39;;
 
-	var containerTpl = CKEDITOR.addTemplate( 'sharedcontainer', '&lt;div' +
-		' id=&quot;cke_{name}&quot;' +
-		' class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_shared cke_detached cke_{langDir} ' + CKEDITOR.env.cssClass + '&quot;' +
-		' dir=&quot;{langDir}&quot;' +
-		' title=&quot;' + ( CKEDITOR.env.gecko ? ' ' : '' ) + '&quot;' +
-		' lang=&quot;{langCode}&quot;' +
-		' role=&quot;presentation&quot;' +
-		'&gt;' +
-			'&lt;div class=&quot;cke_inner&quot;&gt;' +
-				'&lt;div id=&quot;{spaceId}&quot; class=&quot;cke_{space}&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;' +
-			'&lt;/div&gt;' +
-		'&lt;/div&gt;' );
+	var containerTpl = CKEDITOR.addTemplate( &#39;sharedcontainer&#39;, &#39;&lt;div&#39; +
+		&#39; id=&quot;cke_{name}&quot;&#39; +
+		&#39; class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_shared cke_detached cke_{langDir} &#39; + CKEDITOR.env.cssClass + &#39;&quot;&#39; +
+		&#39; dir=&quot;{langDir}&quot;&#39; +
+		&#39; title=&quot;&#39; + ( CKEDITOR.env.gecko ? &#39; &#39; : &#39;&#39; ) + &#39;&quot;&#39; +
+		&#39; lang=&quot;{langCode}&quot;&#39; +
+		&#39; role=&quot;presentation&quot;&#39; +
+		&#39;&gt;&#39; +
+			&#39;&lt;div class=&quot;cke_inner&quot;&gt;&#39; +
+				&#39;&lt;div id=&quot;{spaceId}&quot; class=&quot;cke_{space}&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;&#39; +
+			&#39;&lt;/div&gt;&#39; +
+		&#39;&lt;/div&gt;&#39; );
 
-	CKEDITOR.plugins.add( 'sharedspace', {
+	CKEDITOR.plugins.add( &#39;sharedspace&#39;, {
 		init: function( editor ) {
 			// Create toolbars on #loaded (like themed creator), but do that
 			// with higher priority to block the default scenario.
-			editor.on( 'loaded', function() {
+			editor.on( &#39;loaded&#39;, function() {
 				var spaces = editor.config.sharedSpaces;
 
 				if ( spaces ) {
@@ -58,11 +58,11 @@
 
 		if ( target ) {
 			// Have other plugins filling the space.
-			innerHtml = editor.fire( 'uiSpace', { space: spaceName, html: '' } ).html;
+			innerHtml = editor.fire( &#39;uiSpace&#39;, { space: spaceName, html: &#39;&#39; } ).html;
 
 			if ( innerHtml ) {
 				// Block the uiSpace handling by others (e.g. themed-ui).
-				editor.on( 'uiSpace', function( ev ) {
+				editor.on( &#39;uiSpace&#39;, function( ev ) {
 					if ( ev.data.space == spaceName )
 						ev.cancel();
 				}, null, null, 1 );  // Hi-priority
@@ -79,18 +79,18 @@
 				} ) ) );
 
 				// Only the first container starts visible. Others get hidden.
-				if ( target.getCustomData( 'cke_hasshared' ) )
+				if ( target.getCustomData( &#39;cke_hasshared&#39; ) )
 					space.hide();
 				else
-					target.setCustomData( 'cke_hasshared', 1 );
+					target.setCustomData( &#39;cke_hasshared&#39;, 1 );
 
-				// There's no need for the space to be selectable.
+				// There&#39;s no need for the space to be selectable.
 				space.unselectable();
 
 				// Prevent clicking on non-buttons area of the space from blurring editor.
-				space.on( 'mousedown', function( evt ) {
+				space.on( &#39;mousedown&#39;, function( evt ) {
 					evt = evt.data;
-					if ( !evt.getTarget().hasAscendant( 'a', 1 ) )
+					if ( !evt.getTarget().hasAscendant( &#39;a&#39;, 1 ) )
 						evt.preventDefault();
 				} );
 
@@ -98,11 +98,11 @@
 				editor.focusManager.add( space, 1 );
 
 				// When the editor gets focus, show the space container, hiding others.
-				editor.on( 'focus', function() {
+				editor.on( &#39;focus&#39;, function() {
 					for ( var i = 0, sibling, children = target.getChildren(); ( sibling = children.getItem( i ) ); i++ ) {
 						if ( sibling.type == CKEDITOR.NODE_ELEMENT &amp;&amp;
 							!sibling.equals( space ) &amp;&amp;
-							sibling.hasClass( 'cke_shared' ) ) {
+							sibling.hasClass( &#39;cke_shared&#39; ) ) {
 							sibling.hide();
 						}
 					}
@@ -110,7 +110,7 @@
 					space.show();
 				} );
 
-				editor.on( 'destroy', function() {
+				editor.on( &#39;destroy&#39;, function() {
 					space.remove();
 				} );
 			}
@@ -129,14 +129,14 @@
  *		// Place the toolbar inside the element with ID &quot;someElementId&quot; and the
  *		// elements path into the element with ID &quot;anotherId&quot;.
  *		config.sharedSpaces = {
- *			top: 'someElementId',
- *			bottom: 'anotherId'
+ *			top: &#39;someElementId&#39;,
+ *			bottom: &#39;anotherId&#39;
  *		};
  *
  *		// Place the toolbar inside the element with ID &quot;someElementId&quot;. The
  *		// elements path will remain attached to the editor UI.
  *		config.sharedSpaces = {
- *			top: 'someElementId'
+ *			top: &#39;someElementId&#39;
  *		};
  *
  * @cfg {Object} [sharedSpaces]

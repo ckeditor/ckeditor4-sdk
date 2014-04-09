@@ -42,25 +42,25 @@ CKEDITOR.htmlParser.basicWriter = CKEDITOR.tools.createClass( {
 <span id='CKEDITOR-htmlParser-basicWriter-method-openTag'>		/**
 </span>		 * Writes the tag opening part for a opener tag.
 		 *
-		 *		// Writes '&lt;p'.
-		 *		writer.openTag( 'p', { class : 'MyClass', id : 'MyId' } );
+		 *		// Writes &#39;&lt;p&#39;.
+		 *		writer.openTag( &#39;p&#39;, { class : &#39;MyClass&#39;, id : &#39;MyId&#39; } );
 		 *
 		 * @param {String} tagName The element name for this tag.
 		 * @param {Object} attributes The attributes defined for this tag. The
 		 * attributes could be used to inspect the tag.
 		 */
 		openTag: function( tagName, attributes ) {
-			this._.output.push( '&lt;', tagName );
+			this._.output.push( &#39;&lt;&#39;, tagName );
 		},
 
 <span id='CKEDITOR-htmlParser-basicWriter-method-openTagClose'>		/**
 </span>		 * Writes the tag closing part for a opener tag.
 		 *
-		 *		// Writes '&gt;'.
-		 *		writer.openTagClose( 'p', false );
+		 *		// Writes &#39;&gt;&#39;.
+		 *		writer.openTagClose( &#39;p&#39;, false );
 		 *
-		 *		// Writes ' /&gt;'.
-		 *		writer.openTagClose( 'br', true );
+		 *		// Writes &#39; /&gt;&#39;.
+		 *		writer.openTagClose( &#39;br&#39;, true );
 		 *
 		 * @param {String} tagName The element name for this tag.
 		 * @param {Boolean} isSelfClose Indicates that this is a self-closing tag,
@@ -68,46 +68,46 @@ CKEDITOR.htmlParser.basicWriter = CKEDITOR.tools.createClass( {
 		 */
 		openTagClose: function( tagName, isSelfClose ) {
 			if ( isSelfClose )
-				this._.output.push( ' /&gt;' );
+				this._.output.push( &#39; /&gt;&#39; );
 			else
-				this._.output.push( '&gt;' );
+				this._.output.push( &#39;&gt;&#39; );
 		},
 
 <span id='CKEDITOR-htmlParser-basicWriter-method-attribute'>		/**
 </span>		 * Writes an attribute. This function should be called after opening the
 		 * tag with {@link #openTagClose}.
 		 *
-		 *		// Writes ' class=&quot;MyClass&quot;'.
-		 *		writer.attribute( 'class', 'MyClass' );
+		 *		// Writes &#39; class=&quot;MyClass&quot;&#39;.
+		 *		writer.attribute( &#39;class&#39;, &#39;MyClass&#39; );
 		 *
 		 * @param {String} attName The attribute name.
 		 * @param {String} attValue The attribute value.
 		 */
 		attribute: function( attName, attValue ) {
-			// Browsers don't always escape special character in attribute values. (#4683, #4719).
-			if ( typeof attValue == 'string' )
+			// Browsers don&#39;t always escape special character in attribute values. (#4683, #4719).
+			if ( typeof attValue == &#39;string&#39; )
 				attValue = CKEDITOR.tools.htmlEncodeAttr( attValue );
 
-			this._.output.push( ' ', attName, '=&quot;', attValue, '&quot;' );
+			this._.output.push( &#39; &#39;, attName, &#39;=&quot;&#39;, attValue, &#39;&quot;&#39; );
 		},
 
 <span id='CKEDITOR-htmlParser-basicWriter-method-closeTag'>		/**
 </span>		 * Writes a closer tag.
 		 *
-		 *		// Writes '&lt;/p&gt;'.
-		 *		writer.closeTag( 'p' );
+		 *		// Writes &#39;&lt;/p&gt;&#39;.
+		 *		writer.closeTag( &#39;p&#39; );
 		 *
 		 * @param {String} tagName The element name for this tag.
 		 */
 		closeTag: function( tagName ) {
-			this._.output.push( '&lt;/', tagName, '&gt;' );
+			this._.output.push( &#39;&lt;/&#39;, tagName, &#39;&gt;&#39; );
 		},
 
 <span id='CKEDITOR-htmlParser-basicWriter-method-text'>		/**
 </span>		 * Writes text.
 		 *
-		 *		// Writes 'Hello Word'.
-		 *		writer.text( 'Hello Word' );
+		 *		// Writes &#39;Hello Word&#39;.
+		 *		writer.text( &#39;Hello Word&#39; );
 		 *
 		 * @param {String} text The text value.
 		 */
@@ -118,19 +118,19 @@ CKEDITOR.htmlParser.basicWriter = CKEDITOR.tools.createClass( {
 <span id='CKEDITOR-htmlParser-basicWriter-method-comment'>		/**
 </span>		 * Writes a comment.
 		 *
-		 *		// Writes '&lt;!-- My comment --&gt;'.
-		 *		writer.comment( ' My comment ' );
+		 *		// Writes &#39;&lt;!-- My comment --&gt;&#39;.
+		 *		writer.comment( &#39; My comment &#39; );
 		 *
 		 * @param {String} comment The comment text.
 		 */
 		comment: function( comment ) {
-			this._.output.push( '&lt;!--', comment, '--&gt;' );
+			this._.output.push( &#39;&lt;!--&#39;, comment, &#39;--&gt;&#39; );
 		},
 
 <span id='CKEDITOR-htmlParser-basicWriter-method-write'>		/**
 </span>		 * Writes any kind of data to the ouput.
 		 *
-		 *		writer.write( 'This is an &lt;b&gt;example&lt;/b&gt;.' );
+		 *		writer.write( &#39;This is an &lt;b&gt;example&lt;/b&gt;.&#39; );
 		 *
 		 * @param {String} data
 		 */
@@ -158,7 +158,7 @@ CKEDITOR.htmlParser.basicWriter = CKEDITOR.tools.createClass( {
 		 * @returns {String} The HTML written to the writer so far.
 		 */
 		getHtml: function( reset ) {
-			var html = this._.output.join( '' );
+			var html = this._.output.join( &#39;&#39; );
 
 			if ( reset )
 				this.reset();

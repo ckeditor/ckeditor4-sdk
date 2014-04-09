@@ -40,17 +40,17 @@ CKEDITOR.scriptLoader = ( function() {
 </span>		 * Loads one or more external script checking if not already loaded
 		 * previously by this function.
 		 *
-		 *		CKEDITOR.scriptLoader.load( '/myscript.js' );
+		 *		CKEDITOR.scriptLoader.load( &#39;/myscript.js&#39; );
 		 *
-		 *		CKEDITOR.scriptLoader.load( '/myscript.js', function( success ) {
+		 *		CKEDITOR.scriptLoader.load( &#39;/myscript.js&#39;, function( success ) {
 		 *			// Alerts true if the script has been properly loaded.
 		 *			// HTTP error 404 should return false.
 		 *			alert( success );
 		 *		} );
 		 *
-		 *		CKEDITOR.scriptLoader.load( [ '/myscript1.js', '/myscript2.js' ], function( completed, failed ) {
-		 *			alert( 'Number of scripts loaded: ' + completed.length );
-		 *			alert( 'Number of failures: ' + failed.length );
+		 *		CKEDITOR.scriptLoader.load( [ &#39;/myscript1.js&#39;, &#39;/myscript2.js&#39; ], function( completed, failed ) {
+		 *			alert( &#39;Number of scripts loaded: &#39; + completed.length );
+		 *			alert( &#39;Number of failures: &#39; + failed.length );
 		 *		} );
 		 *
 		 * @param {String/Array} scriptUrl One or more URLs pointing to the
@@ -67,7 +67,7 @@ CKEDITOR.scriptLoader = ( function() {
 		 * the script is loaded.
 		 */
 		load: function( scriptUrl, callback, scope, showBusy ) {
-			var isString = ( typeof scriptUrl == 'string' );
+			var isString = ( typeof scriptUrl == &#39;string&#39; );
 
 			if ( isString )
 				scriptUrl = [ scriptUrl ];
@@ -97,7 +97,7 @@ CKEDITOR.scriptLoader = ( function() {
 					( success ? completed : failed ).push( url );
 
 					if ( --scriptCount &lt;= 0 ) {
-						showBusy &amp;&amp; CKEDITOR.document.getDocumentElement().removeStyle( 'cursor' );
+						showBusy &amp;&amp; CKEDITOR.document.getDocumentElement().removeStyle( &#39;cursor&#39; );
 						doCallback( success );
 					}
 				};
@@ -129,16 +129,16 @@ CKEDITOR.scriptLoader = ( function() {
 						return;
 
 					// Create the &lt;script&gt; element.
-					var script = new CKEDITOR.dom.element( 'script' );
+					var script = new CKEDITOR.dom.element( &#39;script&#39; );
 					script.setAttributes( {
-						type: 'text/javascript',
+						type: &#39;text/javascript&#39;,
 						src: url } );
 
 					if ( callback ) {
 						if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 11 ) {
 							// FIXME: For IE, we are not able to return false on error (like 404).
 							script.$.onreadystatechange = function() {
-								if ( script.$.readyState == 'loaded' || script.$.readyState == 'complete' ) {
+								if ( script.$.readyState == &#39;loaded&#39; || script.$.readyState == &#39;complete&#39; ) {
 									script.$.onreadystatechange = null;
 									onLoad( url, true );
 								}
@@ -162,10 +162,10 @@ CKEDITOR.scriptLoader = ( function() {
 					// Append it to &lt;head&gt;.
 					script.appendTo( CKEDITOR.document.getHead() );
 
-					CKEDITOR.fire( 'download', url ); // %REMOVE_LINE%
+					CKEDITOR.fire( &#39;download&#39;, url ); // %REMOVE_LINE%
 				};
 
-			showBusy &amp;&amp; CKEDITOR.document.getDocumentElement().setStyle( 'cursor', 'wait' );
+			showBusy &amp;&amp; CKEDITOR.document.getDocumentElement().setStyle( &#39;cursor&#39;, &#39;wait&#39; );
 			for ( var i = 0; i &lt; scriptCount; i++ ) {
 				loadScript( scriptUrl[ i ] );
 			}
@@ -207,7 +207,7 @@ CKEDITOR.scriptLoader = ( function() {
 					loadNext.call( that );
 				}
 
-				// Let's add this script to the queue
+				// Let&#39;s add this script to the queue
 				pending.push( { scriptUrl: scriptUrl, callback: callbackWrapper } );
 
 				// If the queue was empty, then start loading.

@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
+CKEDITOR.dialog.add( &#39;a11yHelp&#39;, function( editor ) {
 	var lang = editor.lang.a11yhelp,
 		id = CKEDITOR.tools.getNextId();
 
@@ -44,7 +44,7 @@ CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
 		39: lang.rightArrow,
 		40: lang.downArrow,
 		45: lang.insert,
-		46: lang[ 'delete' ],
+		46: lang[ &#39;delete&#39; ],
 		91: lang.leftWindowKey,
 		92: lang.rightWindowKey,
 		93: lang.selectKey,
@@ -113,7 +113,7 @@ CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
 
 		presentation.push( keyMap[ keystroke ] || String.fromCharCode( keystroke ) );
 
-		return presentation.join( '+' );
+		return presentation.join( &#39;+&#39; );
 	}
 
 	var variablesPattern = /\$\{(.*?)\}/g;
@@ -129,17 +129,17 @@ CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
 
 		return function( match, name ) {
 			// Return the keystroke representation or leave match untouched
-			// if there's no keystroke for such command.
+			// if there&#39;s no keystroke for such command.
 			return keystrokesByName[ name ] ? representKeyStroke( keystrokesByName[ name ] ) : match;
 		};
 	} )();
 
 	// Create the help list directly from lang file entries.
 	function buildHelpContents() {
-		var pageTpl = '&lt;div class=&quot;cke_accessibility_legend&quot; role=&quot;document&quot; aria-labelledby=&quot;' + id + '_arialbl&quot; tabIndex=&quot;-1&quot;&gt;%1&lt;/div&gt;' +
-				'&lt;span id=&quot;' + id + '_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;' + lang.contents + ' &lt;/span&gt;',
-			sectionTpl = '&lt;h1&gt;%1&lt;/h1&gt;&lt;dl&gt;%2&lt;/dl&gt;',
-			itemTpl = '&lt;dt&gt;%1&lt;/dt&gt;&lt;dd&gt;%2&lt;/dd&gt;';
+		var pageTpl = &#39;&lt;div class=&quot;cke_accessibility_legend&quot; role=&quot;document&quot; aria-labelledby=&quot;&#39; + id + &#39;_arialbl&quot; tabIndex=&quot;-1&quot;&gt;%1&lt;/div&gt;&#39; +
+				&#39;&lt;span id=&quot;&#39; + id + &#39;_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;&#39; + lang.contents + &#39; &lt;/span&gt;&#39;,
+			sectionTpl = &#39;&lt;h1&gt;%1&lt;/h1&gt;&lt;dl&gt;%2&lt;/dl&gt;&#39;,
+			itemTpl = &#39;&lt;dt&gt;%1&lt;/dt&gt;&lt;dd&gt;%2&lt;/dd&gt;&#39;;
 
 		var pageHtml = [],
 			sections = lang.legend,
@@ -155,19 +155,19 @@ CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
 				var item = items[ j ],
 					itemLegend = item.legend.replace( variablesPattern, replaceVariables );
 
-				// (#9765) If some commands haven't been replaced in the legend,
-				// most likely their keystrokes are unavailable and we shouldn't include
+				// (#9765) If some commands haven&#39;t been replaced in the legend,
+				// most likely their keystrokes are unavailable and we shouldn&#39;t include
 				// them in our help list.
 				if ( itemLegend.match( variablesPattern ) )
 					continue;
 
-				sectionHtml.push( itemTpl.replace( '%1', item.name ).replace( '%2', itemLegend ) );
+				sectionHtml.push( itemTpl.replace( &#39;%1&#39;, item.name ).replace( &#39;%2&#39;, itemLegend ) );
 			}
 
-			pageHtml.push( sectionTpl.replace( '%1', section.name ).replace( '%2', sectionHtml.join( '' ) ) );
+			pageHtml.push( sectionTpl.replace( &#39;%1&#39;, section.name ).replace( &#39;%2&#39;, sectionHtml.join( &#39;&#39; ) ) );
 		}
 
-		return pageTpl.replace( '%1', pageHtml.join( '' ) );
+		return pageTpl.replace( &#39;%1&#39;, pageHtml.join( &#39;&#39; ) );
 	}
 
 	return {
@@ -176,55 +176,55 @@ CKEDITOR.dialog.add( 'a11yHelp', function( editor ) {
 		minHeight: 400,
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.common.generalTab,
 			expand: true,
 			elements: [
 				{
-				type: 'html',
-				id: 'legends',
-				style: 'white-space:normal;',
+				type: &#39;html&#39;,
+				id: &#39;legends&#39;,
+				style: &#39;white-space:normal;&#39;,
 				focus: function() { this.getElement().focus(); },
-				html: buildHelpContents() + '&lt;style type=&quot;text/css&quot;&gt;' +
-					'.cke_accessibility_legend' +
-					'{' +
-						'width:600px;' +
-						'height:400px;' +
-						'padding-right:5px;' +
-						'overflow-y:auto;' +
-						'overflow-x:hidden;' +
-					'}' +
+				html: buildHelpContents() + &#39;&lt;style type=&quot;text/css&quot;&gt;&#39; +
+					&#39;.cke_accessibility_legend&#39; +
+					&#39;{&#39; +
+						&#39;width:600px;&#39; +
+						&#39;height:400px;&#39; +
+						&#39;padding-right:5px;&#39; +
+						&#39;overflow-y:auto;&#39; +
+						&#39;overflow-x:hidden;&#39; +
+					&#39;}&#39; +
 					// Some adjustments are to be done for IE6 and Quirks to work &quot;properly&quot; (#5757)
-					'.cke_browser_quirks .cke_accessibility_legend,' +
-					'.cke_browser_ie6 .cke_accessibility_legend' +
-					'{' +
-						'height:390px' +
-					'}' +
+					&#39;.cke_browser_quirks .cke_accessibility_legend,&#39; +
+					&#39;.cke_browser_ie6 .cke_accessibility_legend&#39; +
+					&#39;{&#39; +
+						&#39;height:390px&#39; +
+					&#39;}&#39; +
 					// Override non-wrapping white-space rule in reset css.
-					'.cke_accessibility_legend *' +
-					'{' +
-						'white-space:normal;' +
-					'}' +
-					'.cke_accessibility_legend h1' +
-					'{' +
-						'font-size: 20px;' +
-						'border-bottom: 1px solid #AAA;' +
-						'margin: 5px 0px 15px;' +
-					'}' +
-					'.cke_accessibility_legend dl' +
-					'{' +
-						'margin-left: 5px;' +
-					'}' +
-					'.cke_accessibility_legend dt' +
-					'{' +
-						'font-size: 13px;' +
-						'font-weight: bold;' +
-					'}' +
-					'.cke_accessibility_legend dd' +
-					'{' +
-						'margin:10px' +
-					'}' +
-					'&lt;/style&gt;'
+					&#39;.cke_accessibility_legend *&#39; +
+					&#39;{&#39; +
+						&#39;white-space:normal;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_accessibility_legend h1&#39; +
+					&#39;{&#39; +
+						&#39;font-size: 20px;&#39; +
+						&#39;border-bottom: 1px solid #AAA;&#39; +
+						&#39;margin: 5px 0px 15px;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_accessibility_legend dl&#39; +
+					&#39;{&#39; +
+						&#39;margin-left: 5px;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_accessibility_legend dt&#39; +
+					&#39;{&#39; +
+						&#39;font-size: 13px;&#39; +
+						&#39;font-weight: bold;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_accessibility_legend dd&#39; +
+					&#39;{&#39; +
+						&#39;margin:10px&#39; +
+					&#39;}&#39; +
+					&#39;&lt;/style&gt;&#39;
 			}
 			]
 		}

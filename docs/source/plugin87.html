@@ -20,28 +20,28 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'uicolor', {
-	requires: 'dialog',
-	lang: 'ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,mk,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'uicolor', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;uicolor&#39;, {
+	requires: &#39;dialog&#39;,
+	lang: &#39;ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,mk,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;uicolor&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
 		if ( CKEDITOR.env.ie6Compat )
 			return;
 
-		editor.addCommand( 'uicolor', new CKEDITOR.dialogCommand( 'uicolor' ) );
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'UIColor', {
+		editor.addCommand( &#39;uicolor&#39;, new CKEDITOR.dialogCommand( &#39;uicolor&#39; ) );
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;UIColor&#39;, {
 			label: editor.lang.uicolor.title,
-			command: 'uicolor',
-			toolbar: 'tools,1'
+			command: &#39;uicolor&#39;,
+			toolbar: &#39;tools,1&#39;
 		} );
-		CKEDITOR.dialog.add( 'uicolor', this.path + 'dialogs/uicolor.js' );
+		CKEDITOR.dialog.add( &#39;uicolor&#39;, this.path + &#39;dialogs/uicolor.js&#39; );
 
 		// Load YUI js files.
-		CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( 'plugins/uicolor/yui/yui.js' ) );
+		CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( &#39;plugins/uicolor/yui/yui.js&#39; ) );
 
 		// Load YUI css files.
-		CKEDITOR.document.appendStyleSheet( CKEDITOR.getUrl( 'plugins/uicolor/yui/assets/yui.css' ) );
+		CKEDITOR.document.appendStyleSheet( CKEDITOR.getUrl( &#39;plugins/uicolor/yui/assets/yui.css&#39; ) );
 	}
 } );
 </pre>

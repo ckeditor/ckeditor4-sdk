@@ -20,9 +20,9 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-'use strict';
+&#39;use strict&#39;;
 
-CKEDITOR.dialog.add( 'mathjax', function( editor ) {
+CKEDITOR.dialog.add( &#39;mathjax&#39;, function( editor ) {
 
 	var preview,
 		lang = editor.lang.mathjax;
@@ -33,20 +33,20 @@ CKEDITOR.dialog.add( 'mathjax', function( editor ) {
 		minHeight: 100,
 		contents: [
 			{
-				id: 'info',
+				id: &#39;info&#39;,
 				elements: [
 					{
-						id: 'equation',
-						type: 'textarea',
+						id: &#39;equation&#39;,
+						type: &#39;textarea&#39;,
 						label: lang.dialogInput,
 
 						onLoad: function( widget ) {
 							var that = this;
 
 							if ( !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version == 8 ) ) {
-								this.getInputElement().on( 'keyup', function() {
+								this.getInputElement().on( &#39;keyup&#39;, function() {
 									// Add \( and \) for preview.
-									preview.setValue( '\\(' + that.getInputElement().getValue() + '\\)' );
+									preview.setValue( &#39;\\(&#39; + that.getInputElement().getValue() + &#39;\\)&#39; );
 								} );
 							}
 						},
@@ -58,26 +58,26 @@ CKEDITOR.dialog.add( 'mathjax', function( editor ) {
 
 						commit: function( widget ) {
 							// Add \( and \) to make TeX be parsed by MathJax by default.
-							widget.setData( 'math', '\\(' + this.getValue() + '\\)' );
+							widget.setData( &#39;math&#39;, &#39;\\(&#39; + this.getValue() + &#39;\\)&#39; );
 						}
 					},
 					{
-						id: 'documentation',
-						type: 'html',
+						id: &#39;documentation&#39;,
+						type: &#39;html&#39;,
 						html:
-							'&lt;div style=&quot;width:100%;text-align:right;margin:-8px 0 10px&quot;&gt;' +
-								'&lt;a class=&quot;cke_mathjax_doc&quot; href=&quot;' + lang.docUrl + '&quot; target=&quot;_black&quot; style=&quot;cursor:pointer;color:#00B2CE;text-decoration:underline&quot;&gt;' +
+							&#39;&lt;div style=&quot;width:100%;text-align:right;margin:-8px 0 10px&quot;&gt;&#39; +
+								&#39;&lt;a class=&quot;cke_mathjax_doc&quot; href=&quot;&#39; + lang.docUrl + &#39;&quot; target=&quot;_black&quot; style=&quot;cursor:pointer;color:#00B2CE;text-decoration:underline&quot;&gt;&#39; +
 									lang.docLabel +
-								'&lt;/a&gt;' +
-							'&lt;/div&gt;'
+								&#39;&lt;/a&gt;&#39; +
+							&#39;&lt;/div&gt;&#39;
 					},
 					( !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version == 8 ) ) &amp;&amp; {
-						id: 'preview',
-						type: 'html',
+						id: &#39;preview&#39;,
+						type: &#39;html&#39;,
 						html:
-							'&lt;div style=&quot;width:100%;text-align:center;&quot;&gt;' +
-								'&lt;iframe style=&quot;border:0;width:0;height:0;font-size:20px&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; allowTransparency=&quot;true&quot; src=&quot;' + CKEDITOR.plugins.mathjax.fixSrc + '&quot;&gt;&lt;/iframe&gt;' +
-							'&lt;/div&gt;',
+							&#39;&lt;div style=&quot;width:100%;text-align:center;&quot;&gt;&#39; +
+								&#39;&lt;iframe style=&quot;border:0;width:0;height:0;font-size:20px&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; allowTransparency=&quot;true&quot; src=&quot;&#39; + CKEDITOR.plugins.mathjax.fixSrc + &#39;&quot;&gt;&lt;/iframe&gt;&#39; +
+							&#39;&lt;/div&gt;&#39;,
 
 						onLoad: function( widget ) {
 							var iFrame = CKEDITOR.document.getById( this.domId ).getChild( 0 );

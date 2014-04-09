@@ -25,7 +25,7 @@
 	function setupAdvParams( element ) {
 		var attrName = this.att;
 
-		var value = element &amp;&amp; element.hasAttribute( attrName ) &amp;&amp; element.getAttribute( attrName ) || '';
+		var value = element &amp;&amp; element.hasAttribute( attrName ) &amp;&amp; element.getAttribute( attrName ) || &#39;&#39;;
 
 		if ( value !== undefined )
 			this.setValue( value );
@@ -56,8 +56,8 @@
 
 	var defaultTabConfig = { id: 1, dir: 1, classes: 1, styles: 1 };
 
-	CKEDITOR.plugins.add( 'dialogadvtab', {
-		requires : 'dialog',
+	CKEDITOR.plugins.add( &#39;dialogadvtab&#39;, {
+		requires : &#39;dialog&#39;,
 
 		// Returns allowed content rule for the content created by this plugin.
 		allowedContent: function( tabConfig ) {
@@ -66,19 +66,19 @@
 
 			var allowedAttrs = [];
 			if ( tabConfig.id )
-				allowedAttrs.push( 'id' );
+				allowedAttrs.push( &#39;id&#39; );
 			if ( tabConfig.dir )
-				allowedAttrs.push( 'dir' );
+				allowedAttrs.push( &#39;dir&#39; );
 
-			var allowed = '';
+			var allowed = &#39;&#39;;
 
 			if ( allowedAttrs.length )
-				allowed += '[' + allowedAttrs.join( ',' ) +  ']';
+				allowed += &#39;[&#39; + allowedAttrs.join( &#39;,&#39; ) +  &#39;]&#39;;
 
 			if ( tabConfig.classes )
-				allowed += '(*)';
+				allowed += &#39;(*)&#39;;
 			if ( tabConfig.styles )
-				allowed += '{*}';
+				allowed += &#39;{*}&#39;;
 
 			return allowed;
 		},
@@ -92,12 +92,12 @@
 			var lang = editor.lang.common;
 
 			var result = {
-				id: 'advanced',
+				id: &#39;advanced&#39;,
 				label: lang.advancedTab,
 				title: lang.advancedTab,
 				elements: [
 					{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					padding: 1,
 					children: []
 				}
@@ -109,10 +109,10 @@
 			if ( tabConfig.id || tabConfig.dir ) {
 				if ( tabConfig.id ) {
 					contents.push( {
-						id: 'advId',
-						att: 'id',
-						type: 'text',
-						requiredContent: element ? element + '[id]' : null,
+						id: &#39;advId&#39;,
+						att: &#39;id&#39;,
+						type: &#39;text&#39;,
+						requiredContent: element ? element + &#39;[id]&#39; : null,
 						label: lang.id,
 						setup: setupAdvParams,
 						commit: commitAdvParams
@@ -121,17 +121,17 @@
 
 				if ( tabConfig.dir ) {
 					contents.push( {
-						id: 'advLangDir',
-						att: 'dir',
-						type: 'select',
-						requiredContent: element ? element + '[dir]' : null,
+						id: &#39;advLangDir&#39;,
+						att: &#39;dir&#39;,
+						type: &#39;select&#39;,
+						requiredContent: element ? element + &#39;[dir]&#39; : null,
 						label: lang.langDir,
-						'default': '',
-						style: 'width:100%',
+						&#39;default&#39;: &#39;&#39;,
+						style: &#39;width:100%&#39;,
 						items: [
-							[ lang.notSet, '' ],
-							[ lang.langDirLTR, 'ltr' ],
-							[ lang.langDirRTL, 'rtl' ]
+							[ lang.notSet, &#39;&#39; ],
+							[ lang.langDirLTR, &#39;ltr&#39; ],
+							[ lang.langDirRTL, &#39;rtl&#39; ]
 							],
 						setup: setupAdvParams,
 						commit: commitAdvParams
@@ -139,8 +139,8 @@
 				}
 
 				result.elements[ 0 ].children.push( {
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [].concat( contents )
 				} );
 			}
@@ -150,28 +150,28 @@
 
 				if ( tabConfig.styles ) {
 					contents.push( {
-						id: 'advStyles',
-						att: 'style',
-						type: 'text',
-						requiredContent: element ? element + '{cke-xyz}' : null,
+						id: &#39;advStyles&#39;,
+						att: &#39;style&#39;,
+						type: &#39;text&#39;,
+						requiredContent: element ? element + &#39;{cke-xyz}&#39; : null,
 						label: lang.styles,
-						'default': '',
+						&#39;default&#39;: &#39;&#39;,
 
 						validate: CKEDITOR.dialog.validate.inlineStyle( lang.invalidInlineStyle ),
 						onChange: function() {},
 
 						getStyle: function( name, defaultValue ) {
-							var match = this.getValue().match( new RegExp( '(?:^|;)\\s*' + name + '\\s*:\\s*([^;]*)', 'i' ) );
+							var match = this.getValue().match( new RegExp( &#39;(?:^|;)\\s*&#39; + name + &#39;\\s*:\\s*([^;]*)&#39;, &#39;i&#39; ) );
 							return match ? match[ 1 ] : defaultValue;
 						},
 
 						updateStyle: function( name, value ) {
 							var styles = this.getValue();
 
-							var tmp = editor.document.createElement( 'span' );
-							tmp.setAttribute( 'style', styles );
+							var tmp = editor.document.createElement( &#39;span&#39; );
+							tmp.setAttribute( &#39;style&#39;, styles );
 							tmp.setStyle( name, value );
-							styles = CKEDITOR.tools.normalizeCssText( tmp.getAttribute( 'style' ) );
+							styles = CKEDITOR.tools.normalizeCssText( tmp.getAttribute( &#39;style&#39; ) );
 
 							this.setValue( styles, 1 );
 						},
@@ -185,16 +185,16 @@
 
 				if ( tabConfig.classes ) {
 					contents.push( {
-						type: 'hbox',
-						widths: [ '45%', '55%' ],
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;55%&#39; ],
 						children: [
 							{
-							id: 'advCSSClasses',
-							att: 'class',
-							type: 'text',
-							requiredContent: element ? element + '(cke-xyz)' : null,
+							id: &#39;advCSSClasses&#39;,
+							att: &#39;class&#39;,
+							type: &#39;text&#39;,
+							requiredContent: element ? element + &#39;(cke-xyz)&#39; : null,
 							label: lang.cssClasses,
-							'default': '',
+							&#39;default&#39;: &#39;&#39;,
 							setup: setupAdvParams,
 							commit: commitAdvParams
 
@@ -204,8 +204,8 @@
 				}
 
 				result.elements[ 0 ].children.push( {
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [].concat( contents )
 				} );
 			}

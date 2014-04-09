@@ -28,10 +28,10 @@
 <span id='CKEDITOR-dom-text-method-constructor'><span id='CKEDITOR-dom-text'>/**
 </span></span> * Represents a DOM text node.
  *
- *		var nativeNode = document.createTextNode( 'Example' );
+ *		var nativeNode = document.createTextNode( &#39;Example&#39; );
  *		var text = CKEDITOR.dom.text( nativeNode );
  *
- *		var text = CKEDITOR.dom.text( 'Example' );
+ *		var text = CKEDITOR.dom.text( &#39;Example&#39; );
  *
  * @class
  * @extends CKEDITOR.dom.node
@@ -42,11 +42,11 @@
  * the node in case of new node creation. Defaults to the current document.
  */
 CKEDITOR.dom.text = function( text, ownerDocument ) {
-	if ( typeof text == 'string' )
+	if ( typeof text == &#39;string&#39; )
 		text = ( ownerDocument ? ownerDocument.$ : document ).createTextNode( text );
 
 	// Theoretically, we should call the base constructor here
-	// (not CKEDITOR.dom.node though). But, IE doesn't support expando
+	// (not CKEDITOR.dom.node though). But, IE doesn&#39;t support expando
 	// properties on text node, so the features provided by domObject will not
 	// work for text nodes (which is not a big issue for us).
 	//
@@ -67,7 +67,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.text.prototype, {
 	type: CKEDITOR.NODE_TEXT,
 
 <span id='CKEDITOR-dom-text-method-getLength'>	/**
-</span>	 * Gets length of node's value.
+</span>	 * Gets length of node&#39;s value.
 	 *
 	 * @returns {Number}
 	 */
@@ -76,7 +76,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.text.prototype, {
 	},
 
 <span id='CKEDITOR-dom-text-method-getText'>	/**
-</span>	 * Gets node's value.
+</span>	 * Gets node&#39;s value.
 	 *
 	 * @returns {String}
 	 */
@@ -85,7 +85,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.text.prototype, {
 	},
 
 <span id='CKEDITOR-dom-text-method-setText'>	/**
-</span>	 * Sets node's value.
+</span>	 * Sets node&#39;s value.
 	 *
 	 * @param {String} text
 	 */
@@ -117,18 +117,18 @@ CKEDITOR.tools.extend( CKEDITOR.dom.text.prototype, {
 		if ( parent.childNodes.length == count )
 		{
 			// If the offset is after the last char, IE creates the text node
-			// on split, but don't include it into the DOM. So, we have to do
+			// on split, but don&#39;t include it into the DOM. So, we have to do
 			// that manually here.
 			if ( offset &gt;= length )
 			{
-				retval = doc.createText( '' );
+				retval = doc.createText( &#39;&#39; );
 				retval.insertAfter( this );
 			}
 			else
 			{
 				// IE BUG: IE8+ does not update the childNodes array in DOM after splitText(),
 				// we need to make some DOM changes to make it update. (#3436)
-				var workaround = doc.createText( '' );
+				var workaround = doc.createText( &#39;&#39; );
 				workaround.insertAfter( retval );
 				workaround.remove();
 			}
@@ -148,7 +148,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.text.prototype, {
 	substring: function( indexA, indexB ) {
 		// We need the following check due to a Firefox bug
 		// https://bugzilla.mozilla.org/show_bug.cgi?id=458886
-		if ( typeof indexB != 'number' )
+		if ( typeof indexB != &#39;number&#39; )
 			return this.$.nodeValue.substr( indexA );
 		else
 			return this.$.nodeValue.substring( indexA, indexB );

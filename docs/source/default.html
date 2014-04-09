@@ -74,19 +74,19 @@
 		return null;
 	};
 
-	// Adding a (set) of styles to the element's 'style' attributes.
+	// Adding a (set) of styles to the element&#39;s &#39;style&#39; attributes.
 	elementPrototype.addStyle = function( name, value, isPrepend ) {
 		var styleText,
-			addingStyleText = '';
+			addingStyleText = &#39;&#39;;
 		// name/value pair.
-		if ( typeof value == 'string' )
-			addingStyleText += name + ':' + value + ';';
+		if ( typeof value == &#39;string&#39; )
+			addingStyleText += name + &#39;:&#39; + value + &#39;;&#39;;
 		else {
 			// style literal.
-			if ( typeof name == 'object' ) {
+			if ( typeof name == &#39;object&#39; ) {
 				for ( var style in name ) {
 					if ( name.hasOwnProperty( style ) )
-						addingStyleText += style + ':' + name[ style ] + ';';
+						addingStyleText += style + &#39;:&#39; + name[ style ] + &#39;;&#39;;
 				}
 			}
 			// raw style text form.
@@ -99,11 +99,11 @@
 		if ( !this.attributes )
 			this.attributes = {};
 
-		styleText = this.attributes.style || '';
+		styleText = this.attributes.style || &#39;&#39;;
 
-		styleText = ( isPrepend ? [ addingStyleText, styleText ] : [ styleText, addingStyleText ] ).join( ';' );
+		styleText = ( isPrepend ? [ addingStyleText, styleText ] : [ styleText, addingStyleText ] ).join( &#39;;&#39; );
 
-		this.attributes.style = styleText.replace( /^;|;(?=;)/, '' );
+		this.attributes.style = styleText.replace( /^;|;(?=;)/, &#39;&#39; );
 	};
 
 	// Retrieve a style property value of the element.
@@ -125,7 +125,7 @@
 	CKEDITOR.dtd.parentOf = function( tagName ) {
 		var result = {};
 		for ( var tag in this ) {
-			if ( tag.indexOf( '$' ) == -1 &amp;&amp; this[ tag ][ tagName ] )
+			if ( tag.indexOf( &#39;$&#39; ) == -1 &amp;&amp; this[ tag ][ tagName ] )
 				result[ tag ] = 1;
 		}
 		return result;
@@ -166,23 +166,23 @@
 		if ( mergeStyle ) {
 			for ( i = 0; i &lt; count; i++ ) {
 				attrs = children[ i ].attributes;
-				attrs.style &amp;&amp; ( attrs.style = stylesFilter( [ [ 'list-style-type' ] ] )( attrs.style ) || '' );
+				attrs.style &amp;&amp; ( attrs.style = stylesFilter( [ [ &#39;list-style-type&#39; ] ] )( attrs.style ) || &#39;&#39; );
 			}
 
-			list.addStyle( 'list-style-type', mergeStyle );
+			list.addStyle( &#39;list-style-type&#39;, mergeStyle );
 		}
 	}
 
 	var cssLengthRelativeUnit = /^([.\d]*)+(em|ex|px|gd|rem|vw|vh|vm|ch|mm|cm|in|pt|pc|deg|rad|ms|s|hz|khz){1}?/i;
 	var emptyMarginRegex = /^(?:\b0[^\s]*\s*){1,4}$/; // e.g. 0px 0pt 0px
-	var romanLiternalPattern = '^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$',
+	var romanLiternalPattern = &#39;^m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$&#39;,
 		lowerRomanLiteralRegex = new RegExp( romanLiternalPattern ),
 		upperRomanLiteralRegex = new RegExp( romanLiternalPattern.toUpperCase() );
 
-	var orderedPatterns = { 'decimal': /\d+/, 'lower-roman': lowerRomanLiteralRegex, 'upper-roman': upperRomanLiteralRegex, 'lower-alpha': /^[a-z]+$/, 'upper-alpha': /^[A-Z]+$/ },
-		unorderedPatterns = { 'disc': /[l\u00B7\u2002]/, 'circle': /[\u006F\u00D8]/, 'square': /[\u006E\u25C6]/ },
-		listMarkerPatterns = { 'ol': orderedPatterns, 'ul': unorderedPatterns },
-		romans = [ [ 1000, 'M' ], [ 900, 'CM' ], [ 500, 'D' ], [ 400, 'CD' ], [ 100, 'C' ], [ 90, 'XC' ], [ 50, 'L' ], [ 40, 'XL' ], [ 10, 'X' ], [ 9, 'IX' ], [ 5, 'V' ], [ 4, 'IV' ], [ 1, 'I' ] ],
+	var orderedPatterns = { &#39;decimal&#39;: /\d+/, &#39;lower-roman&#39;: lowerRomanLiteralRegex, &#39;upper-roman&#39;: upperRomanLiteralRegex, &#39;lower-alpha&#39;: /^[a-z]+$/, &#39;upper-alpha&#39;: /^[A-Z]+$/ },
+		unorderedPatterns = { &#39;disc&#39;: /[l\u00B7\u2002]/, &#39;circle&#39;: /[\u006F\u00D8]/, &#39;square&#39;: /[\u006E\u25C6]/ },
+		listMarkerPatterns = { &#39;ol&#39;: orderedPatterns, &#39;ul&#39;: unorderedPatterns },
+		romans = [ [ 1000, &#39;M&#39; ], [ 900, &#39;CM&#39; ], [ 500, &#39;D&#39; ], [ 400, &#39;CD&#39; ], [ 100, &#39;C&#39; ], [ 90, &#39;XC&#39; ], [ 50, &#39;L&#39; ], [ 40, &#39;XL&#39; ], [ 10, &#39;X&#39; ], [ 9, &#39;IX&#39; ], [ 5, &#39;V&#39; ], [ 4, &#39;IV&#39; ], [ 1, &#39;I&#39; ] ],
 		alpahbets = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;
 
 	// Convert roman numbering back to decimal.
@@ -217,8 +217,8 @@
 		utils: {
 			// Create a &lt;cke:listbullet&gt; which indicate an list item type.
 			createListBulletMarker: function( bullet, bulletText ) {
-				var marker = new CKEDITOR.htmlParser.element( 'cke:listbullet' );
-				marker.attributes = { 'cke:listsymbol': bullet[ 0 ] };
+				var marker = new CKEDITOR.htmlParser.element( &#39;cke:listbullet&#39; );
+				marker.attributes = { &#39;cke:listsymbol&#39;: bullet[ 0 ] };
 				marker.add( new CKEDITOR.htmlParser.text( bulletText ) );
 				return marker;
 			},
@@ -239,18 +239,18 @@
 				var attrs = element.attributes,
 					listMarker;
 
-				if ( ( listMarker = element.removeAnyChildWithName( 'cke:listbullet' ) ) &amp;&amp; listMarker.length &amp;&amp; ( listMarker = listMarker[ 0 ] ) ) {
-					element.name = 'cke:li';
+				if ( ( listMarker = element.removeAnyChildWithName( &#39;cke:listbullet&#39; ) ) &amp;&amp; listMarker.length &amp;&amp; ( listMarker = listMarker[ 0 ] ) ) {
+					element.name = &#39;cke:li&#39;;
 
 					if ( attrs.style ) {
 						attrs.style = plugin.filters.stylesFilter( [
 							// Text-indent is not representing list item level any more.
-							[ 'text-indent' ],
-							[ 'line-height' ],
+							[ &#39;text-indent&#39; ],
+							[ &#39;line-height&#39; ],
 							// First attempt is to resolve indent level from on a constant margin increment.
 							[ ( /^margin(:?-left)?$/ ), null, function( margin ) {
 								// Deal with component/short-hand form.
-								var values = margin.split( ' ' );
+								var values = margin.split( &#39; &#39; );
 								margin = CKEDITOR.tools.convertToPx( values[ 3 ] || values[ 1 ] || values[ 0 ] );
 
 								// Figure out the indent unit by checking the first time of incrementation.
@@ -259,30 +259,30 @@
 
 								previousListItemMargin = margin;
 
-								attrs[ 'cke:indent' ] = listBaseIndent &amp;&amp; ( Math.ceil( margin / listBaseIndent ) + 1 ) || 1;
+								attrs[ &#39;cke:indent&#39; ] = listBaseIndent &amp;&amp; ( Math.ceil( margin / listBaseIndent ) + 1 ) || 1;
 							} ],
 							// The best situation: &quot;mso-list:l0 level1 lfo2&quot; tells the belonged list root, list item indentation, etc.
 							[ ( /^mso-list$/ ), null, function( val ) {
-								val = val.split( ' ' );
+								val = val.split( &#39; &#39; );
 								var listId = Number( val[ 0 ].match( /\d+/ ) ),
 									indent = Number( val[ 1 ].match( /\d+/ ) );
 
 								if ( indent == 1 ) {
-									listId !== previousListId &amp;&amp; ( attrs[ 'cke:reset' ] = 1 );
+									listId !== previousListId &amp;&amp; ( attrs[ &#39;cke:reset&#39; ] = 1 );
 									previousListId = listId;
 								}
-								attrs[ 'cke:indent' ] = indent;
+								attrs[ &#39;cke:indent&#39; ] = indent;
 							} ]
-						] )( attrs.style, element ) || '';
+						] )( attrs.style, element ) || &#39;&#39;;
 					}
 
 					// First level list item might be presented without a margin.
 
 
-					// In case all above doesn't apply.
-					if ( !attrs[ 'cke:indent' ] ) {
+					// In case all above doesn&#39;t apply.
+					if ( !attrs[ &#39;cke:indent&#39; ] ) {
 						previousListItemMargin = 0;
-						attrs[ 'cke:indent' ] = 1;
+						attrs[ &#39;cke:indent&#39; ] = 1;
 					}
 
 					// Inherit attributes from bullet.
@@ -298,7 +298,7 @@
 
 			// Providing a shorthand style then retrieve one or more style component values.
 			getStyleComponents: ( function() {
-				var calculator = CKEDITOR.dom.element.createFromHtml( '&lt;div style=&quot;position:absolute;left:-9999px;top:-9999px;&quot;&gt;&lt;/div&gt;', CKEDITOR.document );
+				var calculator = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div style=&quot;position:absolute;left:-9999px;top:-9999px;&quot;&gt;&lt;/div&gt;&#39;, CKEDITOR.document );
 				CKEDITOR.document.getBody().append( calculator );
 
 				return function( name, styleValue, fetchList ) {
@@ -312,7 +312,7 @@
 				};
 			} )(),
 
-			listDtdParents: CKEDITOR.dtd.parentOf( 'ol' )
+			listDtdParents: CKEDITOR.dtd.parentOf( &#39;ol&#39; )
 		},
 
 		filters: {
@@ -321,18 +321,18 @@
 			// &lt;cke:li cke:listtype=&quot;ul&quot; cke:indent=&quot;1&quot;&gt;level1&lt;/cke:li&gt;
 			// &lt;cke:li cke:listtype=&quot;ol&quot; cke:indent=&quot;2&quot;&gt;level2&lt;/cke:li&gt;
 			flattenList: function( element, level ) {
-				level = typeof level == 'number' ? level : 1;
+				level = typeof level == &#39;number&#39; ? level : 1;
 
 				var attrs = element.attributes,
 					listStyleType;
 
 				// All list items are of the same type.
 				switch ( attrs.type ) {
-					case 'a':
-						listStyleType = 'lower-alpha';
+					case &#39;a&#39;:
+						listStyleType = &#39;lower-alpha&#39;;
 						break;
-					case '1':
-						listStyleType = 'decimal';
+					case &#39;1&#39;:
+						listStyleType = &#39;decimal&#39;;
 						break;
 						// TODO: Support more list style type from MS-Word.
 				}
@@ -353,32 +353,32 @@
 						if ( last.name in CKEDITOR.dtd.$list ) {
 							element.add( last, i + 1 );
 
-							// Remove the parent list item if it's just a holder.
+							// Remove the parent list item if it&#39;s just a holder.
 							if ( !--listItemChildren.length )
 								children.splice( i--, 1 );
 						}
 
-						child.name = 'cke:li';
+						child.name = &#39;cke:li&#39;;
 
 						// Inherit numbering from list root on the first list item.
 						attrs.start &amp;&amp; !i &amp;&amp; ( attributes.value = attrs.start );
 
 						plugin.filters.stylesFilter( [
-							[ 'tab-stops', null, function( val ) {
-								var margin = val.split( ' ' )[ 1 ].match( cssLengthRelativeUnit );
+							[ &#39;tab-stops&#39;, null, function( val ) {
+								var margin = val.split( &#39; &#39; )[ 1 ].match( cssLengthRelativeUnit );
 								margin &amp;&amp; ( previousListItemMargin = CKEDITOR.tools.convertToPx( margin[ 0 ] ) );
 							} ],
-							( level == 1 ? [ 'mso-list', null, function( val ) {
-								val = val.split( ' ' );
+							( level == 1 ? [ &#39;mso-list&#39;, null, function( val ) {
+								val = val.split( &#39; &#39; );
 								var listId = Number( val[ 0 ].match( /\d+/ ) );
-								listId !== previousListId &amp;&amp; ( attributes[ 'cke:reset' ] = 1 );
+								listId !== previousListId &amp;&amp; ( attributes[ &#39;cke:reset&#39; ] = 1 );
 								previousListId = listId;
 							} ] : null )
 						] )( attributes.style );
 
-						attributes[ 'cke:indent' ] = level;
-						attributes[ 'cke:listtype' ] = element.name;
-						attributes[ 'cke:list-style-type' ] = listStyleType;
+						attributes[ &#39;cke:indent&#39; ] = level;
+						attributes[ &#39;cke:listtype&#39; ] = element.name;
+						attributes[ &#39;cke:list-style-type&#39; ] = listStyleType;
 					}
 					// Flatten sub list.
 					else if ( child.name in CKEDITOR.dtd.$list ) {
@@ -395,8 +395,8 @@
 
 				delete element.name;
 
-				// We're loosing tag name here, signalize this element as a list.
-				attrs[ 'cke:list' ] = 1;
+				// We&#39;re loosing tag name here, signalize this element as a list.
+				attrs[ &#39;cke:list&#39; ] = 1;
 			},
 
 			// Try to collect all list items among the children and establish one
@@ -407,7 +407,7 @@
 					child, listItem, // The current processing cke:li element.
 					listItemAttrs, listItemIndent, // Indent level of current list item.
 					lastIndent, lastListItem, // The previous one just been added to the list.
-					list, // Current staging list and it's parent list if any.
+					list, // Current staging list and it&#39;s parent list if any.
 					openedLists = [],
 					previousListStyleType, previousListType;
 
@@ -417,36 +417,36 @@
 				for ( var i = 0; i &lt; children.length; i++ ) {
 					child = children[ i ];
 
-					if ( 'cke:li' == child.name ) {
-						child.name = 'li';
+					if ( &#39;cke:li&#39; == child.name ) {
+						child.name = &#39;li&#39;;
 						listItem = child;
 						listItemAttrs = listItem.attributes;
-						bullet = listItemAttrs[ 'cke:listsymbol' ];
+						bullet = listItemAttrs[ &#39;cke:listsymbol&#39; ];
 						bullet = bullet &amp;&amp; bullet.match( /^(?:[(]?)([^\s]+?)([.)]?)$/ );
 						listType = listStyleType = itemNumeric = null;
 
-						if ( listItemAttrs[ 'cke:ignored' ] ) {
+						if ( listItemAttrs[ &#39;cke:ignored&#39; ] ) {
 							children.splice( i--, 1 );
 							continue;
 						}
 
 
-						// This's from a new list root.
-						listItemAttrs[ 'cke:reset' ] &amp;&amp; ( list = lastIndent = lastListItem = null );
+						// This&#39;s from a new list root.
+						listItemAttrs[ &#39;cke:reset&#39; ] &amp;&amp; ( list = lastIndent = lastListItem = null );
 
 						// List item indent level might come from a real list indentation or
-						// been resolved from a pseudo list item's margin value, even get
+						// been resolved from a pseudo list item&#39;s margin value, even get
 						// no indentation at all.
-						listItemIndent = Number( listItemAttrs[ 'cke:indent' ] );
+						listItemIndent = Number( listItemAttrs[ &#39;cke:indent&#39; ] );
 
-						// We're moving out of the current list, cleaning up.
+						// We&#39;re moving out of the current list, cleaning up.
 						if ( listItemIndent != lastIndent )
 							previousListType = previousListStyleType = null;
 
 						// List type and item style are already resolved.
 						if ( !bullet ) {
-							listType = listItemAttrs[ 'cke:listtype' ] || 'ol';
-							listStyleType = listItemAttrs[ 'cke:list-style-type' ];
+							listType = listItemAttrs[ &#39;cke:listtype&#39; ] || &#39;ol&#39;;
+							listStyleType = listItemAttrs[ &#39;cke:list-style-type&#39; ];
 						} else {
 							// Probably share the same list style type with previous list item,
 							// give it priority to avoid ambiguous between C(Alpha) and C.(Roman).
@@ -459,7 +459,7 @@
 										if ( listMarkerPatterns[ type ][ style ].test( bullet[ 1 ] ) ) {
 											// Small numbering has higher priority, when dealing with ambiguous
 											// between C(Alpha) and C.(Roman).
-											if ( type == 'ol' &amp;&amp; ( /alpha|roman/ ).test( style ) ) {
+											if ( type == &#39;ol&#39; &amp;&amp; ( /alpha|roman/ ).test( style ) ) {
 												var num = /roman/.test( style ) ? fromRoman( bullet[ 1 ] ) : fromAlphabet( bullet[ 1 ] );
 												if ( !itemNumeric || num &lt; itemNumeric ) {
 													itemNumeric = num;
@@ -479,26 +479,26 @@
 							// Simply use decimal/disc for the rest forms of unrepresentable
 							// numerals, e.g. Chinese..., but as long as there a second part
 							// included, it has a bigger chance of being a order list ;)
-							!listType &amp;&amp; ( listType = bullet[ 2 ] ? 'ol' : 'ul' );
+							!listType &amp;&amp; ( listType = bullet[ 2 ] ? &#39;ol&#39; : &#39;ul&#39; );
 						}
 
 						previousListType = listType;
-						previousListStyleType = listStyleType || ( listType == 'ol' ? 'decimal' : 'disc' );
-						if ( listStyleType &amp;&amp; listStyleType != ( listType == 'ol' ? 'decimal' : 'disc' ) )
-							listItem.addStyle( 'list-style-type', listStyleType );
+						previousListStyleType = listStyleType || ( listType == &#39;ol&#39; ? &#39;decimal&#39; : &#39;disc&#39; );
+						if ( listStyleType &amp;&amp; listStyleType != ( listType == &#39;ol&#39; ? &#39;decimal&#39; : &#39;disc&#39; ) )
+							listItem.addStyle( &#39;list-style-type&#39;, listStyleType );
 
 						// Figure out start numbering.
-						if ( listType == 'ol' &amp;&amp; bullet ) {
+						if ( listType == &#39;ol&#39; &amp;&amp; bullet ) {
 							switch ( listStyleType ) {
-								case 'decimal':
+								case &#39;decimal&#39;:
 									itemNumeric = Number( bullet[ 1 ] );
 									break;
-								case 'lower-roman':
-								case 'upper-roman':
+								case &#39;lower-roman&#39;:
+								case &#39;upper-roman&#39;:
 									itemNumeric = fromRoman( bullet[ 1 ] );
 									break;
-								case 'lower-alpha':
-								case 'upper-alpha':
+								case &#39;lower-alpha&#39;:
+								case &#39;upper-alpha&#39;:
 									itemNumeric = fromAlphabet( bullet[ 1 ] );
 									break;
 							}
@@ -548,7 +548,7 @@
 				return false;
 			},
 
-			// A filter dedicated on the 'style' attribute filtering, e.g. dropping/replacing style properties.
+			// A filter dedicated on the &#39;style&#39; attribute filtering, e.g. dropping/replacing style properties.
 			// @param styles {Array} in form of [ styleNameRegexp, styleValueRegexp,
 			// newStyleValue/newStyleGenerator, newStyleName ] where only the first
 			// parameter is mandatory.
@@ -556,12 +556,12 @@
 			stylesFilter: function( styles, whitelist ) {
 				return function( styleText, element ) {
 					var rules = [];
-					// html-encoded quote might be introduced by 'font-family'
+					// html-encoded quote might be introduced by &#39;font-family&#39;
 					// from MS-Word which confused the following regexp. e.g.
-					//'font-family: &amp;quot;Lucida, Console&amp;quot;'
-					( styleText || '' ).replace( /&amp;quot;/g, '&quot;' ).replace( /\s*([^ :;]+)\s*:\s*([^;]+)\s*(?=;|$)/g, function( match, name, value ) {
+					//&#39;font-family: &amp;quot;Lucida, Console&amp;quot;&#39;
+					( styleText || &#39;&#39; ).replace( /&amp;quot;/g, &#39;&quot;&#39; ).replace( /\s*([^ :;]+)\s*:\s*([^;]+)\s*(?=;|$)/g, function( match, name, value ) {
 						name = name.toLowerCase();
-						name == 'font-family' &amp;&amp; ( value = value.replace( /[&quot;']/g, '' ) );
+						name == &#39;font-family&#39; &amp;&amp; ( value = value.replace( /[&quot;&#39;]/g, &#39;&#39; ) );
 
 						var namePattern, valuePattern, newValue, newName;
 						for ( var i = 0; i &lt; styles.length; i++ ) {
@@ -575,7 +575,7 @@
 									name = newName || name;
 									whitelist &amp;&amp; ( newValue = newValue || value );
 
-									if ( typeof newValue == 'function' )
+									if ( typeof newValue == &#39;function&#39; )
 										newValue = newValue( value, element, name );
 
 									// Return an couple indicate both name and value
@@ -583,7 +583,7 @@
 									if ( newValue &amp;&amp; newValue.push )
 										name = newValue[ 0 ], newValue = newValue[ 1 ];
 
-									if ( typeof newValue == 'string' )
+									if ( typeof newValue == &#39;string&#39; )
 										rules.push( [ name, newValue ] );
 									return;
 								}
@@ -595,8 +595,8 @@
 					} );
 
 					for ( var i = 0; i &lt; rules.length; i++ )
-						rules[ i ] = rules[ i ].join( ':' );
-					return rules.length ? ( rules.join( ';' ) + ';' ) : false;
+						rules[ i ] = rules[ i ].join( &#39;:&#39; );
+					return rules.length ? ( rules.join( &#39;;&#39; ) + &#39;;&#39; ) : false;
 				};
 			},
 
@@ -628,10 +628,10 @@
 					styleElement.children = element.children;
 					element.children = [ styleElement ];
 
-					// #10285 - later on styleElement will replace element if element won't have any attributes.
+					// #10285 - later on styleElement will replace element if element won&#39;t have any attributes.
 					// However, in some cases styleElement is identical to element and therefore should not be filtered
 					// to avoid inf loop. Unfortunately calling element.filterChildren() does not prevent from that (#10327).
-					// However, we can assume that we don't need to filter styleElement at all, so it is safe to replace
+					// However, we can assume that we don&#39;t need to filter styleElement at all, so it is safe to replace
 					// its filter method.
 					styleElement.filter = function() {};
 					styleElement.parent = element;
@@ -643,7 +643,7 @@
 			// @param value
 			// @param element
 			bogusAttrFilter: function( value, element ) {
-				if ( element.name.indexOf( 'cke:' ) == -1 )
+				if ( element.name.indexOf( &#39;cke:&#39; ) == -1 )
 					return false;
 			},
 
@@ -670,7 +670,7 @@
 				resolveListItem = this.utils.resolveList,
 				convertToPx = function( value ) {
 					value = CKEDITOR.tools.convertToPx( value );
-					return isNaN( value ) ? value : value + 'px';
+					return isNaN( value ) ? value : value + &#39;px&#39;;
 				},
 				getStyleComponents = this.utils.getStyleComponents,
 				listDtdParents = this.utils.listDtdParents,
@@ -681,7 +681,7 @@
 
 				elementNames: [
 					// Remove script, meta and link elements.
-					[ ( /meta|link|script/ ), '' ]
+					[ ( /meta|link|script/ ), &#39;&#39; ]
 				],
 
 				root: function( element ) {
@@ -690,7 +690,7 @@
 				},
 
 				elements: {
-					'^': function( element ) {
+					&#39;^&#39;: function( element ) {
 						// Transform CSS style declaration to inline style.
 						var applyStyleFilter;
 						if ( CKEDITOR.env.gecko &amp;&amp; ( applyStyleFilter = filters.applyStyleFilter ) )
@@ -698,13 +698,13 @@
 					},
 
 					$: function( element ) {
-						var tagName = element.name || '',
+						var tagName = element.name || &#39;&#39;,
 							attrs = element.attributes;
 
 						// Convert length unit of width/height on blocks to
 						// a more editor-friendly way (px).
 						if ( tagName in blockLike &amp;&amp; attrs.style )
-							attrs.style = stylesFilter( [ [ ( /^(:?width|height)$/ ), null, convertToPx ] ] )( attrs.style ) || '';
+							attrs.style = stylesFilter( [ [ ( /^(:?width|height)$/ ), null, convertToPx ] ] )( attrs.style ) || &#39;&#39;;
 
 						// Processing headings.
 						if ( tagName.match( /h\d/ ) ) {
@@ -713,8 +713,8 @@
 							if ( resolveListItem( element ) )
 								return;
 
-							// Adapt heading styles to editor's convention.
-							elementMigrateFilter( config[ 'format_' + tagName ] )( element );
+							// Adapt heading styles to editor&#39;s convention.
+							elementMigrateFilter( config[ &#39;format_&#39; + tagName ] )( element );
 						}
 						// Remove inline elements which contain only empty spaces.
 						else if ( tagName in dtd.$inline ) {
@@ -723,16 +723,16 @@
 								delete element.name;
 						}
 						// Remove element with ms-office namespace,
-						// with it's content preserved, e.g. 'o:p'.
-						else if ( tagName.indexOf( ':' ) != -1 &amp;&amp; tagName.indexOf( 'cke' ) == -1 ) {
+						// with it&#39;s content preserved, e.g. &#39;o:p&#39;.
+						else if ( tagName.indexOf( &#39;:&#39; ) != -1 &amp;&amp; tagName.indexOf( &#39;cke&#39; ) == -1 ) {
 							element.filterChildren( filter );
 
 							// Restore image real link from vml.
-							if ( tagName == 'v:imagedata' ) {
-								var href = element.attributes[ 'o:href' ];
+							if ( tagName == &#39;v:imagedata&#39; ) {
+								var href = element.attributes[ &#39;o:href&#39; ];
 								if ( href )
 									element.attributes.src = href;
-								element.name = 'img';
+								element.name = &#39;img&#39;;
 								return;
 							}
 							delete element.name;
@@ -745,10 +745,10 @@
 						}
 					},
 
-					// We'll drop any style sheet, but Firefox conclude
+					// We&#39;ll drop any style sheet, but Firefox conclude
 					// certain styles in a single style element, which are
 					// required to be changed into inline ones.
-					'style': function( element ) {
+					&#39;style&#39;: function( element ) {
 						if ( CKEDITOR.env.gecko ) {
 							// Grab only the style definition section.
 							var styleDefSection = element.onlyChild().value.match( /\/\* Style Definitions \*\/([\s\S]*?)\/\*/ ),
@@ -758,17 +758,17 @@
 							if ( styleDefText ) {
 								styleDefText
 								// Remove line-breaks.
-								.replace( /[\n\r]/g, '' )
+								.replace( /[\n\r]/g, &#39;&#39; )
 								// Extract selectors and style properties.
 								.replace( /(.+?)\{(.+?)\}/g, function( rule, selectors, styleBlock ) {
-									selectors = selectors.split( ',' );
+									selectors = selectors.split( &#39;,&#39; );
 									var length = selectors.length,
 										selector;
 									for ( var i = 0; i &lt; length; i++ ) {
 										// Assume MS-Word mostly generate only simple
 										// selector( [Type selector][Class selector]).
 										CKEDITOR.tools.trim( selectors[ i ] ).replace( /^(\w+)(\.[\w-]+)?$/g, function( match, tagName, className ) {
-											tagName = tagName || '*';
+											tagName = tagName || &#39;*&#39;;
 											className = className.substring( 1, className.length );
 
 											// Reject MS-Word Normal styles.
@@ -786,12 +786,12 @@
 								} );
 
 								filters.applyStyleFilter = function( element ) {
-									var name = rules[ '*' ] ? '*' : element.name,
-										className = element.attributes &amp;&amp; element.attributes[ 'class' ],
+									var name = rules[ &#39;*&#39; ] ? &#39;*&#39; : element.name,
+										className = element.attributes &amp;&amp; element.attributes[ &#39;class&#39; ],
 										style;
 									if ( name in rules ) {
 										style = rules[ name ];
-										if ( typeof style == 'object' )
+										if ( typeof style == &#39;object&#39; )
 											style = style[ className ];
 										// Maintain style rules priorities.
 										style &amp;&amp; element.addStyle( style, true );
@@ -802,19 +802,19 @@
 						return false;
 					},
 
-					'p': function( element ) {
+					&#39;p&#39;: function( element ) {
 						// A a fall-back approach to resolve list item in browsers
-						// that doesn't include &quot;mso-list:Ignore&quot; on list bullets,
-						// note it's not perfect as not all list style (e.g. &quot;heading list&quot;) is shipped
+						// that doesn&#39;t include &quot;mso-list:Ignore&quot; on list bullets,
+						// note it&#39;s not perfect as not all list style (e.g. &quot;heading list&quot;) is shipped
 						// with this pattern. (#6662)
-						if ( ( /MsoListParagraph/i ).exec( element.attributes[ 'class' ] ) || element.getStyle( 'mso-list' ) ) {
+						if ( ( /MsoListParagraph/i ).exec( element.attributes[ &#39;class&#39; ] ) || element.getStyle( &#39;mso-list&#39; ) ) {
 							var bulletText = element.firstChild( function( node ) {
 								return node.type == CKEDITOR.NODE_TEXT &amp;&amp; !containsNothingButSpaces( node.parent );
 							} );
 
 							var bullet = bulletText &amp;&amp; bulletText.parent;
 							if ( bullet )
-								bullet.addStyle( 'mso-list', 'Ignore' );
+								bullet.addStyle( &#39;mso-list&#39;, &#39;Ignore&#39; );
 
 						}
 
@@ -824,46 +824,46 @@
 						if ( resolveListItem( element ) )
 							return;
 
-						// Adapt paragraph formatting to editor's convention
+						// Adapt paragraph formatting to editor&#39;s convention
 						// according to enter-mode.
 						if ( config.enterMode == CKEDITOR.ENTER_BR ) {
 							// We suffer from attribute/style lost in this situation.
 							delete element.name;
-							element.add( new CKEDITOR.htmlParser.element( 'br' ) );
+							element.add( new CKEDITOR.htmlParser.element( &#39;br&#39; ) );
 						} else
-							elementMigrateFilter( config[ 'format_' + ( config.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) ] )( element );
+							elementMigrateFilter( config[ &#39;format_&#39; + ( config.enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) ] )( element );
 					},
 
-					'div': function( element ) {
+					&#39;div&#39;: function( element ) {
 						// Aligned table with no text surrounded is represented by a wrapper div, from which
 						// table cells inherit as text-align styles, which is wrong.
 						// Instead we use a clear-float div after the table to properly achieve the same layout.
 						var singleChild = element.onlyChild();
-						if ( singleChild &amp;&amp; singleChild.name == 'table' ) {
+						if ( singleChild &amp;&amp; singleChild.name == &#39;table&#39; ) {
 							var attrs = element.attributes;
 							singleChild.attributes = CKEDITOR.tools.extend( singleChild.attributes, attrs );
 							attrs.style &amp;&amp; singleChild.addStyle( attrs.style );
 
-							var clearFloatDiv = new CKEDITOR.htmlParser.element( 'div' );
-							clearFloatDiv.addStyle( 'clear', 'both' );
+							var clearFloatDiv = new CKEDITOR.htmlParser.element( &#39;div&#39; );
+							clearFloatDiv.addStyle( &#39;clear&#39;, &#39;both&#39; );
 							element.add( clearFloatDiv );
 							delete element.name;
 						}
 					},
 
-					'td': function( element ) {
-						// 'td' in 'thead' is actually &lt;th&gt;.
-						if ( element.getAncestor( 'thead' ) )
-							element.name = 'th';
+					&#39;td&#39;: function( element ) {
+						// &#39;td&#39; in &#39;thead&#39; is actually &lt;th&gt;.
+						if ( element.getAncestor( &#39;thead&#39; ) )
+							element.name = &#39;th&#39;;
 					},
 
 					// MS-Word sometimes present list as a mixing of normal list
 					// and pseudo-list, normalize the previous ones into pseudo form.
-					'ol': flattenList,
-					'ul': flattenList,
-					'dl': flattenList,
+					&#39;ol&#39;: flattenList,
+					&#39;ul&#39;: flattenList,
+					&#39;dl&#39;: flattenList,
 
-					'font': function( element ) {
+					&#39;font&#39;: function( element ) {
 						// Drop the font tag if it comes from list bullet text.
 						if ( isListBulletIndicator( element.parent ) ) {
 							delete element.name;
@@ -876,7 +876,7 @@
 							styleText = attrs.style,
 							parent = element.parent;
 
-						if ( 'font' == parent.name ) // Merge nested &lt;font&gt; tags.
+						if ( &#39;font&#39; == parent.name ) // Merge nested &lt;font&gt; tags.
 						{
 							CKEDITOR.tools.extend( parent.attributes, element.attributes );
 							styleText &amp;&amp; parent.addStyle( styleText );
@@ -884,30 +884,30 @@
 						}
 						// Convert the merged into a span with all attributes preserved.
 						else {
-							styleText = styleText || '';
-							// IE's having those deprecated attributes, normalize them.
+							styleText = styleText || &#39;&#39;;
+							// IE&#39;s having those deprecated attributes, normalize them.
 							if ( attrs.color ) {
-								attrs.color != '#000000' &amp;&amp; ( styleText += 'color:' + attrs.color + ';' );
+								attrs.color != &#39;#000000&#39; &amp;&amp; ( styleText += &#39;color:&#39; + attrs.color + &#39;;&#39; );
 								delete attrs.color;
 							}
 							if ( attrs.face ) {
-								styleText += 'font-family:' + attrs.face + ';';
+								styleText += &#39;font-family:&#39; + attrs.face + &#39;;&#39;;
 								delete attrs.face;
 							}
 							// TODO: Mapping size in ranges of xx-small,
 							// x-small, small, medium, large, x-large, xx-large.
 							if ( attrs.size ) {
-								styleText += 'font-size:' +
-									( attrs.size &gt; 3 ? 'large' : ( attrs.size &lt; 3 ? 'small' : 'medium' ) ) + ';';
+								styleText += &#39;font-size:&#39; +
+									( attrs.size &gt; 3 ? &#39;large&#39; : ( attrs.size &lt; 3 ? &#39;small&#39; : &#39;medium&#39; ) ) + &#39;;&#39;;
 								delete attrs.size;
 							}
 
-							element.name = 'span';
+							element.name = &#39;span&#39;;
 							element.addStyle( styleText );
 						}
 					},
 
-					'span': function( element ) {
+					&#39;span&#39;: function( element ) {
 						// Remove the span if it comes from list bullet text.
 						if ( isListBulletIndicator( element.parent ) )
 							return false;
@@ -919,22 +919,22 @@
 						}
 
 						// List item bullet type is supposed to be indicated by
-						// the text of a span with style 'mso-list : Ignore' or an image.
+						// the text of a span with style &#39;mso-list : Ignore&#39; or an image.
 						if ( isListBulletIndicator( element ) ) {
 							var listSymbolNode = element.firstChild( function( node ) {
-								return node.value || node.name == 'img';
+								return node.value || node.name == &#39;img&#39;;
 							} );
 
-							var listSymbol = listSymbolNode &amp;&amp; ( listSymbolNode.value || 'l.' ),
+							var listSymbol = listSymbolNode &amp;&amp; ( listSymbolNode.value || &#39;l.&#39; ),
 								listType = listSymbol &amp;&amp; listSymbol.match( /^(?:[(]?)([^\s]+?)([.)]?)$/ );
 
 							if ( listType ) {
 								var marker = createListBulletMarker( listType, listSymbol );
 								// Some non-existed list items might be carried by an inconsequential list, indicate by &quot;mso-hide:all/display:none&quot;,
 								// those are to be removed later, now mark it with &quot;cke:ignored&quot;.
-								var ancestor = element.getAncestor( 'span' );
+								var ancestor = element.getAncestor( &#39;span&#39; );
 								if ( ancestor &amp;&amp; ( / mso-hide:\s*all|display:\s*none / ).test( ancestor.attributes.style ) )
-									marker.attributes[ 'cke:ignored' ] = 1;
+									marker.attributes[ &#39;cke:ignored&#39; ] = 1;
 								return marker;
 							}
 						}
@@ -946,16 +946,16 @@
 							firstChild = children &amp;&amp; children[ 0 ];
 
 						// Assume MS-Word mostly carry font related styles on &lt;span&gt;,
-						// adapting them to editor's convention.
+						// adapting them to editor&#39;s convention.
 						if ( styleText ) {
 							attrs.style = stylesFilter( [
-								// Drop 'inline-height' style which make lines overlapping.
-								[ 'line-height' ],
-								[ ( /^font-family$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ 'font_style' ], 'family' ) : null ],
-								[ ( /^font-size$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ 'fontSize_style' ], 'size' ) : null ],
-								[ ( /^color$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ 'colorButton_foreStyle' ], 'color' ) : null ],
-								[ ( /^background-color$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ 'colorButton_backStyle' ], 'color' ) : null ]
-								] )( styleText, element ) || '';
+								// Drop &#39;inline-height&#39; style which make lines overlapping.
+								[ &#39;line-height&#39; ],
+								[ ( /^font-family$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ &#39;font_style&#39; ], &#39;family&#39; ) : null ],
+								[ ( /^font-size$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ &#39;fontSize_style&#39; ], &#39;size&#39; ) : null ],
+								[ ( /^color$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ &#39;colorButton_foreStyle&#39; ], &#39;color&#39; ) : null ],
+								[ ( /^background-color$/ ), null, !removeFontStyles ? styleMigrateFilter( config[ &#39;colorButton_backStyle&#39; ], &#39;color&#39; ) : null ]
+								] )( styleText, element ) || &#39;&#39;;
 						}
 
 						if ( !attrs.style )
@@ -968,21 +968,21 @@
 					},
 
 					// Migrate basic style formats to editor configured ones.
-					b: elementMigrateFilter( config[ 'coreStyles_bold' ] ),
-					i: elementMigrateFilter( config[ 'coreStyles_italic' ] ),
-					u: elementMigrateFilter( config[ 'coreStyles_underline' ] ),
-					s: elementMigrateFilter( config[ 'coreStyles_strike' ] ),
-					sup: elementMigrateFilter( config[ 'coreStyles_superscript' ] ),
-					sub: elementMigrateFilter( config[ 'coreStyles_subscript' ] ),
+					b: elementMigrateFilter( config[ &#39;coreStyles_bold&#39; ] ),
+					i: elementMigrateFilter( config[ &#39;coreStyles_italic&#39; ] ),
+					u: elementMigrateFilter( config[ &#39;coreStyles_underline&#39; ] ),
+					s: elementMigrateFilter( config[ &#39;coreStyles_strike&#39; ] ),
+					sup: elementMigrateFilter( config[ &#39;coreStyles_superscript&#39; ] ),
+					sub: elementMigrateFilter( config[ &#39;coreStyles_subscript&#39; ] ),
 
 					// Remove full paths from links to anchors.
 					a: function( element ) {
 						var attrs = element.attributes;
 						if ( attrs.href &amp;&amp; attrs.href.match( /^file:\/\/\/[\S]+#/i ) )
-							attrs.href = attrs.href.replace( /^file:\/\/\/[^#]+/i, '' );
+							attrs.href = attrs.href.replace( /^file:\/\/\/[^#]+/i, &#39;&#39; );
 					},
 
-					'cke:listbullet': function( element ) {
+					&#39;cke:listbullet&#39;: function( element ) {
 						if ( element.getAncestor( /h\d/ ) &amp;&amp; !config.pasteFromWordNumberedHeadingToList )
 							delete element.name;
 					}
@@ -990,17 +990,17 @@
 
 				attributeNames: [
 					// Remove onmouseover and onmouseout events (from MS Word comments effect)
-					[ ( /^onmouse(:?out|over)/ ), '' ],
+					[ ( /^onmouse(:?out|over)/ ), &#39;&#39; ],
 					// Onload on image element.
-					[ ( /^onload$/ ), '' ],
+					[ ( /^onload$/ ), &#39;&#39; ],
 					// Remove office and vml attribute from elements.
-					[ ( /(?:v|o):\w+/ ), '' ],
+					[ ( /(?:v|o):\w+/ ), &#39;&#39; ],
 					// Remove lang/language attributes.
-					[ ( /^lang/ ), '' ]
+					[ ( /^lang/ ), &#39;&#39; ]
 				],
 
 				attributes: {
-					'style': stylesFilter( removeStyles ?
+					&#39;style&#39;: stylesFilter( removeStyles ?
 					// Provide a white-list of styles that we preserve, those should
 					// be the ones that could later be altered with editor tools.
 					[
@@ -1010,10 +1010,10 @@
 						// Preserve margin-left/right which used as default indent style in the editor.
 						[ ( /^margin$|^margin-(?!bottom|top)/ ), null, function( value, element, name ) {
 							if ( element.name in { p: 1, div: 1 } ) {
-								var indentStyleName = config.contentsLangDirection == 'ltr' ? 'margin-left' : 'margin-right';
+								var indentStyleName = config.contentsLangDirection == &#39;ltr&#39; ? &#39;margin-left&#39; : &#39;margin-right&#39;;
 
-								// Extract component value from 'margin' shorthand.
-								if ( name == 'margin' )
+								// Extract component value from &#39;margin&#39; shorthand.
+								if ( name == &#39;margin&#39; )
 									value = getStyleComponents( name, value, [ indentStyleName ] )[ indentStyleName ];
 								else if ( name != indentStyleName )
 									return null;
@@ -1029,7 +1029,7 @@
 						[ ( /^clear$/ ) ],
 
 						[ ( /^border.*|margin.*|vertical-align|float$/ ), null, function( value, element ) {
-							if ( element.name == 'img' )
+							if ( element.name == &#39;img&#39; )
 								return value;
 						} ],
 
@@ -1043,27 +1043,27 @@
 						[ ( /^mso-/ ) ],
 						// Fixing color values.
 						[ ( /-color$/ ), null, function( value ) {
-							if ( value == 'transparent' )
+							if ( value == &#39;transparent&#39; )
 								return false;
 							if ( CKEDITOR.env.gecko )
-								return value.replace( /-moz-use-text-color/g, 'transparent' );
+								return value.replace( /-moz-use-text-color/g, &#39;transparent&#39; );
 						} ],
 						// Remove empty margin values, e.g. 0.00001pt 0em 0pt
 						[ ( /^margin$/ ), emptyMarginRegex ],
-						[ 'text-indent', '0cm' ],
-						[ 'page-break-before' ],
-						[ 'tab-stops' ],
-						[ 'display', 'none' ],
+						[ &#39;text-indent&#39;, &#39;0cm&#39; ],
+						[ &#39;page-break-before&#39; ],
+						[ &#39;tab-stops&#39; ],
+						[ &#39;display&#39;, &#39;none&#39; ],
 						removeFontStyles ? [ ( /font-?/ ) ] : null
 					], removeStyles ),
 
-					// Prefer width styles over 'width' attributes.
-					'width': function( value, element ) {
+					// Prefer width styles over &#39;width&#39; attributes.
+					&#39;width&#39;: function( value, element ) {
 						if ( element.name in dtd.$tableContent )
 							return false;
 					},
-					// Prefer border styles over table 'border' attributes.
-					'border': function( value, element ) {
+					// Prefer border styles over table &#39;border&#39; attributes.
+					&#39;border&#39;: function( value, element ) {
 						if ( element.name in dtd.$tableContent )
 							return false;
 					},
@@ -1071,15 +1071,15 @@
 					// Only Firefox carry style sheet from MS-Word, which
 					// will be applied by us manually. For other browsers
 					// the css className is useless.
-					'class': falsyFilter,
+					&#39;class&#39;: falsyFilter,
 
-					// MS-Word always generate 'background-color' along with 'bgcolor',
+					// MS-Word always generate &#39;background-color&#39; along with &#39;bgcolor&#39;,
 					// simply drop the deprecated attributes.
-					'bgcolor': falsyFilter,
+					&#39;bgcolor&#39;: falsyFilter,
 
-					// Deprecate 'valign' attribute in favor of 'vertical-align'.
-					'valign': removeStyles ? falsyFilter : function( value, element ) {
-						element.addStyle( 'vertical-align', value );
+					// Deprecate &#39;valign&#39; attribute in favor of &#39;vertical-align&#39;.
+					&#39;valign&#39;: removeStyles ? falsyFilter : function( value, element ) {
+						element.addStyle( &#39;vertical-align&#39;, value );
 						return false;
 					}
 				},
@@ -1094,7 +1094,7 @@
 					// Seek for list bullet indicator.
 					if ( listInfo ) {
 						// Bullet symbol could be either text or an image.
-						var listSymbol = listInfo[ 1 ] || ( imageInfo &amp;&amp; 'l.' ),
+						var listSymbol = listInfo[ 1 ] || ( imageInfo &amp;&amp; &#39;l.&#39; ),
 							listType = listSymbol &amp;&amp; listSymbol.match( /&gt;(?:[(]?)([^\s]+?)([.)]?)&lt;/ );
 						return createListBulletMarker( listType, listSymbol );
 					}
@@ -1104,10 +1104,10 @@
 						var img = CKEDITOR.htmlParser.fragment.fromHtml( imageInfo[ 0 ] ).children[ 0 ],
 							previousComment = node.previous,
 							// Try to dig the real image link from vml markup from previous comment text.
-							imgSrcInfo = previousComment &amp;&amp; previousComment.value.match( /&lt;v:imagedata[^&gt;]*o:href=['&quot;](.*?)['&quot;]/ ),
+							imgSrcInfo = previousComment &amp;&amp; previousComment.value.match( /&lt;v:imagedata[^&gt;]*o:href=[&#39;&quot;](.*?)[&#39;&quot;]/ ),
 							imgSrc = imgSrcInfo &amp;&amp; imgSrcInfo[ 1 ];
 
-						// Is there a real 'src' url to be used?
+						// Is there a real &#39;src&#39; url to be used?
 						imgSrc &amp;&amp; ( img.attributes.src = imgSrc );
 						return img;
 					}
@@ -1138,13 +1138,13 @@
 		// comments, fixing them first( convert it to upperlevel-revealed one ).
 		// e.g. &lt;![if !vml]&gt;...&lt;![endif]&gt;
 		if ( CKEDITOR.env.gecko )
-			data = data.replace( /(&lt;!--\[if[^&lt;]*?\])--&gt;([\S\s]*?)&lt;!--(\[endif\]--&gt;)/gi, '$1$2$3' );
+			data = data.replace( /(&lt;!--\[if[^&lt;]*?\])--&gt;([\S\s]*?)&lt;!--(\[endif\]--&gt;)/gi, &#39;$1$2$3&#39; );
 
-		// #9456 - Webkit doesn't wrap list number with span, which is crucial for filter to recognize list.
+		// #9456 - Webkit doesn&#39;t wrap list number with span, which is crucial for filter to recognize list.
 		//
 		//		&lt;p class=&quot;MsoListParagraphCxSpLast&quot; style=&quot;text-indent:-18.0pt;mso-list:l0 level1 lfo2&quot;&gt;
 		//			&lt;!--[if !supportLists]--&gt;
-		//			3.&lt;span style=&quot;font-size: 7pt; line-height: normal; font-family: 'Times New Roman';&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;
+		//			3.&lt;span style=&quot;font-size: 7pt; line-height: normal; font-family: &#39;Times New Roman&#39;;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;
 		//			&lt;!--[endif]--&gt;Test3&lt;o:p&gt;&lt;/o:p&gt;
 		//		&lt;/p&gt;
 		//
@@ -1153,12 +1153,12 @@
 		//		&lt;p class=&quot;MsoListParagraphCxSpLast&quot; style=&quot;text-indent:-18.0pt;mso-list:l0 level1 lfo2&quot;&gt;
 		//			&lt;!--[if !supportLists]--&gt;
 		//			&lt;span&gt;
-		//				3.&lt;span style=&quot;font-size: 7pt; line-height: normal; font-family: 'Times New Roman';&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;
+		//				3.&lt;span style=&quot;font-size: 7pt; line-height: normal; font-family: &#39;Times New Roman&#39;;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;
 		//			&lt;/span&gt;
 		//			&lt;!--[endif]--&gt;Test3&lt;o:p&gt;&lt;/o:p&gt;
 		//		&lt;/p&gt;
 		if ( CKEDITOR.env.webkit )
-			data = data.replace( /(class=&quot;MsoListParagraph[^&gt;]+&gt;&lt;!--\[if !supportLists\]--&gt;)([^&lt;]+&lt;span[^&lt;]+&lt;\/span&gt;)(&lt;!--\[endif\]--&gt;)/gi, '$1&lt;span&gt;$2&lt;/span&gt;$3' );
+			data = data.replace( /(class=&quot;MsoListParagraph[^&gt;]+&gt;&lt;!--\[if !supportLists\]--&gt;)([^&lt;]+&lt;span[^&lt;]+&lt;\/span&gt;)(&lt;!--\[endif\]--&gt;)/gi, &#39;$1&lt;span&gt;$2&lt;/span&gt;$3&#39; );
 
 		var dataProcessor = new pasteProcessor(),
 			dataFilter = dataProcessor.dataFilter;
@@ -1167,7 +1167,7 @@
 		dataFilter.addRules( CKEDITOR.plugins.pastefromword.getRules( editor, dataFilter ) );
 
 		// Allow extending data filter rules.
-		editor.fire( 'beforeCleanWord', { filter: dataFilter } );
+		editor.fire( &#39;beforeCleanWord&#39;, { filter: dataFilter } );
 
 		try {
 			data = dataProcessor.toHtml( data );
@@ -1177,14 +1177,14 @@
 
 		// Below post processing those things that are unable to delivered by filter rules.
 
-		// Remove 'cke' namespaced attribute used in filter rules as marker.
-		data = data.replace( /cke:.*?&quot;.*?&quot;/g, '' );
+		// Remove &#39;cke&#39; namespaced attribute used in filter rules as marker.
+		data = data.replace( /cke:.*?&quot;.*?&quot;/g, &#39;&#39; );
 
 		// Remove empty style attribute.
-		data = data.replace( /style=&quot;&quot;/g, '' );
+		data = data.replace( /style=&quot;&quot;/g, &#39;&#39; );
 
 		// Remove the dummy spans ( having no inline style ).
-		data = data.replace( /&lt;span&gt;/g, '' );
+		data = data.replace( /&lt;span&gt;/g, &#39;&#39; );
 
 		return data;
 	};
@@ -1215,8 +1215,8 @@
  */
 
 <span id='CKEDITOR-config-cfg-pasteFromWordRemoveStyles'>/**
-</span> * Whether to remove element styles that can't be managed with the editor. Note
- * that this doesn't handle the font specific styles, which depends on the
+</span> * Whether to remove element styles that can&#39;t be managed with the editor. Note
+ * that this doesn&#39;t handle the font specific styles, which depends on the
  * {@link #pasteFromWordRemoveFontStyles} setting instead.
  *
  *		config.pasteFromWordRemoveStyles = false;

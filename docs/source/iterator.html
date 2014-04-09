@@ -25,7 +25,7 @@
  * File overview: DOM iterator, which iterates over list items, lines and paragraphs.
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
 <span id='CKEDITOR-dom-iterator-method-constructor'><span id='CKEDITOR-dom-iterator'>	/**
@@ -77,7 +77,7 @@
 	}
 
 <span id='CKEDITOR-dom-iterator-property-filter'>	/**
-</span>	 * Default iterator's filter. It is set only for nested iterators.
+</span>	 * Default iterator&#39;s filter. It is set only for nested iterators.
 	 *
 	 * @since 4.3
 	 * @readonly
@@ -85,7 +85,7 @@
 	 */
 
 <span id='CKEDITOR-dom-iterator-property-activeFilter'>	/**
-</span>	 * Iterator's active filter. It is set by the {@link #getNextParagraph} method
+</span>	 * Iterator&#39;s active filter. It is set by the {@link #getNextParagraph} method
 	 * when it enters nested editable.
 	 *
 	 * @since 4.3
@@ -113,7 +113,7 @@
 <span id='CKEDITOR-dom-iterator-method-getNextParagraph'>		/**
 </span>		 * Returns next paragraph-like element or `null` if reached the end of range.
 		 *
-		 * @param {String} [blockTag='p'] Name of a block element which will be established by
+		 * @param {String} [blockTag=&#39;p&#39;] Name of a block element which will be established by
 		 * iterator in block-less elements (see {@link #enforceRealBlocks}).
 		 */
 		getNextParagraph: function( blockTag ) {
@@ -129,9 +129,9 @@
 			// Instructs to cleanup remaining BRs.
 			var removePreviousBr, removeLastBr;
 
-			blockTag = blockTag || 'p';
+			blockTag = blockTag || &#39;p&#39;;
 
-			// We're iterating over nested editable.
+			// We&#39;re iterating over nested editable.
 			if ( this._.nestedEditable ) {
 				// Get next block from nested iterator and returns it if was found.
 				block = this._.nestedEditable.iterator.getNextParagraph( blockTag );
@@ -142,7 +142,7 @@
 				}
 
 				// No block in nested iterator means that we reached the end of the nested editable.
-				// Reset the active filter to the default filter (or undefined if this iterator didn't have it).
+				// Reset the active filter to the default filter (or undefined if this iterator didn&#39;t have it).
 				this.activeFilter = this.filter;
 
 				// Try to find next nested editable or get back to parent (this) iterator.
@@ -158,7 +158,7 @@
 			if ( !this.range.root.getDtd()[ blockTag ] )
 				return null;
 
-			// This is the first iteration. Let's initialize it.
+			// This is the first iteration. Let&#39;s initialize it.
 			if ( !this._.started )
 				range = startIterator.call( this );
 
@@ -170,24 +170,24 @@
 				// closeRange indicates that a paragraph boundary has been found,
 				// so the range can be closed.
 				var closeRange = 0,
-					parentPre = currentNode.hasAscendant( 'pre' );
+					parentPre = currentNode.hasAscendant( &#39;pre&#39; );
 
 				// includeNode indicates that the current node is good to be part
 				// of the range. By default, any non-element node is ok for it.
 				var includeNode = ( currentNode.type != CKEDITOR.NODE_ELEMENT ),
 					continueFromSibling = 0;
 
-				// If it is an element node, let's check if it can be part of the range.
+				// If it is an element node, let&#39;s check if it can be part of the range.
 				if ( !includeNode ) {
 					var nodeName = currentNode.getName();
 
 					// Non-editable block was found - return it and move to processing
 					// its nested editables if they exist.
-					if ( CKEDITOR.dtd.$block[ nodeName ] &amp;&amp; currentNode.getAttribute( 'contenteditable' ) == 'false' ) {
+					if ( CKEDITOR.dtd.$block[ nodeName ] &amp;&amp; currentNode.getAttribute( &#39;contenteditable&#39; ) == &#39;false&#39; ) {
 						block = currentNode;
 
 						// Setup iterator for first of nested editables.
-						// If there's no editable, then algorithm will move to next element after current block.
+						// If there&#39;s no editable, then algorithm will move to next element after current block.
 						startNestedEditableIterator( this, blockTag, block );
 
 						// Gets us straight to the end of getParagraph() because block variable is set.
@@ -195,10 +195,10 @@
 					} else if ( currentNode.isBlockBoundary( this.forceBrBreak &amp;&amp; !parentPre &amp;&amp; { br: 1 } ) ) {
 						// &lt;br&gt; boundaries must be part of the range. It will
 						// happen only if ForceBrBreak.
-						if ( nodeName == 'br' )
+						if ( nodeName == &#39;br&#39; )
 							includeNode = 1;
-						else if ( !range &amp;&amp; !currentNode.getChildCount() &amp;&amp; nodeName != 'hr' ) {
-							// If we have found an empty block, and haven't started
+						else if ( !range &amp;&amp; !currentNode.getChildCount() &amp;&amp; nodeName != &#39;hr&#39; ) {
+							// If we have found an empty block, and haven&#39;t started
 							// the range yet, it means we must return this block.
 							block = currentNode;
 							isLast = currentNode.equals( lastNode );
@@ -212,15 +212,15 @@
 
 							// The found boundary must be set as the next one at this
 							// point. (#1717)
-							if ( nodeName != 'br' )
+							if ( nodeName != &#39;br&#39; )
 								this._.nextNode = currentNode;
 						}
 
 						closeRange = 1;
 					} else {
-						// If we have child nodes, let's check them.
+						// If we have child nodes, let&#39;s check them.
 						if ( currentNode.getFirst() ) {
-							// If we don't have a range yet, let's start it.
+							// If we don&#39;t have a range yet, let&#39;s start it.
 							if ( !range ) {
 								range = this.range.clone();
 								range.setStartAt( currentNode, CKEDITOR.POSITION_BEFORE_START );
@@ -248,7 +248,7 @@
 				// The last node has been found.
 				isLast = ( ( !closeRange || includeNode ) &amp;&amp; currentNode.equals( lastNode ) );
 
-				// If we are in an element boundary, let's check if it is time
+				// If we are in an element boundary, let&#39;s check if it is time
 				// to close the range, otherwise we include the parent within it.
 				if ( range &amp;&amp; !closeRange ) {
 					while ( !currentNode.getNext( skipGuard ) &amp;&amp; !isLast ) {
@@ -277,7 +277,7 @@
 				currentNode = getNextSourceNode( currentNode, continueFromSibling, lastNode );
 				isLast = !currentNode;
 
-				// We have found a block boundary. Let's close the range and move out of the
+				// We have found a block boundary. Let&#39;s close the range and move out of the
 				// loop.
 				if ( isLast || ( closeRange &amp;&amp; range ) )
 					break;
@@ -299,7 +299,7 @@
 
 				if ( !block &amp;&amp; startBlockLimit &amp;&amp; !this.enforceRealBlocks &amp;&amp; checkLimits[ startBlockLimit.getName() ] &amp;&amp; range.checkStartOfBlock() &amp;&amp; range.checkEndOfBlock() &amp;&amp; !startBlockLimit.equals( range.root ) )
 					block = startBlockLimit;
-				else if ( !block || ( this.enforceRealBlocks &amp;&amp; block.getName() == 'li' ) ) {
+				else if ( !block || ( this.enforceRealBlocks &amp;&amp; block.getName() == &#39;li&#39; ) ) {
 					// Create the fixed block.
 					block = this.range.document.createElement( blockTag );
 
@@ -311,8 +311,8 @@
 					range.insertNode( block );
 
 					removePreviousBr = removeLastBr = true;
-				} else if ( block.getName() != 'li' ) {
-					// If the range doesn't includes the entire contents of the
+				} else if ( block.getName() != &#39;li&#39; ) {
+					// If the range doesn&#39;t includes the entire contents of the
 					// block, we must split it, isolating the range in a dedicated
 					// block.
 					if ( !range.checkStartOfBlock() || !range.checkEndOfBlock() ) {
@@ -346,16 +346,16 @@
 			if ( removePreviousBr ) {
 				var previousSibling = block.getPrevious();
 				if ( previousSibling &amp;&amp; previousSibling.type == CKEDITOR.NODE_ELEMENT ) {
-					if ( previousSibling.getName() == 'br' )
+					if ( previousSibling.getName() == &#39;br&#39; )
 						previousSibling.remove();
-					else if ( previousSibling.getLast() &amp;&amp; previousSibling.getLast().$.nodeName.toLowerCase() == 'br' )
+					else if ( previousSibling.getLast() &amp;&amp; previousSibling.getLast().$.nodeName.toLowerCase() == &#39;br&#39; )
 						previousSibling.getLast().remove();
 				}
 			}
 
 			if ( removeLastBr ) {
 				var lastChild = block.getLast();
-				if ( lastChild &amp;&amp; lastChild.type == CKEDITOR.NODE_ELEMENT &amp;&amp; lastChild.getName() == 'br' ) {
+				if ( lastChild &amp;&amp; lastChild.type == CKEDITOR.NODE_ELEMENT &amp;&amp; lastChild.getName() == &#39;br&#39; ) {
 					// Remove br filler on browser which do not need it.
 					if ( !CKEDITOR.env.needsBrFiller || lastChild.getPrevious( bookmarkGuard ) || lastChild.getNext( bookmarkGuard ) )
 						lastChild.remove();
@@ -382,7 +382,7 @@
 		// Shrink the range to exclude harmful &quot;noises&quot; (#4087, #4450, #5435).
 		range.shrink( CKEDITOR.SHRINK_ELEMENT, true );
 
-		touchPre = range.endContainer.hasAscendant( 'pre', true ) || range.startContainer.hasAscendant( 'pre', true );
+		touchPre = range.endContainer.hasAscendant( &#39;pre&#39;, true ) || range.startContainer.hasAscendant( &#39;pre&#39;, true );
 
 		range.enlarge( this.forceBrBreak &amp;&amp; !touchPre || !this.enlargeBr ? CKEDITOR.ENLARGE_LIST_ITEM_CONTENTS : CKEDITOR.ENLARGE_BLOCK_CONTENTS );
 
@@ -392,7 +392,7 @@
 			// Avoid anchor inside bookmark inner text.
 			walker.evaluator = ignoreBookmarkTextEvaluator;
 			this._.nextNode = walker.next();
-			// TODO: It's better to have walker.reset() used here.
+			// TODO: It&#39;s better to have walker.reset() used here.
 			walker = new CKEDITOR.dom.walker( range.clone() );
 			walker.evaluator = ignoreBookmarkTextEvaluator;
 			var lastNode = walker.previous();
@@ -413,11 +413,11 @@
 
 			// The end of document or range.root was reached, so we need a marker node inside.
 			if ( !this._.lastNode || !range.root.contains( this._.lastNode ) ) {
-				this._.lastNode = this._.docEndMarker = range.document.createText( '' );
+				this._.lastNode = this._.docEndMarker = range.document.createText( &#39;&#39; );
 				this._.lastNode.insertAfter( lastNode );
 			}
 
-			// Let's reuse this variable.
+			// Let&#39;s reuse this variable.
 			range = null;
 		}
 
@@ -456,7 +456,7 @@
 		var editables = [];
 
 		container.forEach( function( element ) {
-			if ( element.getAttribute( 'contenteditable' ) == 'true' ) {
+			if ( element.getAttribute( &#39;contenteditable&#39; ) == &#39;true&#39; ) {
 				editables.push( element );
 				return false; // Skip children.
 			}
@@ -473,7 +473,7 @@
 		if ( !editable )
 			return 0;
 
-		var filter = CKEDITOR.filter.instances[ editable.element.data( 'cke-filter' ) ];
+		var filter = CKEDITOR.filter.instances[ editable.element.data( &#39;cke-filter&#39; ) ];
 
 		// If current editable has a filter and this filter does not allow for block tag,
 		// search for next nested editable in remaining ones.
@@ -485,14 +485,14 @@
 
 		var iterator = range.createIterator();
 		// This setting actually does not change anything in this case,
-		// because entire range contents is selected, so there're no &lt;br&gt;s to be included.
+		// because entire range contents is selected, so there&#39;re no &lt;br&gt;s to be included.
 		// But it seems right to copy it too.
 		iterator.enlargeBr = parentIterator.enlargeBr;
 		// Inherit configuration from parent iterator.
 		iterator.enforceRealBlocks = parentIterator.enforceRealBlocks;
 		// Set the activeFilter (which can be overriden when this iteator will start nested iterator)
 		// and the default filter, which will make it possible to reset to
-		// current iterator's activeFilter after leaving nested editable.
+		// current iterator&#39;s activeFilter after leaving nested editable.
 		iterator.activeFilter = iterator.filter = filter;
 
 		parentIterator._.nestedEditable = {

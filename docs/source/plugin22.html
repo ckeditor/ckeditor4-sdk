@@ -25,15 +25,15 @@
  *		mode using a DIV element.
  */
 
-CKEDITOR.plugins.add( 'divarea', {
+CKEDITOR.plugins.add( &#39;divarea&#39;, {
 	afterInit: function( editor ) {
 		// Add the &quot;wysiwyg&quot; mode.
-		// Do that in the afterInit function, so it'll eventually overwrite
+		// Do that in the afterInit function, so it&#39;ll eventually overwrite
 		// the mode defined by the wysiwygarea plugin.
-		editor.addMode( 'wysiwyg', function( callback ) {
-			var editingBlock = CKEDITOR.dom.element.createFromHtml( '&lt;div class=&quot;cke_wysiwyg_div cke_reset&quot; hidefocus=&quot;true&quot;&gt;&lt;/div&gt;' );
+		editor.addMode( &#39;wysiwyg&#39;, function( callback ) {
+			var editingBlock = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div class=&quot;cke_wysiwyg_div cke_reset&quot; hidefocus=&quot;true&quot;&gt;&lt;/div&gt;&#39; );
 
-			var contentSpace = editor.ui.space( 'contents' );
+			var contentSpace = editor.ui.space( &#39;contents&#39; );
 			contentSpace.append( editingBlock );
 
 			editingBlock = editor.editable( editingBlock );
@@ -47,7 +47,7 @@ CKEDITOR.plugins.add( 'divarea', {
 				} );
 
 			editor.setData( editor.getData( 1 ), callback );
-			editor.fire( 'contentDom' );
+			editor.fire( &#39;contentDom&#39; );
 		} );
 	}
 } );

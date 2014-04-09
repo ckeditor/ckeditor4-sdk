@@ -22,29 +22,29 @@
 
 ( function() {
 	CKEDITOR.plugins.liststyle = {
-		requires: 'dialog,contextmenu',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+		requires: &#39;dialog,contextmenu&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
 			var def, cmd;
 
-			def = new CKEDITOR.dialogCommand( 'numberedListStyle', {
-				requiredContent: 'ol',
-				allowedContent: 'ol{list-style-type}[start]'
+			def = new CKEDITOR.dialogCommand( &#39;numberedListStyle&#39;, {
+				requiredContent: &#39;ol&#39;,
+				allowedContent: &#39;ol{list-style-type}[start]&#39;
 			} );
-			cmd = editor.addCommand( 'numberedListStyle', def );
+			cmd = editor.addCommand( &#39;numberedListStyle&#39;, def );
 			editor.addFeature( cmd );
-			CKEDITOR.dialog.add( 'numberedListStyle', this.path + 'dialogs/liststyle.js' );
+			CKEDITOR.dialog.add( &#39;numberedListStyle&#39;, this.path + &#39;dialogs/liststyle.js&#39; );
 
-			def = new CKEDITOR.dialogCommand( 'bulletedListStyle', {
-				requiredContent: 'ul',
-				allowedContent: 'ul{list-style-type}'
+			def = new CKEDITOR.dialogCommand( &#39;bulletedListStyle&#39;, {
+				requiredContent: &#39;ul&#39;,
+				allowedContent: &#39;ul{list-style-type}&#39;
 			} );
-			cmd = editor.addCommand( 'bulletedListStyle', def );
+			cmd = editor.addCommand( &#39;bulletedListStyle&#39;, def );
 			editor.addFeature( cmd );
-			CKEDITOR.dialog.add( 'bulletedListStyle', this.path + 'dialogs/liststyle.js' );
+			CKEDITOR.dialog.add( &#39;bulletedListStyle&#39;, this.path + &#39;dialogs/liststyle.js&#39; );
 
 			//Register map group;
 			editor.addMenuGroup( &quot;list&quot;, 108 );
@@ -52,13 +52,13 @@
 			editor.addMenuItems( {
 				numberedlist: {
 					label: editor.lang.liststyle.numberedTitle,
-					group: 'list',
-					command: 'numberedListStyle'
+					group: &#39;list&#39;,
+					command: &#39;numberedListStyle&#39;
 				},
 				bulletedlist: {
 					label: editor.lang.liststyle.bulletedTitle,
-					group: 'list',
-					command: 'bulletedListStyle'
+					group: &#39;list&#39;,
+					command: &#39;bulletedListStyle&#39;
 				}
 			} );
 
@@ -68,9 +68,9 @@
 
 				while ( element ) {
 					var name = element.getName();
-					if ( name == 'ol' )
+					if ( name == &#39;ol&#39; )
 						return { numberedlist: CKEDITOR.TRISTATE_OFF };
-					else if ( name == 'ul' )
+					else if ( name == &#39;ul&#39; )
 						return { bulletedlist: CKEDITOR.TRISTATE_OFF };
 
 					element = element.getParent();
@@ -80,7 +80,7 @@
 		}
 	};
 
-	CKEDITOR.plugins.add( 'liststyle', CKEDITOR.plugins.liststyle );
+	CKEDITOR.plugins.add( &#39;liststyle&#39;, CKEDITOR.plugins.liststyle );
 } )();
 </pre>
 </body>

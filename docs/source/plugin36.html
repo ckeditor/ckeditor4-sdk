@@ -26,32 +26,32 @@
 
 ( function() {
 	var horizontalruleCmd = {
-		canUndo: false, // The undo snapshot will be handled by 'insertElement'.
+		canUndo: false, // The undo snapshot will be handled by &#39;insertElement&#39;.
 		exec: function( editor ) {
-			var hr = editor.document.createElement( 'hr' );
+			var hr = editor.document.createElement( &#39;hr&#39; );
 			editor.insertElement( hr );
 		},
 
-		allowedContent: 'hr',
-		requiredContent: 'hr'
+		allowedContent: &#39;hr&#39;,
+		requiredContent: &#39;hr&#39;
 	};
 
-	var pluginName = 'horizontalrule';
+	var pluginName = &#39;horizontalrule&#39;;
 
 	// Register a plugin named &quot;horizontalrule&quot;.
 	CKEDITOR.plugins.add( pluginName, {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'horizontalrule', // %REMOVE_LINE_CORE%
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;horizontalrule&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
 			editor.addCommand( pluginName, horizontalruleCmd );
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'HorizontalRule', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;HorizontalRule&#39;, {
 				label: editor.lang.horizontalrule.toolbar,
 				command: pluginName,
-				toolbar: 'insert,40'
+				toolbar: &#39;insert,40&#39;
 			} );
 		}
 	} );

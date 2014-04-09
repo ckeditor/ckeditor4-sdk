@@ -37,9 +37,9 @@
 <span id='CKEDITOR-commandDefinition-method-exec'>/**
 </span> * The function to be fired when the commend is executed.
  *
- *		editorInstance.addCommand( 'sample', {
+ *		editorInstance.addCommand( &#39;sample&#39;, {
  *			exec: function( editor ) {
- *				alert( 'Executing a command for the editor name &quot;' + editor.name + '&quot;!' );
+ *				alert( &#39;Executing a command for the editor name &quot;&#39; + editor.name + &#39;&quot;!&#39; );
  *			}
  *		} );
  *
@@ -53,7 +53,7 @@
 <span id='CKEDITOR-commandDefinition-property-canUndo'>/**
 </span> * Whether the command need to be hooked into the redo/undo system.
  *
- *		editorInstance.addCommand( 'alertName', {
+ *		editorInstance.addCommand( &#39;alertName&#39;, {
  *			exec: function( editor ) {
  *				alert( editor.name );
  *			},
@@ -69,11 +69,11 @@
  * command itself manually, and that the return value of this command is not to
  * be returned by the {@link #exec} function.
  *
- * 		editorInstance.addCommand( 'loadOptions', {
+ * 		editorInstance.addCommand( &#39;loadOptions&#39;, {
  * 			exec: function( editor ) {
  * 				// Asynchronous operation below.
- * 				CKEDITOR.ajax.loadXml( 'data.xml', function() {
- * 					editor.fire( 'afterCommandExec' );
+ * 				CKEDITOR.ajax.loadXml( &#39;data.xml&#39;, function() {
+ * 					editor.fire( &#39;afterCommandExec&#39; );
  * 				} );
  * 			},
  * 			async: true // The command need some time to complete after exec function returns.
@@ -85,11 +85,11 @@
 <span id='CKEDITOR-commandDefinition-property-editorFocus'>/**
 </span> * Whether the command should give focus to the editor before execution.
  *
- *		editorInstance.addCommand( 'maximize', {
+ *		editorInstance.addCommand( &#39;maximize&#39;, {
  *				exec: function( editor ) {
  *				// ...
  *			},
- *			editorFocus: false // The command doesn't require focusing the editing document.
+ *			editorFocus: false // The command doesn&#39;t require focusing the editing document.
  *		} );
  *
  * @property {Boolean} [editorFocus=true]
@@ -100,7 +100,7 @@
 <span id='CKEDITOR-commandDefinition-property-startDisabled'>/**
 </span> * Whether the command state should be set to {@link CKEDITOR#TRISTATE_DISABLED} on startup.
  *
- *		editorInstance.addCommand( 'unlink', {
+ *		editorInstance.addCommand( &#39;unlink&#39;, {
  *			exec: function( editor ) {
  *				// ...
  *			},
@@ -121,7 +121,7 @@
 
 <span id='CKEDITOR-commandDefinition-method-refresh'>/**
 </span> * Defined by command definition a function to determinate the command state, it will be invoked
- * when editor has it's `states` or `selection` changed.
+ * when editor has it&#39;s `states` or `selection` changed.
  *
  * **Note:** The function provided must be calling {@link CKEDITOR.command#setState} in all circumstance,
  * if it is intended to update the command state.
@@ -144,7 +144,7 @@
 </span> * The editor modes within which the command can be executed. The execution
  * will have no action if the current mode is not listed in this property.
  *
- *		editorInstance.addCommand( 'link', {
+ *		editorInstance.addCommand( &#39;link&#39;, {
  *			exec: function( editor ) {
  *				// ...
  *			},

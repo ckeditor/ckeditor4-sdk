@@ -55,7 +55,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 <span id='CKEDITOR-dom-document-method-appendStyleSheet'>	/**
 </span>	 * Appends a CSS file to the document.
 	 *
-	 *		CKEDITOR.document.appendStyleSheet( '/mystyles.css' );
+	 *		CKEDITOR.document.appendStyleSheet( &#39;/mystyles.css&#39; );
 	 *
 	 * @param {String} cssFileUrl The CSS file URL.
 	 */
@@ -63,10 +63,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 		if ( this.$.createStyleSheet )
 			this.$.createStyleSheet( cssFileUrl );
 		else {
-			var link = new CKEDITOR.dom.element( 'link' );
+			var link = new CKEDITOR.dom.element( &#39;link&#39; );
 			link.setAttributes( {
-				rel: 'stylesheet',
-				type: 'text/css',
+				rel: &#39;stylesheet&#39;,
+				type: &#39;text/css&#39;,
 				href: cssFileUrl
 			} );
 
@@ -85,7 +85,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 			var styleSheet = this.$.createStyleSheet( &quot;&quot; );
 			styleSheet.cssText = cssStyleText;
 		} else {
-			var style = new CKEDITOR.dom.element( 'style', this );
+			var style = new CKEDITOR.dom.element( &#39;style&#39;, this );
 			style.append( new CKEDITOR.dom.text( cssStyleText, this ) );
 			this.getHead().append( style );
 		}
@@ -124,7 +124,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 	},
 
 <span id='CKEDITOR-dom-document-method-focus'>	/**
-</span>	 * Moves the selection focus to this document's window.
+</span>	 * Moves the selection focus to this document&#39;s window.
 	 */
 	focus: function() {
 		this.getWindow().focus();
@@ -146,8 +146,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 <span id='CKEDITOR-dom-document-method-getById'>	/**
 </span>	 * Gets an element based on its id.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
-	 *		alert( element.getId() ); // 'myElement'
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
+	 *		alert( element.getId() ); // &#39;myElement&#39;
 	 *
 	 * @param {String} elementId The element id.
 	 * @returns {CKEDITOR.dom.element} The element instance, or null if not found.
@@ -202,7 +202,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 	 */
 	getElementsByTag: function( tagName, namespace ) {
 		if ( !( CKEDITOR.env.ie &amp;&amp; !( document.documentMode &gt; 8 ) ) &amp;&amp; namespace )
-			tagName = namespace + ':' + tagName;
+			tagName = namespace + &#39;:&#39; + tagName;
 		return new CKEDITOR.dom.nodeList( this.$.getElementsByTagName( tagName ) );
 	},
 
@@ -210,14 +210,14 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 </span>	 * Gets the `&lt;head&gt;` element for this document.
 	 *
 	 *		var element = CKEDITOR.document.getHead();
-	 *		alert( element.getName() ); // 'head'
+	 *		alert( element.getName() ); // &#39;head&#39;
 	 *
 	 * @returns {CKEDITOR.dom.element} The `&lt;head&gt;` element.
 	 */
 	getHead: function() {
-		var head = this.$.getElementsByTagName( 'head' )[ 0 ];
+		var head = this.$.getElementsByTagName( &#39;head&#39; )[ 0 ];
 		if ( !head )
-			head = this.getDocumentElement().append( new CKEDITOR.dom.element( 'head' ), true );
+			head = this.getDocumentElement().append( new CKEDITOR.dom.element( &#39;head&#39; ), true );
 		else
 			head = new CKEDITOR.dom.element( head );
 
@@ -228,7 +228,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 </span>	 * Gets the `&lt;body&gt;` element for this document.
 	 *
 	 *		var element = CKEDITOR.document.getBody();
-	 *		alert( element.getName() ); // 'body'
+	 *		alert( element.getName() ); // &#39;body&#39;
 	 *
 	 * @returns {CKEDITOR.dom.element} The `&lt;body&gt;` element.
 	 */
@@ -259,18 +259,18 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 	 * previous document contents will be lost (cleaned).
 	 *
 	 *		document.write(
-	 *			'&lt;html&gt;' +
-	 *				'&lt;head&gt;&lt;title&gt;Sample Doc&lt;/title&gt;&lt;/head&gt;' +
-	 *				'&lt;body&gt;Document contents created by code&lt;/body&gt;' +
-	 *			'&lt;/html&gt;'
+	 *			&#39;&lt;html&gt;&#39; +
+	 *				&#39;&lt;head&gt;&lt;title&gt;Sample Doc&lt;/title&gt;&lt;/head&gt;&#39; +
+	 *				&#39;&lt;body&gt;Document contents created by code&lt;/body&gt;&#39; +
+	 *			&#39;&lt;/html&gt;&#39;
 	 *		);
 	 *
 	 * @since 3.5
 	 * @param {String} html The HTML defining the document contents.
 	 */
 	write: function( html ) {
-		// Don't leave any history log in IE. (#5657)
-		this.$.open( 'text/html', 'replace' );
+		// Don&#39;t leave any history log in IE. (#5657)
+		this.$.open( &#39;text/html&#39;, &#39;replace&#39; );
 
 		// Support for custom document.domain in IE.
 		//
@@ -278,7 +278,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 		// doctype, IE will go into quirks mode and mess with
 		// the editable, e.g. by changing its default height.
 		if ( CKEDITOR.env.ie )
-			html = html.replace( /(?:^\s*&lt;!DOCTYPE[^&gt;]*?&gt;)|^/i, '$&amp;\n&lt;script data-cke-temp=&quot;1&quot;&gt;(' + CKEDITOR.tools.fixDomain + ')();&lt;/script&gt;' );
+			html = html.replace( /(?:^\s*&lt;!DOCTYPE[^&gt;]*?&gt;)|^/i, &#39;$&amp;\n&lt;script data-cke-temp=&quot;1&quot;&gt;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&lt;/script&gt;&#39; );
 
 		this.$.write( html );
 		this.$.close();
@@ -320,12 +320,12 @@ CKEDITOR.tools.extend( CKEDITOR.dom.document.prototype, {
 	 * @returns DocumentFragment
 	 */
 	_getHtml5ShivFrag: function() {
-		var $frag = this.getCustomData( 'html5ShivFrag' );
+		var $frag = this.getCustomData( &#39;html5ShivFrag&#39; );
 
 		if ( !$frag ) {
 			$frag = this.$.createDocumentFragment();
 			CKEDITOR.tools.enableHtml5Elements( $frag, true );
-			this.setCustomData( 'html5ShivFrag', $frag );
+			this.setCustomData( &#39;html5ShivFrag&#39;, $frag );
 		}
 
 		return $frag;

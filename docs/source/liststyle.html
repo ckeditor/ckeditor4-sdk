@@ -34,55 +34,55 @@
 	}
 
 	var listItem = function( node ) {
-			return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( 'li' );
+			return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( &#39;li&#39; );
 		};
 
 	var mapListStyle = {
-		'a': 'lower-alpha',
-		'A': 'upper-alpha',
-		'i': 'lower-roman',
-		'I': 'upper-roman',
-		'1': 'decimal',
-		'disc': 'disc',
-		'circle': 'circle',
-		'square': 'square'
+		&#39;a&#39;: &#39;lower-alpha&#39;,
+		&#39;A&#39;: &#39;upper-alpha&#39;,
+		&#39;i&#39;: &#39;lower-roman&#39;,
+		&#39;I&#39;: &#39;upper-roman&#39;,
+		&#39;1&#39;: &#39;decimal&#39;,
+		&#39;disc&#39;: &#39;disc&#39;,
+		&#39;circle&#39;: &#39;circle&#39;,
+		&#39;square&#39;: &#39;square&#39;
 	};
 
 	function listStyle( editor, startupPage ) {
 		var lang = editor.lang.liststyle;
-		if ( startupPage == 'bulletedListStyle' ) {
+		if ( startupPage == &#39;bulletedListStyle&#39; ) {
 			return {
 				title: lang.bulletedTitle,
 				minWidth: 300,
 				minHeight: 50,
 				contents: [
 					{
-					id: 'info',
-					accessKey: 'I',
+					id: &#39;info&#39;,
+					accessKey: &#39;I&#39;,
 					elements: [
 						{
-						type: 'select',
+						type: &#39;select&#39;,
 						label: lang.type,
-						id: 'type',
-						align: 'center',
-						style: 'width:150px',
+						id: &#39;type&#39;,
+						align: &#39;center&#39;,
+						style: &#39;width:150px&#39;,
 						items: [
-							[ lang.notset, '' ],
-							[ lang.circle, 'circle' ],
-							[ lang.disc, 'disc' ],
-							[ lang.square, 'square' ]
+							[ lang.notset, &#39;&#39; ],
+							[ lang.circle, &#39;circle&#39; ],
+							[ lang.disc, &#39;disc&#39; ],
+							[ lang.square, &#39;square&#39; ]
 							],
 						setup: function( element ) {
-							var value = element.getStyle( 'list-style-type' ) || mapListStyle[ element.getAttribute( 'type' ) ] || element.getAttribute( 'type' ) || '';
+							var value = element.getStyle( &#39;list-style-type&#39; ) || mapListStyle[ element.getAttribute( &#39;type&#39; ) ] || element.getAttribute( &#39;type&#39; ) || &#39;&#39;;
 
 							this.setValue( value );
 						},
 						commit: function( element ) {
 							var value = this.getValue();
 							if ( value )
-								element.setStyle( 'list-style-type', value );
+								element.setStyle( &#39;list-style-type&#39;, value );
 							else
-								element.removeStyle( 'list-style-type' );
+								element.removeStyle( &#39;list-style-type&#39; );
 						}
 					}
 					]
@@ -90,34 +90,34 @@
 				],
 				onShow: function() {
 					var editor = this.getParentEditor(),
-						element = getListElement( editor, 'ul' );
+						element = getListElement( editor, &#39;ul&#39; );
 
 					element &amp;&amp; this.setupContent( element );
 				},
 				onOk: function() {
 					var editor = this.getParentEditor(),
-						element = getListElement( editor, 'ul' );
+						element = getListElement( editor, &#39;ul&#39; );
 
 					element &amp;&amp; this.commitContent( element );
 				}
 			};
-		} else if ( startupPage == 'numberedListStyle' ) {
+		} else if ( startupPage == &#39;numberedListStyle&#39; ) {
 
 			var listStyleOptions = [
-				[ lang.notset, '' ],
-				[ lang.lowerRoman, 'lower-roman' ],
-				[ lang.upperRoman, 'upper-roman' ],
-				[ lang.lowerAlpha, 'lower-alpha' ],
-				[ lang.upperAlpha, 'upper-alpha' ],
-				[ lang.decimal, 'decimal' ]
+				[ lang.notset, &#39;&#39; ],
+				[ lang.lowerRoman, &#39;lower-roman&#39; ],
+				[ lang.upperRoman, &#39;upper-roman&#39; ],
+				[ lang.lowerAlpha, &#39;lower-alpha&#39; ],
+				[ lang.upperAlpha, &#39;upper-alpha&#39; ],
+				[ lang.decimal, &#39;decimal&#39; ]
 				];
 
 			if ( !CKEDITOR.env.ie || CKEDITOR.env.version &gt; 7 ) {
 				listStyleOptions.concat( [
-					[ lang.armenian, 'armenian' ],
-					[ lang.decimalLeadingZero, 'decimal-leading-zero' ],
-					[ lang.georgian, 'georgian' ],
-					[ lang.lowerGreek, 'lower-greek' ]
+					[ lang.armenian, &#39;armenian&#39; ],
+					[ lang.decimalLeadingZero, &#39;decimal-leading-zero&#39; ],
+					[ lang.georgian, &#39;georgian&#39; ],
+					[ lang.lowerGreek, &#39;lower-greek&#39; ]
 					] );
 			}
 
@@ -127,62 +127,62 @@
 				minHeight: 50,
 				contents: [
 					{
-					id: 'info',
-					accessKey: 'I',
+					id: &#39;info&#39;,
+					accessKey: &#39;I&#39;,
 					elements: [
 						{
-						type: 'hbox',
-						widths: [ '25%', '75%' ],
+						type: &#39;hbox&#39;,
+						widths: [ &#39;25%&#39;, &#39;75%&#39; ],
 						children: [
 							{
 							label: lang.start,
-							type: 'text',
-							id: 'start',
+							type: &#39;text&#39;,
+							id: &#39;start&#39;,
 							validate: CKEDITOR.dialog.validate.integer( lang.validateStartNumber ),
 							setup: function( element ) {
 								// List item start number dominates.
-								var value = element.getFirst( listItem ).getAttribute( 'value' ) || element.getAttribute( 'start' ) || 1;
+								var value = element.getFirst( listItem ).getAttribute( &#39;value&#39; ) || element.getAttribute( &#39;start&#39; ) || 1;
 								value &amp;&amp; this.setValue( value );
 							},
 							commit: function( element ) {
 								var firstItem = element.getFirst( listItem );
-								var oldStart = firstItem.getAttribute( 'value' ) || element.getAttribute( 'start' ) || 1;
+								var oldStart = firstItem.getAttribute( &#39;value&#39; ) || element.getAttribute( &#39;start&#39; ) || 1;
 
 								// Force start number on list root.
-								element.getFirst( listItem ).removeAttribute( 'value' );
+								element.getFirst( listItem ).removeAttribute( &#39;value&#39; );
 								var val = parseInt( this.getValue(), 10 );
 								if ( isNaN( val ) )
-									element.removeAttribute( 'start' );
+									element.removeAttribute( &#39;start&#39; );
 								else
-									element.setAttribute( 'start', val );
+									element.setAttribute( &#39;start&#39;, val );
 
 								// Update consequent list item numbering.
 								var nextItem = firstItem,
 									conseq = oldStart,
 									startNumber = isNaN( val ) ? 1 : val;
 								while ( ( nextItem = nextItem.getNext( listItem ) ) &amp;&amp; conseq++ ) {
-									if ( nextItem.getAttribute( 'value' ) == conseq )
-										nextItem.setAttribute( 'value', startNumber + conseq - oldStart );
+									if ( nextItem.getAttribute( &#39;value&#39; ) == conseq )
+										nextItem.setAttribute( &#39;value&#39;, startNumber + conseq - oldStart );
 								}
 							}
 						},
 							{
-							type: 'select',
+							type: &#39;select&#39;,
 							label: lang.type,
-							id: 'type',
-							style: 'width: 100%;',
+							id: &#39;type&#39;,
+							style: &#39;width: 100%;&#39;,
 							items: listStyleOptions,
 							setup: function( element ) {
-								var value = element.getStyle( 'list-style-type' ) || mapListStyle[ element.getAttribute( 'type' ) ] || element.getAttribute( 'type' ) || '';
+								var value = element.getStyle( &#39;list-style-type&#39; ) || mapListStyle[ element.getAttribute( &#39;type&#39; ) ] || element.getAttribute( &#39;type&#39; ) || &#39;&#39;;
 
 								this.setValue( value );
 							},
 							commit: function( element ) {
 								var value = this.getValue();
 								if ( value )
-									element.setStyle( 'list-style-type', value );
+									element.setStyle( &#39;list-style-type&#39;, value );
 								else
-									element.removeStyle( 'list-style-type' );
+									element.removeStyle( &#39;list-style-type&#39; );
 							}
 						}
 						]
@@ -192,13 +192,13 @@
 				],
 				onShow: function() {
 					var editor = this.getParentEditor(),
-						element = getListElement( editor, 'ol' );
+						element = getListElement( editor, &#39;ol&#39; );
 
 					element &amp;&amp; this.setupContent( element );
 				},
 				onOk: function() {
 					var editor = this.getParentEditor(),
-						element = getListElement( editor, 'ol' );
+						element = getListElement( editor, &#39;ol&#39; );
 
 					element &amp;&amp; this.commitContent( element );
 				}
@@ -206,12 +206,12 @@
 		}
 	}
 
-	CKEDITOR.dialog.add( 'numberedListStyle', function( editor ) {
-		return listStyle( editor, 'numberedListStyle' );
+	CKEDITOR.dialog.add( &#39;numberedListStyle&#39;, function( editor ) {
+		return listStyle( editor, &#39;numberedListStyle&#39; );
 	} );
 
-	CKEDITOR.dialog.add( 'bulletedListStyle', function( editor ) {
-		return listStyle( editor, 'bulletedListStyle' );
+	CKEDITOR.dialog.add( &#39;bulletedListStyle&#39;, function( editor ) {
+		return listStyle( editor, &#39;bulletedListStyle&#39; );
 	} );
 } )();
 </pre>

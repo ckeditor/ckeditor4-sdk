@@ -35,7 +35,7 @@ CKEDITOR.keystrokeHandler = function( editor ) {
 </span>	 * List of keystrokes associated to commands. Each entry points to the
 	 * command to be executed.
 	 *
-	 * Since CKEditor 4 there's no need to modify this property directly during the runtime.
+	 * Since CKEditor 4 there&#39;s no need to modify this property directly during the runtime.
 	 * Use {@link CKEDITOR.editor#setKeystroke} instead.
 	 */
 	this.keystrokes = {};
@@ -65,11 +65,11 @@ CKEDITOR.keystrokeHandler = function( editor ) {
 			var command = this.keystrokes[ keyCombination ];
 			var editor = this._.editor;
 
-			cancel = ( editor.fire( 'key', { keyCode: keyCombination } ) === false );
+			cancel = ( editor.fire( &#39;key&#39;, { keyCode: keyCombination } ) === false );
 
 			if ( !cancel ) {
 				if ( command ) {
-					var data = { from: 'keystrokeHandler' };
+					var data = { from: &#39;keystrokeHandler&#39; };
 					cancel = ( editor.execCommand( command, data ) !== false );
 				}
 
@@ -100,12 +100,12 @@ CKEDITOR.keystrokeHandler = function( editor ) {
 		attach: function( domObject ) {
 			// For most browsers, it is enough to listen to the keydown event
 			// only.
-			domObject.on( 'keydown', onKeyDown, this );
+			domObject.on( &#39;keydown&#39;, onKeyDown, this );
 
-			// Some browsers instead, don't cancel key events in the keydown, but in the
+			// Some browsers instead, don&#39;t cancel key events in the keydown, but in the
 			// keypress. So we must do a longer trip in those cases.
 			if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
-				domObject.on( 'keypress', onKeyPress, this );
+				domObject.on( &#39;keypress&#39;, onKeyPress, this );
 		}
 	};
 } )();
@@ -125,10 +125,10 @@ CKEDITOR.keystrokeHandler = function( editor ) {
  * See {@link CKEDITOR.editor#setKeystroke} documentation for more details
  * regarding the start up order.
  *
- *		// Change default CTRL + L keystroke for 'link' command to CTRL + SHIFT + L.
+ *		// Change default CTRL + L keystroke for &#39;link&#39; command to CTRL + SHIFT + L.
  *		config.keystrokes = [
  *			...
- *			[ CKEDITOR.CTRL + CKEDITOR.SHIFT + 76, 'link' ],	// CTRL + SHIFT + L
+ *			[ CKEDITOR.CTRL + CKEDITOR.SHIFT + 76, &#39;link&#39; ],	// CTRL + SHIFT + L
  *			...
  *		];
  *
@@ -145,7 +145,7 @@ CKEDITOR.keystrokeHandler = function( editor ) {
  * used. This is since editor defaults are merged rather than overwritten by
  * user keystrokes.
  *
- * **Note**: This can be potentially harmful for an editor. Avoid this unless you're
+ * **Note**: This can be potentially harmful for an editor. Avoid this unless you&#39;re
  * aware of the consequences.
  *
  *		// Reset all default keystrokes.

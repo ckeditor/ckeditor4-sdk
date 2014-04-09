@@ -19,7 +19,7 @@
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
-CKEDITOR.dialog.add( 'textfield', function( editor ) {
+CKEDITOR.dialog.add( &#39;textfield&#39;, function( editor ) {
 	var autoAttributes = { value: 1, size: 1, maxLength: 1 };
 
 	var acceptedTypes = { email: 1, password: 1, search: 1, tel: 1, text: 1, url: 1 };
@@ -33,7 +33,7 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 
 	function autoSetup( element ) {
 		var value = element.hasAttribute( this.id ) &amp;&amp; element.getAttribute( this.id );
-		this.setValue( value || '' );
+		this.setValue( value || &#39;&#39; );
 	}
 
 	return {
@@ -44,7 +44,7 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 			delete this.textField;
 
 			var element = this.getParentEditor().getSelection().getSelectedElement();
-			if ( element &amp;&amp; element.getName() == &quot;input&quot; &amp;&amp; ( acceptedTypes[ element.getAttribute( 'type' ) ] || !element.getAttribute( 'type' ) ) ) {
+			if ( element &amp;&amp; element.getName() == &quot;input&quot; &amp;&amp; ( acceptedTypes[ element.getAttribute( &#39;type&#39; ) ] || !element.getAttribute( &#39;type&#39; ) ) ) {
 				this.textField = element;
 				this.setupContent( element );
 			}
@@ -55,8 +55,8 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 				isInsertMode = !element;
 
 			if ( isInsertMode ) {
-				element = editor.document.createElement( 'input' );
-				element.setAttribute( 'type', 'text' );
+				element = editor.document.createElement( &#39;input&#39; );
+				element.setAttribute( &#39;type&#39;, &#39;text&#39; );
 			}
 
 			var data = { element: element };
@@ -82,44 +82,44 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.forms.textfield.title,
 			title: editor.lang.forms.textfield.title,
 			elements: [
 				{
-				type: 'hbox',
-				widths: [ '50%', '50%' ],
+				type: &#39;hbox&#39;,
+				widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 				children: [
 					{
-					id: '_cke_saved_name',
-					type: 'text',
+					id: &#39;_cke_saved_name&#39;,
+					type: &#39;text&#39;,
 					label: editor.lang.forms.textfield.name,
-					'default': '',
-					accessKey: 'N',
+					&#39;default&#39;: &#39;&#39;,
+					accessKey: &#39;N&#39;,
 					setup: function( element ) {
-						this.setValue( element.data( 'cke-saved-name' ) || element.getAttribute( 'name' ) || '' );
+						this.setValue( element.data( &#39;cke-saved-name&#39; ) || element.getAttribute( &#39;name&#39; ) || &#39;&#39; );
 					},
 					commit: function( data ) {
 						var element = data.element;
 
 						if ( this.getValue() )
-							element.data( 'cke-saved-name', this.getValue() );
+							element.data( &#39;cke-saved-name&#39;, this.getValue() );
 						else {
-							element.data( 'cke-saved-name', false );
-							element.removeAttribute( 'name' );
+							element.data( &#39;cke-saved-name&#39;, false );
+							element.removeAttribute( &#39;name&#39; );
 						}
 					}
 				},
 					{
-					id: 'value',
-					type: 'text',
+					id: &#39;value&#39;,
+					type: &#39;text&#39;,
 					label: editor.lang.forms.textfield.value,
-					'default': '',
-					accessKey: 'V',
+					&#39;default&#39;: &#39;&#39;,
+					accessKey: &#39;V&#39;,
 					commit: function( data ) {
 						if ( CKEDITOR.env.ie &amp;&amp; !this.getValue() ) {
 							var element = data.element,
-								fresh = new CKEDITOR.dom.element( 'input', editor.document );
+								fresh = new CKEDITOR.dom.element( &#39;input&#39;, editor.document );
 							element.copyAttributes( fresh, { value: 1 } );
 							fresh.replace( element );
 							data.element = fresh;
@@ -130,66 +130,66 @@ CKEDITOR.dialog.add( 'textfield', function( editor ) {
 				]
 			},
 				{
-				type: 'hbox',
-				widths: [ '50%', '50%' ],
+				type: &#39;hbox&#39;,
+				widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 				children: [
 					{
-					id: 'size',
-					type: 'text',
+					id: &#39;size&#39;,
+					type: &#39;text&#39;,
 					label: editor.lang.forms.textfield.charWidth,
-					'default': '',
-					accessKey: 'C',
-					style: 'width:50px',
+					&#39;default&#39;: &#39;&#39;,
+					accessKey: &#39;C&#39;,
+					style: &#39;width:50px&#39;,
 					validate: CKEDITOR.dialog.validate.integer( editor.lang.common.validateNumberFailed )
 				},
 					{
-					id: 'maxLength',
-					type: 'text',
+					id: &#39;maxLength&#39;,
+					type: &#39;text&#39;,
 					label: editor.lang.forms.textfield.maxChars,
-					'default': '',
-					accessKey: 'M',
-					style: 'width:50px',
+					&#39;default&#39;: &#39;&#39;,
+					accessKey: &#39;M&#39;,
+					style: &#39;width:50px&#39;,
 					validate: CKEDITOR.dialog.validate.integer( editor.lang.common.validateNumberFailed )
 				}
 				],
 				onLoad: function() {
 					// Repaint the style for IE7 (#6068)
 					if ( CKEDITOR.env.ie7Compat )
-						this.getElement().setStyle( 'zoom', '100%' );
+						this.getElement().setStyle( &#39;zoom&#39;, &#39;100%&#39; );
 				}
 			},
 				{
-				id: 'type',
-				type: 'select',
+				id: &#39;type&#39;,
+				type: &#39;select&#39;,
 				label: editor.lang.forms.textfield.type,
-				'default': 'text',
-				accessKey: 'M',
+				&#39;default&#39;: &#39;text&#39;,
+				accessKey: &#39;M&#39;,
 				items: [
-					[ editor.lang.forms.textfield.typeEmail,	'email' ],
-					[ editor.lang.forms.textfield.typePass,		'password' ],
-					[ editor.lang.forms.textfield.typeSearch,	'search' ],
-					[ editor.lang.forms.textfield.typeTel,		'tel' ],
-					[ editor.lang.forms.textfield.typeText,		'text' ],
-					[ editor.lang.forms.textfield.typeUrl,		'url' ]
+					[ editor.lang.forms.textfield.typeEmail,	&#39;email&#39; ],
+					[ editor.lang.forms.textfield.typePass,		&#39;password&#39; ],
+					[ editor.lang.forms.textfield.typeSearch,	&#39;search&#39; ],
+					[ editor.lang.forms.textfield.typeTel,		&#39;tel&#39; ],
+					[ editor.lang.forms.textfield.typeText,		&#39;text&#39; ],
+					[ editor.lang.forms.textfield.typeUrl,		&#39;url&#39; ]
 					],
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'type' ) );
+					this.setValue( element.getAttribute( &#39;type&#39; ) );
 				},
 				commit: function( data ) {
 					var element = data.element;
 
 					if ( CKEDITOR.env.ie ) {
-						var elementType = element.getAttribute( 'type' );
+						var elementType = element.getAttribute( &#39;type&#39; );
 						var myType = this.getValue();
 
 						if ( elementType != myType ) {
-							var replace = CKEDITOR.dom.element.createFromHtml( '&lt;input type=&quot;' + myType + '&quot;&gt;&lt;/input&gt;', editor.document );
+							var replace = CKEDITOR.dom.element.createFromHtml( &#39;&lt;input type=&quot;&#39; + myType + &#39;&quot;&gt;&lt;/input&gt;&#39;, editor.document );
 							element.copyAttributes( replace, { type: 1 } );
 							replace.replace( element );
 							data.element = replace;
 						}
 					} else
-						element.setAttribute( 'type', this.getValue() );
+						element.setAttribute( &#39;type&#39;, this.getValue() );
 				}
 			}
 			]

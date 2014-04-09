@@ -25,42 +25,42 @@
  */
 
 ( function() {
-	'use strict';
+	&#39;use strict&#39;;
 
 	var isNotWhitespaces = CKEDITOR.dom.walker.whitespaces( true ),
 		isNotBookmark = CKEDITOR.dom.walker.bookmark( false, true ),
 		TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
 		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
 
-	CKEDITOR.plugins.add( 'indentlist', {
-		requires: 'indent',
+	CKEDITOR.plugins.add( &#39;indentlist&#39;, {
+		requires: &#39;indent&#39;,
 		init: function( editor ) {
 			var globalHelpers = CKEDITOR.plugins.indent,
 				editable = editor;
 
 			// Register commands.
 			globalHelpers.registerCommands( editor, {
-				indentlist: new commandDefinition( editor, 'indentlist', true ),
-				outdentlist: new commandDefinition( editor, 'outdentlist' )
+				indentlist: new commandDefinition( editor, &#39;indentlist&#39;, true ),
+				outdentlist: new commandDefinition( editor, &#39;outdentlist&#39; )
 			} );
 
 			function commandDefinition( editor, name ) {
 				globalHelpers.specificDefinition.apply( this, arguments );
 
 				// Require ul OR ol list.
-				this.requiredContent = [ 'ul', 'ol' ];
+				this.requiredContent = [ &#39;ul&#39;, &#39;ol&#39; ];
 
 				// Indent and outdent lists with TAB/SHIFT+TAB key. Indenting can
-				// be done for any list item that isn't the first child of the parent.
-				editor.on( 'key', function( evt ) {
-					if ( editor.mode != 'wysiwyg' )
+				// be done for any list item that isn&#39;t the first child of the parent.
+				editor.on( &#39;key&#39;, function( evt ) {
+					if ( editor.mode != &#39;wysiwyg&#39; )
 						return;
 
 					if ( evt.data.keyCode == this.indentKey ) {
 						var list = this.getContext( editor.elementPath() );
 
 						if ( list ) {
-							// Don't indent if in first list item of the parent.
+							// Don&#39;t indent if in first list item of the parent.
 							// Outdent, however, can always be done to collapse
 							// the list into a paragraph (div).
 							if ( this.isIndent &amp;&amp; firstItemInPath.call( this, editor.elementPath(), list ) )
@@ -68,11 +68,11 @@
 
 							// Exec related global indentation command. Global
 							// commands take care of bookmarks and selection,
-							// so it's much easier to use them instead of
+							// so it&#39;s much easier to use them instead of
 							// content-specific commands.
 							editor.execCommand( this.relatedGlobal );
 
-							// Cancel the key event so editor doesn't lose focus.
+							// Cancel the key event so editor doesn&#39;t lose focus.
 							evt.cancel();
 						}
 					}
@@ -161,7 +161,7 @@
 				return false;
 
 			// Do indent or outdent operations on the array model of the list, not the
-			// list's DOM tree itself. The array model demands that it knows as much as
+			// list&#39;s DOM tree itself. The array model demands that it knows as much as
 			// possible about the surrounding lists, we need to feed it the further
 			// ancestor node that is still a list.
 			var listParents = listNode.getParents( true );
@@ -180,9 +180,9 @@
 				listArray = CKEDITOR.plugins.list.listToArray( listNode, database ),
 
 				// Apply indenting or outdenting on the array.
-				baseIndent = listArray[ lastItem.getCustomData( 'listarray_index' ) ].indent;
+				baseIndent = listArray[ lastItem.getCustomData( &#39;listarray_index&#39; ) ].indent;
 
-			for ( i = startItem.getCustomData( 'listarray_index' ); i &lt;= lastItem.getCustomData( 'listarray_index' ); i++ ) {
+			for ( i = startItem.getCustomData( &#39;listarray_index&#39; ); i &lt;= lastItem.getCustomData( &#39;listarray_index&#39; ); i++ ) {
 				listArray[ i ].indent += indentOffset;
 				// Make sure the newly created sublist get a brand-new element of the same type. (#5372)
 				if ( indentOffset &gt; 0 ) {
@@ -191,25 +191,25 @@
 				}
 			}
 
-			for ( i = lastItem.getCustomData( 'listarray_index' ) + 1; i &lt; listArray.length &amp;&amp; listArray[ i ].indent &gt; baseIndent; i++ )
+			for ( i = lastItem.getCustomData( &#39;listarray_index&#39; ) + 1; i &lt; listArray.length &amp;&amp; listArray[ i ].indent &gt; baseIndent; i++ )
 				listArray[ i ].indent += indentOffset;
 
 			// Convert the array back to a DOM forest (yes we might have a few subtrees now).
 			// And replace the old list with the new forest.
 			var newList = CKEDITOR.plugins.list.arrayToList( listArray, database, null, editor.config.enterMode, listNode.getDirection() );
 
-			// Avoid nested &lt;li&gt; after outdent even they're visually same,
+			// Avoid nested &lt;li&gt; after outdent even they&#39;re visually same,
 			// recording them for later refactoring.(#3982)
 			if ( !that.isIndent ) {
 				var parentLiElement;
-				if ( ( parentLiElement = listNode.getParent() ) &amp;&amp; parentLiElement.is( 'li' ) ) {
+				if ( ( parentLiElement = listNode.getParent() ) &amp;&amp; parentLiElement.is( &#39;li&#39; ) ) {
 					var children = newList.listNode.getChildren(),
 						pendingLis = [],
 						count = children.count(),
 						child;
 
 					for ( i = count - 1; i &gt;= 0; i-- ) {
-						if ( ( child = children.getItem( i ) ) &amp;&amp; child.is &amp;&amp; child.is( 'li' ) )
+						if ( ( child = children.getItem( i ) ) &amp;&amp; child.is &amp;&amp; child.is( &#39;li&#39; ) )
 							pendingLis.push( child );
 					}
 				}
@@ -229,7 +229,7 @@
 						// IE requires a filler NBSP for nested list inside empty list item,
 						// otherwise the list item will be inaccessiable. (#4476)
 						if ( CKEDITOR.env.needsNbspFiller &amp;&amp; !li.getFirst( neitherWhitespacesNorBookmark ) )
-							li.append( range.document.createText( '\u00a0' ) );
+							li.append( range.document.createText( &#39;\u00a0&#39; ) );
 
 						li.append( followingList );
 					}
@@ -239,7 +239,7 @@
 			}
 
 			if ( newList )
-				editor.fire( 'contentDomInvalidated' );
+				editor.fire( &#39;contentDomInvalidated&#39; );
 
 			return true;
 		}
@@ -306,7 +306,7 @@
 
 	// Determines whether a node is a list &lt;li&gt; element.
 	function listItem( node ) {
-		return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( 'li' );
+		return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.is( &#39;li&#39; );
 	}
 
 	function neitherWhitespacesNorBookmark( node ) {

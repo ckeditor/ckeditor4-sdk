@@ -20,8 +20,8 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'panelbutton', {
-	requires: 'button',
+CKEDITOR.plugins.add( &#39;panelbutton&#39;, {
+	requires: &#39;button&#39;,
 	onLoad: function() {
 		function clickFn( editor ) {
 			var _ = this._;
@@ -53,7 +53,7 @@ CKEDITOR.plugins.add( 'panelbutton', {
 			 * @constructor
 			 */
 			$: function( definition ) {
-				// We don't want the panel definition in this object.
+				// We don&#39;t want the panel definition in this object.
 				var panelDefinition = definition.panel || {};
 				delete definition.panel;
 
@@ -99,7 +99,7 @@ CKEDITOR.plugins.add( 'panelbutton', {
 
 					panel.onShow = function() {
 						if ( me.className )
-							this.element.addClass( me.className + '_panel' );
+							this.element.addClass( me.className + &#39;_panel&#39; );
 
 						me.setState( CKEDITOR.TRISTATE_ON );
 
@@ -113,7 +113,7 @@ CKEDITOR.plugins.add( 'panelbutton', {
 
 					panel.onHide = function( preventOnClose ) {
 						if ( me.className )
-							this.element.getFirst().removeClass( me.className + '_panel' );
+							this.element.getFirst().removeClass( me.className + &#39;_panel&#39; );
 
 						me.setState( me.modes &amp;&amp; me.modes[ editor.mode ] ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
 
@@ -149,10 +149,10 @@ CKEDITOR.plugins.add( 'panelbutton', {
 </span> * Button UI element.
  *
  * @readonly
- * @property {String} [='panelbutton']
+ * @property {String} [=&#39;panelbutton&#39;]
  * @member CKEDITOR
  */
-CKEDITOR.UI_PANELBUTTON = 'panelbutton';
+CKEDITOR.UI_PANELBUTTON = &#39;panelbutton&#39;;
 </pre>
 </body>
 </html>

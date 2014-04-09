@@ -26,18 +26,18 @@
  *
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
-	CKEDITOR.plugins.add( 'placeholder', {
-		requires: 'widget,dialog',
-		lang: 'ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'placeholder', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;placeholder&#39;, {
+		requires: &#39;widget,dialog&#39;,
+		lang: &#39;ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;placeholder&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 
 		onLoad: function() {
 			// Register styles for placeholder widget frame.
-			CKEDITOR.addCss( '.cke_placeholder{background-color:#ff0}' );
+			CKEDITOR.addCss( &#39;.cke_placeholder{background-color:#ff0}&#39; );
 		},
 
 		init: function( editor ) {
@@ -45,36 +45,36 @@
 			var lang = editor.lang.placeholder;
 
 			// Register dialog.
-			CKEDITOR.dialog.add( 'placeholder', this.path + 'dialogs/placeholder.js' );
+			CKEDITOR.dialog.add( &#39;placeholder&#39;, this.path + &#39;dialogs/placeholder.js&#39; );
 
 			// Put ur init code here.
-			editor.widgets.add( 'placeholder', {
+			editor.widgets.add( &#39;placeholder&#39;, {
 				// Widget code.
-				dialog: 'placeholder',
+				dialog: &#39;placeholder&#39;,
 				pathName: lang.pathName,
 				// We need to have wrapping element, otherwise there are issues in
 				// add dialog.
-				template: '&lt;span class=&quot;cke_placeholder&quot;&gt;[[]]&lt;/span&gt;',
+				template: &#39;&lt;span class=&quot;cke_placeholder&quot;&gt;[[]]&lt;/span&gt;&#39;,
 
 				downcast: function() {
-					return new CKEDITOR.htmlParser.text( '[[' + this.data.name + ']]' );
+					return new CKEDITOR.htmlParser.text( &#39;[[&#39; + this.data.name + &#39;]]&#39; );
 				},
 
 				init: function() {
 					// Note that placeholder markup characters are stripped for the name.
-					this.setData( 'name', this.element.getText().slice( 2, -2 ) );
+					this.setData( &#39;name&#39;, this.element.getText().slice( 2, -2 ) );
 				},
 
 				data: function( data ) {
-					this.element.setText( '[[' + this.data.name + ']]' );
+					this.element.setText( &#39;[[&#39; + this.data.name + &#39;]]&#39; );
 				}
 			} );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'CreatePlaceholder', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;CreatePlaceholder&#39;, {
 				label: lang.toolbar,
-				command: 'placeholder',
-				toolbar: 'insert,5',
-				icon: 'placeholder'
+				command: &#39;placeholder&#39;,
+				toolbar: &#39;insert,5&#39;,
+				icon: &#39;placeholder&#39;
 			} );
 		},
 
@@ -93,13 +93,13 @@
 					return text.replace( placeholderReplaceRegex, function( match ) {
 						// Creating widget code.
 						var widgetWrapper = null,
-							innerElement = new CKEDITOR.htmlParser.element( 'span', {
-								'class': 'cke_placeholder'
+							innerElement = new CKEDITOR.htmlParser.element( &#39;span&#39;, {
+								&#39;class&#39;: &#39;cke_placeholder&#39;
 							} );
 
 						// Adds placeholder identifier as innertext.
 						innerElement.add( new CKEDITOR.htmlParser.text( match ) );
-						widgetWrapper = editor.widgets.wrapElement( innerElement, 'placeholder' );
+						widgetWrapper = editor.widgets.wrapElement( innerElement, &#39;placeholder&#39; );
 
 						// Return outerhtml of widget wrapper so it will be placed
 						// as replacement.

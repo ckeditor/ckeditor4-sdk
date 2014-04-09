@@ -24,48 +24,48 @@
 </span> * @fileOverview [Mathematical Formulas](http://ckeditor.com/addon/mathjax) plugin.
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
 
-	var cdn = 'http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML';
+	var cdn = &#39;http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML&#39;;
 
-	CKEDITOR.plugins.add( 'mathjax', {
-		lang: 'ar,ca,cs,cy,de,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ro,ru,sl,sv,uk,zh,zh-cn', // %REMOVE_LINE_CORE%
-		requires: 'widget,dialog',
-		icons: 'mathjax',
+	CKEDITOR.plugins.add( &#39;mathjax&#39;, {
+		lang: &#39;ar,ca,cs,cy,de,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ro,ru,sl,sv,uk,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		requires: &#39;widget,dialog&#39;,
+		icons: &#39;mathjax&#39;,
 		hidpi: true, // %REMOVE_LINE_CORE%
 
 		init: function( editor ) {
-			var cls = editor.config.mathJaxClass || 'math-tex';
+			var cls = editor.config.mathJaxClass || &#39;math-tex&#39;;
 
-			editor.widgets.add( 'mathjax', {
+			editor.widgets.add( &#39;mathjax&#39;, {
 				inline: true,
-				dialog: 'mathjax',
+				dialog: &#39;mathjax&#39;,
 				button: editor.lang.mathjax.button,
 				mask: true,
-				allowedContent: 'span(!' + cls + ')',
+				allowedContent: &#39;span(!&#39; + cls + &#39;)&#39;,
 				pathName: editor.lang.mathjax.pathName,
 
-				template: '&lt;span class=&quot;' + cls + '&quot; style=&quot;display:inline-block&quot; data-cke-survive=1&gt;&lt;/span&gt;',
+				template: &#39;&lt;span class=&quot;&#39; + cls + &#39;&quot; style=&quot;display:inline-block&quot; data-cke-survive=1&gt;&lt;/span&gt;&#39;,
 
 				parts: {
-					span: 'span'
+					span: &#39;span&#39;
 				},
 
 				defaults: {
-					math: '\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)'
+					math: &#39;\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)&#39;
 				},
 
 				init: function() {
 					var iframe = this.parts.span.getChild( 0 );
 
 					// Check if span contains iframe and create it otherwise.
-					if ( !iframe || iframe.type != CKEDITOR.NODE_ELEMENT || !iframe.is( 'iframe' ) ) {
-						iframe = new CKEDITOR.dom.element( 'iframe' );
+					if ( !iframe || iframe.type != CKEDITOR.NODE_ELEMENT || !iframe.is( &#39;iframe&#39; ) ) {
+						iframe = new CKEDITOR.dom.element( &#39;iframe&#39; );
 						iframe.setAttributes( {
-							style: 'border:0;width:0;height:0',
-							scrolling: 'no',
+							style: &#39;border:0;width:0;height:0&#39;,
+							scrolling: &#39;no&#39;,
 							frameborder: 0,
 							allowTransparency: true,
 							src: CKEDITOR.plugins.mathjax.fixSrc
@@ -76,11 +76,11 @@
 					// Wait for ready because on some browsers iFrame will not
 					// have document element until it is put into document.
 					// This is a problem when you crate widget using dialog.
-					this.once( 'ready', function() {
+					this.once( &#39;ready&#39;, function() {
 						// Src attribute must be recreated to fix custom domain error after undo
-						// (see iFrame.removeAttribute( 'src' ) in frameWrapper.load).
+						// (see iFrame.removeAttribute( &#39;src&#39; ) in frameWrapper.load).
 						if ( CKEDITOR.env.ie )
-							iframe.setAttribute( 'src', CKEDITOR.plugins.mathjax.fixSrc );
+							iframe.setAttribute( &#39;src&#39;, CKEDITOR.plugins.mathjax.fixSrc );
 
 						this.frameWrapper = new CKEDITOR.plugins.mathjax.frameWrapper( iframe, editor );
 						this.frameWrapper.setValue( this.data.math );
@@ -93,7 +93,7 @@
 				},
 
 				upcast: function( el, data ) {
-					if ( !( el.name == 'span' &amp;&amp; el.hasClass( cls ) ) )
+					if ( !( el.name == &#39;span&#39; &amp;&amp; el.hasClass( cls ) ) )
 						return;
 
 					if ( el.children.length &gt; 1 || el.children[ 0 ].type != CKEDITOR.NODE_TEXT )
@@ -105,12 +105,12 @@
 					var attrs = el.attributes;
 
 					if ( attrs.style )
-						attrs.style += ';display:inline-block';
+						attrs.style += &#39;;display:inline-block&#39;;
 					else
-						attrs.style = 'display:inline-block';
+						attrs.style = &#39;display:inline-block&#39;;
 
 					// Add attribute to prevent deleting empty span in data processing.
-					attrs[ 'data-cke-survive' ] = 1;
+					attrs[ &#39;data-cke-survive&#39; ] = 1;
 
 					el.children[ 0 ].remove();
 
@@ -122,8 +122,8 @@
 
 					// Remove style display:inline-block.
 					var attrs = el.attributes;
-					attrs.style = attrs.style.replace( /display:\s?inline-block;?\s?/, '' );
-					if ( attrs.style === '' )
+					attrs.style = attrs.style.replace( /display:\s?inline-block;?\s?/, &#39;&#39; );
+					if ( attrs.style === &#39;&#39; )
 						delete attrs.style;
 
 					return el;
@@ -131,20 +131,20 @@
 			} );
 
 			// Add dialog.
-			CKEDITOR.dialog.add( 'mathjax', this.path + 'dialogs/mathjax.js' );
+			CKEDITOR.dialog.add( &#39;mathjax&#39;, this.path + &#39;dialogs/mathjax.js&#39; );
 
 			// Add MathJax script to page preview.
-			editor.on( 'contentPreview', function( evt ) {
+			editor.on( &#39;contentPreview&#39;, function( evt ) {
 				evt.data.dataValue = evt.data.dataValue.replace( /&lt;\/head&gt;/,
-					'&lt;script src=&quot;' + ( editor.config.mathJaxLib ? CKEDITOR.getUrl( editor.config.mathJaxLib ) : cdn ) + '&quot;&gt;&lt;\/script&gt;&lt;\/head&gt;' );
+					&#39;&lt;script src=&quot;&#39; + ( editor.config.mathJaxLib ? CKEDITOR.getUrl( editor.config.mathJaxLib ) : cdn ) + &#39;&quot;&gt;&lt;\/script&gt;&lt;\/head&gt;&#39; );
 			} );
 
-			editor.on( 'paste', function( evt ) {
+			editor.on( &#39;paste&#39;, function( evt ) {
 				// Firefox does remove iFrame elements from pasted content so this event do the same on other browsers.
 				// Also iFrame in paste content is reason of &quot;Unspecified error&quot; in IE9 (#10857).
-				var regex = new RegExp( '&lt;span[^&gt;]*?' + cls + '.*?&lt;\/span&gt;', 'ig' );
+				var regex = new RegExp( &#39;&lt;span[^&gt;]*?&#39; + cls + &#39;.*?&lt;\/span&gt;&#39;, &#39;ig&#39; );
 				evt.data.dataValue = evt.data.dataValue.replace( regex, function( match ) {
-					return  match.replace( /(&lt;iframe.*?\/iframe&gt;)/i, '' );
+					return  match.replace( /(&lt;iframe.*?\/iframe&gt;)/i, &#39;&#39; );
 				} );
 			} );
 		}
@@ -166,16 +166,16 @@
 	 */
 	CKEDITOR.plugins.mathjax.fixSrc =
 		// In Firefox src must exist and be different than about:blank to emit load event.
-		CKEDITOR.env.gecko ? 'javascript:true' :
+		CKEDITOR.env.gecko ? &#39;javascript:true&#39; :
 		// Support for custom document.domain in IE.
-		CKEDITOR.env.ie ? 'javascript:' +
-						'void((function(){' + encodeURIComponent(
-							'document.open();' +
-							'(' + CKEDITOR.tools.fixDomain + ')();' +
-							'document.close();'
-						) + '})())' :
+		CKEDITOR.env.ie ? &#39;javascript:&#39; +
+						&#39;void((function(){&#39; + encodeURIComponent(
+							&#39;document.open();&#39; +
+							&#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; +
+							&#39;document.close();&#39;
+						) + &#39;})())&#39; :
 		// In Chrome src must be undefined to emit load event.
-						'javascript:void(0)';
+						&#39;javascript:void(0)&#39;;
 
 <span id='CKEDITOR-plugins-mathjax-property-loadingIcon'>	/**
 </span>	 * Loading indicator image generated by http://preloaders.net.
@@ -183,7 +183,7 @@
 	 * @private
 	 * @property {String} loadingIcon
 	 */
-	CKEDITOR.plugins.mathjax.loadingIcon = CKEDITOR.plugins.get( 'mathjax' ).path + 'images/loader.gif';
+	CKEDITOR.plugins.mathjax.loadingIcon = CKEDITOR.plugins.get( &#39;mathjax&#39; ).path + &#39;images/loader.gif&#39;;
 
 <span id='CKEDITOR-plugins-mathjax-method-copyStyles'>	/**
 </span>	 * Computes predefined styles and copies them to another element.
@@ -193,7 +193,7 @@
 	 * @param {CKEDITOR.dom.element} to Copy target.
 	 */
 	CKEDITOR.plugins.mathjax.copyStyles = function( from, to ) {
-		var stylesToCopy = [ 'color', 'font-family', 'font-style', 'font-weight', 'font-variant', 'font-size' ];
+		var stylesToCopy = [ &#39;color&#39;, &#39;font-family&#39;, &#39;font-style&#39;, &#39;font-weight&#39;, &#39;font-variant&#39;, &#39;font-size&#39; ];
 
 		for ( var i = 0; i &lt; stylesToCopy.length; i++ ) {
 			var key = stylesToCopy[ i ],
@@ -204,15 +204,15 @@
 	};
 
 <span id='CKEDITOR-plugins-mathjax-method-trim'>	/**
-</span>	 * Trims MathJax value from '\(1+1=2\)' to '1+1=2'.
+</span>	 * Trims MathJax value from &#39;\(1+1=2\)&#39; to &#39;1+1=2&#39;.
 	 *
 	 * @private
 	 * @param {String} value String to trim.
 	 * @returns {String} Trimed string.
 	 */
 	CKEDITOR.plugins.mathjax.trim = function( value ) {
-		var begin = value.indexOf( '\\(' ) + 2,
-			end = value.lastIndexOf( '\\)' );
+		var begin = value.indexOf( &#39;\\(&#39; ) + 2,
+			end = value.lastIndexOf( &#39;\\)&#39; );
 
 		return value.substring( begin, end );
 	};
@@ -244,15 +244,15 @@
 
 				// Function called when MathJax is loaded.
 				loadedHandler = CKEDITOR.tools.addFunction( function() {
-					preview = doc.getById( 'preview' );
-					buffer = doc.getById( 'buffer' );
+					preview = doc.getById( &#39;preview&#39; );
+					buffer = doc.getById( &#39;buffer&#39; );
 					isInit = true;
 
 					if ( newValue )
 						update();
 
 					// Private! For test usage only.
-					CKEDITOR.fire( 'mathJaxLoaded', iFrame );
+					CKEDITOR.fire( &#39;mathJaxLoaded&#39;, iFrame );
 				} ),
 
 				// Function called when MathJax finish his job.
@@ -261,7 +261,7 @@
 
 					preview.setHtml( buffer.getHtml() );
 
-					editor.fire( 'lockSnapshot' );
+					editor.fire( &#39;lockSnapshot&#39; );
 
 					iFrame.setStyles( {
 						height: 0,
@@ -273,14 +273,14 @@
 						width = Math.max( preview.$.offsetWidth, doc.$.body.scrollWidth );
 
 					iFrame.setStyles( {
-						height: height + 'px',
-						width: width + 'px'
+						height: height + &#39;px&#39;,
+						width: width + &#39;px&#39;
 					} );
 
-					editor.fire( 'unlockSnapshot' );
+					editor.fire( &#39;unlockSnapshot&#39; );
 
 					// Private! For test usage only.
-					CKEDITOR.fire( 'mathJaxUpdateDone', iFrame );
+					CKEDITOR.fire( &#39;mathJaxUpdateDone&#39;, iFrame );
 
 					// If value changed in the meantime update it again.
 					if ( value != newValue )
@@ -289,71 +289,71 @@
 						isRunning = false;
 				} );
 
-			iFrame.on( 'load', load );
+			iFrame.on( &#39;load&#39;, load );
 
 			load();
 
 			function load() {
 				doc = iFrame.getFrameDocument();
 
-				if ( doc.getById( 'preview' ) )
+				if ( doc.getById( &#39;preview&#39; ) )
 					return;
 
 				// Because of IE9 bug in a src attribute can not be javascript
 				// when you undo (#10930). If you have iFrame with javascript in src
 				// and call insertBefore on such element then IE9 will see crash.
 				if ( CKEDITOR.env.ie )
-					iFrame.removeAttribute( 'src' );
+					iFrame.removeAttribute( &#39;src&#39; );
 
-				doc.write( '&lt;!DOCTYPE html&gt;' +
-							'&lt;html&gt;' +
-							'&lt;head&gt;' +
-								'&lt;meta charset=&quot;utf-8&quot;&gt;' +
-								'&lt;script type=&quot;text/x-mathjax-config&quot;&gt;' +
+				doc.write( &#39;&lt;!DOCTYPE html&gt;&#39; +
+							&#39;&lt;html&gt;&#39; +
+							&#39;&lt;head&gt;&#39; +
+								&#39;&lt;meta charset=&quot;utf-8&quot;&gt;&#39; +
+								&#39;&lt;script type=&quot;text/x-mathjax-config&quot;&gt;&#39; +
 
 									// MathJax configuration, disable messages.
-									'MathJax.Hub.Config( {' +
-										'showMathMenu: false,' +
-										'messageStyle: &quot;none&quot;' +
-									'} );' +
+									&#39;MathJax.Hub.Config( {&#39; +
+										&#39;showMathMenu: false,&#39; +
+										&#39;messageStyle: &quot;none&quot;&#39; +
+									&#39;} );&#39; +
 
 									// Get main CKEDITOR form parent.
-									'function getCKE() {' +
-										'if ( typeof window.parent.CKEDITOR == \'object\' ) {' +
-											'return window.parent.CKEDITOR;' +
-										'} else {' +
-											'return window.parent.parent.CKEDITOR;' +
-										'}' +
-									'}' +
+									&#39;function getCKE() {&#39; +
+										&#39;if ( typeof window.parent.CKEDITOR == \&#39;object\&#39; ) {&#39; +
+											&#39;return window.parent.CKEDITOR;&#39; +
+										&#39;} else {&#39; +
+											&#39;return window.parent.parent.CKEDITOR;&#39; +
+										&#39;}&#39; +
+									&#39;}&#39; +
 
 									// Run MathJax.Hub with its actual parser and call callback function after that.
 									// Because MathJax.Hub is asynchronous create MathJax.Hub.Queue to wait with callback.
-									'function update() {' +
-										'MathJax.Hub.Queue(' +
-											'[ \'Typeset\', MathJax.Hub, this.buffer ],' +
-											'function() {' +
-												'getCKE().tools.callFunction( ' + updateDoneHandler + ' );' +
-											'}' +
-										');' +
-									'}' +
+									&#39;function update() {&#39; +
+										&#39;MathJax.Hub.Queue(&#39; +
+											&#39;[ \&#39;Typeset\&#39;, MathJax.Hub, this.buffer ],&#39; +
+											&#39;function() {&#39; +
+												&#39;getCKE().tools.callFunction( &#39; + updateDoneHandler + &#39; );&#39; +
+											&#39;}&#39; +
+										&#39;);&#39; +
+									&#39;}&#39; +
 
 									// Run MathJax for the first time, when the script is loaded.
-									// Callback function will be called then it's done.
-									'MathJax.Hub.Queue( function() {' +
-										'getCKE().tools.callFunction(' + loadedHandler + ');' +
-									'} );' +
-								'&lt;/script&gt;' +
+									// Callback function will be called then it&#39;s done.
+									&#39;MathJax.Hub.Queue( function() {&#39; +
+										&#39;getCKE().tools.callFunction(&#39; + loadedHandler + &#39;);&#39; +
+									&#39;} );&#39; +
+								&#39;&lt;/script&gt;&#39; +
 
 								// Load MathJax lib.
-								'&lt;script src=&quot;' + ( editor.config.mathJaxLib || cdn ) + '&quot;&gt;&lt;/script&gt;' +
-							'&lt;/head&gt;' +
-							'&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;' +
-								'&lt;span id=&quot;preview&quot;&gt;&lt;/span&gt;' +
+								&#39;&lt;script src=&quot;&#39; + ( editor.config.mathJaxLib || cdn ) + &#39;&quot;&gt;&lt;/script&gt;&#39; +
+							&#39;&lt;/head&gt;&#39; +
+							&#39;&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;&#39; +
+								&#39;&lt;span id=&quot;preview&quot;&gt;&lt;/span&gt;&#39; +
 
 								// Render everything here and after that copy it to the preview.
-								'&lt;span id=&quot;buffer&quot; style=&quot;display:none&quot;&gt;&lt;/span&gt;' +
-							'&lt;/body&gt;' +
-							'&lt;/html&gt;' );
+								&#39;&lt;span id=&quot;buffer&quot; style=&quot;display:none&quot;&gt;&lt;/span&gt;&#39; +
+							&#39;&lt;/body&gt;&#39; +
+							&#39;&lt;/html&gt;&#39; );
 			}
 
 			// Run MathJax parsing Tex.
@@ -362,21 +362,21 @@
 
 				value = newValue;
 
-				editor.fire( 'lockSnapshot' );
+				editor.fire( &#39;lockSnapshot&#39; );
 
 				buffer.setHtml( value );
 
 				// Set loading indicator.
-				preview.setHtml( '&lt;img src=' + CKEDITOR.plugins.mathjax.loadingIcon + ' alt=' + editor.lang.mathjax.loading + '&gt;' );
+				preview.setHtml( &#39;&lt;img src=&#39; + CKEDITOR.plugins.mathjax.loadingIcon + &#39; alt=&#39; + editor.lang.mathjax.loading + &#39;&gt;&#39; );
 
 				iFrame.setStyles( {
-					height: '16px',
-					width: '16px',
-					display: 'inline',
-					'vertical-align': 'middle'
+					height: &#39;16px&#39;,
+					width: &#39;16px&#39;,
+					display: &#39;inline&#39;,
+					&#39;vertical-align&#39;: &#39;middle&#39;
 				} );
 
-				editor.fire( 'unlockSnapshot' );
+				editor.fire( &#39;unlockSnapshot&#39; );
 
 				// Run MathJax.
 				doc.getWindow().$.update( value );
@@ -403,35 +403,35 @@
 		// In IE8 MathJax does not work stable so instead of using standard
 		// frame wrapper it is replaced by placeholder to show pure TeX in iframe.
 		CKEDITOR.plugins.mathjax.frameWrapper = function( iFrame, editor ) {
-			iFrame.getFrameDocument().write( '&lt;!DOCTYPE html&gt;' +
-				'&lt;html&gt;' +
-				'&lt;head&gt;' +
-					'&lt;meta charset=&quot;utf-8&quot;&gt;' +
-				'&lt;/head&gt;' +
-				'&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;' +
-					'&lt;span style=&quot;white-space:nowrap;&quot; id=&quot;tex&quot;&gt;&lt;/span&gt;' +
-				'&lt;/body&gt;' +
-				'&lt;/html&gt;' );
+			iFrame.getFrameDocument().write( &#39;&lt;!DOCTYPE html&gt;&#39; +
+				&#39;&lt;html&gt;&#39; +
+				&#39;&lt;head&gt;&#39; +
+					&#39;&lt;meta charset=&quot;utf-8&quot;&gt;&#39; +
+				&#39;&lt;/head&gt;&#39; +
+				&#39;&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;&#39; +
+					&#39;&lt;span style=&quot;white-space:nowrap;&quot; id=&quot;tex&quot;&gt;&lt;/span&gt;&#39; +
+				&#39;&lt;/body&gt;&#39; +
+				&#39;&lt;/html&gt;&#39; );
 
 			return {
 				setValue: function( value ) {
 					var doc = iFrame.getFrameDocument(),
-						tex = doc.getById( 'tex' );
+						tex = doc.getById( &#39;tex&#39; );
 
 					tex.setHtml( CKEDITOR.plugins.mathjax.trim( value ) );
 
 					CKEDITOR.plugins.mathjax.copyStyles( iFrame, tex );
 
-					editor.fire( 'lockSnapshot' );
+					editor.fire( &#39;lockSnapshot&#39; );
 
 					iFrame.setStyles( {
-						width: Math.min( 250, tex.$.offsetWidth ) + 'px',
-						height: doc.$.body.offsetHeight + 'px',
-						display: 'inline',
-						'vertical-align': 'middle'
+						width: Math.min( 250, tex.$.offsetWidth ) + &#39;px&#39;,
+						height: doc.$.body.offsetHeight + &#39;px&#39;,
+						display: &#39;inline&#39;,
+						&#39;vertical-align&#39;: &#39;middle&#39;
 					} );
 
-					editor.fire( 'unlockSnapshot' );
+					editor.fire( &#39;unlockSnapshot&#39; );
 				}
 			};
 		};
@@ -444,9 +444,9 @@
  *
  * Please note that this must be a full or absolute path.
  *
- *		config.mathJaxLib = 'http:\/\/example.com\/libs\/MathJax.js';
+ *		config.mathJaxLib = &#39;http:\/\/example.com\/libs\/MathJax.js&#39;;
  *
- * @cfg {String} [mathJaxLib='http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML']
+ * @cfg {String} [mathJaxLib=&#39;http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML&#39;]
  * @member CKEDITOR.config
  */
 
@@ -457,13 +457,13 @@
  *
  * If you set it to the following:
  *
- *		config.mathJaxClass = 'my-math';
+ *		config.mathJaxClass = &#39;my-math&#39;;
  *
  * The code below will be recognized as a Mathematical Formulas widget.
  *
  *		&lt;span class=&quot;my-math&quot;&gt;\( \sqrt{4} = 2 \)&lt;/span&gt;
  *
- * @cfg {String} [mathJaxClass='math-tex']
+ * @cfg {String} [mathJaxClass=&#39;math-tex&#39;]
  * @member CKEDITOR.config
  */</pre>
 </body>

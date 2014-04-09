@@ -21,11 +21,11 @@
  */
 
 ( function() {
-	// Map 'true' and 'false' values to match W3C's specifications
+	// Map &#39;true&#39; and &#39;false&#39; values to match W3C&#39;s specifications
 	// http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5
 	var checkboxValues = {
-		scrolling: { 'true': 'yes', 'false': 'no' },
-		frameborder: { 'true': '1', 'false': '0' }
+		scrolling: { &#39;true&#39;: &#39;yes&#39;, &#39;false&#39;: &#39;no&#39; },
+		frameborder: { &#39;true&#39;: &#39;1&#39;, &#39;false&#39;: &#39;0&#39; }
 	};
 
 	function loadValue( iframeNode ) {
@@ -33,14 +33,14 @@
 		if ( iframeNode.hasAttribute( this.id ) ) {
 			var value = iframeNode.getAttribute( this.id );
 			if ( isCheckbox )
-				this.setValue( checkboxValues[ this.id ][ 'true' ] == value.toLowerCase() );
+				this.setValue( checkboxValues[ this.id ][ &#39;true&#39; ] == value.toLowerCase() );
 			else
 				this.setValue( value );
 		}
 	}
 
 	function commitValue( iframeNode ) {
-		var isRemove = this.getValue() === '',
+		var isRemove = this.getValue() === &#39;&#39;,
 			isCheckbox = this instanceof CKEDITOR.ui.dialog.checkbox,
 			value = this.getValue();
 		if ( isRemove )
@@ -51,7 +51,7 @@
 			iframeNode.setAttribute( this.att || this.id, value );
 	}
 
-	CKEDITOR.dialog.add( 'iframe', function( editor ) {
+	CKEDITOR.dialog.add( &#39;iframe&#39;, function( editor ) {
 		var iframeLang = editor.lang.iframe,
 			commonLang = editor.lang.common,
 			dialogadvtab = editor.plugins.dialogadvtab;
@@ -64,7 +64,7 @@
 				this.fakeImage = this.iframeNode = null;
 
 				var fakeImage = this.getSelectedElement();
-				if ( fakeImage &amp;&amp; fakeImage.data( 'cke-real-element-type' ) &amp;&amp; fakeImage.data( 'cke-real-element-type' ) == 'iframe' ) {
+				if ( fakeImage &amp;&amp; fakeImage.data( &#39;cke-real-element-type&#39; ) &amp;&amp; fakeImage.data( &#39;cke-real-element-type&#39; ) == &#39;iframe&#39; ) {
 					this.fakeImage = fakeImage;
 
 					var iframeNode = editor.restoreRealElement( fakeImage );
@@ -76,7 +76,7 @@
 			onOk: function() {
 				var iframeNode;
 				if ( !this.fakeImage )
-					iframeNode = new CKEDITOR.dom.element( 'iframe' );
+					iframeNode = new CKEDITOR.dom.element( &#39;iframe&#39; );
 				else
 					iframeNode = this.iframeNode;
 
@@ -88,7 +88,7 @@
 				this.commitContent( iframeNode, extraStyles, extraAttributes );
 
 				// Refresh the fake image.
-				var newFakeImage = editor.createFakeElement( iframeNode, 'cke_iframe', 'iframe', true );
+				var newFakeImage = editor.createFakeElement( iframeNode, &#39;cke_iframe&#39;, &#39;iframe&#39;, true );
 				newFakeImage.setAttributes( extraAttributes );
 				newFakeImage.setStyles( extraStyles );
 				if ( this.fakeImage ) {
@@ -99,17 +99,17 @@
 			},
 			contents: [
 				{
-				id: 'info',
+				id: &#39;info&#39;,
 				label: commonLang.generalTab,
-				accessKey: 'I',
+				accessKey: &#39;I&#39;,
 				elements: [
 					{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					padding: 0,
 					children: [
 						{
-						id: 'src',
-						type: 'text',
+						id: &#39;src&#39;,
+						type: &#39;text&#39;,
 						label: commonLang.url,
 						required: true,
 						validate: CKEDITOR.dialog.validate.notEmpty( iframeLang.noUrl ),
@@ -119,51 +119,51 @@
 					]
 				},
 					{
-					type: 'hbox',
+					type: &#39;hbox&#39;,
 					children: [
 						{
-						id: 'width',
-						type: 'text',
-						requiredContent: 'iframe[width]',
-						style: 'width:100%',
-						labelLayout: 'vertical',
+						id: &#39;width&#39;,
+						type: &#39;text&#39;,
+						requiredContent: &#39;iframe[width]&#39;,
+						style: &#39;width:100%&#39;,
+						labelLayout: &#39;vertical&#39;,
 						label: commonLang.width,
-						validate: CKEDITOR.dialog.validate.htmlLength( commonLang.invalidHtmlLength.replace( '%1', commonLang.width ) ),
+						validate: CKEDITOR.dialog.validate.htmlLength( commonLang.invalidHtmlLength.replace( &#39;%1&#39;, commonLang.width ) ),
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'height',
-						type: 'text',
-						requiredContent: 'iframe[height]',
-						style: 'width:100%',
-						labelLayout: 'vertical',
+						id: &#39;height&#39;,
+						type: &#39;text&#39;,
+						requiredContent: &#39;iframe[height]&#39;,
+						style: &#39;width:100%&#39;,
+						labelLayout: &#39;vertical&#39;,
 						label: commonLang.height,
-						validate: CKEDITOR.dialog.validate.htmlLength( commonLang.invalidHtmlLength.replace( '%1', commonLang.height ) ),
+						validate: CKEDITOR.dialog.validate.htmlLength( commonLang.invalidHtmlLength.replace( &#39;%1&#39;, commonLang.height ) ),
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'align',
-						type: 'select',
-						requiredContent: 'iframe[align]',
-						'default': '',
+						id: &#39;align&#39;,
+						type: &#39;select&#39;,
+						requiredContent: &#39;iframe[align]&#39;,
+						&#39;default&#39;: &#39;&#39;,
 						items: [
-							[ commonLang.notSet, '' ],
-							[ commonLang.alignLeft, 'left' ],
-							[ commonLang.alignRight, 'right' ],
-							[ commonLang.alignTop, 'top' ],
-							[ commonLang.alignMiddle, 'middle' ],
-							[ commonLang.alignBottom, 'bottom' ]
+							[ commonLang.notSet, &#39;&#39; ],
+							[ commonLang.alignLeft, &#39;left&#39; ],
+							[ commonLang.alignRight, &#39;right&#39; ],
+							[ commonLang.alignTop, &#39;top&#39; ],
+							[ commonLang.alignMiddle, &#39;middle&#39; ],
+							[ commonLang.alignBottom, &#39;bottom&#39; ]
 							],
-						style: 'width:100%',
-						labelLayout: 'vertical',
+						style: &#39;width:100%&#39;,
+						labelLayout: &#39;vertical&#39;,
 						label: commonLang.align,
 						setup: function( iframeNode, fakeImage ) {
 							loadValue.apply( this, arguments );
 							if ( fakeImage ) {
-								var fakeImageAlign = fakeImage.getAttribute( 'align' );
-								this.setValue( fakeImageAlign &amp;&amp; fakeImageAlign.toLowerCase() || '' );
+								var fakeImageAlign = fakeImage.getAttribute( &#39;align&#39; );
+								this.setValue( fakeImageAlign &amp;&amp; fakeImageAlign.toLowerCase() || &#39;&#39; );
 							}
 						},
 						commit: function( iframeNode, extraStyles, extraAttributes ) {
@@ -175,21 +175,21 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'scrolling',
-						type: 'checkbox',
-						requiredContent: 'iframe[scrolling]',
+						id: &#39;scrolling&#39;,
+						type: &#39;checkbox&#39;,
+						requiredContent: &#39;iframe[scrolling]&#39;,
 						label: iframeLang.scrolling,
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'frameborder',
-						type: 'checkbox',
-						requiredContent: 'iframe[frameborder]',
+						id: &#39;frameborder&#39;,
+						type: &#39;checkbox&#39;,
+						requiredContent: &#39;iframe[frameborder]&#39;,
 						label: iframeLang.border,
 						setup: loadValue,
 						commit: commitValue
@@ -197,21 +197,21 @@
 					]
 				},
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'name',
-						type: 'text',
-						requiredContent: 'iframe[name]',
+						id: &#39;name&#39;,
+						type: &#39;text&#39;,
+						requiredContent: &#39;iframe[name]&#39;,
 						label: commonLang.name,
 						setup: loadValue,
 						commit: commitValue
 					},
 						{
-						id: 'title',
-						type: 'text',
-						requiredContent: 'iframe[title]',
+						id: &#39;title&#39;,
+						type: &#39;text&#39;,
+						requiredContent: &#39;iframe[title]&#39;,
 						label: commonLang.advisoryTitle,
 						setup: loadValue,
 						commit: commitValue
@@ -219,16 +219,16 @@
 					]
 				},
 					{
-					id: 'longdesc',
-					type: 'text',
-					requiredContent: 'iframe[longdesc]',
+					id: &#39;longdesc&#39;,
+					type: &#39;text&#39;,
+					requiredContent: &#39;iframe[longdesc]&#39;,
 					label: commonLang.longDescr,
 					setup: loadValue,
 					commit: commitValue
 				}
 				]
 			},
-				dialogadvtab &amp;&amp; dialogadvtab.createAdvancedTab( editor, { id: 1, classes: 1, styles: 1 }, 'iframe' )
+				dialogadvtab &amp;&amp; dialogadvtab.createAdvancedTab( editor, { id: 1, classes: 1, styles: 1 }, &#39;iframe&#39; )
 				]
 		};
 	} );

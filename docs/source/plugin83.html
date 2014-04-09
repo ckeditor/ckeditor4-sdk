@@ -25,20 +25,20 @@
 		needsIEHacks = CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks );
 
 	function getWidth( el ) {
-		return CKEDITOR.env.ie ? el.$.clientWidth : parseInt( el.getComputedStyle( 'width' ), 10 );
+		return CKEDITOR.env.ie ? el.$.clientWidth : parseInt( el.getComputedStyle( &#39;width&#39; ), 10 );
 	}
 
 	function getBorderWidth( element, side ) {
-		var computed = element.getComputedStyle( 'border-' + side + '-width' ),
+		var computed = element.getComputedStyle( &#39;border-&#39; + side + &#39;-width&#39; ),
 			borderMap = {
-				thin: '0px',
-				medium: '1px',
-				thick: '2px'
+				thin: &#39;0px&#39;,
+				medium: &#39;1px&#39;,
+				thick: &#39;2px&#39;
 			};
 
-		if ( computed.indexOf( 'px' ) &lt; 0 ) {
+		if ( computed.indexOf( &#39;px&#39; ) &lt; 0 ) {
 			// look up keywords
-			if ( computed in borderMap &amp;&amp; element.getComputedStyle( 'border-style' ) != 'none' )
+			if ( computed in borderMap &amp;&amp; element.getComputedStyle( &#39;border-style&#39; ) != &#39;none&#39; )
 				computed = borderMap[ computed ];
 			else
 				computed = 0;
@@ -69,7 +69,7 @@
 	function buildTableColumnPillars( table ) {
 		var pillars = [],
 			pillarIndex = -1,
-			rtl = ( table.getComputedStyle( 'direction' ) == 'rtl' );
+			rtl = ( table.getComputedStyle( &#39;direction&#39; ) == &#39;rtl&#39; );
 
 		// Get the raw row element that cointains the most columns.
 		var $tr = getMasterPillarRow( table );
@@ -94,13 +94,13 @@
 			var x = td.getDocumentPosition().x;
 
 			// Calculate positions based on the current cell.
-			rtl ? pillarRight = x + getBorderWidth( td, 'left' ) : pillarLeft = x + td.$.offsetWidth - getBorderWidth( td, 'right' );
+			rtl ? pillarRight = x + getBorderWidth( td, &#39;left&#39; ) : pillarLeft = x + td.$.offsetWidth - getBorderWidth( td, &#39;right&#39; );
 
 			// Calculate positions based on the next cell, if available.
 			if ( nextTd ) {
 				x = nextTd.getDocumentPosition().x;
 
-				rtl ? pillarLeft = x + nextTd.$.offsetWidth - getBorderWidth( nextTd, 'right' ) : pillarRight = x + getBorderWidth( nextTd, 'left' );
+				rtl ? pillarLeft = x + nextTd.$.offsetWidth - getBorderWidth( nextTd, &#39;right&#39; ) : pillarRight = x + getBorderWidth( nextTd, &#39;left&#39; );
 			}
 			// Otherwise calculate positions based on the table (for last cell).
 			else {
@@ -151,11 +151,11 @@
 			currentShift = 0;
 			isResizing = 0;
 
-			document.removeListener( 'mouseup', onMouseUp );
-			resizer.removeListener( 'mousedown', onMouseDown );
-			resizer.removeListener( 'mousemove', onMouseMove );
+			document.removeListener( &#39;mouseup&#39;, onMouseUp );
+			resizer.removeListener( &#39;mousedown&#39;, onMouseDown );
+			resizer.removeListener( &#39;mousemove&#39;, onMouseMove );
 
-			document.getBody().setStyle( 'cursor', 'auto' );
+			document.getBody().setStyle( &#39;cursor&#39;, &#39;auto&#39; );
 
 			// Hide the resizer (remove it on IE7 - #5890).
 			needsIEHacks ? resizer.remove() : resizer.hide();
@@ -199,14 +199,14 @@
 			rightShiftBoundary = pillar.x + rightMinSize;
 
 			resizer.setOpacity( 0.5 );
-			startOffset = parseInt( resizer.getStyle( 'left' ), 10 );
+			startOffset = parseInt( resizer.getStyle( &#39;left&#39; ), 10 );
 			currentShift = 0;
 			isResizing = 1;
 
-			resizer.on( 'mousemove', onMouseMove );
+			resizer.on( &#39;mousemove&#39;, onMouseMove );
 
-			// Prevent the native drag behavior otherwise 'mousemove' won't fire.
-			document.on( 'dragstart', cancel );
+			// Prevent the native drag behavior otherwise &#39;mousemove&#39; won&#39;t fire.
+			document.on( &#39;dragstart&#39;, cancel );
 		}
 
 		function resizeEnd() {
@@ -218,10 +218,10 @@
 
 			var table = pillar.table;
 			setTimeout( function() {
-				table.removeCustomData( '_cke_table_pillars' );
+				table.removeCustomData( &#39;_cke_table_pillars&#39; );
 			}, 0 );
 
-			document.removeListener( 'dragstart', cancel );
+			document.removeListener( &#39;dragstart&#39;, cancel );
 		}
 
 		function resizeColumn() {
@@ -236,16 +236,16 @@
 
 				// Defer the resizing to avoid any interference among cells.
 				CKEDITOR.tools.setTimeout( function( leftCell, leftOldWidth, rightCell, rightOldWidth, tableWidth, sizeShift ) {
-					leftCell &amp;&amp; leftCell.setStyle( 'width', pxUnit( Math.max( leftOldWidth + sizeShift, 0 ) ) );
-					rightCell &amp;&amp; rightCell.setStyle( 'width', pxUnit( Math.max( rightOldWidth - sizeShift, 0 ) ) );
+					leftCell &amp;&amp; leftCell.setStyle( &#39;width&#39;, pxUnit( Math.max( leftOldWidth + sizeShift, 0 ) ) );
+					rightCell &amp;&amp; rightCell.setStyle( &#39;width&#39;, pxUnit( Math.max( rightOldWidth - sizeShift, 0 ) ) );
 
-					// If we're in the last cell, we need to resize the table as well
+					// If we&#39;re in the last cell, we need to resize the table as well
 					if ( tableWidth )
-						table.setStyle( 'width', pxUnit( tableWidth + sizeShift * ( rtl ? -1 : 1 ) ) );
+						table.setStyle( &#39;width&#39;, pxUnit( tableWidth + sizeShift * ( rtl ? -1 : 1 ) ) );
 				}, 0, this, [
 					leftCell, leftCell &amp;&amp; getWidth( leftCell ),
 					rightCell, rightCell &amp;&amp; getWidth( rightCell ),
-					( !leftCell || !rightCell ) &amp;&amp; ( getWidth( table ) + getBorderWidth( table, 'left' ) + getBorderWidth( table, 'right' ) ),
+					( !leftCell || !rightCell ) &amp;&amp; ( getWidth( table ) + getBorderWidth( table, &#39;left&#39; ) + getBorderWidth( table, &#39;right&#39; ) ),
 					currentShift ] );
 			}
 		}
@@ -255,7 +255,7 @@
 
 			resizeStart();
 
-			document.on( 'mouseup', onMouseUp, this );
+			document.on( &#39;mouseup&#39;, onMouseUp, this );
 		}
 
 		function onMouseUp( evt ) {
@@ -270,12 +270,12 @@
 
 		document = editor.document;
 
-		resizer = CKEDITOR.dom.element.createFromHtml( '&lt;div data-cke-temp=1 contenteditable=false unselectable=on ' +
-			'style=&quot;position:absolute;cursor:col-resize;filter:alpha(opacity=0);opacity:0;' +
-				'padding:0;background-color:#004;background-image:none;border:0px none;z-index:10&quot;&gt;&lt;/div&gt;', document );
+		resizer = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div data-cke-temp=1 contenteditable=false unselectable=on &#39; +
+			&#39;style=&quot;position:absolute;cursor:col-resize;filter:alpha(opacity=0);opacity:0;&#39; +
+				&#39;padding:0;background-color:#004;background-image:none;border:0px none;z-index:10&quot;&gt;&lt;/div&gt;&#39;, document );
 
 		// Clean DOM when editor is destroyed.
-		editor.on( 'destroy', function() {
+		editor.on( &#39;destroy&#39;, function() {
 			resizer.remove();
 		} );
 
@@ -304,16 +304,16 @@
 				top: pxUnit( targetPillar.y )
 			} );
 
-			// In IE6/7, it's not possible to have custom cursors for floating
+			// In IE6/7, it&#39;s not possible to have custom cursors for floating
 			// elements in an editable document. Show the resizer in that case,
 			// to give the user a visual clue.
 			needsIEHacks &amp;&amp; resizer.setOpacity( 0.25 );
 
-			resizer.on( 'mousedown', onMouseDown, this );
+			resizer.on( &#39;mousedown&#39;, onMouseDown, this );
 
-			document.getBody().setStyle( 'cursor', 'col-resize' );
+			document.getBody().setStyle( &#39;cursor&#39;, &#39;col-resize&#39; );
 
-			// Display the resizer to receive events but don't show it,
+			// Display the resizer to receive events but don&#39;t show it,
 			// only change the cursor to resizable shape.
 			resizer.show();
 		};
@@ -339,7 +339,7 @@
 					currentShift = resizerNewPosition - startOffset;
 				}
 
-				resizer.setStyle( 'left', pxUnit( resizerNewPosition ) );
+				resizer.setStyle( &#39;left&#39;, pxUnit( resizerNewPosition ) );
 
 				return 1;
 			};
@@ -348,36 +348,36 @@
 	function clearPillarsCache( evt ) {
 		var target = evt.data.getTarget();
 
-		if ( evt.name == 'mouseout' ) {
+		if ( evt.name == &#39;mouseout&#39; ) {
 			// Bypass interal mouse move.
-			if ( !target.is( 'table' ) )
+			if ( !target.is( &#39;table&#39; ) )
 				return;
 
 			var dest = new CKEDITOR.dom.element( evt.data.$.relatedTarget || evt.data.$.toElement );
-			while ( dest &amp;&amp; dest.$ &amp;&amp; !dest.equals( target ) &amp;&amp; !dest.is( 'body' ) )
+			while ( dest &amp;&amp; dest.$ &amp;&amp; !dest.equals( target ) &amp;&amp; !dest.is( &#39;body&#39; ) )
 				dest = dest.getParent();
 			if ( !dest || dest.equals( target ) )
 				return;
 		}
 
-		target.getAscendant( 'table', 1 ).removeCustomData( '_cke_table_pillars' );
+		target.getAscendant( &#39;table&#39;, 1 ).removeCustomData( &#39;_cke_table_pillars&#39; );
 		evt.removeListener();
 	}
 
-	CKEDITOR.plugins.add( 'tableresize', {
-		requires: 'tabletools',
+	CKEDITOR.plugins.add( &#39;tableresize&#39;, {
+		requires: &#39;tabletools&#39;,
 
 		init: function( editor ) {
-			editor.on( 'contentDom', function() {
+			editor.on( &#39;contentDom&#39;, function() {
 				var resizer,
 					editable = editor.editable();
 
-				editable.attachListener( editable.isInline() ? editable : editor.document, 'mousemove', function( evt ) {
+				editable.attachListener( editable.isInline() ? editable : editor.document, &#39;mousemove&#39;, function( evt ) {
 					evt = evt.data;
 
 					var pageX = evt.getPageOffset().x;
 
-					// If we're already attached to a pillar, simply move the
+					// If we&#39;re already attached to a pillar, simply move the
 					// resizer.
 					if ( resizer &amp;&amp; resizer.move( pageX ) ) {
 						cancel( evt );
@@ -388,16 +388,16 @@
 					var target = evt.getTarget(),
 						table, pillars;
 
-					if ( !target.is( 'table' ) &amp;&amp; !target.getAscendant( 'tbody', 1 ) )
+					if ( !target.is( &#39;table&#39; ) &amp;&amp; !target.getAscendant( &#39;tbody&#39;, 1 ) )
 						return;
 
-					table = target.getAscendant( 'table', 1 );
+					table = target.getAscendant( &#39;table&#39;, 1 );
 
-					if ( !( pillars = table.getCustomData( '_cke_table_pillars' ) ) ) {
+					if ( !( pillars = table.getCustomData( &#39;_cke_table_pillars&#39; ) ) ) {
 						// Cache table pillars calculation result.
-						table.setCustomData( '_cke_table_pillars', ( pillars = buildTableColumnPillars( table ) ) );
-						table.on( 'mouseout', clearPillarsCache );
-						table.on( 'mousedown', clearPillarsCache );
+						table.setCustomData( &#39;_cke_table_pillars&#39;, ( pillars = buildTableColumnPillars( table ) ) );
+						table.on( &#39;mouseout&#39;, clearPillarsCache );
+						table.on( &#39;mousedown&#39;, clearPillarsCache );
 					}
 
 					var pillar = getPillarAtPosition( pillars, pageX );

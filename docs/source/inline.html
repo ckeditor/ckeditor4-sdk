@@ -30,7 +30,7 @@
 	 *
 	 *		&lt;div contenteditable=&quot;true&quot; id=&quot;content&quot;&gt;...&lt;/div&gt;
 	 *		...
-	 *		CKEDITOR.inline( 'content' );
+	 *		CKEDITOR.inline( &#39;content&#39; );
 	 *
 	 * It is also possible to create an inline editor from the `&lt;textarea&gt;` element.
 	 * If you do so, an additional `&lt;div&gt;` element with editable content will be created
@@ -49,19 +49,19 @@
 
 		// Avoid multiple inline editor instances on the same element.
 		if ( element.getEditor() )
-			throw 'The editor instance &quot;' + element.getEditor().name + '&quot; is already attached to the provided element.';
+			throw &#39;The editor instance &quot;&#39; + element.getEditor().name + &#39;&quot; is already attached to the provided element.&#39;;
 
 		var editor = new CKEDITOR.editor( instanceConfig, element, CKEDITOR.ELEMENT_MODE_INLINE ),
-			textarea = element.is( 'textarea' ) ? element : null;
+			textarea = element.is( &#39;textarea&#39; ) ? element : null;
 
 		if ( textarea ) {
 			editor.setData( textarea.getValue(), null, true );
 
 			//Change element from textarea to div
 			element = CKEDITOR.dom.element.createFromHtml(
-				'&lt;div contenteditable=&quot;' + !!editor.readOnly + '&quot; class=&quot;cke_textarea_inline&quot;&gt;' +
+				&#39;&lt;div contenteditable=&quot;&#39; + !!editor.readOnly + &#39;&quot; class=&quot;cke_textarea_inline&quot;&gt;&#39; +
 					textarea.getValue() +
-				'&lt;/div&gt;',
+				&#39;&lt;/div&gt;&#39;,
 				CKEDITOR.document );
 
 			element.insertAfter( textarea );
@@ -77,8 +77,8 @@
 		}
 
 		// Once the editor is loaded, start the UI.
-		editor.on( 'loaded', function() {
-			editor.fire( 'uiReady' );
+		editor.on( &#39;loaded&#39;, function() {
+			editor.fire( &#39;uiReady&#39; );
 
 			// Enable editing on the element.
 			editor.editable( element );
@@ -92,23 +92,23 @@
 			// Clean on startup.
 			editor.resetDirty();
 
-			editor.fire( 'contentDom' );
+			editor.fire( &#39;contentDom&#39; );
 
-			// Inline editing defaults to &quot;wysiwyg&quot; mode, so plugins don't
+			// Inline editing defaults to &quot;wysiwyg&quot; mode, so plugins don&#39;t
 			// need to make special handling for this &quot;mode-less&quot; environment.
-			editor.mode = 'wysiwyg';
-			editor.fire( 'mode' );
+			editor.mode = &#39;wysiwyg&#39;;
+			editor.fire( &#39;mode&#39; );
 
 			// The editor is completely loaded for interaction.
-			editor.status = 'ready';
-			editor.fireOnce( 'instanceReady' );
-			CKEDITOR.fire( 'instanceReady', null, editor );
+			editor.status = &#39;ready&#39;;
+			editor.fireOnce( &#39;instanceReady&#39; );
+			CKEDITOR.fire( &#39;instanceReady&#39;, null, editor );
 
 			// give priority to plugins that relay on editor#loaded for bootstrapping.
 		}, null, null, 10000 );
 
 		// Handle editor destroying.
-		editor.on( 'destroy', function() {
+		editor.on( &#39;destroy&#39;, function() {
 			// Remove container from DOM if inline-textarea editor.
 			// Show &lt;textarea&gt; back again.
 			if ( textarea ) {
@@ -139,7 +139,7 @@
 			for ( var i = 0, len = elements.count(); i &lt; len; i++ ) {
 				el = elements.getItem( i );
 
-				if ( el.getAttribute( 'contenteditable' ) == 'true' ) {
+				if ( el.getAttribute( &#39;contenteditable&#39; ) == &#39;true&#39; ) {
 					// Fire the &quot;inline&quot; event, making it possible to customize
 					// the instance settings and eventually cancel the creation.
 
@@ -148,7 +148,7 @@
 						config: {}
 					};
 
-					if ( CKEDITOR.fire( 'inline', data ) !== false )
+					if ( CKEDITOR.fire( &#39;inline&#39;, data ) !== false )
 						CKEDITOR.inline( el, data.config );
 				}
 			}

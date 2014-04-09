@@ -38,19 +38,19 @@
  * with the `$` character.
  *
  *		// Check if &lt;div&gt; can be contained in a &lt;p&gt; element.
- *		alert( !!CKEDITOR.dtd[ 'p' ][ 'div' ] ); // false
+ *		alert( !!CKEDITOR.dtd[ &#39;p&#39; ][ &#39;div&#39; ] ); // false
  *
  *		// Check if &lt;p&gt; can be contained in a &lt;div&gt; element.
- *		alert( !!CKEDITOR.dtd[ 'div' ][ 'p' ] ); // true
+ *		alert( !!CKEDITOR.dtd[ &#39;div&#39; ][ &#39;p&#39; ] ); // true
  *
  *		// Check if &lt;p&gt; is a block element.
- *		alert( !!CKEDITOR.dtd.$block[ 'p' ] ); // true
+ *		alert( !!CKEDITOR.dtd.$block[ &#39;p&#39; ] ); // true
  *
  * @class CKEDITOR.dtd
  * @singleton
  */
 CKEDITOR.dtd = ( function() {
-	'use strict';
+	&#39;use strict&#39;;
 
 	var X = CKEDITOR.tools.extend,
 		// Subtraction rest of sets, from the first set.
@@ -66,7 +66,7 @@ CKEDITOR.dtd = ( function() {
 
 	// Phrasing elements.
 	// P = { a: 1, em: 1, strong: 1, small: 1, abbr: 1, dfn: 1, i: 1, b: 1, s: 1,
-	//		u: 1, code: 1, 'var': 1, samp: 1, kbd: 1, sup: 1, sub: 1, q: 1, cite: 1,
+	//		u: 1, code: 1, &#39;var&#39;: 1, samp: 1, kbd: 1, sup: 1, sub: 1, q: 1, cite: 1,
 	//		span: 1, bdo: 1, bdi: 1, br: 1, wbr: 1, ins: 1, del: 1, img: 1, embed: 1,
 	//		object: 1, iframe: 1, map: 1, area: 1, script: 1, noscript: 1, ruby: 1,
 	//		video: 1, audio: 1, input: 1, textarea: 1, select: 1, button: 1, label: 1,
@@ -91,7 +91,7 @@ CKEDITOR.dtd = ( function() {
 			code: 1, command: 1, datalist: 1, del: 1, dfn: 1, em: 1, embed: 1, i: 1, iframe: 1, img: 1,
 			input: 1, ins: 1, kbd: 1, keygen: 1, label: 1, map: 1, mark: 1, meter: 1, noscript: 1, object: 1,
 			output: 1, progress: 1, q: 1, ruby: 1, s: 1, samp: 1, script: 1, select: 1, small: 1, span: 1,
-			strong: 1, sub: 1, sup: 1, textarea: 1, time: 1, u: 1, 'var': 1, video: 1, wbr: 1 },
+			strong: 1, sub: 1, sup: 1, textarea: 1, time: 1, u: 1, &#39;var&#39;: 1, video: 1, wbr: 1 },
 		// F - PF (Flow Only).
 		FO = { address: 1, article: 1, aside: 1, blockquote: 1, details: 1, div: 1, dl: 1, fieldset: 1,
 			figure: 1, footer: 1, form: 1, h1: 1, h2: 1, h3: 1, h4: 1, h5: 1, h6: 1, header: 1, hgroup: 1,
@@ -101,7 +101,7 @@ CKEDITOR.dtd = ( function() {
 		// Empty.
 		E = {},
 		// Text.
-		T = { '#': 1 },
+		T = { &#39;#&#39;: 1 },
 
 		// Deprecated phrasing elements.
 		DP = { acronym: 1, applet: 1, basefont: 1, big: 1, font: 1, isindex: 1, strike: 1, style: 1, tt: 1 }, // TODO remove &quot;style&quot;.
@@ -219,7 +219,7 @@ CKEDITOR.dtd = ( function() {
 		track: E,
 		u: P,
 		ul: { li: 1 },
-		'var': P,
+		&#39;var&#39;: P,
 		video: X( { source: 1, track: 1 }, F ),
 		wbr: E,
 
@@ -254,7 +254,7 @@ CKEDITOR.dtd = ( function() {
 		 * * Style application is constraint by the block limit of the current selection.
 		 * * Pasted html will be inserted into the block limit of the current selection.
 		 *
-		 * **Note:** As an exception `&lt;li&gt;` is not considered as a block limit, as it's generally used as a text block.
+		 * **Note:** As an exception `&lt;li&gt;` is not considered as a block limit, as it&#39;s generally used as a text block.
 		 */
 		$blockLimit: { article: 1, aside: 1, audio: 1, body: 1, caption: 1, details: 1, dir: 1, div: 1, dl: 1,
 			fieldset: 1, figcaption: 1, figure: 1, footer: 1, form: 1, header: 1, hgroup: 1, menu: 1, nav: 1,
@@ -315,7 +315,7 @@ CKEDITOR.dtd = ( function() {
 		 */
 		$removeEmpty: { abbr: 1, acronym: 1, b: 1, bdi: 1, bdo: 1, big: 1, cite: 1, code: 1, del: 1, dfn: 1,
 			em: 1, font: 1, i: 1, ins: 1, label: 1, kbd: 1, mark: 1, meter: 1, output: 1, q: 1, ruby: 1, s: 1,
-			samp: 1, small: 1, span: 1, strike: 1, strong: 1, sub: 1, sup: 1, time: 1, tt: 1, u: 1, 'var': 1 },
+			samp: 1, small: 1, span: 1, strike: 1, strong: 1, sub: 1, sup: 1, time: 1, tt: 1, u: 1, &#39;var&#39;: 1 },
 
 <span id='CKEDITOR-dtd-property-S-tabIndex'>		/**
 </span>		 * List of elements that have tabindex set to zero by default.
@@ -328,12 +328,12 @@ CKEDITOR.dtd = ( function() {
 		$tableContent: { caption: 1, col: 1, colgroup: 1, tbody: 1, td: 1, tfoot: 1, th: 1, thead: 1, tr: 1 },
 
 <span id='CKEDITOR-dtd-property-S-transparent'>		/**
-</span>		 * List of &quot;transparent&quot; elements. See [W3C's definition of &quot;transparent&quot; element](http://dev.w3.org/html5/markup/terminology.html#transparent).
+</span>		 * List of &quot;transparent&quot; elements. See [W3C&#39;s definition of &quot;transparent&quot; element](http://dev.w3.org/html5/markup/terminology.html#transparent).
 		 */
 		$transparent: { a: 1, audio: 1, canvas: 1, del: 1, ins: 1, map: 1, noscript: 1, object: 1, video: 1 },
 
 <span id='CKEDITOR-dtd-property-S-intermediate'>		/**
-</span>		 * List of elements that are not to exist standalone that must live under it's parent element.
+</span>		 * List of elements that are not to exist standalone that must live under it&#39;s parent element.
 		 */
 		$intermediate: { caption: 1, colgroup: 1, dd: 1, dt: 1, figcaption: 1, legend: 1, li: 1, optgroup: 1,
 			option: 1, rp: 1, rt: 1, summary: 1, tbody: 1, td: 1, tfoot: 1, th: 1, thead: 1, tr: 1 }

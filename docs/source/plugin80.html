@@ -30,26 +30,26 @@
 		// aRules are just the different rules in the style sheets
 		// We want to merge them and them split them by commas, so we end up with only
 		// the selectors
-		var s = aRules.join( ' ' );
+		var s = aRules.join( &#39; &#39; );
 		// Remove selectors splitting the elements, leave only the class selector (.)
-		s = s.replace( /(,|&gt;|\+|~)/g, ' ' );
+		s = s.replace( /(,|&gt;|\+|~)/g, &#39; &#39; );
 		// Remove attribute selectors: table[border=&quot;0&quot;]
-		s = s.replace( /\[[^\]]*/g, '' );
+		s = s.replace( /\[[^\]]*/g, &#39;&#39; );
 		// Remove Ids: div#main
-		s = s.replace( /#[^\s]*/g, '' );
+		s = s.replace( /#[^\s]*/g, &#39;&#39; );
 		// Remove pseudo-selectors and pseudo-elements: :hover :nth-child(2n+1) ::before
-		s = s.replace( /\:{1,2}[^\s]*/g, '' );
+		s = s.replace( /\:{1,2}[^\s]*/g, &#39;&#39; );
 
-		s = s.replace( /\s+/g, ' ' );
+		s = s.replace( /\s+/g, &#39; &#39; );
 
-		var aSelectors = s.split( ' ' ),
+		var aSelectors = s.split( &#39; &#39; ),
 			aClasses = [];
 
 		for ( var i = 0; i &lt; aSelectors.length; i++ ) {
 			var selector = aSelectors[ i ];
 
 			if ( validSelectors.test( selector ) &amp;&amp; !skipSelectors.test( selector ) ) {
-				// If we still don't know about this one, add it
+				// If we still don&#39;t know about this one, add it
 				if ( CKEDITOR.tools.indexOf( aClasses, selector ) == -1 )
 					aClasses.push( selector );
 			}
@@ -69,11 +69,11 @@
 				node = sheet.ownerNode || sheet.owningElement;
 
 			// Skip the internal stylesheets
-			if ( node.getAttribute( 'data-cke-temp' ) )
+			if ( node.getAttribute( &#39;data-cke-temp&#39; ) )
 				continue;
 
 			// Exclude stylesheets injected by extensions
-			if ( sheet.href &amp;&amp; sheet.href.substr( 0, 9 ) == 'chrome://' )
+			if ( sheet.href &amp;&amp; sheet.href.substr( 0, 9 ) == &#39;chrome://&#39; )
 				continue;
 
 			// Bulletproof with x-domain content stylesheet.
@@ -88,14 +88,14 @@
 
 		// Add each style to our &quot;Styles&quot; collection.
 		for ( i = 0; i &lt; aClasses.length; i++ ) {
-			var oElement = aClasses[ i ].split( '.' ),
+			var oElement = aClasses[ i ].split( &#39;.&#39; ),
 				element = oElement[ 0 ].toLowerCase(),
 				sClassName = oElement[ 1 ];
 
 			styles.push( {
-				name: element + '.' + sClassName,
+				name: element + &#39;.&#39; + sClassName,
 				element: element,
-				attributes: { 'class': sClassName }
+				attributes: { &#39;class&#39;: sClassName }
 			} );
 		}
 
@@ -103,20 +103,20 @@
 	}
 
 	// Register a plugin named &quot;stylesheetparser&quot;.
-	CKEDITOR.plugins.add( 'stylesheetparser', {
+	CKEDITOR.plugins.add( &#39;stylesheetparser&#39;, {
 		init: function( editor ) {
 			// Stylesheet parser is incompatible with filter (#10136).
 			editor.filter.disable();
 
 			var cachedDefinitions;
 
-			editor.once( 'stylesSet', function( evt ) {
+			editor.once( &#39;stylesSet&#39;, function( evt ) {
 				// Cancel event and fire it again when styles are ready.
 				evt.cancel();
 
 				// Overwrite editor#getStylesSet asap (contentDom is the first moment
 				// when editor.document is ready), but before stylescombo reads styles set (priority 5).
-				editor.once( 'contentDom', function() {
+				editor.once( &#39;contentDom&#39;, function() {
 					editor.getStylesSet( function( definitions ) {
 						// Rules that must be skipped
 						var skipSelectors = editor.config.stylesheetParser_skipSelectors || ( /(^body\.|^\.)/i ),
@@ -130,7 +130,7 @@
 								return callback( cachedDefinitions );
 						};
 
-						editor.fire( 'stylesSet', { styles: cachedDefinitions } );
+						editor.fire( &#39;stylesSet&#39;, { styles: cachedDefinitions } );
 					} );
 				} );
 			}, null, null, 1 );

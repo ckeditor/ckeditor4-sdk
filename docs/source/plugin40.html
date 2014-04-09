@@ -26,10 +26,10 @@
 
 ( function() {
 
-	CKEDITOR.plugins.add( 'image', {
-		requires: 'dialog',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'image', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;image&#39;, {
+		requires: &#39;dialog&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;image&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			// Abort when Image2 is to be loaded since both plugins
@@ -37,39 +37,39 @@
 			if ( editor.plugins.image2 )
 				return;
 
-			var pluginName = 'image';
+			var pluginName = &#39;image&#39;;
 
 			// Register the dialog.
-			CKEDITOR.dialog.add( pluginName, this.path + 'dialogs/image.js' );
+			CKEDITOR.dialog.add( pluginName, this.path + &#39;dialogs/image.js&#39; );
 
-			var allowed = 'img[alt,!src]{border-style,border-width,float,height,margin,margin-bottom,margin-left,margin-right,margin-top,width}',
-				required = 'img[alt,src]';
+			var allowed = &#39;img[alt,!src]{border-style,border-width,float,height,margin,margin-bottom,margin-left,margin-right,margin-top,width}&#39;,
+				required = &#39;img[alt,src]&#39;;
 
-			if ( CKEDITOR.dialog.isTabEnabled( editor, pluginName, 'advanced' ) )
-				allowed = 'img[alt,dir,id,lang,longdesc,!src,title]{*}(*)';
+			if ( CKEDITOR.dialog.isTabEnabled( editor, pluginName, &#39;advanced&#39; ) )
+				allowed = &#39;img[alt,dir,id,lang,longdesc,!src,title]{*}(*)&#39;;
 
 			// Register the command.
 			editor.addCommand( pluginName, new CKEDITOR.dialogCommand( pluginName, {
 				allowedContent: allowed,
 				requiredContent: required,
 				contentTransformations: [
-					[ 'img{width}: sizeToStyle', 'img[width]: sizeToAttribute' ],
-					[ 'img{float}: alignmentToStyle', 'img[align]: alignmentToAttribute' ]
+					[ &#39;img{width}: sizeToStyle&#39;, &#39;img[width]: sizeToAttribute&#39; ],
+					[ &#39;img{float}: alignmentToStyle&#39;, &#39;img[align]: alignmentToAttribute&#39; ]
 				]
 			} ) );
 
 			// Register the toolbar button.
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Image', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Image&#39;, {
 				label: editor.lang.common.image,
 				command: pluginName,
-				toolbar: 'insert,10'
+				toolbar: &#39;insert,10&#39;
 			} );
 
-			editor.on( 'doubleclick', function( evt ) {
+			editor.on( &#39;doubleclick&#39;, function( evt ) {
 				var element = evt.data.element;
 
-				if ( element.is( 'img' ) &amp;&amp; !element.data( 'cke-realelement' ) &amp;&amp; !element.isReadOnly() )
-					evt.data.dialog = 'image';
+				if ( element.is( &#39;img&#39; ) &amp;&amp; !element.data( &#39;cke-realelement&#39; ) &amp;&amp; !element.isReadOnly() )
+					evt.data.dialog = &#39;image&#39;;
 			} );
 
 			// If the &quot;menu&quot; plugin is loaded, register the menu items.
@@ -77,8 +77,8 @@
 				editor.addMenuItems( {
 					image: {
 						label: editor.lang.image.menu,
-						command: 'image',
-						group: 'image'
+						command: &#39;image&#39;,
+						group: &#39;image&#39;
 					}
 				} );
 			}
@@ -98,42 +98,42 @@
 				return;
 
 			// Customize the behavior of the alignment commands. (#7430)
-			setupAlignCommand( 'left' );
-			setupAlignCommand( 'right' );
-			setupAlignCommand( 'center' );
-			setupAlignCommand( 'block' );
+			setupAlignCommand( &#39;left&#39; );
+			setupAlignCommand( &#39;right&#39; );
+			setupAlignCommand( &#39;center&#39; );
+			setupAlignCommand( &#39;block&#39; );
 
 			function setupAlignCommand( value ) {
-				var command = editor.getCommand( 'justify' + value );
+				var command = editor.getCommand( &#39;justify&#39; + value );
 				if ( command ) {
-					if ( value == 'left' || value == 'right' ) {
-						command.on( 'exec', function( evt ) {
+					if ( value == &#39;left&#39; || value == &#39;right&#39; ) {
+						command.on( &#39;exec&#39;, function( evt ) {
 							var img = getSelectedImage( editor ),
 								align;
 							if ( img ) {
 								align = getImageAlignment( img );
 								if ( align == value ) {
-									img.removeStyle( 'float' );
+									img.removeStyle( &#39;float&#39; );
 
 									// Remove &quot;align&quot; attribute when necessary.
 									if ( value == getImageAlignment( img ) )
-										img.removeAttribute( 'align' );
+										img.removeAttribute( &#39;align&#39; );
 								} else
-									img.setStyle( 'float', value );
+									img.setStyle( &#39;float&#39;, value );
 
 								evt.cancel();
 							}
 						} );
 					}
 
-					command.on( 'refresh', function( evt ) {
+					command.on( &#39;refresh&#39;, function( evt ) {
 						var img = getSelectedImage( editor ),
 							align;
 						if ( img ) {
 							align = getImageAlignment( img );
 
 							this.setState(
-							( align == value ) ? CKEDITOR.TRISTATE_ON : ( value == 'right' || value == 'left' ) ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+							( align == value ) ? CKEDITOR.TRISTATE_ON : ( value == &#39;right&#39; || value == &#39;left&#39; ) ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
 
 							evt.cancel();
 						}
@@ -149,18 +149,18 @@
 			element = sel.getSelectedElement();
 		}
 
-		if ( element &amp;&amp; element.is( 'img' ) &amp;&amp; !element.data( 'cke-realelement' ) &amp;&amp; !element.isReadOnly() )
+		if ( element &amp;&amp; element.is( &#39;img&#39; ) &amp;&amp; !element.data( &#39;cke-realelement&#39; ) &amp;&amp; !element.isReadOnly() )
 			return element;
 	}
 
 	function getImageAlignment( element ) {
-		var align = element.getStyle( 'float' );
+		var align = element.getStyle( &#39;float&#39; );
 
-		if ( align == 'inherit' || align == 'none' )
+		if ( align == &#39;inherit&#39; || align == &#39;none&#39; )
 			align = 0;
 
 		if ( !align )
-			align = element.getAttribute( 'align' );
+			align = element.getAttribute( &#39;align&#39; );
 
 		return align;
 	}
@@ -180,9 +180,9 @@ CKEDITOR.config.image_removeLinkByEmptyURL = true;
 <span id='CKEDITOR-config-cfg-image_previewText'>/**
 </span> * Padding text to set off the image in preview area.
  *
- *		config.image_previewText = CKEDITOR.tools.repeat( '___ ', 100 );
+ *		config.image_previewText = CKEDITOR.tools.repeat( &#39;___ &#39;, 100 );
  *
- * @cfg {String} [image_previewText='Lorem ipsum dolor...' (placeholder text)]
+ * @cfg {String} [image_previewText=&#39;Lorem ipsum dolor...&#39; (placeholder text)]
  * @member CKEDITOR.config
  */
 </pre>

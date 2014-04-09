@@ -20,8 +20,8 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'floatpanel', {
-	requires: 'panel'
+CKEDITOR.plugins.add( &#39;floatpanel&#39;, {
+	requires: &#39;panel&#39;
 } );
 
 ( function() {
@@ -29,7 +29,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 
 	function getPanel( editor, doc, parentElement, definition, level ) {
 		// Generates the panel key: docId-eleId-skinName-langDir[-uiColor][-CSSs][-level]
-		var key = CKEDITOR.tools.genKey( doc.getUniqueId(), parentElement.getUniqueId(), editor.lang.dir, editor.uiColor || '', definition.css || '', level || '' ),
+		var key = CKEDITOR.tools.genKey( doc.getUniqueId(), parentElement.getUniqueId(), editor.lang.dir, editor.uiColor || &#39;&#39;, definition.css || &#39;&#39;, level || &#39;&#39; ),
 			panel = panels[ key ];
 
 		if ( !panel ) {
@@ -37,8 +37,8 @@ CKEDITOR.plugins.add( 'floatpanel', {
 			panel.element = parentElement.append( CKEDITOR.dom.element.createFromHtml( panel.render( editor ), doc ) );
 
 			panel.element.setStyles( {
-				display: 'none',
-				position: 'absolute'
+				display: &#39;none&#39;,
+				position: &#39;absolute&#39;
 			} );
 		}
 
@@ -48,7 +48,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 <span id='CKEDITOR-ui-floatPanel'>	/**
 </span>	 * Represents a floating panel UI element.
 	 *
-	 * It's reused by rich combos, color combos, menus, etc.
+	 * It&#39;s reused by rich combos, color combos, menus, etc.
 	 * and it renders its content using {@link CKEDITOR.ui.panel}.
 	 *
 	 * @class
@@ -70,7 +70,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 			// In case of editor with floating toolbar append panels that should float
 			// to the main UI element.
 			if ( definition.toolbarRelated &amp;&amp; editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
-				parentElement = CKEDITOR.document.getById( 'cke_' + editor.name );
+				parentElement = CKEDITOR.document.getById( &#39;cke_&#39; + editor.name );
 
 			var doc = parentElement.getDocument(),
 				panel = getPanel( editor, doc, parentElement, definition, level || 0 ),
@@ -95,12 +95,12 @@ CKEDITOR.plugins.add( 'floatpanel', {
 				dir: editor.lang.dir
 			};
 
-			editor.on( 'mode', hide );
-			editor.on( 'resize', hide );
-			// Window resize doesn't cause hide on blur. (#9800)
-			doc.getWindow().on( 'resize', hide );
+			editor.on( &#39;mode&#39;, hide );
+			editor.on( &#39;resize&#39;, hide );
+			// Window resize doesn&#39;t cause hide on blur. (#9800)
+			doc.getWindow().on( &#39;resize&#39;, hide );
 
-			// We need a wrapper because events implementation doesn't allow to attach
+			// We need a wrapper because events implementation doesn&#39;t allow to attach
 			// one listener more than once for the same event on the same object.
 			// Remember that floatPanel#hide is shared between all instances.
 			function hide() {
@@ -171,7 +171,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 					positionedAncestor = this._.parentElement.getPositionedAncestor(),
 					position = offsetParent.getDocumentPosition( doc ),
 					positionedAncestorPosition = positionedAncestor ? positionedAncestor.getDocumentPosition( doc ) : { x: 0, y: 0 },
-					rtl = this._.dir == 'rtl',
+					rtl = this._.dir == &#39;rtl&#39;,
 					left = position.x + ( offsetX || 0 ) - positionedAncestorPosition.x,
 					top = position.y + ( offsetY || 0 ) - positionedAncestorPosition.y;
 
@@ -184,21 +184,21 @@ CKEDITOR.plugins.add( 'floatpanel', {
 				if ( corner == 3 || corner == 4 )
 					top += offsetParent.$.offsetHeight - 1;
 
-				// Memorize offsetParent by it's ID.
+				// Memorize offsetParent by it&#39;s ID.
 				this._.panel._.offsetParentId = offsetParent.getId();
 
 				element.setStyles( {
-					top: top + 'px',
+					top: top + &#39;px&#39;,
 					left: 0,
-					display: ''
+					display: &#39;&#39;
 				} );
 
-				// Don't use display or visibility style because we need to
+				// Don&#39;t use display or visibility style because we need to
 				// calculate the rendering layout later and focus the element.
 				element.setOpacity( 0 );
 
 				// To allow the context menu to decrease back their width
-				element.getFirst().removeStyle( 'width' );
+				element.getFirst().removeStyle( &#39;width&#39; );
 
 				// Report to focus manager.
 				this._.editor.focusManager.add( focused );
@@ -211,7 +211,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 					// guarantee they will be firing in all situations. (#3068, #3222 )
 					CKEDITOR.event.useCapture = true;
 
-					focused.on( 'blur', function( ev ) {
+					focused.on( &#39;blur&#39;, function( ev ) {
 
 						// As we are using capture to register the listener,
 						// the blur event may get fired even when focusing
@@ -221,14 +221,14 @@ CKEDITOR.plugins.add( 'floatpanel', {
 							return;
 
 						if ( this.visible &amp;&amp; !this._.activeChild ) {
-							// Panel close is caused by user's navigating away the focus, e.g. click outside the panel.
+							// Panel close is caused by user&#39;s navigating away the focus, e.g. click outside the panel.
 							// DO NOT restore focus in this case.
 							delete this._.returnFocus;
 							this.hide();
 						}
 					}, this );
 
-					focused.on( 'focus', function() {
+					focused.on( &#39;focus&#39;, function() {
 						this._.focused = true;
 						this.hideChild();
 						this.allowBlur( true );
@@ -250,11 +250,11 @@ CKEDITOR.plugins.add( 'floatpanel', {
 
 						// Reset panel width as the new content can be narrower
 						// than the old one. (#9355)
-						target.removeStyle( 'width' );
+						target.removeStyle( &#39;width&#39; );
 
 						if ( block.autoSize ) {
 							var panelDoc = block.element.getDocument();
-							var width = ( CKEDITOR.env.webkit? block.element : panelDoc.getBody() )[ '$' ].scrollWidth;
+							var width = ( CKEDITOR.env.webkit? block.element : panelDoc.getBody() )[ &#39;$&#39; ].scrollWidth;
 
 							// Account for extra height needed due to IE quirks box model bug:
 							// http://en.wikipedia.org/wiki/Internet_Explorer_box_model_bug
@@ -265,7 +265,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 							// Add some extra pixels to improve the appearance.
 							width += 10;
 
-							target.setStyle( 'width', width + 'px' );
+							target.setStyle( &#39;width&#39;, width + &#39;px&#39; );
 
 							var height = block.element.$.scrollHeight;
 
@@ -275,19 +275,19 @@ CKEDITOR.plugins.add( 'floatpanel', {
 							if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.quirks &amp;&amp; height &gt; 0 )
 								height += ( target.$.offsetHeight || 0 ) - ( target.$.clientHeight || 0 ) + 3;
 
-							target.setStyle( 'height', height + 'px' );
+							target.setStyle( &#39;height&#39;, height + &#39;px&#39; );
 
 							// Fix IE &lt; 8 visibility.
-							panel._.currentBlock.element.setStyle( 'display', 'none' ).removeStyle( 'display' );
+							panel._.currentBlock.element.setStyle( &#39;display&#39;, &#39;none&#39; ).removeStyle( &#39;display&#39; );
 						} else
-							target.removeStyle( 'height' );
+							target.removeStyle( &#39;height&#39; );
 
 						// Flip panel layout horizontally in RTL with known width.
 						if ( rtl )
 							left -= element.$.offsetWidth;
 
 						// Pop the style now for measurement.
-						element.setStyle( 'left', left + 'px' );
+						element.setStyle( &#39;left&#39;, left + &#39;px&#39; );
 
 						/* panel layout smartly fit the viewport size. */
 						var panelElement = panel.element,
@@ -352,10 +352,10 @@ CKEDITOR.plugins.add( 'floatpanel', {
 								scrollParent = offsetParent;
 
 							// Quirks returns &lt;body&gt;, but standards returns &lt;html&gt;.
-							if ( scrollParent.getName() == 'html' )
+							if ( scrollParent.getName() == &#39;html&#39; )
 								scrollParent = scrollParent.getDocument().getBody();
 
-							if ( scrollParent.getComputedStyle( 'direction' ) == 'rtl' ) {
+							if ( scrollParent.getComputedStyle( &#39;direction&#39; ) == &#39;rtl&#39; ) {
 								// For IE8, there is not much logic on this, but it works.
 								if ( CKEDITOR.env.ie8Compat )
 									left -= element.getDocument().getDocumentElement().$.scrollLeft * 2;
@@ -368,13 +368,13 @@ CKEDITOR.plugins.add( 'floatpanel', {
 						// incorrect styles from being applied (#6170)
 						var innerElement = element.getFirst(),
 							activePanel;
-						if ( ( activePanel = innerElement.getCustomData( 'activePanel' ) ) )
+						if ( ( activePanel = innerElement.getCustomData( &#39;activePanel&#39; ) ) )
 							activePanel.onHide &amp;&amp; activePanel.onHide.call( this, 1 );
-						innerElement.setCustomData( 'activePanel', this );
+						innerElement.setCustomData( &#39;activePanel&#39;, this );
 
 						element.setStyles( {
-							top: top + 'px',
-							left: left + 'px'
+							top: top + &#39;px&#39;,
+							left: left + &#39;px&#39;
 						} );
 						element.setOpacity( 1 );
 
@@ -392,13 +392,13 @@ CKEDITOR.plugins.add( 'floatpanel', {
 						// Focus the block now.
 						block.element.focus();
 
-						// #10623, #10951 - restore the viewport's scroll position after focusing list element.
+						// #10623, #10951 - restore the viewport&#39;s scroll position after focusing list element.
 						if ( CKEDITOR.env.webkit )
 							CKEDITOR.document.getBody().$.scrollTop = scrollTop;
 
 						// We need this get fired manually because of unfired focus() function.
 						this.allowBlur( true );
-						this._.editor.fire( 'panelShow', this );
+						this._.editor.fire( &#39;panelShow&#39;, this );
 					}, 0, this );
 				}, CKEDITOR.env.air ? 200 : 0, this );
 				this.visible = 1;
@@ -430,7 +430,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 				var doc = this._.iframe.getFrameDocument(),
 					active = doc.getActive();
 
-				active.is( 'a' ) &amp;&amp; ( this._.lastFocused = active );
+				active.is( &#39;a&#39; ) &amp;&amp; ( this._.lastFocused = active );
 			},
 
 <span id='CKEDITOR-ui-floatPanel-method-hide'>			/**
@@ -443,9 +443,9 @@ CKEDITOR.plugins.add( 'floatpanel', {
 					this.hideChild();
 					// Blur previously focused element. (#6671)
 					CKEDITOR.env.gecko &amp;&amp; this._.iframe.getFrameDocument().$.activeElement.blur();
-					this.element.setStyle( 'display', 'none' );
+					this.element.setStyle( &#39;display&#39;, &#39;none&#39; );
 					this.visible = 0;
-					this.element.getFirst().removeCustomData( 'activePanel' );
+					this.element.getFirst().removeCustomData( &#39;activePanel&#39; );
 
 					// Return focus properly. (#6247)
 					var focusReturn = returnFocus &amp;&amp; this._.returnFocus;
@@ -459,7 +459,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 
 					delete this._.lastFocused;
 
-					this._.editor.fire( 'panelHide', this );
+					this._.editor.fire( &#39;panelHide&#39;, this );
 				}
 			},
 
@@ -523,7 +523,7 @@ CKEDITOR.plugins.add( 'floatpanel', {
 				/* #3767 IE: Second level menu may not have borders */
 				if ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) {
 					setTimeout( function() {
-						panel.element.getChild( 0 ).$.style.cssText += '';
+						panel.element.getChild( 0 ).$.style.cssText += &#39;&#39;;
 					}, 100 );
 				}
 			},
@@ -546,12 +546,12 @@ CKEDITOR.plugins.add( 'floatpanel', {
 		}
 	} );
 
-	CKEDITOR.on( 'instanceDestroyed', function() {
+	CKEDITOR.on( &#39;instanceDestroyed&#39;, function() {
 		var isLastInstance = CKEDITOR.tools.isEmpty( CKEDITOR.instances );
 
 		for ( var i in panels ) {
 			var panel = panels[ i ];
-			// Safe to destroy it since there're no more instances.(#4241)
+			// Safe to destroy it since there&#39;re no more instances.(#4241)
 			if ( isLastInstance )
 				panel.destroy();
 			// Panel might be used by other instances, just hide them.(#4552)

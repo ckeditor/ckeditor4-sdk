@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'specialchar', function( editor ) {
+CKEDITOR.dialog.add( &#39;specialchar&#39;, function( editor ) {
 	// Simulate &quot;this&quot; of a dialog for non-dialog events.
 	// @type {CKEDITOR.dialog}
 	var dialog,
@@ -33,12 +33,12 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 			else
 				target = new CKEDITOR.dom.element( evt );
 
-			if ( target.getName() == 'a' &amp;&amp; ( value = target.getChild( 0 ).getHtml() ) ) {
+			if ( target.getName() == &#39;a&#39; &amp;&amp; ( value = target.getChild( 0 ).getHtml() ) ) {
 				target.removeClass( &quot;cke_light_background&quot; );
 				dialog.hide();
 
 				// We must use &quot;insertText&quot; here to keep text styled.
-				var span = editor.document.createElement( 'span' );
+				var span = editor.document.createElement( &#39;span&#39; );
 				span.setHtml( value );
 				editor.insertText( span.getText() );
 			}
@@ -52,17 +52,17 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 			var value;
 			target = target || evt.data.getTarget();
 
-			if ( target.getName() == 'span' )
+			if ( target.getName() == &#39;span&#39; )
 				target = target.getParent();
 
-			if ( target.getName() == 'a' &amp;&amp; ( value = target.getChild( 0 ).getHtml() ) ) {
+			if ( target.getName() == &#39;a&#39; &amp;&amp; ( value = target.getChild( 0 ).getHtml() ) ) {
 				// Trigger blur manually if there is focused node.
 				if ( focusedNode )
 					onBlur( null, focusedNode );
 
-				var htmlPreview = dialog.getContentElement( 'info', 'htmlPreview' ).getElement();
+				var htmlPreview = dialog.getContentElement( &#39;info&#39;, &#39;htmlPreview&#39; ).getElement();
 
-				dialog.getContentElement( 'info', 'charPreview' ).getElement().setHtml( value );
+				dialog.getContentElement( &#39;info&#39;, &#39;charPreview&#39; ).getElement().setHtml( value );
 				htmlPreview.setHtml( CKEDITOR.tools.htmlEncode( value ) );
 				target.getParent().addClass( &quot;cke_light_background&quot; );
 
@@ -74,12 +74,12 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 	var onBlur = function( evt, target ) {
 			target = target || evt.data.getTarget();
 
-			if ( target.getName() == 'span' )
+			if ( target.getName() == &#39;span&#39; )
 				target = target.getParent();
 
-			if ( target.getName() == 'a' ) {
-				dialog.getContentElement( 'info', 'charPreview' ).getElement().setHtml( '&amp;nbsp;' );
-				dialog.getContentElement( 'info', 'htmlPreview' ).getElement().setHtml( '&amp;nbsp;' );
+			if ( target.getName() == &#39;a&#39; ) {
+				dialog.getContentElement( &#39;info&#39;, &#39;charPreview&#39; ).getElement().setHtml( &#39;&amp;nbsp;&#39; );
+				dialog.getContentElement( &#39;info&#39;, &#39;htmlPreview&#39; ).getElement().setHtml( &#39;&amp;nbsp;&#39; );
 				target.getParent().removeClass( &quot;cke_light_background&quot; );
 
 				focusedNode = undefined;
@@ -93,7 +93,7 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 		var element = ev.getTarget();
 		var relative, nodeToMove;
 		var keystroke = ev.getKeystroke(),
-			rtl = editor.lang.dir == 'rtl';
+			rtl = editor.lang.dir == &#39;rtl&#39;;
 
 		switch ( keystroke ) {
 			// UP-ARROW
@@ -190,79 +190,79 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 				extraChars = editor.config.extraSpecialChars,
 				chars = editor.config.specialChars;
 
-			var charsTableLabel = CKEDITOR.tools.getNextId() + '_specialchar_table_label';
-			var html = [ '&lt;table role=&quot;listbox&quot; aria-labelledby=&quot;' + charsTableLabel + '&quot;' +
-				' style=&quot;width: 320px; height: 100%; border-collapse: separate;&quot;' +
-				' align=&quot;center&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot;&gt;' ];
+			var charsTableLabel = CKEDITOR.tools.getNextId() + &#39;_specialchar_table_label&#39;;
+			var html = [ &#39;&lt;table role=&quot;listbox&quot; aria-labelledby=&quot;&#39; + charsTableLabel + &#39;&quot;&#39; +
+				&#39; style=&quot;width: 320px; height: 100%; border-collapse: separate;&quot;&#39; +
+				&#39; align=&quot;center&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot;&gt;&#39; ];
 
 			var i = 0,
 				size = chars.length,
 				character, charDesc;
 
 			while ( i &lt; size ) {
-				html.push( '&lt;tr role=&quot;presentation&quot;&gt;' );
+				html.push( &#39;&lt;tr role=&quot;presentation&quot;&gt;&#39; );
 
 				for ( var j = 0; j &lt; columns; j++, i++ ) {
 					if ( ( character = chars[ i ] ) ) {
-						charDesc = '';
+						charDesc = &#39;&#39;;
 
 						if ( character instanceof Array ) {
 							charDesc = character[ 1 ];
 							character = character[ 0 ];
 						} else {
-							var _tmpName = character.replace( '&amp;', '' ).replace( ';', '' ).replace( '#', '' );
+							var _tmpName = character.replace( &#39;&amp;&#39;, &#39;&#39; ).replace( &#39;;&#39;, &#39;&#39; ).replace( &#39;#&#39;, &#39;&#39; );
 
 							// Use character in case description unavailable.
 							charDesc = lang[ _tmpName ] || character;
 						}
 
-						var charLabelId = 'cke_specialchar_label_' + i + '_' + CKEDITOR.tools.getNextNumber();
+						var charLabelId = &#39;cke_specialchar_label_&#39; + i + &#39;_&#39; + CKEDITOR.tools.getNextNumber();
 
-						html.push( '&lt;td class=&quot;cke_dark_background&quot; style=&quot;cursor: default&quot; role=&quot;presentation&quot;&gt;' +
-							'&lt;a href=&quot;javascript: void(0);&quot; role=&quot;option&quot;' +
-							' aria-posinset=&quot;' + ( i + 1 ) + '&quot;', ' aria-setsize=&quot;' + size + '&quot;', ' aria-labelledby=&quot;' + charLabelId + '&quot;', ' class=&quot;cke_specialchar&quot; title=&quot;', CKEDITOR.tools.htmlEncode( charDesc ), '&quot;' +
-							' onkeydown=&quot;CKEDITOR.tools.callFunction( ' + onKeydown + ', event, this )&quot;' +
-							' onclick=&quot;CKEDITOR.tools.callFunction(' + onClick + ', this); return false;&quot;' +
-							' tabindex=&quot;-1&quot;&gt;' +
-							'&lt;span style=&quot;margin: 0 auto;cursor: inherit&quot;&gt;' +
+						html.push( &#39;&lt;td class=&quot;cke_dark_background&quot; style=&quot;cursor: default&quot; role=&quot;presentation&quot;&gt;&#39; +
+							&#39;&lt;a href=&quot;javascript: void(0);&quot; role=&quot;option&quot;&#39; +
+							&#39; aria-posinset=&quot;&#39; + ( i + 1 ) + &#39;&quot;&#39;, &#39; aria-setsize=&quot;&#39; + size + &#39;&quot;&#39;, &#39; aria-labelledby=&quot;&#39; + charLabelId + &#39;&quot;&#39;, &#39; class=&quot;cke_specialchar&quot; title=&quot;&#39;, CKEDITOR.tools.htmlEncode( charDesc ), &#39;&quot;&#39; +
+							&#39; onkeydown=&quot;CKEDITOR.tools.callFunction( &#39; + onKeydown + &#39;, event, this )&quot;&#39; +
+							&#39; onclick=&quot;CKEDITOR.tools.callFunction(&#39; + onClick + &#39;, this); return false;&quot;&#39; +
+							&#39; tabindex=&quot;-1&quot;&gt;&#39; +
+							&#39;&lt;span style=&quot;margin: 0 auto;cursor: inherit&quot;&gt;&#39; +
 							character +
-							'&lt;/span&gt;' +
-							'&lt;span class=&quot;cke_voice_label&quot; id=&quot;' + charLabelId + '&quot;&gt;' +
+							&#39;&lt;/span&gt;&#39; +
+							&#39;&lt;span class=&quot;cke_voice_label&quot; id=&quot;&#39; + charLabelId + &#39;&quot;&gt;&#39; +
 							charDesc +
-							'&lt;/span&gt;&lt;/a&gt;' );
+							&#39;&lt;/span&gt;&lt;/a&gt;&#39; );
 					} else
-						html.push( '&lt;td class=&quot;cke_dark_background&quot;&gt;&amp;nbsp;' );
+						html.push( &#39;&lt;td class=&quot;cke_dark_background&quot;&gt;&amp;nbsp;&#39; );
 
-					html.push( '&lt;/td&gt;' );
+					html.push( &#39;&lt;/td&gt;&#39; );
 				}
-				html.push( '&lt;/tr&gt;' );
+				html.push( &#39;&lt;/tr&gt;&#39; );
 			}
 
-			html.push( '&lt;/tbody&gt;&lt;/table&gt;', '&lt;span id=&quot;' + charsTableLabel + '&quot; class=&quot;cke_voice_label&quot;&gt;' + lang.options + '&lt;/span&gt;' );
+			html.push( &#39;&lt;/tbody&gt;&lt;/table&gt;&#39;, &#39;&lt;span id=&quot;&#39; + charsTableLabel + &#39;&quot; class=&quot;cke_voice_label&quot;&gt;&#39; + lang.options + &#39;&lt;/span&gt;&#39; );
 
-			this.getContentElement( 'info', 'charContainer' ).getElement().setHtml( html.join( '' ) );
+			this.getContentElement( &#39;info&#39;, &#39;charContainer&#39; ).getElement().setHtml( html.join( &#39;&#39; ) );
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.common.generalTab,
 			title: editor.lang.common.generalTab,
 			padding: 0,
-			align: 'top',
+			align: &#39;top&#39;,
 			elements: [
 				{
-				type: 'hbox',
-				align: 'top',
-				widths: [ '320px', '90px' ],
+				type: &#39;hbox&#39;,
+				align: &#39;top&#39;,
+				widths: [ &#39;320px&#39;, &#39;90px&#39; ],
 				children: [
 					{
-					type: 'html',
-					id: 'charContainer',
-					html: '',
+					type: &#39;html&#39;,
+					id: &#39;charContainer&#39;,
+					html: &#39;&#39;,
 					onMouseover: onFocus,
 					onMouseout: onBlur,
 					focus: function() {
-						var firstChar = this.getElement().getElementsByTag( 'a' ).getItem( 0 );
+						var firstChar = this.getElement().getElementsByTag( &#39;a&#39; ).getItem( 0 );
 						setTimeout( function() {
 							firstChar.focus();
 							onFocus( null, firstChar );
@@ -280,31 +280,31 @@ CKEDITOR.dialog.add( 'specialchar', function( editor ) {
 					}
 				},
 					{
-					type: 'hbox',
-					align: 'top',
-					widths: [ '100%' ],
+					type: &#39;hbox&#39;,
+					align: &#39;top&#39;,
+					widths: [ &#39;100%&#39; ],
 					children: [
 						{
-						type: 'vbox',
-						align: 'top',
+						type: &#39;vbox&#39;,
+						align: &#39;top&#39;,
 						children: [
 							{
-							type: 'html',
-							html: '&lt;div&gt;&lt;/div&gt;'
+							type: &#39;html&#39;,
+							html: &#39;&lt;div&gt;&lt;/div&gt;&#39;
 						},
 							{
-							type: 'html',
-							id: 'charPreview',
-							className: 'cke_dark_background',
-							style: 'border:1px solid #eeeeee;font-size:28px;height:40px;width:70px;padding-top:9px;font-family:\'Microsoft Sans Serif\',Arial,Helvetica,Verdana;text-align:center;',
-							html: '&lt;div&gt;&amp;nbsp;&lt;/div&gt;'
+							type: &#39;html&#39;,
+							id: &#39;charPreview&#39;,
+							className: &#39;cke_dark_background&#39;,
+							style: &#39;border:1px solid #eeeeee;font-size:28px;height:40px;width:70px;padding-top:9px;font-family:\&#39;Microsoft Sans Serif\&#39;,Arial,Helvetica,Verdana;text-align:center;&#39;,
+							html: &#39;&lt;div&gt;&amp;nbsp;&lt;/div&gt;&#39;
 						},
 							{
-							type: 'html',
-							id: 'htmlPreview',
-							className: 'cke_dark_background',
-							style: 'border:1px solid #eeeeee;font-size:14px;height:20px;width:70px;padding-top:2px;font-family:\'Microsoft Sans Serif\',Arial,Helvetica,Verdana;text-align:center;',
-							html: '&lt;div&gt;&amp;nbsp;&lt;/div&gt;'
+							type: &#39;html&#39;,
+							id: &#39;htmlPreview&#39;,
+							className: &#39;cke_dark_background&#39;,
+							style: &#39;border:1px solid #eeeeee;font-size:14px;height:20px;width:70px;padding-top:2px;font-family:\&#39;Microsoft Sans Serif\&#39;,Arial,Helvetica,Verdana;text-align:center;&#39;,
+							html: &#39;&lt;div&gt;&amp;nbsp;&lt;/div&gt;&#39;
 						}
 						]
 					}

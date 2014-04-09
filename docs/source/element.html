@@ -29,10 +29,10 @@
 </span></span> * Represents a DOM element.
  *
  *		// Create a new &lt;span&gt; element.
- *		var element = new CKEDITOR.dom.element( 'span' );
+ *		var element = new CKEDITOR.dom.element( &#39;span&#39; );
  *
  *		// Create an element based on a native DOM element.
- *		var element = new CKEDITOR.dom.element( document.getElementById( 'myId' ) );
+ *		var element = new CKEDITOR.dom.element( document.getElementById( &#39;myId&#39; ) );
  *
  * @class
  * @extends CKEDITOR.dom.node
@@ -43,7 +43,7 @@
  * the element in case of element creation.
  */
 CKEDITOR.dom.element = function( element, ownerDocument ) {
-	if ( typeof element == 'string' )
+	if ( typeof element == &#39;string&#39; )
 		element = ( ownerDocument ? ownerDocument.$ : document ).createElement( element );
 
 	// Call the base constructor (we must not call CKEDITOR.dom.node).
@@ -56,18 +56,18 @@ CKEDITOR.dom.element = function( element, ownerDocument ) {
  * element is a native DOM element, it will be transformed into a valid
  * CKEDITOR.dom.element object.
  *
- *		var element = new CKEDITOR.dom.element( 'span' );
+ *		var element = new CKEDITOR.dom.element( &#39;span&#39; );
  *		alert( element == CKEDITOR.dom.element.get( element ) ); // true
  *
- *		var element = document.getElementById( 'myElement' );
- *		alert( CKEDITOR.dom.element.get( element ).getName() ); // (e.g.) 'p'
+ *		var element = document.getElementById( &#39;myElement&#39; );
+ *		alert( CKEDITOR.dom.element.get( element ).getName() ); // (e.g.) &#39;p&#39;
  *
  * @static
- * @param {String/Object} element Element's id or name or native DOM element.
+ * @param {String/Object} element Element&#39;s id or name or native DOM element.
  * @returns {CKEDITOR.dom.element} The transformed element.
  */
 CKEDITOR.dom.element.get = function( element ) {
-	var el = typeof element == 'string' ? document.getElementById( element ) || document.getElementsByName( element )[ 0 ] : element;
+	var el = typeof element == &#39;string&#39; ? document.getElementById( element ) || document.getElementsByName( element )[ 0 ] : element;
 
 	return el &amp;&amp; ( el.$ ? el : new CKEDITOR.dom.element( el ) );
 };
@@ -78,8 +78,8 @@ CKEDITOR.dom.element.prototype = new CKEDITOR.dom.node();
 </span> * Creates an instance of the {@link CKEDITOR.dom.element} class based on the
  * HTML representation of an element.
  *
- *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;strong class=&quot;anyclass&quot;&gt;My element&lt;/strong&gt;' );
- *		alert( element.getName() ); // 'strong'
+ *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;strong class=&quot;anyclass&quot;&gt;My element&lt;/strong&gt;&#39; );
+ *		alert( element.getName() ); // &#39;strong&#39;
  *
  * @static
  * @param {String} html The element HTML. It should define only one element in
@@ -87,7 +87,7 @@ CKEDITOR.dom.element.prototype = new CKEDITOR.dom.node();
  * @returns {CKEDITOR.dom.element} The element instance.
  */
 CKEDITOR.dom.element.createFromHtml = function( html, ownerDocument ) {
-	var temp = new CKEDITOR.dom.element( 'div', ownerDocument );
+	var temp = new CKEDITOR.dom.element( &#39;div&#39;, ownerDocument );
 	temp.setHtml( html );
 
 	// When returning the node, remove it from its parent to detach it.
@@ -99,8 +99,8 @@ CKEDITOR.dom.element.createFromHtml = function( html, ownerDocument ) {
  * @todo
  */
 CKEDITOR.dom.element.setMarker = function( database, element, name, value ) {
-	var id = element.getCustomData( 'list_marker_id' ) || ( element.setCustomData( 'list_marker_id', CKEDITOR.tools.getNextNumber() ).getCustomData( 'list_marker_id' ) ),
-		markerNames = element.getCustomData( 'list_marker_names' ) || ( element.setCustomData( 'list_marker_names', {} ).getCustomData( 'list_marker_names' ) );
+	var id = element.getCustomData( &#39;list_marker_id&#39; ) || ( element.setCustomData( &#39;list_marker_id&#39;, CKEDITOR.tools.getNextNumber() ).getCustomData( &#39;list_marker_id&#39; ) ),
+		markerNames = element.getCustomData( &#39;list_marker_names&#39; ) || ( element.setCustomData( &#39;list_marker_names&#39;, {} ).getCustomData( &#39;list_marker_names&#39; ) );
 	database[ id ] = element;
 	markerNames[ name ] = 1;
 
@@ -121,13 +121,13 @@ CKEDITOR.dom.element.clearAllMarkers = function( database ) {
  * @todo
  */
 CKEDITOR.dom.element.clearMarkers = function( database, element, removeFromDatabase ) {
-	var names = element.getCustomData( 'list_marker_names' ),
-		id = element.getCustomData( 'list_marker_id' );
+	var names = element.getCustomData( &#39;list_marker_names&#39; ),
+		id = element.getCustomData( &#39;list_marker_id&#39; );
 	for ( var i in names )
 		element.removeCustomData( i );
-	element.removeCustomData( 'list_marker_names' );
+	element.removeCustomData( &#39;list_marker_names&#39; );
 	if ( removeFromDatabase ) {
-		element.removeCustomData( 'list_marker_id' );
+		element.removeCustomData( &#39;list_marker_id&#39; );
 		delete database[ id ];
 	}
 };
@@ -146,19 +146,19 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Adds a CSS class to the element. It appends the class to the
 	 * already existing names.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'div' );
-	 *		element.addClass( 'classA' ); // &lt;div class=&quot;classA&quot;&gt;
-	 *		element.addClass( 'classB' ); // &lt;div class=&quot;classA classB&quot;&gt;
-	 *		element.addClass( 'classA' ); // &lt;div class=&quot;classA classB&quot;&gt;
+	 *		var element = new CKEDITOR.dom.element( &#39;div&#39; );
+	 *		element.addClass( &#39;classA&#39; ); // &lt;div class=&quot;classA&quot;&gt;
+	 *		element.addClass( &#39;classB&#39; ); // &lt;div class=&quot;classA classB&quot;&gt;
+	 *		element.addClass( &#39;classA&#39; ); // &lt;div class=&quot;classA classB&quot;&gt;
 	 *
 	 * @param {String} className The name of the class to be added.
 	 */
 	addClass: function( className ) {
 		var c = this.$.className;
 		if ( c ) {
-			var regex = new RegExp( '(?:^|\\s)' + className + '(?:\\s|$)', '' );
+			var regex = new RegExp( &#39;(?:^|\\s)&#39; + className + &#39;(?:\\s|$)&#39;, &#39;&#39; );
 			if ( !regex.test( c ) )
-				c += ' ' + className;
+				c += &#39; &#39; + className;
 		}
 		this.$.className = c || className;
 	},
@@ -167,26 +167,26 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Removes a CSS class name from the elements classes. Other classes
 	 * remain untouched.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'div' );
-	 *		element.addClass( 'classA' );		// &lt;div class=&quot;classA&quot;&gt;
-	 *		element.addClass( 'classB' );		// &lt;div class=&quot;classA classB&quot;&gt;
-	 *		element.removeClass( 'classA' );	// &lt;div class=&quot;classB&quot;&gt;
-	 *		element.removeClass( 'classB' );	// &lt;div&gt;
+	 *		var element = new CKEDITOR.dom.element( &#39;div&#39; );
+	 *		element.addClass( &#39;classA&#39; );		// &lt;div class=&quot;classA&quot;&gt;
+	 *		element.addClass( &#39;classB&#39; );		// &lt;div class=&quot;classA classB&quot;&gt;
+	 *		element.removeClass( &#39;classA&#39; );	// &lt;div class=&quot;classB&quot;&gt;
+	 *		element.removeClass( &#39;classB&#39; );	// &lt;div&gt;
 	 *
 	 * @chainable
 	 * @param {String} className The name of the class to remove.
 	 */
 	removeClass: function( className ) {
-		var c = this.getAttribute( 'class' );
+		var c = this.getAttribute( &#39;class&#39; );
 		if ( c ) {
-			var regex = new RegExp( '(?:^|\\s+)' + className + '(?=\\s|$)', 'i' );
+			var regex = new RegExp( &#39;(?:^|\\s+)&#39; + className + &#39;(?=\\s|$)&#39;, &#39;i&#39; );
 			if ( regex.test( c ) ) {
-				c = c.replace( regex, '' ).replace( /^\s+/, '' );
+				c = c.replace( regex, &#39;&#39; ).replace( /^\s+/, &#39;&#39; );
 
 				if ( c )
-					this.setAttribute( 'class', c );
+					this.setAttribute( &#39;class&#39;, c );
 				else
-					this.removeAttribute( 'class' );
+					this.removeAttribute( &#39;class&#39; );
 			}
 		}
 
@@ -200,28 +200,28 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @returns {Boolean}
 	 */
 	hasClass: function( className ) {
-		var regex = new RegExp( '(?:^|\\s+)' + className + '(?=\\s|$)', '' );
-		return regex.test( this.getAttribute( 'class' ) );
+		var regex = new RegExp( &#39;(?:^|\\s+)&#39; + className + &#39;(?=\\s|$)&#39;, &#39;&#39; );
+		return regex.test( this.getAttribute( &#39;class&#39; ) );
 	},
 
 <span id='CKEDITOR-dom-element-method-append'>	/**
 </span>	 * Append a node as a child of this element.
 	 *
-	 *		var p = new CKEDITOR.dom.element( 'p' );
+	 *		var p = new CKEDITOR.dom.element( &#39;p&#39; );
 	 *
-	 *		var strong = new CKEDITOR.dom.element( 'strong' );
+	 *		var strong = new CKEDITOR.dom.element( &#39;strong&#39; );
 	 *		p.append( strong );
 	 *
-	 *		var em = p.append( 'em' );
+	 *		var em = p.append( &#39;em&#39; );
 	 *
-	 *		// Result: '&lt;p&gt;&lt;strong&gt;&lt;/strong&gt;&lt;em&gt;&lt;/em&gt;&lt;/p&gt;'
+	 *		// Result: &#39;&lt;p&gt;&lt;strong&gt;&lt;/strong&gt;&lt;em&gt;&lt;/em&gt;&lt;/p&gt;&#39;
 	 *
 	 * @param {CKEDITOR.dom.node/String} node The node or element name to be appended.
 	 * @param {Boolean} [toStart=false] Indicates that the element is to be appended at the start.
 	 * @returns {CKEDITOR.dom.node} The appended node.
 	 */
 	append: function( node, toStart ) {
-		if ( typeof node == 'string' )
+		if ( typeof node == &#39;string&#39; )
 			node = this.getDocument().createElement( node );
 
 		if ( toStart )
@@ -241,7 +241,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		if ( !this.$.childNodes.length )
 			this.setHtml( html );
 		else {
-			var temp = new CKEDITOR.dom.element( 'div', this.getDocument() );
+			var temp = new CKEDITOR.dom.element( &#39;div&#39;, this.getDocument() );
 			temp.setHtml( html );
 			temp.moveChildren( this );
 		}
@@ -250,11 +250,11 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-appendText'>	/**
 </span>	 * Append text to this element.
 	 *
-	 *		var p = new CKEDITOR.dom.element( 'p' );
-	 *		p.appendText( 'This is' );
-	 *		p.appendText( ' some text' );
+	 *		var p = new CKEDITOR.dom.element( &#39;p&#39; );
+	 *		p.appendText( &#39;This is&#39; );
+	 *		p.appendText( &#39; some text&#39; );
 	 *
-	 *		// Result: '&lt;p&gt;This is some text&lt;/p&gt;'
+	 *		// Result: &#39;&lt;p&gt;This is some text&lt;/p&gt;&#39;
 	 *
 	 * @param {String} text The text to be appended.
 	 * @returns {CKEDITOR.dom.node} The appended node.
@@ -282,10 +282,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		// Ignore empty/spaces text.
 		while ( lastChild &amp;&amp; lastChild.type == CKEDITOR.NODE_TEXT &amp;&amp; !CKEDITOR.tools.rtrim( lastChild.getText() ) )
 			lastChild = lastChild.getPrevious();
-		if ( !lastChild || !lastChild.is || !lastChild.is( 'br' ) ) {
-			var bogus = CKEDITOR.env.opera ? this.getDocument().createText( '' ) : this.getDocument().createElement( 'br' );
+		if ( !lastChild || !lastChild.is || !lastChild.is( &#39;br&#39; ) ) {
+			var bogus = CKEDITOR.env.opera ? this.getDocument().createText( &#39;&#39; ) : this.getDocument().createElement( &#39;br&#39; );
 
-			CKEDITOR.env.gecko &amp;&amp; bogus.setAttribute( 'type', '_moz' );
+			CKEDITOR.env.gecko &amp;&amp; bogus.setAttribute( &#39;type&#39;, &#39;_moz&#39; );
 
 			this.append( bogus );
 		}
@@ -312,7 +312,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	breakParent: function( parent ) {
 		var range = new CKEDITOR.dom.range( this.getDocument() );
 
-		// We'll be extracting part of this element, so let's use our
+		// We&#39;ll be extracting part of this element, so let&#39;s use our
 		// range to get the correct piece.
 		range.setStartAfter( this );
 		range.setEndAfter( parent );
@@ -346,7 +346,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-focus'>	/**
 </span>	 * Moves the selection focus to this element.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myTextarea' );
+	 *		var element = CKEDITOR.document.getById( &#39;myTextarea&#39; );
 	 *		element.focus();
 	 *
 	 * @method
@@ -372,22 +372,22 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getHtml'>	/**
 </span>	 * Gets the inner HTML of this element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;' );
-	 *		alert( element.getHtml() ); // '&lt;b&gt;Example&lt;/b&gt;'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;&#39; );
+	 *		alert( element.getHtml() ); // &#39;&lt;b&gt;Example&lt;/b&gt;&#39;
 	 *
 	 * @returns {String} The inner HTML of this element.
 	 */
 	getHtml: function() {
 		var retval = this.$.innerHTML;
 		// Strip &lt;?xml:namespace&gt; tags in IE. (#3341).
-		return CKEDITOR.env.ie ? retval.replace( /&lt;\?[^&gt;]*&gt;/g, '' ) : retval;
+		return CKEDITOR.env.ie ? retval.replace( /&lt;\?[^&gt;]*&gt;/g, &#39;&#39; ) : retval;
 	},
 
 <span id='CKEDITOR-dom-element-method-getOuterHtml'>	/**
 </span>	 * Gets the outer (inner plus tags) HTML of this element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div class=&quot;bold&quot;&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;' );
-	 *		alert( element.getOuterHtml() ); // '&lt;div class=&quot;bold&quot;&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div class=&quot;bold&quot;&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;&#39; );
+	 *		alert( element.getOuterHtml() ); // &#39;&lt;div class=&quot;bold&quot;&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;&#39;
 	 *
 	 * @returns {String} The outer HTML of this element.
 	 */
@@ -395,17 +395,17 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		if ( this.$.outerHTML ) {
 			// IE includes the &lt;?xml:namespace&gt; tag in the outerHTML of
 			// namespaced element. So, we must strip it here. (#3341)
-			return this.$.outerHTML.replace( /&lt;\?[^&gt;]*&gt;/, '' );
+			return this.$.outerHTML.replace( /&lt;\?[^&gt;]*&gt;/, &#39;&#39; );
 		}
 
-		var tmpDiv = this.$.ownerDocument.createElement( 'div' );
+		var tmpDiv = this.$.ownerDocument.createElement( &#39;div&#39; );
 		tmpDiv.appendChild( this.$.cloneNode( true ) );
 		return tmpDiv.innerHTML;
 	},
 
 <span id='CKEDITOR-dom-element-method-getClientRect'>	/**
 </span>	 * Retrieve the bounding rectangle of the current element, in pixels,
-	 * relative to the upper-left corner of the browser's client area.
+	 * relative to the upper-left corner of the browser&#39;s client area.
 	 *
 	 * @returns {Object} The dimensions of the DOM element including
 	 * `left`, `top`, `right`, `bottom`, `width` and `height`.
@@ -423,10 +423,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setHtml'>	/**
 </span>	 * Sets the inner HTML of this element.
 	 *
-	 *		var p = new CKEDITOR.dom.element( 'p' );
-	 *		p.setHtml( '&lt;b&gt;Inner&lt;/b&gt; HTML' );
+	 *		var p = new CKEDITOR.dom.element( &#39;p&#39; );
+	 *		p.setHtml( &#39;&lt;b&gt;Inner&lt;/b&gt; HTML&#39; );
 	 *
-	 *		// Result: '&lt;p&gt;&lt;b&gt;Inner&lt;/b&gt; HTML&lt;/p&gt;'
+	 *		// Result: &#39;&lt;p&gt;&lt;b&gt;Inner&lt;/b&gt; HTML&lt;/p&gt;&#39;
 	 *
 	 * @method
 	 * @param {String} html The HTML to be set for this element.
@@ -442,7 +442,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 					// Fix the case when setHtml is called on detached element.
 					// HTML5 shiv used for document in which this element was created
-					// won't affect that detached element. So get document fragment with
+					// won&#39;t affect that detached element. So get document fragment with
 					// all HTML5 elements enabled and set innerHTML while this element is appended to it.
 					if ( this.getParent() )
 						return ( $.innerHTML = html );
@@ -456,9 +456,9 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 					}
 				}
 				catch ( e ) {
-					this.$.innerHTML = '';
+					this.$.innerHTML = &#39;&#39;;
 
-					var temp = new CKEDITOR.dom.element( 'body', this.getDocument() );
+					var temp = new CKEDITOR.dom.element( &#39;body&#39;, this.getDocument() );
 					temp.$.innerHTML = html;
 
 					var children = temp.getChildren();
@@ -476,9 +476,9 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setText'>	/**
 </span>	 * Sets the element contents as plain text.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'div' );
-	 *		element.setText( 'A &gt; B &amp; C &lt; D' );
-	 *		alert( element.innerHTML ); // 'A &amp;gt; B &amp;amp; C &amp;lt; D'
+	 *		var element = new CKEDITOR.dom.element( &#39;div&#39; );
+	 *		element.setText( &#39;A &gt; B &amp; C &lt; D&#39; );
+	 *		alert( element.innerHTML ); // &#39;A &amp;gt; B &amp;amp; C &amp;lt; D&#39;
 	 *
 	 * @param {String} text The text to be set.
 	 * @returns {String} The inserted text.
@@ -497,8 +497,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getAttribute'>	/**
 </span>	 * Gets the value of an element attribute.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;input type=&quot;text&quot; /&gt;' );
-	 *		alert( element.getAttribute( 'type' ) ); // 'text'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;input type=&quot;text&quot; /&gt;&#39; );
+	 *		alert( element.getAttribute( &#39;type&#39; ) ); // &#39;text&#39;
 	 *
 	 * @method
 	 * @param {String} name The attribute name.
@@ -512,23 +512,23 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
 			return function( name ) {
 				switch ( name ) {
-					case 'class':
-						name = 'className';
+					case &#39;class&#39;:
+						name = &#39;className&#39;;
 						break;
 
-					case 'http-equiv':
-						name = 'httpEquiv';
+					case &#39;http-equiv&#39;:
+						name = &#39;httpEquiv&#39;;
 						break;
 
-					case 'name':
+					case &#39;name&#39;:
 						return this.$.name;
 
-					case 'tabindex':
+					case &#39;tabindex&#39;:
 						var tabIndex = standard.call( this, name );
 
 						// IE returns tabIndex=0 by default for all
 						// elements. For those elements,
-						// getAtrribute( 'tabindex', 2 ) returns 32768
+						// getAtrribute( &#39;tabindex&#39;, 2 ) returns 32768
 						// instead. So, we must make this check to give a
 						// uniform result among all browsers.
 						if ( tabIndex !== 0 &amp;&amp; this.$.tabIndex === 0 )
@@ -537,26 +537,26 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 						return tabIndex;
 						break;
 
-					case 'checked':
+					case &#39;checked&#39;:
 						{
 							var attr = this.$.attributes.getNamedItem( name ),
 								attrValue = attr.specified ? attr.nodeValue // For value given by parser.
 								: this.$.checked; // For value created via DOM interface.
 
-							return attrValue ? 'checked' : null;
+							return attrValue ? &#39;checked&#39; : null;
 						}
 
-					case 'hspace':
-					case 'value':
+					case &#39;hspace&#39;:
+					case &#39;value&#39;:
 						return this.$[ name ];
 
-					case 'style':
+					case &#39;style&#39;:
 						// IE does not return inline styles via getAttribute(). See #2947.
 						return this.$.style.cssText;
 
-					case 'contenteditable':
-					case 'contentEditable':
-						return this.$.attributes.getNamedItem( 'contentEditable' ).specified ? this.$.getAttribute( 'contentEditable' ) : null;
+					case &#39;contenteditable&#39;:
+					case &#39;contentEditable&#39;:
+						return this.$.attributes.getNamedItem( &#39;contentEditable&#39; ).specified ? this.$.getAttribute( &#39;contentEditable&#39; ) : null;
 				}
 
 				return standard.call( this, name );
@@ -578,8 +578,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Gets the current computed value of one of the element CSS style
 	 * properties.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'span' );
-	 *		alert( element.getComputedStyle( 'display' ) ); // 'inline'
+	 *		var element = new CKEDITOR.dom.element( &#39;span&#39; );
+	 *		alert( element.getComputedStyle( &#39;display&#39; ) ); // &#39;inline&#39;
 	 *
 	 * @method
 	 * @param {String} propertyName The style property name.
@@ -591,7 +591,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		} : function( propertyName ) {
 			var style = this.getWindow().$.getComputedStyle( this.$, null );
 			// Firefox may return null if we call the above on a hidden iframe. (#9117)
-			return style ? style.getPropertyValue( propertyName ) : '';
+			return style ? style.getPropertyValue( propertyName ) : &#39;&#39;;
 		},
 
 <span id='CKEDITOR-dom-element-method-getDtd'>	/**
@@ -611,7 +611,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	},
 
 <span id='CKEDITOR-dom-element-method-getElementsByTag'>	/**
-</span>	 * Gets all this element's descendants having given tag name.
+</span>	 * Gets all this element&#39;s descendants having given tag name.
 	 *
 	 * @method
 	 * @param {String} tagName
@@ -621,8 +621,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getTabIndex'>	/**
 </span>	 * Gets the computed tabindex for this element.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myDiv' );
-	 *		alert( element.getTabIndex() ); // (e.g.) '-1'
+	 *		var element = CKEDITOR.document.getById( &#39;myDiv&#39; );
+	 *		alert( element.getTabIndex() ); // (e.g.) &#39;-1&#39;
 	 *
 	 * @method
 	 * @returns {Number} The tabindex value.
@@ -635,7 +635,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			// those cases we must check that the element really has
 			// the tabindex attribute set to zero, or it is one of
 			// those element that should have zero by default.
-			if ( tabIndex === 0 &amp;&amp; !CKEDITOR.dtd.$tabIndex[ this.getName() ] &amp;&amp; parseInt( this.getAttribute( 'tabindex' ), 10 ) !== 0 )
+			if ( tabIndex === 0 &amp;&amp; !CKEDITOR.dtd.$tabIndex[ this.getName() ] &amp;&amp; parseInt( this.getAttribute( &#39;tabindex&#39; ), 10 ) !== 0 )
 				tabIndex = -1;
 
 			return tabIndex;
@@ -648,9 +648,9 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			// from the attribute.
 			// https://bugs.webkit.org/show_bug.cgi?id=20596
 			if ( tabIndex == undefined ) {
-				tabIndex = parseInt( this.getAttribute( 'tabindex' ), 10 );
+				tabIndex = parseInt( this.getAttribute( &#39;tabindex&#39; ), 10 );
 
-				// If the element don't have the tabindex attribute,
+				// If the element don&#39;t have the tabindex attribute,
 				// then we should return -1.
 				if ( isNaN( tabIndex ) )
 					tabIndex = -1;
@@ -669,13 +669,13 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * a single space. This behavior is ok for us, for now. It may change
 	 * in the future.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div&gt;Sample &lt;i&gt;text&lt;/i&gt;.&lt;/div&gt;' );
-	 *		alert( &lt;b&gt;element.getText()&lt;/b&gt; ); // 'Sample text.'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div&gt;Sample &lt;i&gt;text&lt;/i&gt;.&lt;/div&gt;&#39; );
+	 *		alert( &lt;b&gt;element.getText()&lt;/b&gt; ); // &#39;Sample text.&#39;
 	 *
 	 * @returns {String} The text value.
 	 */
 	getText: function() {
-		return this.$.textContent || this.$.innerText || '';
+		return this.$.textContent || this.$.innerText || &#39;&#39;;
 	},
 
 <span id='CKEDITOR-dom-element-method-getWindow'>	/**
@@ -690,8 +690,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getId'>	/**
 </span>	 * Gets the value of the `id` attribute of this element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;p id=&quot;myId&quot;&gt;&lt;/p&gt;' );
-	 *		alert( element.getId() ); // 'myId'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;p id=&quot;myId&quot;&gt;&lt;/p&gt;&#39; );
+	 *		alert( element.getId() ); // &#39;myId&#39;
 	 *
 	 * @returns {String} The element id, or null if not available.
 	 */
@@ -702,8 +702,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getNameAtt'>	/**
 </span>	 * Gets the value of the `name` attribute of this element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;input name=&quot;myName&quot;&gt;&lt;/input&gt;' );
-	 *		alert( &lt;b&gt;element.getNameAtt()&lt;/b&gt; ); // 'myName'
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;input name=&quot;myName&quot;&gt;&lt;/input&gt;&#39; );
+	 *		alert( &lt;b&gt;element.getNameAtt()&lt;/b&gt; ); // &#39;myName&#39;
 	 *
 	 * @returns {String} The element name, or null if not available.
 	 */
@@ -715,8 +715,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Gets the element name (tag name). The returned name is guaranteed to
 	 * be always full lowercased.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'span' );
-	 *		alert( element.getName() ); // 'span'
+	 *		var element = new CKEDITOR.dom.element( &#39;span&#39; );
+	 *		alert( element.getName() ); // &#39;span&#39;
 	 *
 	 * @returns {String} The element name.
 	 */
@@ -726,8 +726,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		if ( CKEDITOR.env.ie &amp;&amp; !( document.documentMode &gt; 8 ) ) {
 			var scopeName = this.$.scopeName;
-			if ( scopeName != 'HTML' )
-				nodeName = scopeName.toLowerCase() + ':' + nodeName;
+			if ( scopeName != &#39;HTML&#39; )
+				nodeName = scopeName.toLowerCase() + &#39;:&#39; + nodeName;
 		}
 
 		return ( this.getName = function() {
@@ -748,9 +748,9 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-getFirst'>	/**
 </span>	 * Gets the first child node of this element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/div&gt;&#39; );
 	 *		var first = element.getFirst();
-	 *		alert( first.getName() ); // 'b'
+	 *		alert( first.getName() ); // &#39;b&#39;
 	 *
 	 * @param {Function} evaluator Filtering the result node.
 	 * @returns {CKEDITOR.dom.node} The first child node or null if not available.
@@ -792,11 +792,11 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-is'>	/**
 </span>	 * Checks if the element name matches the specified criteria.
 	 *
-	 *		var element = new CKEDITOR.element( 'span' );
-	 *		alert( element.is( 'span' ) );			// true
-	 *		alert( element.is( 'p', 'span' ) );		// true
-	 *		alert( element.is( 'p' ) );				// false
-	 *		alert( element.is( 'p', 'div' ) );		// false
+	 *		var element = new CKEDITOR.element( &#39;span&#39; );
+	 *		alert( element.is( &#39;span&#39; ) );			// true
+	 *		alert( element.is( &#39;p&#39;, &#39;span&#39; ) );		// true
+	 *		alert( element.is( &#39;p&#39; ) );				// false
+	 *		alert( element.is( &#39;p&#39;, &#39;div&#39; ) );		// false
 	 *		alert( element.is( { p:1,span:1 } ) );	// true
 	 *
 	 * @param {String.../Object} name One or more names to be checked, or a {@link CKEDITOR.dtd} object.
@@ -806,7 +806,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		var name = this.getName();
 
 		// Check against the specified DTD liternal.
-		if ( typeof arguments[ 0 ] == 'object' )
+		if ( typeof arguments[ 0 ] == &#39;object&#39; )
 			return !!arguments[ 0 ][ name ];
 
 		// Check for tag names
@@ -825,12 +825,12 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	isEditable: function( textCursor ) {
 		var name = this.getName();
 
-		if ( this.isReadOnly() || this.getComputedStyle( 'display' ) == 'none' ||
-				 this.getComputedStyle( 'visibility' ) == 'hidden' ||
+		if ( this.isReadOnly() || this.getComputedStyle( &#39;display&#39; ) == &#39;none&#39; ||
+				 this.getComputedStyle( &#39;visibility&#39; ) == &#39;hidden&#39; ||
 				 CKEDITOR.dtd.$nonEditable[ name ] ||
 				 CKEDITOR.dtd.$empty[ name ] ||
-				 ( this.is( 'a' ) &amp;&amp;
-					 ( this.data( 'cke-saved-name' ) || this.hasAttribute( 'name' ) ) &amp;&amp;
+				 ( this.is( &#39;a&#39; ) &amp;&amp;
+					 ( this.data( &#39;cke-saved-name&#39; ) || this.hasAttribute( &#39;name&#39; ) ) &amp;&amp;
 					 !this.getChildCount()
 				 ) )
 		{
@@ -841,16 +841,16 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			// Get the element DTD (defaults to span for unknown elements).
 			var dtd = CKEDITOR.dtd[ name ] || CKEDITOR.dtd.span;
 			// In the DTD # == text node.
-			return !!( dtd &amp;&amp; dtd[ '#' ] );
+			return !!( dtd &amp;&amp; dtd[ &#39;#&#39; ] );
 		}
 
 		return true;
 	},
 
 <span id='CKEDITOR-dom-element-method-isIdentical'>	/**
-</span>	 * Compare this element's inner html, tag name, attributes, etc. with other one.
+</span>	 * Compare this element&#39;s inner html, tag name, attributes, etc. with other one.
 	 *
-	 * See [W3C's DOM Level 3 spec - node#isEqualNode](http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-isEqualNode)
+	 * See [W3C&#39;s DOM Level 3 spec - node#isEqualNode](http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-isEqualNode)
 	 * for more details.
 	 *
 	 * @param {CKEDITOR.dom.element} otherElement Element to compare.
@@ -862,8 +862,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			otherEl = otherElement.clone( 0, 1 );
 
 		// Remove distractions.
-		thisEl.removeAttributes( [ '_moz_dirty', 'data-cke-expando', 'data-cke-saved-href', 'data-cke-saved-name' ] );
-		otherEl.removeAttributes( [ '_moz_dirty', 'data-cke-expando', 'data-cke-saved-href', 'data-cke-saved-name' ] );
+		thisEl.removeAttributes( [ &#39;_moz_dirty&#39;, &#39;data-cke-expando&#39;, &#39;data-cke-saved-href&#39;, &#39;data-cke-saved-name&#39; ] );
+		otherEl.removeAttributes( [ &#39;_moz_dirty&#39;, &#39;data-cke-expando&#39;, &#39;data-cke-saved-href&#39;, &#39;data-cke-saved-name&#39; ] );
 
 		// Native comparison available.
 		if ( thisEl.$.isEqualNode ) {
@@ -876,7 +876,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			otherEl = otherEl.getOuterHtml();
 
 			// Fix tiny difference between link href in older IEs.
-			if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 &amp;&amp; this.is( 'a' ) ) {
+			if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 &amp;&amp; this.is( &#39;a&#39; ) ) {
 				var parent = this.getParent();
 				if ( parent.type == CKEDITOR.NODE_ELEMENT ) {
 					var el = parent.clone();
@@ -897,7 +897,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @returns {Boolean} True if the element is visible.
 	 */
 	isVisible: function() {
-		var isVisible = ( this.$.offsetHeight || this.$.offsetWidth ) &amp;&amp; this.getComputedStyle( 'visibility' ) != 'hidden',
+		var isVisible = ( this.$.offsetHeight || this.$.offsetWidth ) &amp;&amp; this.getComputedStyle( &#39;visibility&#39; ) != &#39;hidden&#39;,
 			elementWindow, elementWindowFrame;
 
 		// Webkit and Opera report non-zero offsetHeight despite that
@@ -914,7 +914,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	},
 
 <span id='CKEDITOR-dom-element-method-isEmptyInlineRemoveable'>	/**
-</span>	 * Whether it's an empty inline elements which has no visual impact when removed.
+</span>	 * Whether it&#39;s an empty inline elements which has no visual impact when removed.
 	 *
 	 * @returns {Boolean}
 	 */
@@ -926,7 +926,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		for ( var i = 0, count = children.count(); i &lt; count; i++ ) {
 			var child = children.getItem( i );
 
-			if ( child.type == CKEDITOR.NODE_ELEMENT &amp;&amp; child.data( 'cke-bookmark' ) )
+			if ( child.type == CKEDITOR.NODE_ELEMENT &amp;&amp; child.data( &#39;cke-bookmark&#39; ) )
 				continue;
 
 			if ( child.type == CKEDITOR.NODE_ELEMENT &amp;&amp; !child.isEmptyInlineRemoveable() || child.type == CKEDITOR.NODE_TEXT &amp;&amp; CKEDITOR.tools.trim( child.getText() ) )
@@ -939,10 +939,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-hasAttributes'>	/**
 </span>	 * Checks if the element has any defined attributes.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div title=&quot;Test&quot;&gt;Example&lt;/div&gt;' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div title=&quot;Test&quot;&gt;Example&lt;/div&gt;&#39; );
 	 *		alert( element.hasAttributes() ); // true
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div&gt;Example&lt;/div&gt;' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div&gt;Example&lt;/div&gt;&#39; );
 	 *		alert( element.hasAttributes() ); // false
 	 *
 	 * @method
@@ -956,18 +956,18 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				var attribute = attributes[ i ];
 
 				switch ( attribute.nodeName ) {
-					case 'class':
-						// IE has a strange bug. If calling removeAttribute('className'),
+					case &#39;class&#39;:
+						// IE has a strange bug. If calling removeAttribute(&#39;className&#39;),
 						// the attributes collection will still contain the &quot;class&quot;
 						// attribute, which will be marked as &quot;specified&quot;, even if the
 						// outerHTML of the element is not displaying the class attribute.
 						// Note : I was not able to reproduce it outside the editor,
-						// but I've faced it while working on the TC of #1391.
-						if ( this.getAttribute( 'class' ) )
+						// but I&#39;ve faced it while working on the TC of #1391.
+						if ( this.getAttribute( &#39;class&#39; ) )
 							return true;
 
 						// Attributes to be ignored.
-					case 'data-cke-expando':
+					case &#39;data-cke-expando&#39;:
 						continue;
 
 						/*jsl:fallthru*/
@@ -984,7 +984,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				attrsNum = attrs.length;
 
 			// The _moz_dirty attribute might get into the element after pasting (#5455)
-			var execludeAttrs = { 'data-cke-expando': 1, _moz_dirty: 1 };
+			var execludeAttrs = { &#39;data-cke-expando&#39;: 1, _moz_dirty: 1 };
 
 			return attrsNum &gt; 0 &amp;&amp; ( attrsNum &gt; 2 || !execludeAttrs[ attrs[ 0 ].nodeName ] || ( attrsNum == 2 &amp;&amp; !execludeAttrs[ attrs[ 1 ].nodeName ] ) );
 		},
@@ -1007,7 +1007,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			// On IE &lt; 8 the name attribute cannot be retrieved
 			// right after the element creation and setting the
 			// name with setAttribute.
-			if ( name == 'name' )
+			if ( name == &#39;name&#39; )
 				return !!this.$.name;
 
 			return standard.call( this, name );
@@ -1017,15 +1017,15 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-hide'>	/**
 </span>	 * Hides this element (sets `display: none`).
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.hide();
 	 */
 	hide: function() {
-		this.setStyle( 'display', 'none' );
+		this.setStyle( &#39;display&#39;, &#39;none&#39; );
 	},
 
 <span id='CKEDITOR-dom-element-method-moveChildren'>	/**
-</span>	 * Moves this element's children to the target element.
+</span>	 * Moves this element&#39;s children to the target element.
 	 *
 	 * @param {CKEDITOR.dom.element} target
 	 * @param {Boolean} [toStart=false] Insert moved children at the
@@ -1066,7 +1066,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				// queuing them to be moved later. (#5567)
 				var pendingNodes = [];
 
-				while ( sibling.data( 'cke-bookmark' ) || sibling.isEmptyInlineRemoveable() ) {
+				while ( sibling.data( &#39;cke-bookmark&#39; ) || sibling.isEmptyInlineRemoveable() ) {
 					pendingNodes.push( sibling );
 					sibling = isNext ? sibling.getNext() : sibling.getPrevious();
 					if ( !sibling || sibling.type != CKEDITOR.NODE_ELEMENT )
@@ -1093,7 +1093,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		}
 
 		return function( inlineOnly ) {
-			if ( !( inlineOnly === false || CKEDITOR.dtd.$removeEmpty[ this.getName() ] || this.is( 'a' ) ) ) // Merge empty links and anchors also. (#5567)
+			if ( !( inlineOnly === false || CKEDITOR.dtd.$removeEmpty[ this.getName() ] || this.is( &#39;a&#39; ) ) ) // Merge empty links and anchors also. (#5567)
 			{
 				return;
 			}
@@ -1106,22 +1106,22 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-show'>	/**
 </span>	 * Shows this element (displays it).
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.show();
 	 */
 	show: function() {
 		this.setStyles( {
-			display: '',
-			visibility: ''
+			display: &#39;&#39;,
+			visibility: &#39;&#39;
 		} );
 	},
 
 <span id='CKEDITOR-dom-element-method-setAttribute'>	/**
 </span>	 * Sets the value of an element attribute.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
-	 *		element.setAttribute( 'class', 'myClass' );
-	 *		element.setAttribute( 'title', 'This is an example' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
+	 *		element.setAttribute( &#39;class&#39;, &#39;myClass&#39; );
+	 *		element.setAttribute( &#39;title&#39;, &#39;This is an example&#39; );
 	 *
 	 * @method
 	 * @param {String} name The name of the attribute.
@@ -1136,16 +1136,16 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
 			return function( name, value ) {
-				if ( name == 'class' )
+				if ( name == &#39;class&#39; )
 					this.$.className = value;
-				else if ( name == 'style' )
+				else if ( name == &#39;style&#39; )
 					this.$.style.cssText = value;
-				else if ( name == 'tabindex' ) // Case sensitive.
+				else if ( name == &#39;tabindex&#39; ) // Case sensitive.
 				this.$.tabIndex = value;
-				else if ( name == 'checked' )
+				else if ( name == &#39;checked&#39; )
 					this.$.checked = value;
-				else if ( name == 'contenteditable' )
-					standard.call( this, 'contentEditable', value );
+				else if ( name == &#39;contenteditable&#39; )
+					standard.call( this, &#39;contentEditable&#39;, value );
 				else
 					standard.apply( this, arguments );
 				return this;
@@ -1153,7 +1153,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		} else if ( CKEDITOR.env.ie8Compat &amp;&amp; CKEDITOR.env.secure ) {
 			return function( name, value ) {
 				// IE8 throws error when setting src attribute to non-ssl value. (#7847)
-				if ( name == 'src' &amp;&amp; value.match( /^http:\/\// ) )
+				if ( name == &#39;src&#39; &amp;&amp; value.match( /^http:\/\// ) )
 					try {
 					standard.apply( this, arguments );
 				} catch ( e ) {} else
@@ -1167,10 +1167,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setAttributes'>	/**
 </span>	 * Sets the value of several element attributes.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.setAttributes( {
-	 *			'class':	'myClass',
-	 *			title:		'This is an example'
+	 *			&#39;class&#39;:	&#39;myClass&#39;,
+	 *			title:		&#39;This is an example&#39;
 	 *		} );
 	 *
 	 * @chainable
@@ -1200,8 +1200,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-removeAttribute'>	/**
 </span>	 * Removes an attribute from the element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div class=&quot;classA&quot;&gt;&lt;/div&gt;' );
-	 *		element.removeAttribute( 'class' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div class=&quot;classA&quot;&gt;&lt;/div&gt;&#39; );
+	 *		element.removeAttribute( &#39;class&#39; );
 	 *
 	 * @method
 	 * @param {String} name The attribute name.
@@ -1213,12 +1213,12 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
 			return function( name ) {
-				if ( name == 'class' )
-					name = 'className';
-				else if ( name == 'tabindex' )
-					name = 'tabIndex';
-				else if ( name == 'contenteditable' )
-					name = 'contentEditable';
+				if ( name == &#39;class&#39; )
+					name = &#39;className&#39;;
+				else if ( name == &#39;tabindex&#39; )
+					name = &#39;tabIndex&#39;;
+				else if ( name == &#39;contenteditable&#39; )
+					name = &#39;contentEditable&#39;;
 				standard.call( this, name );
 			};
 		} else
@@ -1226,7 +1226,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	} )(),
 
 <span id='CKEDITOR-dom-element-method-removeAttributes'>	/**
-</span>	 * Removes all element's attributes or just given ones.
+</span>	 * Removes all element&#39;s attributes or just given ones.
 	 *
 	 * @param {Array} [attributes] The array with attributes names.
 	 */
@@ -1243,8 +1243,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-removeStyle'>	/**
 </span>	 * Removes a style from the element.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div style=&quot;display:none&quot;&gt;&lt;/div&gt;' );
-	 *		element.removeStyle( 'display' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div style=&quot;display:none&quot;&gt;&lt;/div&gt;&#39; );
+	 *		element.removeStyle( &#39;display&#39; );
 	 *
 	 * @method
 	 * @param {String} name The style name.
@@ -1254,7 +1254,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		var $ = this.$.style;
 
 		// &quot;removeProperty&quot; need to be specific on the following styles.
-		if ( !$.removeProperty &amp;&amp; ( name == 'border' || name == 'margin' || name == 'padding' ) ) {
+		if ( !$.removeProperty &amp;&amp; ( name == &#39;border&#39; || name == &#39;margin&#39; || name == &#39;padding&#39; ) ) {
 			var names = expandedRules( name );
 			for ( var i = 0 ; i &lt; names.length ; i++ )
 				this.removeStyle( names[ i ] );
@@ -1265,16 +1265,16 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// Eventually remove empty style attribute.
 		if ( !this.$.style.cssText )
-			this.removeAttribute( 'style' );
+			this.removeAttribute( &#39;style&#39; );
 	},
 
 <span id='CKEDITOR-dom-element-method-setStyle'>	/**
 </span>	 * Sets the value of an element style.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
-	 *		element.setStyle( 'background-color', '#ff0000' );
-	 *		element.setStyle( 'margin-top', '10px' );
-	 *		element.setStyle( 'float', 'right' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
+	 *		element.setStyle( &#39;background-color&#39;, &#39;#ff0000&#39; );
+	 *		element.setStyle( &#39;margin-top&#39;, &#39;10px&#39; );
+	 *		element.setStyle( &#39;float&#39;, &#39;right&#39; );
 	 *
 	 * @param {String} name The name of the style. The CSS naming notation
 	 * must be used (e.g. `background-color`).
@@ -1289,10 +1289,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setStyles'>	/**
 </span>	 * Sets the value of several element styles.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.setStyles( {
-	 *			position:	'absolute',
-	 *			float:		'right'
+	 *			position:	&#39;absolute&#39;,
+	 *			float:		&#39;right&#39;
 	 *		} );
 	 *
 	 * @param {Object} stylesPairs An object containing the names and
@@ -1308,7 +1308,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setOpacity'>	/**
 </span>	 * Sets the opacity of an element.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.setOpacity( 0.75 );
 	 *
 	 * @param {Number} opacity A number within the range `[0.0, 1.0]`.
@@ -1316,35 +1316,35 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	setOpacity: function( opacity ) {
 		if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 ) {
 			opacity = Math.round( opacity * 100 );
-			this.setStyle( 'filter', opacity &gt;= 100 ? '' : 'progid:DXImageTransform.Microsoft.Alpha(opacity=' + opacity + ')' );
+			this.setStyle( &#39;filter&#39;, opacity &gt;= 100 ? &#39;&#39; : &#39;progid:DXImageTransform.Microsoft.Alpha(opacity=&#39; + opacity + &#39;)&#39; );
 		} else
-			this.setStyle( 'opacity', opacity );
+			this.setStyle( &#39;opacity&#39;, opacity );
 	},
 
 <span id='CKEDITOR-dom-element-method-unselectable'>	/**
 </span>	 * Makes the element and its children unselectable.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
 	 *		element.unselectable();
 	 *
 	 * @method
 	 */
 	unselectable: function() {
 		// CSS unselectable.
-		this.setStyles( CKEDITOR.tools.cssVendorPrefix( 'user-select', 'none' ) );
+		this.setStyles( CKEDITOR.tools.cssVendorPrefix( &#39;user-select&#39;, &#39;none&#39; ) );
 
-		// For IE/Opera which doesn't support for the above CSS style,
+		// For IE/Opera which doesn&#39;t support for the above CSS style,
 		// the unselectable=&quot;on&quot; attribute only specifies the selection
-		// process cannot start in the element itself, and it doesn't inherit.
+		// process cannot start in the element itself, and it doesn&#39;t inherit.
 		if ( CKEDITOR.env.ie || CKEDITOR.env.opera ) {
-			this.setAttribute( 'unselectable', 'on' );
+			this.setAttribute( &#39;unselectable&#39;, &#39;on&#39; );
 
 			var element,
 				elements = this.getElementsByTag( &quot;*&quot; );
 
 			for ( var i = 0, count = elements.count() ; i &lt; count ; i++ ) {
 				element = elements.getItem( i );
-				element.setAttribute( 'unselectable', 'on' );
+				element.setAttribute( &#39;unselectable&#39;, &#39;on&#39; );
 			}
 		}
 	},
@@ -1356,8 +1356,8 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 */
 	getPositionedAncestor: function() {
 		var current = this;
-		while ( current.getName() != 'html' ) {
-			if ( current.getComputedStyle( 'position' ) != 'static' )
+		while ( current.getName() != &#39;html&#39; ) {
+			if ( current.getComputedStyle( &#39;position&#39; ) != &#39;static&#39; )
 				return current;
 
 			current = current.getParent();
@@ -1366,10 +1366,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	},
 
 <span id='CKEDITOR-dom-element-method-getDocumentPosition'>	/**
-</span>	 * Gets this element's position in document.
+</span>	 * Gets this element&#39;s position in document.
 	 *
 	 * @param {CKEDITOR.dom.document} [refDocument]
-	 * @returns {Object} Element's position.
+	 * @returns {Object} Element&#39;s position.
 	 * @returns {Number} return.x
 	 * @returns {Number} return.y
 	 * @todo refDocument
@@ -1379,7 +1379,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			y = 0,
 			doc = this.getDocument(),
 			body = doc.getBody(),
-			quirks = doc.$.compatMode == 'BackCompat';
+			quirks = doc.$.compatMode == &#39;BackCompat&#39;;
 
 		if ( document.documentElement[ &quot;getBoundingClientRect&quot; ] ) {
 			var box = this.$.getBoundingClientRect(),
@@ -1415,7 +1415,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			var current = this,
 				previous = null,
 				offsetParent;
-			while ( current &amp;&amp; !( current.getName() == 'body' || current.getName() == 'html' ) ) {
+			while ( current &amp;&amp; !( current.getName() == &#39;body&#39; || current.getName() == &#39;html&#39; ) ) {
 				x += current.$.offsetLeft - current.$.scrollLeft;
 				y += current.$.offsetTop - current.$.scrollTop;
 
@@ -1450,7 +1450,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		}
 
 		if ( !document.documentElement[ &quot;getBoundingClientRect&quot; ] ) {
-			// In Firefox, we'll endup one pixel before the element positions,
+			// In Firefox, we&#39;ll endup one pixel before the element positions,
 			// so we must add it here.
 			if ( CKEDITOR.env.gecko &amp;&amp; !quirks ) {
 				x += this.$.clientLeft ? 1 : 0;
@@ -1480,11 +1480,11 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 			// Skip body element, which will report wrong clientHeight when containing
 			// floated content. (#9523)
-			if ( overflowed &amp;&amp; !parent.is( 'body' ) )
+			if ( overflowed &amp;&amp; !parent.is( &#39;body&#39; ) )
 				this.scrollIntoParent( parent, alignToTop, 1 );
 
 			// Walk across the frame.
-			if ( parent.is( 'html' ) ) {
+			if ( parent.is( &#39;html&#39; ) ) {
 				var win = parent.getWindow();
 
 				// Avoid security error.
@@ -1501,7 +1501,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Make any page element visible inside one of the ancestors by scrolling the parent.
 	 *
 	 * @param {CKEDITOR.dom.element/CKEDITOR.dom.window} parent The container to scroll into.
-	 * @param {Boolean} [alignToTop] Align the element's top side with the container's
+	 * @param {Boolean} [alignToTop] Align the element&#39;s top side with the container&#39;s
 	 * when `true` is specified; align the bottom with viewport bottom when
 	 * `false` is specified. Otherwise scroll on either side with the minimum
 	 * amount to show the element.
@@ -1511,7 +1511,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		!parent &amp;&amp; ( parent = this.getWindow() );
 
 		var doc = parent.getDocument();
-		var isQuirks = doc.$.compatMode == 'BackCompat';
+		var isQuirks = doc.$.compatMode == &#39;BackCompat&#39;;
 
 		// On window &lt;html&gt; is scrolled while quirks scrolls &lt;body&gt;.
 		if ( parent instanceof CKEDITOR.dom.window )
@@ -1519,13 +1519,13 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// Scroll the parent by the specified amount.
 		function scrollBy( x, y ) {
-			// Webkit doesn't support &quot;scrollTop/scrollLeft&quot;
+			// Webkit doesn&#39;t support &quot;scrollTop/scrollLeft&quot;
 			// on documentElement/body element.
 			if ( /body|html/.test( parent.getName() ) )
 				parent.getWindow().$.scrollBy( x, y );
 			else {
-				parent.$[ 'scrollLeft' ] += x;
-				parent.$[ 'scrollTop' ] += y;
+				parent.$[ &#39;scrollLeft&#39; ] += x;
+				parent.$[ &#39;scrollTop&#39; ] += y;
 			}
 		}
 
@@ -1533,7 +1533,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		function screenPos( element, refWin ) {
 			var pos = { x: 0, y: 0 };
 
-			if ( !( element.is( isQuirks ? 'body' : 'html' ) ) ) {
+			if ( !( element.is( isQuirks ? &#39;body&#39; : &#39;html&#39; ) ) ) {
 				var box = element.$.getBoundingClientRect();
 				pos.x = box.left, pos.y = box.top;
 			}
@@ -1549,7 +1549,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// calculated margin size.
 		function margin( element, side ) {
-			return parseInt( element.getComputedStyle( 'margin-' + side ) || 0, 10 ) || 0;
+			return parseInt( element.getComputedStyle( &#39;margin-&#39; + side ) || 0, 10 ) || 0;
 		}
 
 		var win = parent.getWindow();
@@ -1564,14 +1564,14 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// Left-top margins.
 		lt = {
-			x: thisPos.x - margin( this, 'left' ) - parentPos.x || 0,
-			y: thisPos.y - margin( this, 'top' ) - parentPos.y || 0
+			x: thisPos.x - margin( this, &#39;left&#39; ) - parentPos.x || 0,
+			y: thisPos.y - margin( this, &#39;top&#39; ) - parentPos.y || 0
 		};
 
 		// Bottom-right margins.
 		br = {
-			x: thisPos.x + ew + margin( this, 'right' ) - ( ( parentPos.x ) + cw ) || 0,
-			y: thisPos.y + eh + margin( this, 'bottom' ) - ( ( parentPos.y ) + ch ) || 0
+			x: thisPos.x + ew + margin( this, &#39;right&#39; ) - ( ( parentPos.x ) + cw ) || 0,
+			y: thisPos.y + eh + margin( this, &#39;bottom&#39; ) - ( ( parentPos.y ) + ch ) || 0
 		};
 
 		// 1. Do the specified alignment as much as possible;
@@ -1597,40 +1597,40 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 *		link.setState( CKEDITOR.TRISTATE_DISABLED );
 	 *		// &lt;a class=&quot;cke_disabled&quot; aria-disabled=&quot;true&quot;&gt;...&lt;/a&gt;
 	 *
-	 *		span.setState( CKEDITOR.TRISTATE_ON, 'cke_button' );
+	 *		span.setState( CKEDITOR.TRISTATE_ON, &#39;cke_button&#39; );
 	 *		// &lt;span class=&quot;cke_button_on&quot;&gt;...&lt;/span&gt;
 	 *
 	 * @param {Number} state Indicate the element state. One of {@link CKEDITOR#TRISTATE_ON},
 	 * {@link CKEDITOR#TRISTATE_OFF}, {@link CKEDITOR#TRISTATE_DISABLED}.
-	 * @param [base='cke'] The prefix apply to each of the state class name.
+	 * @param [base=&#39;cke&#39;] The prefix apply to each of the state class name.
 	 * @param [useAria=true] Whether toggle the ARIA state attributes besides of class name change.
 	 */
 	setState: function( state, base, useAria ) {
-		base = base || 'cke';
+		base = base || &#39;cke&#39;;
 
 		switch ( state ) {
 			case CKEDITOR.TRISTATE_ON:
-				this.addClass( base + '_on' );
-				this.removeClass( base + '_off' );
-				this.removeClass( base + '_disabled' );
-				useAria &amp;&amp; this.setAttribute( 'aria-pressed', true );
-				useAria &amp;&amp; this.removeAttribute( 'aria-disabled' );
+				this.addClass( base + &#39;_on&#39; );
+				this.removeClass( base + &#39;_off&#39; );
+				this.removeClass( base + &#39;_disabled&#39; );
+				useAria &amp;&amp; this.setAttribute( &#39;aria-pressed&#39;, true );
+				useAria &amp;&amp; this.removeAttribute( &#39;aria-disabled&#39; );
 				break;
 
 			case CKEDITOR.TRISTATE_DISABLED:
-				this.addClass( base + '_disabled' );
-				this.removeClass( base + '_off' );
-				this.removeClass( base + '_on' );
-				useAria &amp;&amp; this.setAttribute( 'aria-disabled', true );
-				useAria &amp;&amp; this.removeAttribute( 'aria-pressed' );
+				this.addClass( base + &#39;_disabled&#39; );
+				this.removeClass( base + &#39;_off&#39; );
+				this.removeClass( base + &#39;_on&#39; );
+				useAria &amp;&amp; this.setAttribute( &#39;aria-disabled&#39;, true );
+				useAria &amp;&amp; this.removeAttribute( &#39;aria-pressed&#39; );
 				break;
 
 			default:
-				this.addClass( base + '_off' );
-				this.removeClass( base + '_on' );
-				this.removeClass( base + '_disabled' );
-				useAria &amp;&amp; this.removeAttribute( 'aria-pressed' );
-				useAria &amp;&amp; this.removeAttribute( 'aria-disabled' );
+				this.addClass( base + &#39;_off&#39; );
+				this.removeClass( base + &#39;_on&#39; );
+				this.removeClass( base + &#39;_disabled&#39; );
+				useAria &amp;&amp; this.removeAttribute( &#39;aria-pressed&#39; );
+				useAria &amp;&amp; this.removeAttribute( &#39;aria-disabled&#39; );
 				break;
 		}
 	},
@@ -1680,10 +1680,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 			if ( attrName in skipAttributes )
 				continue;
 
-			if ( attrName == 'checked' &amp;&amp; ( attrValue = this.getAttribute( attrName ) ) )
+			if ( attrName == &#39;checked&#39; &amp;&amp; ( attrValue = this.getAttribute( attrName ) ) )
 				dest.setAttribute( attrName, attrValue );
 			// IE BUG: value attribute is never specified even if it exists.
-			else if ( attribute.specified || ( CKEDITOR.env.ie &amp;&amp; attribute.nodeValue &amp;&amp; attrName == 'value' ) ) {
+			else if ( attribute.specified || ( CKEDITOR.env.ie &amp;&amp; attribute.nodeValue &amp;&amp; attrName == &#39;value&#39; ) ) {
 				attrValue = this.getAttribute( attrName );
 				if ( attrValue === null )
 					attrValue = attribute.nodeValue;
@@ -1693,7 +1693,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		}
 
 		// The style:
-		if ( this.$.style.cssText !== '' )
+		if ( this.$.style.cssText !== &#39;&#39; )
 			dest.$.style.cssText = this.$.style.cssText;
 	},
 
@@ -1703,7 +1703,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @param {String} newTag The new tag for the element.
 	 */
 	renameNode: function( newTag ) {
-		// If it's already correct exit here.
+		// If it&#39;s already correct exit here.
 		if ( this.getName() == newTag )
 			return;
 
@@ -1720,9 +1720,9 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// Replace the node.
 		this.getParent() &amp;&amp; this.$.parentNode.replaceChild( newNode.$, this.$ );
-		newNode.$[ 'data-cke-expando' ] = this.$[ 'data-cke-expando' ];
+		newNode.$[ &#39;data-cke-expando&#39; ] = this.$[ &#39;data-cke-expando&#39; ];
 		this.$ = newNode.$;
-		// Bust getName's cache. (#8663)
+		// Bust getName&#39;s cache. (#8663)
 		delete this.getName;
 	},
 
@@ -1758,7 +1758,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	} )(),
 
 <span id='CKEDITOR-dom-element-method-getChildCount'>	/**
-</span>	 * Gets number of element's children.
+</span>	 * Gets number of element&#39;s children.
 	 *
 	 * @returns {Number}
 	 */
@@ -1767,43 +1767,43 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	},
 
 <span id='CKEDITOR-dom-element-method-disableContextMenu'>	/**
-</span>	 * Disables browser's context menu in this element.
+</span>	 * Disables browser&#39;s context menu in this element.
 	 */
 	disableContextMenu: function() {
-		this.on( 'contextmenu', function( event ) {
+		this.on( &#39;contextmenu&#39;, function( event ) {
 			// Cancel the browser context menu.
-			if ( !event.data.getTarget().hasClass( 'cke_enable_context_menu' ) )
+			if ( !event.data.getTarget().hasClass( &#39;cke_enable_context_menu&#39; ) )
 				event.data.preventDefault();
 		} );
 	},
 
 <span id='CKEDITOR-dom-element-method-getDirection'>	/**
-</span>	 * Gets element's direction. Supports both CSS `direction` prop and `dir` attr.
+</span>	 * Gets element&#39;s direction. Supports both CSS `direction` prop and `dir` attr.
 	 */
 	getDirection: function( useComputed ) {
 		if ( useComputed ) {
-			return this.getComputedStyle( 'direction' ) ||
+			return this.getComputedStyle( &#39;direction&#39; ) ||
 					this.getDirection() ||
 					this.getParent() &amp;&amp; this.getParent().getDirection( 1 ) ||
 					this.getDocument().$.dir ||
-					'ltr';
+					&#39;ltr&#39;;
 		}
 		else
-			return this.getStyle( 'direction' ) || this.getAttribute( 'dir' );
+			return this.getStyle( &#39;direction&#39; ) || this.getAttribute( &#39;dir&#39; );
 	},
 
 <span id='CKEDITOR-dom-element-method-data'>	/**
 </span>	 * Gets, sets and removes custom data to be stored as HTML5 data-* attributes.
 	 *
-	 *		element.data( 'extra-info', 'test' );	// Appended the attribute data-extra-info=&quot;test&quot; to the element.
-	 *		alert( element.data( 'extra-info' ) );	// 'test'
-	 *		element.data( 'extra-info', false );	// Remove the data-extra-info attribute from the element.
+	 *		element.data( &#39;extra-info&#39;, &#39;test&#39; );	// Appended the attribute data-extra-info=&quot;test&quot; to the element.
+	 *		alert( element.data( &#39;extra-info&#39; ) );	// &#39;test&#39;
+	 *		element.data( &#39;extra-info&#39;, false );	// Remove the data-extra-info attribute from the element.
 	 *
 	 * @param {String} name The name of the attribute, excluding the `data-` part.
 	 * @param {String} [value] The value to set. If set to false, the attribute will be removed.
 	 */
 	data: function( name, value ) {
-		name = 'data-' + name;
+		name = &#39;data-&#39; + name;
 		if ( value === undefined )
 			return this.getAttribute( name );
 		else if ( value === false )
@@ -1819,10 +1819,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * It basically loops over {@link CKEDITOR#instances} in search for an instance
 	 * that uses the element.
 	 *
-	 *		var element = new CKEDITOR.dom.element( 'div' );
+	 *		var element = new CKEDITOR.dom.element( &#39;div&#39; );
 	 *		element.appendTo( CKEDITOR.document.getBody() );
 	 *		CKEDITOR.replace( element );
-	 *		alert( element.getEditor().name ); // 'editor1'
+	 *		alert( element.getEditor().name ); // &#39;editor1&#39;
 	 *
 	 * @returns {CKEDITOR.editor} An editor instance or null if nothing has been found.
 	 */
@@ -1849,10 +1849,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 *	* Returned list is not a live collection (like a result of native `querySelectorAll`).
 	 *	* Unlike native `querySelectorAll` this method ensures selector contextualization. This is:
 	 *
-	 *			HTML:		'&lt;body&gt;&lt;div&gt;&lt;i&gt;foo&lt;/i&gt;&lt;/div&gt;&lt;/body&gt;'
-	 *			Native:		div.querySelectorAll( 'body i' ) // -&gt;		[ &lt;i&gt;foo&lt;/i&gt; ]
-	 *			Method:		div.find( 'body i' ) // -&gt;					[]
-	 *						div.find( 'i' ) // -&gt;						[ &lt;i&gt;foo&lt;/i&gt; ]
+	 *			HTML:		&#39;&lt;body&gt;&lt;div&gt;&lt;i&gt;foo&lt;/i&gt;&lt;/div&gt;&lt;/body&gt;&#39;
+	 *			Native:		div.querySelectorAll( &#39;body i&#39; ) // -&gt;		[ &lt;i&gt;foo&lt;/i&gt; ]
+	 *			Method:		div.find( &#39;body i&#39; ) // -&gt;					[]
+	 *						div.find( &#39;i&#39; ) // -&gt;						[ &lt;i&gt;foo&lt;/i&gt; ]
 	 *
 	 * @since 4.3
 	 * @param {String} selector
@@ -1877,10 +1877,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 *	* Not available in IE7.
 	 *	* Unlike native `querySelectorAll` this method ensures selector contextualization. This is:
 	 *
-	 *			HTML:		'&lt;body&gt;&lt;div&gt;&lt;i&gt;foo&lt;/i&gt;&lt;/div&gt;&lt;/body&gt;'
-	 *			Native:		div.querySelector( 'body i' ) // -&gt;			&lt;i&gt;foo&lt;/i&gt;
-	 *			Method:		div.findOne( 'body i' ) // -&gt;				null
-	 *						div.findOne( 'i' ) // -&gt;					&lt;i&gt;foo&lt;/i&gt;
+	 *			HTML:		&#39;&lt;body&gt;&lt;div&gt;&lt;i&gt;foo&lt;/i&gt;&lt;/div&gt;&lt;/body&gt;&#39;
+	 *			Native:		div.querySelector( &#39;body i&#39; ) // -&gt;			&lt;i&gt;foo&lt;/i&gt;
+	 *			Method:		div.findOne( &#39;body i&#39; ) // -&gt;				null
+	 *						div.findOne( &#39;i&#39; ) // -&gt;					&lt;i&gt;foo&lt;/i&gt;
 	 *
 	 * @since 4.3
 	 * @param {String} selector
@@ -1899,7 +1899,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 </span>	 * Traverse the DOM of this element (inclusive), executing a callback for
 	 * each node.
 	 *
-	 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;div&gt;&lt;p&gt;foo&lt;b&gt;bar&lt;/b&gt;bom&lt;/p&gt;&lt;/div&gt;' );
+	 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div&gt;&lt;p&gt;foo&lt;b&gt;bar&lt;/b&gt;bom&lt;/p&gt;&lt;/div&gt;&#39; );
 	 *		element.forEach( function( node ) {
 	 *			console.log( node );
 	 *		} );
@@ -1917,7 +1917,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @param {CKEDITOR.htmlParser.node} callback.node Node passed as argument.
 	 * @param {Number} [type] If specified `callback` will be executed only on
 	 * nodes of this type.
-	 * @param {Boolean} [skipRoot] Don't execute `callback` on this element.
+	 * @param {Boolean} [skipRoot] Don&#39;t execute `callback` on this element.
 	 */
 	forEach: function( callback, type, skipRoot ) {
 		if ( !skipRoot &amp;&amp; ( !type || this.type == type ) )
@@ -1946,41 +1946,41 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		var hadId = true;
 
 		if ( !element.$.id ) {
-			element.$.id = 'cke_tmp_' + CKEDITOR.tools.getNextNumber();
+			element.$.id = &#39;cke_tmp_&#39; + CKEDITOR.tools.getNextNumber();
 			hadId = false;
 		}
 
 		return function() {
 			if ( !hadId )
-				element.removeAttribute( 'id' );
+				element.removeAttribute( &#39;id&#39; );
 		};
 	}
 
 	function getContextualizedSelector( element, selector ) {
-		return '#' + element.$.id + ' ' + selector.split( /,\s*/ ).join( ', #' + element.$.id + ' ' );
+		return &#39;#&#39; + element.$.id + &#39; &#39; + selector.split( /,\s*/ ).join( &#39;, #&#39; + element.$.id + &#39; &#39; );
 	}
 
 	var sides = {
-		width: [ 'border-left-width', 'border-right-width', 'padding-left', 'padding-right' ],
-		height: [ 'border-top-width', 'border-bottom-width', 'padding-top', 'padding-bottom' ]
+		width: [ &#39;border-left-width&#39;, &#39;border-right-width&#39;, &#39;padding-left&#39;, &#39;padding-right&#39; ],
+		height: [ &#39;border-top-width&#39;, &#39;border-bottom-width&#39;, &#39;padding-top&#39;, &#39;padding-bottom&#39; ]
 	};
 
 	// Generate list of specific style rules, applicable to margin/padding/border.
 	function expandedRules( style ) {
-		var sides = [ 'top', 'left', 'right', 'bottom' ], components;
+		var sides = [ &#39;top&#39;, &#39;left&#39;, &#39;right&#39;, &#39;bottom&#39; ], components;
 
-		if ( style == 'border' )
-				components = [ 'color', 'style', 'width' ];
+		if ( style == &#39;border&#39; )
+				components = [ &#39;color&#39;, &#39;style&#39;, &#39;width&#39; ];
 
 		var styles = [];
 		for ( var i = 0 ; i &lt; sides.length ; i++ ) {
 
 			if ( components ) {
 				for ( var j = 0 ; j &lt; components.length ; j++ )
-					styles.push( [ style, sides[ i ], components[ j ] ].join( '-' ) );
+					styles.push( [ style, sides[ i ], components[ j ] ].join( &#39;-&#39; ) );
 			}
 			else
-				styles.push( [ style, sides[ i ] ].join( '-' ) );
+				styles.push( [ style, sides[ i ] ].join( &#39;-&#39; ) );
 		}
 
 		return styles;
@@ -1996,27 +1996,27 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 <span id='CKEDITOR-dom-element-method-setSize'>	/**
 </span>	 * Sets the element size considering the box model.
 	 *
-	 * @param {'width'/'height'} type The dimension to set.
+	 * @param {&#39;width&#39;/&#39;height&#39;} type The dimension to set.
 	 * @param {Number} size The length unit in px.
 	 * @param {Boolean} isBorderBox Apply the size based on the border box model.
 	 */
 	CKEDITOR.dom.element.prototype.setSize = function( type, size, isBorderBox ) {
-		if ( typeof size == 'number' ) {
+		if ( typeof size == &#39;number&#39; ) {
 			if ( isBorderBox &amp;&amp; !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.quirks ) )
 				size -= marginAndPaddingSize.call( this, type );
 
-			this.setStyle( type, size + 'px' );
+			this.setStyle( type, size + &#39;px&#39; );
 		}
 	};
 
 <span id='CKEDITOR-dom-element-method-getSize'>	/**
 </span>	 * Gets the element size, possibly considering the box model.
 	 *
-	 * @param {'width'/'height'} type The dimension to get.
+	 * @param {&#39;width&#39;/&#39;height&#39;} type The dimension to get.
 	 * @param {Boolean} isBorderBox Get the size based on the border box model.
 	 */
 	CKEDITOR.dom.element.prototype.getSize = function( type, isBorderBox ) {
-		var size = Math.max( this.$[ 'offset' + CKEDITOR.tools.capitalize( type ) ], this.$[ 'client' + CKEDITOR.tools.capitalize( type ) ] ) || 0;
+		var size = Math.max( this.$[ &#39;offset&#39; + CKEDITOR.tools.capitalize( type ) ], this.$[ &#39;client&#39; + CKEDITOR.tools.capitalize( type ) ] ) || 0;
 
 		if ( isBorderBox )
 			size -= marginAndPaddingSize.call( this, type );

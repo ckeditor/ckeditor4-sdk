@@ -20,8 +20,8 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'richcombo', {
-	requires: 'floatpanel,listblock,button',
+CKEDITOR.plugins.add( &#39;richcombo&#39;, {
+	requires: &#39;floatpanel,listblock,button&#39;,
 
 	beforeInit: function( editor ) {
 		editor.ui.addHandler( CKEDITOR.UI_RICHCOMBO, CKEDITOR.ui.richCombo.handler );
@@ -29,54 +29,54 @@ CKEDITOR.plugins.add( 'richcombo', {
 } );
 
 ( function() {
-	var template = '&lt;span id=&quot;{id}&quot;' +
-		' class=&quot;cke_combo cke_combo__{name} {cls}&quot;' +
-		' role=&quot;presentation&quot;&gt;' +
-			'&lt;span id=&quot;{id}_label&quot; class=&quot;cke_combo_label&quot;&gt;{label}&lt;/span&gt;' +
-			'&lt;a class=&quot;cke_combo_button&quot; hidefocus=true title=&quot;{title}&quot; tabindex=&quot;-1&quot;' +
-			( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &gt;= 10900 &amp;&amp; !CKEDITOR.env.hc ? '' : '&quot; href=&quot;javascript:void(\'{titleJs}\')&quot;' ) +
-			' hidefocus=&quot;true&quot;' +
-			' role=&quot;button&quot;' +
-			' aria-labelledby=&quot;{id}_label&quot;' +
-			' aria-haspopup=&quot;true&quot;';
+	var template = &#39;&lt;span id=&quot;{id}&quot;&#39; +
+		&#39; class=&quot;cke_combo cke_combo__{name} {cls}&quot;&#39; +
+		&#39; role=&quot;presentation&quot;&gt;&#39; +
+			&#39;&lt;span id=&quot;{id}_label&quot; class=&quot;cke_combo_label&quot;&gt;{label}&lt;/span&gt;&#39; +
+			&#39;&lt;a class=&quot;cke_combo_button&quot; hidefocus=true title=&quot;{title}&quot; tabindex=&quot;-1&quot;&#39; +
+			( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &gt;= 10900 &amp;&amp; !CKEDITOR.env.hc ? &#39;&#39; : &#39;&quot; href=&quot;javascript:void(\&#39;{titleJs}\&#39;)&quot;&#39; ) +
+			&#39; hidefocus=&quot;true&quot;&#39; +
+			&#39; role=&quot;button&quot;&#39; +
+			&#39; aria-labelledby=&quot;{id}_label&quot;&#39; +
+			&#39; aria-haspopup=&quot;true&quot;&#39;;
 
-	// Some browsers don't cancel key events in the keydown but in the
+	// Some browsers don&#39;t cancel key events in the keydown but in the
 	// keypress.
 	// TODO: Check if really needed for Gecko+Mac.
 	if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
-		template += ' onkeypress=&quot;return false;&quot;';
+		template += &#39; onkeypress=&quot;return false;&quot;&#39;;
 
 	// With Firefox, we need to force the button to redraw, otherwise it
 	// will remain in the focus state.
 	if ( CKEDITOR.env.gecko )
-		template += ' onblur=&quot;this.style.cssText = this.style.cssText;&quot;';
+		template += &#39; onblur=&quot;this.style.cssText = this.style.cssText;&quot;&#39;;
 
 	template +=
-		' onkeydown=&quot;return CKEDITOR.tools.callFunction({keydownFn},event,this);&quot;' +
-		' onmousedown=&quot;return CKEDITOR.tools.callFunction({mousedownFn},event);&quot; ' +
-		' onfocus=&quot;return CKEDITOR.tools.callFunction({focusFn},event);&quot; ' +
-			( CKEDITOR.env.ie ? 'onclick=&quot;return false;&quot; onmouseup' : 'onclick' ) + // #188
-				'=&quot;CKEDITOR.tools.callFunction({clickFn},this);return false;&quot;&gt;' +
-			'&lt;span id=&quot;{id}_text&quot; class=&quot;cke_combo_text cke_combo_inlinelabel&quot;&gt;{label}&lt;/span&gt;' +
-			'&lt;span class=&quot;cke_combo_open&quot;&gt;' +
-				'&lt;span class=&quot;cke_combo_arrow&quot;&gt;' +
+		&#39; onkeydown=&quot;return CKEDITOR.tools.callFunction({keydownFn},event,this);&quot;&#39; +
+		&#39; onmousedown=&quot;return CKEDITOR.tools.callFunction({mousedownFn},event);&quot; &#39; +
+		&#39; onfocus=&quot;return CKEDITOR.tools.callFunction({focusFn},event);&quot; &#39; +
+			( CKEDITOR.env.ie ? &#39;onclick=&quot;return false;&quot; onmouseup&#39; : &#39;onclick&#39; ) + // #188
+				&#39;=&quot;CKEDITOR.tools.callFunction({clickFn},this);return false;&quot;&gt;&#39; +
+			&#39;&lt;span id=&quot;{id}_text&quot; class=&quot;cke_combo_text cke_combo_inlinelabel&quot;&gt;{label}&lt;/span&gt;&#39; +
+			&#39;&lt;span class=&quot;cke_combo_open&quot;&gt;&#39; +
+				&#39;&lt;span class=&quot;cke_combo_arrow&quot;&gt;&#39; +
 				// BLACK DOWN-POINTING TRIANGLE
-	( CKEDITOR.env.hc ? '&amp;#9660;' : CKEDITOR.env.air ? '&amp;nbsp;' : '' ) +
-				'&lt;/span&gt;' +
-			'&lt;/span&gt;' +
-		'&lt;/a&gt;' +
-		'&lt;/span&gt;';
+	( CKEDITOR.env.hc ? &#39;&amp;#9660;&#39; : CKEDITOR.env.air ? &#39;&amp;nbsp;&#39; : &#39;&#39; ) +
+				&#39;&lt;/span&gt;&#39; +
+			&#39;&lt;/span&gt;&#39; +
+		&#39;&lt;/a&gt;&#39; +
+		&#39;&lt;/span&gt;&#39;;
 
-	var rcomboTpl = CKEDITOR.addTemplate( 'combo', template );
+	var rcomboTpl = CKEDITOR.addTemplate( &#39;combo&#39;, template );
 
 <span id='CKEDITOR-property-UI_RICHCOMBO'>	/**
 </span>	 * Button UI element.
 	 *
 	 * @readonly
-	 * @property {String} [='richcombo']
+	 * @property {String} [=&#39;richcombo&#39;]
 	 * @member CKEDITOR
 	 */
-	CKEDITOR.UI_RICHCOMBO = 'richcombo';
+	CKEDITOR.UI_RICHCOMBO = &#39;richcombo&#39;;
 
 <span id='CKEDITOR-ui-richCombo'>	/**
 </span>	 * @class
@@ -88,14 +88,14 @@ CKEDITOR.plugins.add( 'richcombo', {
 			CKEDITOR.tools.extend( this, definition,
 			// Set defaults.
 			{
-				// The combo won't participate in toolbar grouping.
+				// The combo won&#39;t participate in toolbar grouping.
 				canGroup: false,
 				title: definition.label,
 				modes: { wysiwyg: 1 },
 				editorFocus: 1
 			} );
 
-			// We don't want the panel definition in this object.
+			// We don&#39;t want the panel definition in this object.
 			var panelDefinition = this.panel || {};
 			delete this.panel;
 
@@ -103,7 +103,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 
 			this.document = ( panelDefinition.parent &amp;&amp; panelDefinition.parent.getDocument() ) || CKEDITOR.document;
 
-			panelDefinition.className = 'cke_combopanel';
+			panelDefinition.className = &#39;cke_combopanel&#39;;
 			panelDefinition.block = {
 				multiSelect: panelDefinition.multiSelect,
 				attributes: panelDefinition.attributes
@@ -120,7 +120,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 			renderHtml: function( editor ) {
 				var output = [];
 				this.render( editor, output );
-				return output.join( '' );
+				return output.join( &#39;&#39; );
 			},
 
 <span id='CKEDITOR-ui-richCombo-method-render'>			/**
@@ -134,7 +134,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 			render: function( editor, output ) {
 				var env = CKEDITOR.env;
 
-				var id = 'cke_' + this.id;
+				var id = &#39;cke_&#39; + this.id;
 				var clickFn = CKEDITOR.tools.addFunction( function( el ) {
 					// Restore locked selection in Opera.
 					if ( selLocked ) {
@@ -184,7 +184,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 						state = CKEDITOR.TRISTATE_DISABLED;
 
 					this.setState( state );
-					this.setValue( '' );
+					this.setValue( &#39;&#39; );
 
 					// Let plugin to disable button.
 					if ( state != CKEDITOR.TRISTATE_DISABLED &amp;&amp; this.refresh )
@@ -192,11 +192,11 @@ CKEDITOR.plugins.add( 'richcombo', {
 				}
 
 				// Update status when activeFilter, mode, selection or readOnly changes.
-				editor.on( 'activeFilterChange', updateState, this );
-				editor.on( 'mode', updateState, this );
-				editor.on( 'selectionChange', updateState, this );
+				editor.on( &#39;activeFilterChange&#39;, updateState, this );
+				editor.on( &#39;mode&#39;, updateState, this );
+				editor.on( &#39;selectionChange&#39;, updateState, this );
 				// If this combo is sensitive to readOnly state, update it accordingly.
-				!this.readOnly &amp;&amp; editor.on( 'readOnly', updateState, this );
+				!this.readOnly &amp;&amp; editor.on( &#39;readOnly&#39;, updateState, this );
 
 				var keyDownFn = CKEDITOR.tools.addFunction( function( ev, element ) {
 					ev = new CKEDITOR.dom.event( ev );
@@ -207,7 +207,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 					// This call is duplicated in plugins/toolbar/plugin.js in itemKeystroke().
 					// Move focus to the first element after drop down was opened by the arrow down key.
 					if ( keystroke == 40 ) {
-						editor.once( 'panelShow', function( evt ) {
+						editor.once( &#39;panelShow&#39;, function( evt ) {
 							evt.data._.panel._.currentBlock.onKeyDown( 40 );
 						} );
 					}
@@ -252,8 +252,8 @@ CKEDITOR.plugins.add( 'richcombo', {
 					name: this.name || this.command,
 					label: this.label,
 					title: this.title,
-					cls: this.className || '',
-					titleJs: env.gecko &amp;&amp; env.version &gt;= 10900 &amp;&amp; !env.hc ? '' : ( this.title || '' ).replace( &quot;'&quot;, '' ),
+					cls: this.className || &#39;&#39;,
+					titleJs: env.gecko &amp;&amp; env.version &gt;= 10900 &amp;&amp; !env.hc ? &#39;&#39; : ( this.title || &#39;&#39; ).replace( &quot;&#39;&quot;, &#39;&#39; ),
 					keydownFn: keyDownFn,
 					mousedownFn: mouseDownFn,
 					focusFn: focusFn,
@@ -275,7 +275,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 				var panelDefinition = this._.panelDefinition,
 					panelBlockDefinition = this._.panelDefinition.block,
 					panelParentElement = panelDefinition.parent || CKEDITOR.document.getBody(),
-					namedPanelCls = 'cke_combopanel__' + this.name,
+					namedPanelCls = &#39;cke_combopanel__&#39; + this.name,
 					panel = new CKEDITOR.ui.floatPanel( editor, panelParentElement, panelDefinition ),
 					list = panel.addListBlock( this.id, panelBlockDefinition ),
 					me = this;
@@ -294,7 +294,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 
 					// The &quot;panelShow&quot; event is fired assinchronously, after the
 					// onShow method call.
-					editor.once( 'panelShow', function() {
+					editor.once( &#39;panelShow&#39;, function() {
 						list.focus( !list.multiSelect &amp;&amp; me.getValue() );
 					} );
 				};
@@ -338,20 +338,20 @@ CKEDITOR.plugins.add( 'richcombo', {
 			setValue: function( value, text ) {
 				this._.value = value;
 
-				var textElement = this.document.getById( 'cke_' + this.id + '_text' );
+				var textElement = this.document.getById( &#39;cke_&#39; + this.id + &#39;_text&#39; );
 				if ( textElement ) {
 					if ( !( value || text ) ) {
 						text = this.label;
-						textElement.addClass( 'cke_combo_inlinelabel' );
+						textElement.addClass( &#39;cke_combo_inlinelabel&#39; );
 					} else
-						textElement.removeClass( 'cke_combo_inlinelabel' );
+						textElement.removeClass( &#39;cke_combo_inlinelabel&#39; );
 
-					textElement.setText( typeof text != 'undefined' ? text : value );
+					textElement.setText( typeof text != &#39;undefined&#39; ? text : value );
 				}
 			},
 
 			getValue: function() {
-				return this._.value || '';
+				return this._.value || &#39;&#39;;
 			},
 
 			unmarkAll: function() {
@@ -387,7 +387,7 @@ CKEDITOR.plugins.add( 'richcombo', {
 				if ( !this._.committed ) {
 					this._.list.commit();
 					this._.committed = 1;
-					CKEDITOR.ui.fire( 'ready', this );
+					CKEDITOR.ui.fire( &#39;ready&#39;, this );
 				}
 				this._.committed = 1;
 			},
@@ -396,12 +396,12 @@ CKEDITOR.plugins.add( 'richcombo', {
 				if ( this._.state == state )
 					return;
 
-				var el = this.document.getById( 'cke_' + this.id );
-				el.setState( state, 'cke_combo' );
+				var el = this.document.getById( &#39;cke_&#39; + this.id );
+				el.setState( state, &#39;cke_combo&#39; );
 
 				state == CKEDITOR.TRISTATE_DISABLED ?
-					el.setAttribute( 'aria-disabled', true ) :
-					el.removeAttribute( 'aria-disabled' );
+					el.setAttribute( &#39;aria-disabled&#39;, true ) :
+					el.removeAttribute( &#39;aria-disabled&#39; );
 
 				this._.state = state;
 			},

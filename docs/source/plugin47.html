@@ -24,11 +24,11 @@
 </span> * @fileOverview A set of utilities to find and make horizontal spaces in edited contents.
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
 
-	CKEDITOR.plugins.add( 'lineutils' );
+	CKEDITOR.plugins.add( &#39;lineutils&#39; );
 
 <span id='CKEDITOR-property-LINEUTILS_BEFORE'>	/**
 </span>	 * Determines a position relative to an element in DOM (before).
@@ -65,7 +65,7 @@
 	 * @class CKEDITOR.plugins.lineutils.finder
 	 * @constructor Creates a Finder class instance.
 	 * @param {CKEDITOR.editor} editor Editor instance that Finder belongs to.
-	 * @param {Object} def Finder's definition.
+	 * @param {Object} def Finder&#39;s definition.
 	 * @since 4.3
 	 */
 	function Finder( editor, def ) {
@@ -78,7 +78,7 @@
 
 		this.frame = this.win.getFrame();
 		this.inline = this.editable.isInline();
-		this.target = this[ this.inline ? 'editable' : 'doc' ];
+		this.target = this[ this.inline ? &#39;editable&#39; : &#39;doc&#39; ];
 	}
 
 	Finder.prototype = {
@@ -95,7 +95,7 @@
 				el, x, y;
 
 			var moveBuffer = CKEDITOR.tools.eventsBuffer( 50, function() {
-					if ( editor.readOnly || editor.mode != 'wysiwyg' )
+					if ( editor.readOnly || editor.mode != &#39;wysiwyg&#39; )
 						return;
 
 					that.relations = {};
@@ -111,14 +111,14 @@
 				} );
 
 			// Searching starting from element from point on mousemove.
-			this.listener = this.editable.attachListener( this.target, 'mousemove', function( evt ) {
+			this.listener = this.editable.attachListener( this.target, &#39;mousemove&#39;, function( evt ) {
 				x = evt.data.$.clientX;
 				y = evt.data.$.clientY;
 
 				moveBuffer.input();
 			} );
 
-			this.editable.attachListener( this.inline ? this.editable : this.frame, 'mouseout', function( evt ) {
+			this.editable.attachListener( this.inline ? this.editable : this.frame, &#39;mouseout&#39;, function( evt ) {
 				moveBuffer.reset();
 			} );
 		},
@@ -204,7 +204,7 @@
 
 			// Go down DOM towards root (or limit).
 			do {
-				uid = el.$[ 'data-cke-expando' ];
+				uid = el.$[ &#39;data-cke-expando&#39; ];
 
 				// This element was already visited and checked.
 				if ( uid &amp;&amp; uid in this.relations )
@@ -264,7 +264,7 @@
 				while ( condition( y ) ) {
 					y += step;
 
-					// If we try and we try, and still nothing's found, let's end
+					// If we try and we try, and still nothing&#39;s found, let&#39;s end
 					// that party.
 					if ( ++tryouts == 25 )
 						return;
@@ -274,7 +274,7 @@
 					// Nothing found. This is crazy... but...
 					// It might be that a line, which is in different document,
 					// covers that pixel (elementFromPoint is doc-sensitive).
-					// Better let's have another try.
+					// Better let&#39;s have another try.
 					if ( !found )
 						continue;
 
@@ -285,7 +285,7 @@
 					}
 
 					// Reached the edge of an element and found an ancestor or...
-					// A line, that covers that pixel. Better let's have another try.
+					// A line, that covers that pixel. Better let&#39;s have another try.
 					else if ( !contains( el, found ) )
 						continue;
 
@@ -328,7 +328,7 @@
 
 				// Iterate forwards starting from neg and backwards from
 				// pos to harvest all children of el between those elements.
-				// Stop when neg and pos meet each other or there's none of them.
+				// Stop when neg and pos meet each other or there&#39;s none of them.
 				// TODO (?) reduce number of hops forwards/backwards.
 				while ( neg || pos ) {
 					if ( neg )
@@ -351,7 +351,7 @@
 		} )(),
 
 <span id='CKEDITOR-plugins-lineutils-finder-method-greedySearch'>		/**
-</span>		 * Unline {@link #traverseSearch}, it collects **all** elements from editable's DOM tree
+</span>		 * Unline {@link #traverseSearch}, it collects **all** elements from editable&#39;s DOM tree
 		 * and runs lookups for every one of them, collecting relations.
 		 *
 		 * @returns {Object} {@link #relations}.
@@ -359,20 +359,20 @@
 		greedySearch: function() {
 			this.relations = {};
 
-			var all = this.editable.getElementsByTag( '*' ),
+			var all = this.editable.getElementsByTag( &#39;*&#39; ),
 				i = 0,
 				el, type, l;
 
 			while ( ( el = all.getItem( i++ ) ) ) {
-				// Don't consider editable, as it might be inline,
-				// and i.e. checking it's siblings is pointless.
+				// Don&#39;t consider editable, as it might be inline,
+				// and i.e. checking it&#39;s siblings is pointless.
 				if ( el.equals( this.editable ) )
 					continue;
 
-				// Don't visit non-editable internals, for example widget's
+				// Don&#39;t visit non-editable internals, for example widget&#39;s
 				// guts (above wrapper, below nested). Still check editable limits,
 				// as they are siblings with editable contents.
-				if ( !el.hasAttribute( 'contenteditable' ) &amp;&amp; el.isReadOnly() )
+				if ( !el.hasAttribute( &#39;contenteditable&#39; ) &amp;&amp; el.isReadOnly() )
 					continue;
 
 				if ( isStatic( el ) &amp;&amp; el.isVisible() ) {
@@ -415,10 +415,10 @@
 		 * When the criterion is met, lookup returns a logical conjunction of `CKEDITOR.LINEUTILS_BEFORE`,
 		 * `CKEDITOR.LINEUTILS_AFTER` or `CKEDITOR.LINEUTILS_INSIDE`.
 		 *
-		 * Lookups are passed along with Finder's definition.
+		 * Lookups are passed along with Finder&#39;s definition.
 		 *
 		 *		lookups: {
-		 *			'some lookup': function( el ) {
+		 *			&#39;some lookup&#39;: function( el ) {
 		 *				if ( someCondition )
 		 *					return CKEDITOR.LINEUTILS_BEFORE;
 		 *			},
@@ -459,7 +459,7 @@
 			var rel, uid;
 
 			function locateSibling( rel, type ) {
-				var sib = rel.element[ type === CKEDITOR.LINEUTILS_BEFORE ? 'getPrevious' : 'getNext' ]();
+				var sib = rel.element[ type === CKEDITOR.LINEUTILS_BEFORE ? &#39;getPrevious&#39; : &#39;getNext&#39; ]();
 
 				// Return the middle point between siblings.
 				if ( sib &amp;&amp; isStatic( sib ) ) {
@@ -471,7 +471,7 @@
 						return ( rel.elementRect.bottom + rel.siblingRect.top ) / 2;
 				}
 
-				// If there's no sibling, use the edge of an element.
+				// If there&#39;s no sibling, use the edge of an element.
 				else {
 					if ( type == CKEDITOR.LINEUTILS_BEFORE )
 						return rel.elementRect.top;
@@ -530,7 +530,7 @@
 						if ( !sorted.length )
 							sorted.push( { uid: +uid, type: type, dist: dist } );
 						else {
-							// Sort the array on fly when it's populated.
+							// Sort the array on fly when it&#39;s populated.
 							for ( i = 0; i &lt; sorted.length; i++ ) {
 								if ( dist &lt; sorted[ i ].dist ) {
 									sorted.splice( i, 0, { uid: +uid, type: type, dist: dist } );
@@ -546,7 +546,7 @@
 					}
 				}
 
-				if ( typeof howMany != 'undefined' )
+				if ( typeof howMany != &#39;undefined&#39; )
 					return sorted.slice( 0, howMany );
 				else
 					return sorted;
@@ -574,27 +574,27 @@
 	};
 
 	var tipCss = {
-			display: 'block',
-			width: '0px',
-			height: '0px',
-			'border-color': 'transparent',
-			'border-style': 'solid',
-			position: 'absolute',
-			top: '-6px'
+			display: &#39;block&#39;,
+			width: &#39;0px&#39;,
+			height: &#39;0px&#39;,
+			&#39;border-color&#39;: &#39;transparent&#39;,
+			&#39;border-style&#39;: &#39;solid&#39;,
+			position: &#39;absolute&#39;,
+			top: &#39;-6px&#39;
 		},
 
 		lineStyle = {
-			height: '0px',
-			'border-top': '1px dashed red',
-			position: 'absolute',
-			'z-index': 9999
+			height: &#39;0px&#39;,
+			&#39;border-top&#39;: &#39;1px dashed red&#39;,
+			position: &#39;absolute&#39;,
+			&#39;z-index&#39;: 9999
 		},
 
 		lineTpl =
-			'&lt;div data-cke-lineutils-line=&quot;1&quot; class=&quot;cke_reset_all&quot; style=&quot;{lineStyle}&quot;&gt;' +
-				'&lt;span style=&quot;{tipLeftStyle}&quot;&gt;&amp;nbsp;&lt;/span&gt;' +
-				'&lt;span style=&quot;{tipRightStyle}&quot;&gt;&amp;nbsp;&lt;/span&gt;' +
-			'&lt;/div&gt;';
+			&#39;&lt;div data-cke-lineutils-line=&quot;1&quot; class=&quot;cke_reset_all&quot; style=&quot;{lineStyle}&quot;&gt;&#39; +
+				&#39;&lt;span style=&quot;{tipLeftStyle}&quot;&gt;&amp;nbsp;&lt;/span&gt;&#39; +
+				&#39;&lt;span style=&quot;{tipRightStyle}&quot;&gt;&amp;nbsp;&lt;/span&gt;&#39; +
+			&#39;&lt;/div&gt;&#39;;
 
 <span id='CKEDITOR-plugins-lineutils-liner-method-constructor'><span id='CKEDITOR-plugins-lineutils-liner'>	/**
 </span></span>	 * An utility that draws horizontal lines in DOM according to locations
@@ -604,7 +604,7 @@
 	 * @class CKEDITOR.plugins.lineutils.liner
 	 * @constructor Creates a Liner class instance.
 	 * @param {CKEDITOR.editor} editor Editor instance that Liner belongs to.
-	 * @param {Object} def Liner's definition.
+	 * @param {Object} def Liner&#39;s definition.
 	 * @since 4.3
 	 */
 	function Liner( editor, def ) {
@@ -629,21 +629,21 @@
 
 		this.queryViewport();
 
-		// Callbacks must be wrapped. Otherwise they're not attached
+		// Callbacks must be wrapped. Otherwise they&#39;re not attached
 		// to global DOM objects (i.e. topmost window) for every editor
-		// because they're treated as duplicates. They belong to the
+		// because they&#39;re treated as duplicates. They belong to the
 		// same prototype shared among Liner instances.
 		var queryViewport = CKEDITOR.tools.bind( this.queryViewport, this ),
 			hideVisible = CKEDITOR.tools.bind( this.hideVisible, this ),
 			removeAll = CKEDITOR.tools.bind( this.removeAll, this );
 
-		editable.attachListener( this.winTop, 'resize', queryViewport );
-		editable.attachListener( this.winTop, 'scroll', queryViewport );
+		editable.attachListener( this.winTop, &#39;resize&#39;, queryViewport );
+		editable.attachListener( this.winTop, &#39;scroll&#39;, queryViewport );
 
-		editable.attachListener( this.winTop, 'resize', hideVisible );
-		editable.attachListener( this.win, 'scroll', hideVisible );
+		editable.attachListener( this.winTop, &#39;resize&#39;, hideVisible );
+		editable.attachListener( this.win, &#39;scroll&#39;, hideVisible );
 
-		editable.attachListener( this.inline ? editable : this.frame, 'mouseout', function( evt ) {
+		editable.attachListener( this.inline ? editable : this.frame, &#39;mouseout&#39;, function( evt ) {
 			var x = evt.data.$.clientX,
 				y = evt.data.$.clientY;
 
@@ -658,9 +658,9 @@
 				this.hideVisible();
 		}, this );
 
-		editable.attachListener( editor, 'resize', queryViewport );
-		editable.attachListener( editor, 'mode', removeAll );
-		editor.on( 'destroy', removeAll );
+		editable.attachListener( editor, &#39;resize&#39;, queryViewport );
+		editable.attachListener( editor, &#39;mode&#39;, removeAll );
+		editor.on( &#39;destroy&#39;, removeAll );
 
 		this.lineTpl = new CKEDITOR.template( lineTpl ).output( {
 			lineStyle: CKEDITOR.tools.writeCssText(
@@ -668,16 +668,16 @@
 			),
 			tipLeftStyle: CKEDITOR.tools.writeCssText(
 				CKEDITOR.tools.extend( {}, tipCss, {
-					left: '0px',
-					'border-left-color': 'red',
-					'border-width': '6px 0 6px 6px'
+					left: &#39;0px&#39;,
+					&#39;border-left-color&#39;: &#39;red&#39;,
+					&#39;border-width&#39;: &#39;6px 0 6px 6px&#39;
 				}, this.tipCss, this.tipLeftStyle, true )
 			),
 			tipRightStyle: CKEDITOR.tools.writeCssText(
 				CKEDITOR.tools.extend( {}, tipCss, {
-					right: '0px',
-					'border-right-color': 'red',
-					'border-width': '6px 6px 6px 0'
+					right: &#39;0px&#39;,
+					&#39;border-right-color&#39;: &#39;red&#39;,
+					&#39;border-width&#39;: &#39;6px 6px 6px 0&#39;
 				}, this.tipCss, this.tipRightStyle, true )
 			)
 		} );
@@ -752,9 +752,9 @@
 				return;
 
 			// Search for any visible line of a different hash first.
-			// It's faster to re-position visible line than to show it.
+			// It&#39;s faster to re-position visible line than to show it.
 			for ( l in this.visible ) {
-				if ( this.visible[ l ].getCustomData( 'hash' ) !== this.hash ) {
+				if ( this.visible[ l ].getCustomData( &#39;hash&#39; ) !== this.hash ) {
 					line = this.visible[ l ];
 					break;
 				}
@@ -763,7 +763,7 @@
 			// Search for any hidden line of a different hash.
 			if ( !line ) {
 				for ( l in this.hidden ) {
-					if ( this.hidden[ l ].getCustomData( 'hash' ) !== this.hash ) {
+					if ( this.hidden[ l ].getCustomData( &#39;hash&#39; ) !== this.hash ) {
 						this.showLine( ( line = this.hidden[ l ] ) );
 						break;
 					}
@@ -775,7 +775,7 @@
 				this.showLine( ( line = this.addLine() ) );
 
 			// Mark the line with current hash.
-			line.setCustomData( 'hash', this.hash );
+			line.setCustomData( &#39;hash&#39;, this.hash );
 
 			// Mark the line as visible.
 			this.visible[ line.getUniqueId() ] = line;
@@ -806,7 +806,7 @@
 			else
 				styles.width = rel.elementRect.width;
 
-			// Let's calculate the vertical position of the line.
+			// Let&#39;s calculate the vertical position of the line.
 			if ( this.inline )
 				styles.top = loc + this.winTopScroll.y;
 			else
@@ -816,7 +816,7 @@
 			if ( styles.top - this.winTopScroll.y &lt; this.rect.top || styles.top - this.winTopScroll.y &gt; this.rect.bottom )
 				return false;
 
-			// Now let's calculate the horizontal alignment (left and width).
+			// Now let&#39;s calculate the horizontal alignment (left and width).
 			if ( this.inline )
 				styles.left = rel.elementRect.left;
 			else {
@@ -837,7 +837,7 @@
 			// Finally include horizontal scroll of the global window.
 			styles.left += this.winTopScroll.x;
 
-			// Append 'px' to style values.
+			// Append &#39;px&#39; to style values.
 			for ( var style in styles )
 				styles[ style ] = CKEDITOR.tools.cssLength( styles[ style ] );
 
@@ -875,7 +875,7 @@
 		},
 
 <span id='CKEDITOR-plugins-lineutils-liner-method-cleanup'>		/**
-</span>		 * Hides all visible lines that don't belong to current hash
+</span>		 * Hides all visible lines that don&#39;t belong to current hash
 		 * and no-longer represent relations (locations).
 		 *
 		 * See also: {@link #prepare}.
@@ -886,7 +886,7 @@
 			for ( var l in this.visible ) {
 				line = this.visible[ l ];
 
-				if ( line.getCustomData( 'hash' ) !== this.hash )
+				if ( line.getCustomData( &#39;hash&#39; ) !== this.hash )
 					this.hideLine( line );
 			}
 		},
@@ -919,15 +919,15 @@
 	}
 
 	function isFloated( el ) {
-		return !!( floats[ el.getComputedStyle( 'float' ) ] || floats[ el.getAttribute( 'align' ) ] );
+		return !!( floats[ el.getComputedStyle( &#39;float&#39; ) ] || floats[ el.getAttribute( &#39;align&#39; ) ] );
 	}
 
 	function isPositioned( el ) {
-		return !!positions[ el.getComputedStyle( 'position' ) ];
+		return !!positions[ el.getComputedStyle( &#39;position&#39; ) ];
 	}
 
 	function isLimit( node ) {
-		return isElement( node ) &amp;&amp; node.getAttribute( 'contenteditable' ) == 'true';
+		return isElement( node ) &amp;&amp; node.getAttribute( &#39;contenteditable&#39; ) == &#39;true&#39;;
 	}
 
 	function isStatic( node ) {

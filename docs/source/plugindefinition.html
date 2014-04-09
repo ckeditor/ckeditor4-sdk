@@ -40,8 +40,8 @@
 </span> * A list of plugins that are required by this plugin. Note that this property
  * does not determine the loading order of the plugins.
  *
- *		CKEDITOR.plugins.add( 'sample', {
- *			requires: [ 'button', 'selection' ]
+ *		CKEDITOR.plugins.add( &#39;sample&#39;, {
+ *			requires: [ &#39;button&#39;, &#39;selection&#39; ]
  *		} );
  *
  * @property {Array} requires
@@ -58,8 +58,8 @@
  * is available, and if so, loads it. Otherwise, the file represented by the first item
  * in the list is loaded.
  *
- *		CKEDITOR.plugins.add( 'sample', {
- *			lang: [ 'en', 'fr' ]
+ *		CKEDITOR.plugins.add( &#39;sample&#39;, {
+ *			lang: [ &#39;en&#39;, &#39;fr&#39; ]
  *		} );
  *
  * @property {Array} lang
@@ -72,9 +72,9 @@
  * feature makes it possible to initialize things that could be used in the
  * `init` function of other plugins.
  *
- *		CKEDITOR.plugins.add( 'sample', {
+ *		CKEDITOR.plugins.add( &#39;sample&#39;, {
  *			beforeInit: function( editor ) {
- *				alert( 'Editor &quot;' + editor.name + '&quot; is to be initialized!' );
+ *				alert( &#39;Editor &quot;&#39; + editor.name + &#39;&quot; is to be initialized!&#39; );
  *			}
  *		} );
  *
@@ -85,9 +85,9 @@
 <span id='CKEDITOR-pluginDefinition-method-init'>/**
 </span> * Function called on initialization of every editor instance created in the page.
  *
- *		CKEDITOR.plugins.add( 'sample', {
+ *		CKEDITOR.plugins.add( &#39;sample&#39;, {
  *			init: function( editor ) {
- *				alert( 'Editor &quot;' + editor.name + '&quot; is being initialized!' );
+ *				alert( &#39;Editor &quot;&#39; + editor.name + &#39;&quot; is being initialized!&#39; );
  *			}
  *		} );
  *

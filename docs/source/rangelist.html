@@ -49,7 +49,7 @@
 </span>		 * Creates an instance of the rangeList iterator, it should be used
 		 * only when the ranges processing could be DOM intrusive, which
 		 * means it may pollute and break other ranges in this list.
-		 * Otherwise, it's enough to just iterate over this array in a for loop.
+		 * Otherwise, it&#39;s enough to just iterate over this array in a for loop.
 		 *
 		 * @returns {CKEDITOR.dom.rangeListIterator}
 		 */
@@ -57,7 +57,7 @@
 			var rangeList = this,
 				bookmark = CKEDITOR.dom.walker.bookmark(),
 				guard = function( node ) {
-					return !( node.is &amp;&amp; node.is( 'tr' ) );
+					return !( node.is &amp;&amp; node.is( &#39;tr&#39; ) );
 				},
 				bookmarks = [],
 				current;
@@ -78,7 +78,7 @@
 					// Multiple ranges might be mangled by each other.
 					if ( range &amp;&amp; rangeList.length &gt; 1 ) {
 						// Bookmarking all other ranges on the first iteration,
-						// the range correctness after it doesn't matter since we'll
+						// the range correctness after it doesn&#39;t matter since we&#39;ll
 						// restore them before the next iteration.
 						if ( !current ) {
 							// Make sure bookmark correctness by reverse processing.
@@ -186,8 +186,8 @@
 	// range bookmark nodes.(#3256)
 	function updateDirtyRange( bookmark, dirtyRange, checkEnd ) {
 		var serializable = bookmark.serializable,
-			container = dirtyRange[ checkEnd ? 'endContainer' : 'startContainer' ],
-			offset = checkEnd ? 'endOffset' : 'startOffset';
+			container = dirtyRange[ checkEnd ? &#39;endContainer&#39; : &#39;startContainer&#39; ],
+			offset = checkEnd ? &#39;endOffset&#39; : &#39;startOffset&#39;;
 
 		var bookmarkStart = serializable ? dirtyRange.document.getById( bookmark.startNode ) : bookmark.startNode;
 
@@ -205,7 +205,7 @@
 		container.equals( bookmarkEnd.getParent() ) &amp;&amp; dirtyRange[ offset ]++;
 
 		// Update and return this range.
-		dirtyRange[ checkEnd ? 'endContainer' : 'startContainer' ] = container;
+		dirtyRange[ checkEnd ? &#39;endContainer&#39; : &#39;startContainer&#39; ] = container;
 		return dirtyRange;
 	}
 } )();

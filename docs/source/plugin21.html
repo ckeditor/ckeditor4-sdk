@@ -21,39 +21,39 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview The &quot;div&quot; plugin. It wraps the selected block level elements with a 'div' element with specified styles and attributes.
+</span> * @fileOverview The &quot;div&quot; plugin. It wraps the selected block level elements with a &#39;div&#39; element with specified styles and attributes.
  *
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'div', {
-		requires: 'dialog',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'creatediv', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;div&#39;, {
+		requires: &#39;dialog&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;creatediv&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
 			var lang = editor.lang.div,
-				allowed = 'div(*)';
+				allowed = &#39;div(*)&#39;;
 
-			if ( CKEDITOR.dialog.isTabEnabled( editor, 'editdiv', 'advanced' ) )
-				allowed += ';div[dir,id,lang,title]{*}';
+			if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;editdiv&#39;, &#39;advanced&#39; ) )
+				allowed += &#39;;div[dir,id,lang,title]{*}&#39;;
 
-			editor.addCommand( 'creatediv', new CKEDITOR.dialogCommand( 'creatediv', {
+			editor.addCommand( &#39;creatediv&#39;, new CKEDITOR.dialogCommand( &#39;creatediv&#39;, {
 				allowedContent: allowed,
-				requiredContent: 'div',
+				requiredContent: &#39;div&#39;,
 				contextSensitive: true,
 				refresh: function( editor, path ) {
 					var context = editor.config.div_wrapTable ? path.root : path.blockLimit;
-					this.setState( 'div' in context.getDtd() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+					this.setState( &#39;div&#39; in context.getDtd() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
 				}
 			} ) );
 
-			editor.addCommand( 'editdiv', new CKEDITOR.dialogCommand( 'editdiv', { requiredContent: 'div' } ) );
-			editor.addCommand( 'removediv', {
-				requiredContent: 'div',
+			editor.addCommand( &#39;editdiv&#39;, new CKEDITOR.dialogCommand( &#39;editdiv&#39;, { requiredContent: &#39;div&#39; } ) );
+			editor.addCommand( &#39;removediv&#39;, {
+				requiredContent: &#39;div&#39;,
 				exec: function( editor ) {
 					var selection = editor.getSelection(),
 						ranges = selection &amp;&amp; selection.getRanges(),
@@ -64,9 +64,9 @@
 
 					function findDiv( node ) {
 						var div = CKEDITOR.plugins.div.getSurroundDiv( editor, node );
-						if ( div &amp;&amp; !div.data( 'cke-div-added' ) ) {
+						if ( div &amp;&amp; !div.data( &#39;cke-div-added&#39; ) ) {
 							toRemove.push( div );
-							div.data( 'cke-div-added' );
+							div.data( &#39;cke-div-added&#39; );
 						}
 					}
 
@@ -88,25 +88,25 @@
 				}
 			} );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'CreateDiv', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;CreateDiv&#39;, {
 				label: lang.toolbar,
-				command: 'creatediv',
-				toolbar: 'blocks,50'
+				command: &#39;creatediv&#39;,
+				toolbar: &#39;blocks,50&#39;
 			} );
 
 			if ( editor.addMenuItems ) {
 				editor.addMenuItems( {
 					editdiv: {
 						label: lang.edit,
-						command: 'editdiv',
-						group: 'div',
+						command: &#39;editdiv&#39;,
+						group: &#39;div&#39;,
 						order: 1
 					},
 
 					removediv: {
 						label: lang.remove,
-						command: 'removediv',
-						group: 'div',
+						command: &#39;removediv&#39;,
+						group: &#39;div&#39;,
 						order: 5
 					}
 				} );
@@ -129,8 +129,8 @@
 				}
 			}
 
-			CKEDITOR.dialog.add( 'creatediv', this.path + 'dialogs/div.js' );
-			CKEDITOR.dialog.add( 'editdiv', this.path + 'dialogs/div.js' );
+			CKEDITOR.dialog.add( &#39;creatediv&#39;, this.path + &#39;dialogs/div.js&#39; );
+			CKEDITOR.dialog.add( &#39;editdiv&#39;, this.path + &#39;dialogs/div.js&#39; );
 		}
 	} );
 
@@ -139,7 +139,7 @@
 			var path = editor.elementPath( start );
 			return editor.elementPath( path.blockLimit ).contains( function( node ) {
 				// Avoid read-only (i.e. contenteditable=&quot;false&quot;) divs (#11083).
-				return node.is( 'div' ) &amp;&amp; !node.isReadOnly();
+				return node.is( &#39;div&#39; ) &amp;&amp; !node.isReadOnly();
 			}, 1 );
 		}
 	};

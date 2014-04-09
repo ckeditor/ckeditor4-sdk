@@ -55,10 +55,10 @@ CKEDITOR.ui.prototype = {
 </span>	 * Adds a UI item to the items collection. These items can be later used in
 	 * the interface.
 	 *
-	 *		// Add a new button named 'MyBold'.
-	 *		editorInstance.ui.add( 'MyBold', CKEDITOR.UI_BUTTON, {
-	 *			label: 'My Bold',
-	 *			command: 'bold'
+	 *		// Add a new button named &#39;MyBold&#39;.
+	 *		editorInstance.ui.add( &#39;MyBold&#39;, CKEDITOR.UI_BUTTON, {
+	 *			label: &#39;My Bold&#39;,
+	 *			command: &#39;bold&#39;
 	 *		} );
 	 *
 	 * @param {String} name The UI item name.
@@ -126,13 +126,13 @@ CKEDITOR.ui.prototype = {
 	},
 
 <span id='CKEDITOR-ui-method-space'>	/**
-</span>	 * Returns the unique DOM element that represents one editor's UI part, as
+</span>	 * Returns the unique DOM element that represents one editor&#39;s UI part, as
 	 * the editor UI is made completely decoupled from DOM (no DOM reference hold),
 	 * this method is mainly used to retrieve the rendered DOM part by name.
 	 *
 	 *		// Hide the bottom space in the UI.
-	 *		var bottom = editor.ui.getSpace( 'bottom' );
-	 *		bottom.setStyle( 'display', 'none' );
+	 *		var bottom = editor.ui.getSpace( &#39;bottom&#39; );
+	 *		bottom.setStyle( &#39;display&#39;, &#39;none&#39; );
 	 *
 	 * @param {String} name The space name.
 	 * @returns {CKEDITOR.dom.element} The element that represents the space.
@@ -148,7 +148,7 @@ CKEDITOR.ui.prototype = {
 	 * @todo param and return types?
 	 */
 	spaceId: function( name ) {
-		return this.editor.id + '_' + name;
+		return this.editor.id + &#39;_&#39; + name;
 	}
 };
 
@@ -164,7 +164,7 @@ CKEDITOR.event.implementOn( CKEDITOR.ui );
 <span id='CKEDITOR-ui-handlerDefinition'>/**
 </span> * Virtual class which just illustrates the features of handler objects to be
  * passed to the {@link CKEDITOR.ui#addHandler} function.
- * This class is not really part of the API, so don't call its constructor.
+ * This class is not really part of the API, so don&#39;t call its constructor.
  *
  * @class CKEDITOR.ui.handlerDefinition
  */

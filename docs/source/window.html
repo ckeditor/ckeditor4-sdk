@@ -53,7 +53,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.window.prototype, {
 	},
 
 <span id='CKEDITOR-dom-window-method-getViewPaneSize'>	/**
-</span>	 * Gets the width and height of this window's viewable area.
+</span>	 * Gets the width and height of this window&#39;s viewable area.
 	 *
 	 *		var win = new CKEDITOR.dom.window( window );
 	 *		var size = win.getViewPaneSize();
@@ -65,7 +65,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.window.prototype, {
 	 */
 	getViewPaneSize: function() {
 		var doc = this.$.document,
-			stdMode = doc.compatMode == 'CSS1Compat';
+			stdMode = doc.compatMode == &#39;CSS1Compat&#39;;
 		return {
 			width: ( stdMode ? doc.documentElement.clientWidth : doc.body.clientWidth ) || 0,
 			height: ( stdMode ? doc.documentElement.clientHeight : doc.body.clientHeight ) || 0
@@ -73,7 +73,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.window.prototype, {
 	},
 
 <span id='CKEDITOR-dom-window-method-getScrollPosition'>	/**
-</span>	 * Gets the current position of the window's scroll.
+</span>	 * Gets the current position of the window&#39;s scroll.
 	 *
 	 *		var win = new CKEDITOR.dom.window( window );
 	 *		var pos = win.getScrollPosition();
@@ -86,7 +86,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.window.prototype, {
 	getScrollPosition: function() {
 		var $ = this.$;
 
-		if ( 'pageXOffset' in $ ) {
+		if ( &#39;pageXOffset&#39; in $ ) {
 			return {
 				x: $.pageXOffset || 0,
 				y: $.pageYOffset || 0

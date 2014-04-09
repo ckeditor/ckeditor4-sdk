@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
+CKEDITOR.dialog.add( &#39;scaytcheck&#39;, function( editor ) {
 	var firstLoad = true,
 		captions,
 		doc = CKEDITOR.document,
@@ -35,7 +35,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			// [1] contains buton for manipulation
 			&quot;dic_rename_&quot; + editorName + &quot;,dic_delete_&quot; + editorName
 		],
-		optionsIds = [ 'mixedCase', 'mixedWithDigits', 'allCaps', 'ignoreDomainNames' ];
+		optionsIds = [ &#39;mixedCase&#39;, &#39;mixedWithDigits&#39;, &#39;allCaps&#39;, &#39;ignoreDomainNames&#39; ];
 
 	// common operations
 
@@ -69,89 +69,89 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 	var lang = editor.lang.scayt;
 	var tags_contents = [
 		{
-		id: 'options',
+		id: &#39;options&#39;,
 		label: lang.optionsTab,
 		elements: [
 			{
-			type: 'html',
-			id: 'options',
-			html: '&lt;form name=&quot;optionsbar_' + editorName + '&quot;&gt;&lt;div class=&quot;inner_options&quot;&gt;' +
-				'	&lt;div class=&quot;messagebox&quot;&gt;&lt;/div&gt;' +
-				'	&lt;div style=&quot;display:none;&quot;&gt;' +
-				'		&lt;input type=&quot;checkbox&quot; name=&quot;options&quot;  id=&quot;allCaps_' + editorName + '&quot; /&gt;' +
-				'		&lt;label style = &quot;display: inline&quot; for=&quot;allCaps&quot; id=&quot;label_allCaps_' + editorName + '&quot;&gt;&lt;/label&gt;' +
-				'	&lt;/div&gt;' +
-				'	&lt;div style=&quot;display:none;&quot;&gt;' +
-				'		&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;ignoreDomainNames_' + editorName + '&quot; /&gt;' +
-				'		&lt;label style = &quot;display: inline&quot; for=&quot;ignoreDomainNames&quot; id=&quot;label_ignoreDomainNames_' + editorName + '&quot;&gt;&lt;/label&gt;' +
-				'	&lt;/div&gt;' +
-				'	&lt;div style=&quot;display:none;&quot;&gt;' +
-				'	&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;mixedCase_' + editorName + '&quot; /&gt;' +
-				'		&lt;label style = &quot;display: inline&quot; for=&quot;mixedCase&quot; id=&quot;label_mixedCase_' + editorName + '&quot;&gt;&lt;/label&gt;' +
-				'	&lt;/div&gt;' +
-				'	&lt;div style=&quot;display:none;&quot;&gt;' +
-				'		&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;mixedWithDigits_' + editorName + '&quot; /&gt;' +
-				'		&lt;label style = &quot;display: inline&quot; for=&quot;mixedWithDigits&quot; id=&quot;label_mixedWithDigits_' + editorName + '&quot;&gt;&lt;/label&gt;' +
-				'	&lt;/div&gt;' +
-				'&lt;/div&gt;&lt;/form&gt;'
+			type: &#39;html&#39;,
+			id: &#39;options&#39;,
+			html: &#39;&lt;form name=&quot;optionsbar_&#39; + editorName + &#39;&quot;&gt;&lt;div class=&quot;inner_options&quot;&gt;&#39; +
+				&#39;	&lt;div class=&quot;messagebox&quot;&gt;&lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;display:none;&quot;&gt;&#39; +
+				&#39;		&lt;input type=&quot;checkbox&quot; name=&quot;options&quot;  id=&quot;allCaps_&#39; + editorName + &#39;&quot; /&gt;&#39; +
+				&#39;		&lt;label style = &quot;display: inline&quot; for=&quot;allCaps&quot; id=&quot;label_allCaps_&#39; + editorName + &#39;&quot;&gt;&lt;/label&gt;&#39; +
+				&#39;	&lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;display:none;&quot;&gt;&#39; +
+				&#39;		&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;ignoreDomainNames_&#39; + editorName + &#39;&quot; /&gt;&#39; +
+				&#39;		&lt;label style = &quot;display: inline&quot; for=&quot;ignoreDomainNames&quot; id=&quot;label_ignoreDomainNames_&#39; + editorName + &#39;&quot;&gt;&lt;/label&gt;&#39; +
+				&#39;	&lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;display:none;&quot;&gt;&#39; +
+				&#39;	&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;mixedCase_&#39; + editorName + &#39;&quot; /&gt;&#39; +
+				&#39;		&lt;label style = &quot;display: inline&quot; for=&quot;mixedCase&quot; id=&quot;label_mixedCase_&#39; + editorName + &#39;&quot;&gt;&lt;/label&gt;&#39; +
+				&#39;	&lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;display:none;&quot;&gt;&#39; +
+				&#39;		&lt;input name=&quot;options&quot; type=&quot;checkbox&quot;  id=&quot;mixedWithDigits_&#39; + editorName + &#39;&quot; /&gt;&#39; +
+				&#39;		&lt;label style = &quot;display: inline&quot; for=&quot;mixedWithDigits&quot; id=&quot;label_mixedWithDigits_&#39; + editorName + &#39;&quot;&gt;&lt;/label&gt;&#39; +
+				&#39;	&lt;/div&gt;&#39; +
+				&#39;&lt;/div&gt;&lt;/form&gt;&#39;
 			}
 		]
 	},
 		{
-		id: 'langs',
+		id: &#39;langs&#39;,
 		label: lang.languagesTab,
 		elements: [
 			{
-			type: 'html',
-			id: 'langs',
-			html: '&lt;form name=&quot;languagesbar_' + editorName + '&quot;&gt;&lt;div class=&quot;inner_langs&quot;&gt;' +
-				'	&lt;div class=&quot;messagebox&quot;&gt;&lt;/div&gt;	' +
-				'   &lt;div style=&quot;float:left;width:45%;margin-left:5px;&quot; id=&quot;scayt_lcol_' + editorName + '&quot; &gt;&lt;/div&gt;' +
-				'   &lt;div style=&quot;float:left;width:45%;margin-left:15px;&quot; id=&quot;scayt_rcol_' + editorName + '&quot;&gt;&lt;/div&gt;' +
-				'&lt;/div&gt;&lt;/form&gt;'
+			type: &#39;html&#39;,
+			id: &#39;langs&#39;,
+			html: &#39;&lt;form name=&quot;languagesbar_&#39; + editorName + &#39;&quot;&gt;&lt;div class=&quot;inner_langs&quot;&gt;&#39; +
+				&#39;	&lt;div class=&quot;messagebox&quot;&gt;&lt;/div&gt;	&#39; +
+				&#39;   &lt;div style=&quot;float:left;width:45%;margin-left:5px;&quot; id=&quot;scayt_lcol_&#39; + editorName + &#39;&quot; &gt;&lt;/div&gt;&#39; +
+				&#39;   &lt;div style=&quot;float:left;width:45%;margin-left:15px;&quot; id=&quot;scayt_rcol_&#39; + editorName + &#39;&quot;&gt;&lt;/div&gt;&#39; +
+				&#39;&lt;/div&gt;&lt;/form&gt;&#39;
 			}
 		]
 	},
 		{
-		id: 'dictionaries',
+		id: &#39;dictionaries&#39;,
 		label: lang.dictionariesTab,
 		elements: [
 			{
-			type: 'html',
-			style: '',
-			id: 'dictionaries',
-			html: '&lt;form name=&quot;dictionarybar_' + editorName + '&quot;&gt;&lt;div class=&quot;inner_dictionary&quot; style=&quot;text-align:left; white-space:normal; width:320px; overflow: hidden;&quot;&gt;' +
-				'	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal; overflow:hidden;&quot; id=&quot;dic_message_' + editorName + '&quot;&gt; &lt;/div&gt;' +
-				'	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot;&gt; ' +
-				'       &lt;span class=&quot;cke_dialog_ui_labeled_label&quot; &gt;Dictionary name&lt;/span&gt;&lt;br&gt;' +
-				'		&lt;span class=&quot;cke_dialog_ui_labeled_content&quot; &gt;' +
-				'			&lt;div class=&quot;cke_dialog_ui_input_text&quot;&gt;' +
-				'				&lt;input id=&quot;dic_name_' + editorName + '&quot; type=&quot;text&quot; class=&quot;cke_dialog_ui_input_text&quot; style = &quot;height: 25px; background: none; padding: 0;&quot;/&gt;' +
-				'		&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;' +
-				'		&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot;&gt;' +
-				'			&lt;a style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_create_' + editorName + '&quot;&gt;' +
-				'				&lt;/a&gt;' +
-				'			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_delete_' + editorName + '&quot;&gt;' +
-				'				&lt;/a&gt;' +
-				'			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_rename_' + editorName + '&quot;&gt;' +
-				'				&lt;/a&gt;' +
-				'			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_restore_' + editorName + '&quot;&gt;' +
-				'				&lt;/a&gt;' +
-				'		&lt;/div&gt;' +
-				'	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot; id=&quot;dic_info_' + editorName + '&quot;&gt;&lt;/div&gt;' +
-				'&lt;/div&gt;&lt;/form&gt;'
+			type: &#39;html&#39;,
+			style: &#39;&#39;,
+			id: &#39;dictionaries&#39;,
+			html: &#39;&lt;form name=&quot;dictionarybar_&#39; + editorName + &#39;&quot;&gt;&lt;div class=&quot;inner_dictionary&quot; style=&quot;text-align:left; white-space:normal; width:320px; overflow: hidden;&quot;&gt;&#39; +
+				&#39;	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal; overflow:hidden;&quot; id=&quot;dic_message_&#39; + editorName + &#39;&quot;&gt; &lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot;&gt; &#39; +
+				&#39;       &lt;span class=&quot;cke_dialog_ui_labeled_label&quot; &gt;Dictionary name&lt;/span&gt;&lt;br&gt;&#39; +
+				&#39;		&lt;span class=&quot;cke_dialog_ui_labeled_content&quot; &gt;&#39; +
+				&#39;			&lt;div class=&quot;cke_dialog_ui_input_text&quot;&gt;&#39; +
+				&#39;				&lt;input id=&quot;dic_name_&#39; + editorName + &#39;&quot; type=&quot;text&quot; class=&quot;cke_dialog_ui_input_text&quot; style = &quot;height: 25px; background: none; padding: 0;&quot;/&gt;&#39; +
+				&#39;		&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&#39; +
+				&#39;		&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot;&gt;&#39; +
+				&#39;			&lt;a style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_create_&#39; + editorName + &#39;&quot;&gt;&#39; +
+				&#39;				&lt;/a&gt;&#39; +
+				&#39;			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_delete_&#39; + editorName + &#39;&quot;&gt;&#39; +
+				&#39;				&lt;/a&gt;&#39; +
+				&#39;			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_rename_&#39; + editorName + &#39;&quot;&gt;&#39; +
+				&#39;				&lt;/a&gt;&#39; +
+				&#39;			&lt;a  style=&quot;display:none;&quot; class=&quot;cke_dialog_ui_button&quot; href=&quot;javascript:void(0)&quot; id=&quot;dic_restore_&#39; + editorName + &#39;&quot;&gt;&#39; +
+				&#39;				&lt;/a&gt;&#39; +
+				&#39;		&lt;/div&gt;&#39; +
+				&#39;	&lt;div style=&quot;margin:5px auto; width:95%;white-space:normal;&quot; id=&quot;dic_info_&#39; + editorName + &#39;&quot;&gt;&lt;/div&gt;&#39; +
+				&#39;&lt;/div&gt;&lt;/form&gt;&#39;
 			}
 		]
 	},
 		{
-		id: 'about',
+		id: &#39;about&#39;,
 		label: lang.aboutTab,
 		elements: [
 			{
-			type: 'html',
-			id: 'about',
-			style: 'margin: 5px 5px;',
-			html: '&lt;div id=&quot;scayt_about_' + editorName + '&quot;&gt;&lt;/div&gt;'
+			type: &#39;html&#39;,
+			id: &#39;about&#39;,
+			style: &#39;margin: 5px 5px;&#39;,
+			html: &#39;&lt;div id=&quot;scayt_about_&#39; + editorName + &#39;&quot;&gt;&lt;/div&gt;&#39;
 		}
 		]
 	}
@@ -163,19 +163,19 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 		minHeight: 220,
 		onShow: function() {
 			var dialog = this;
-			dialog.data = editor.fire( 'scaytDialog', {} );
+			dialog.data = editor.fire( &#39;scaytDialog&#39;, {} );
 			dialog.options = dialog.data.scayt_control.option();
 			dialog.chosed_lang = dialog.sLang = dialog.data.scayt_control.sLang;
 
 			if ( !dialog.data || !dialog.data.scayt || !dialog.data.scayt_control ) {
-				alert( 'Error loading application service' );
+				alert( &#39;Error loading application service&#39; );
 				dialog.hide();
 				return;
 			}
 
 			var stop = 0;
 			if ( firstLoad ) {
-				dialog.data.scayt.getCaption( editor.langCode || 'en', function( caps ) {
+				dialog.data.scayt.getCaption( editor.langCode || &#39;en&#39;, function( caps ) {
 					if ( stop++ &gt; 0 ) // Once only
 					return;
 					captions = caps;
@@ -218,7 +218,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 	var init_with_captions = function() {
 			var dialog = this,
 				lang_list = dialog.data.scayt.getLangList(),
-				buttonCaptions = [ 'dic_create', 'dic_delete', 'dic_rename', 'dic_restore' ],
+				buttonCaptions = [ &#39;dic_create&#39;, &#39;dic_delete&#39;, &#39;dic_rename&#39;, &#39;dic_restore&#39; ],
 				buttonIds = [],
 				langList = [],
 				labels = optionsIds,
@@ -228,19 +228,19 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			if ( userDicActive ) {
 				for ( i = 0; i &lt; buttonCaptions.length; i++ ) {
 					buttonIds[ i ] = buttonCaptions[ i ] + &quot;_&quot; + editorName;
-					doc.getById( buttonIds[ i ] ).setHtml( '&lt;span class=&quot;cke_dialog_ui_button&quot;&gt;' + captions[ 'button_' + buttonCaptions[ i ] ] + '&lt;/span&gt;' );
+					doc.getById( buttonIds[ i ] ).setHtml( &#39;&lt;span class=&quot;cke_dialog_ui_button&quot;&gt;&#39; + captions[ &#39;button_&#39; + buttonCaptions[ i ] ] + &#39;&lt;/span&gt;&#39; );
 				}
-				doc.getById( 'dic_info_' + editorName ).setHtml( captions[ 'dic_info' ] );
+				doc.getById( &#39;dic_info_&#39; + editorName ).setHtml( captions[ &#39;dic_info&#39; ] );
 			}
 
 			// Fill options and dictionary labels.
 			if ( tags[ 0 ] == 1 ) {
 				for ( i in labels ) {
-					var labelCaption = 'label_' + labels[ i ],
-						labelId = labelCaption + '_' + editorName,
+					var labelCaption = &#39;label_&#39; + labels[ i ],
+						labelId = labelCaption + &#39;_&#39; + editorName,
 						labelElement = doc.getById( labelId );
 
-					if ( 'undefined' != typeof labelElement &amp;&amp; 'undefined' != typeof captions[ labelCaption ] &amp;&amp; 'undefined' != typeof dialog.options[ labels[ i ] ] ) {
+					if ( &#39;undefined&#39; != typeof labelElement &amp;&amp; &#39;undefined&#39; != typeof captions[ labelCaption ] &amp;&amp; &#39;undefined&#39; != typeof dialog.options[ labels[ i ] ] ) {
 						labelElement.setHtml( captions[ labelCaption ] );
 						var labelParent = labelElement.getParent();
 						labelParent.$.style.display = &quot;block&quot;;
@@ -248,29 +248,29 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 				}
 			}
 
-			var about = '&lt;p&gt;&lt;img src=&quot;' + window.scayt.getAboutInfo().logoURL + '&quot; /&gt;&lt;/p&gt;' +
-				'&lt;p&gt;' + captions[ 'version' ] + window.scayt.getAboutInfo().version.toString() + '&lt;/p&gt;' +
-				'&lt;p&gt;' + captions[ 'about_throwt_copy' ] + '&lt;/p&gt;';
+			var about = &#39;&lt;p&gt;&lt;img src=&quot;&#39; + window.scayt.getAboutInfo().logoURL + &#39;&quot; /&gt;&lt;/p&gt;&#39; +
+				&#39;&lt;p&gt;&#39; + captions[ &#39;version&#39; ] + window.scayt.getAboutInfo().version.toString() + &#39;&lt;/p&gt;&#39; +
+				&#39;&lt;p&gt;&#39; + captions[ &#39;about_throwt_copy&#39; ] + &#39;&lt;/p&gt;&#39;;
 
-			doc.getById( 'scayt_about_' + editorName ).setHtml( about );
+			doc.getById( &#39;scayt_about_&#39; + editorName ).setHtml( about );
 
 			// Create languages tab.
 			var createOption = function( option, list ) {
-					var label = doc.createElement( 'label' );
-					label.setAttribute( 'for', 'cke_option' + option );
-					label.setStyle('display', 'inline');
+					var label = doc.createElement( &#39;label&#39; );
+					label.setAttribute( &#39;for&#39;, &#39;cke_option&#39; + option );
+					label.setStyle(&#39;display&#39;, &#39;inline&#39;);
 					label.setHtml( list[ option ] );
 
 					if ( dialog.sLang == option ) // Current.
 					dialog.chosed_lang = option;
 
-					var div = doc.createElement( 'div' );
-					var radio = CKEDITOR.dom.element.createFromHtml( '&lt;input class = &quot;cke_dialog_ui_radio_input&quot; id=&quot;cke_option' +
-						option + '&quot; type=&quot;radio&quot; ' +
-						( dialog.sLang == option ? 'checked=&quot;checked&quot;' : '' ) +
-						' value=&quot;' + option + '&quot; name=&quot;scayt_lang&quot; /&gt;' );
+					var div = doc.createElement( &#39;div&#39; );
+					var radio = CKEDITOR.dom.element.createFromHtml( &#39;&lt;input class = &quot;cke_dialog_ui_radio_input&quot; id=&quot;cke_option&#39; +
+						option + &#39;&quot; type=&quot;radio&quot; &#39; +
+						( dialog.sLang == option ? &#39;checked=&quot;checked&quot;&#39; : &#39;&#39; ) +
+						&#39; value=&quot;&#39; + option + &#39;&quot; name=&quot;scayt_lang&quot; /&gt;&#39; );
 
-					radio.on( 'click', function() {
+					radio.on( &#39;click&#39;, function() {
 						this.$.checked = true;
 						dialog.chosed_lang = option;
 					});
@@ -296,8 +296,8 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 					return ( lang2.lang &gt; lang1.lang ) ? -1 : 1;
 				});
 
-				var fieldL = doc.getById( 'scayt_lcol_' + editorName ),
-					fieldR = doc.getById( 'scayt_rcol_' + editorName );
+				var fieldL = doc.getById( &#39;scayt_lcol_&#39; + editorName ),
+					fieldR = doc.getById( &#39;scayt_rcol_&#39; + editorName );
 				for ( i = 0; i &lt; langList.length; i++ ) {
 					var field = ( i &lt; langList.length / 2 ) ? fieldL : fieldR;
 					field.append( langList[ i ].radio );
@@ -307,8 +307,8 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			// user dictionary handlers
 			var dic = {};
 			dic.dic_create = function( el, dic_name, dic_buttons ) {
-				// comma separated button's ids include repeats if exists
-				var all_buttons = dic_buttons[ 0 ] + ',' + dic_buttons[ 1 ];
+				// comma separated button&#39;s ids include repeats if exists
+				var all_buttons = dic_buttons[ 0 ] + &#39;,&#39; + dic_buttons[ 1 ];
 
 				var err_massage = captions[ &quot;err_dic_create&quot; ];
 				var suc_massage = captions[ &quot;succ_dic_create&quot; ];
@@ -342,7 +342,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			};
 
 			dic.dic_delete = function( el, dic_name, dic_buttons ) {
-				var all_buttons = dic_buttons[ 0 ] + ',' + dic_buttons[ 1 ];
+				var all_buttons = dic_buttons[ 0 ] + &#39;,&#39; + dic_buttons[ 1 ];
 				var err_massage = captions[ &quot;err_dic_delete&quot; ];
 				var suc_massage = captions[ &quot;succ_dic_delete&quot; ];
 
@@ -362,7 +362,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			dic.dic_restore = dialog.dic_restore ||
 			function( el, dic_name, dic_buttons ) {
 				// try to restore existing dictionary
-				var all_buttons = dic_buttons[ 0 ] + ',' + dic_buttons[ 1 ];
+				var all_buttons = dic_buttons[ 0 ] + &#39;,&#39; + dic_buttons[ 1 ];
 				var err_massage = captions[ &quot;err_dic_restore&quot; ];
 				var suc_massage = captions[ &quot;succ_dic_restore&quot; ];
 
@@ -378,7 +378,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			};
 
 			function onDicButtonClick( ev ) {
-				var dic_name = doc.getById( 'dic_name_' + editorName ).getValue();
+				var dic_name = doc.getById( &#39;dic_name_&#39; + editorName ).getValue();
 				if ( !dic_name ) {
 					dic_error_message( &quot; Dictionary name should not be empty. &quot; );
 					return false;
@@ -395,13 +395,13 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			}
 
 			// ** bind event listeners
-			var arr_buttons = ( dic_buttons[ 0 ] + ',' + dic_buttons[ 1 ] ).split( ',' ),
+			var arr_buttons = ( dic_buttons[ 0 ] + &#39;,&#39; + dic_buttons[ 1 ] ).split( &#39;,&#39; ),
 				l;
 
 			for ( i = 0, l = arr_buttons.length; i &lt; l; i += 1 ) {
 				var dic_button = doc.getById( arr_buttons[ i ] );
 				if ( dic_button )
-					dic_button.on( 'click', onDicButtonClick, this );
+					dic_button.on( &#39;click&#39;, onDicButtonClick, this );
 			}
 		};
 
@@ -427,7 +427,7 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 
 						// Bind events. Do it only once.
 						if ( firstLoad ) {
-							checkbox.on( 'click', function() {
+							checkbox.on( &#39;click&#39;, function() {
 								dialog.options[ this.getId().split( &quot;_&quot; )[ 0 ] ] = this.$.checked ? 1 : 0;
 							});
 						}
@@ -445,15 +445,15 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 			if ( userDicActive ) {
 				window.scayt.getNameUserDictionary( function( o ) {
 					var dic_name = o.dname;
-					hide_dic_buttons( dic_buttons[ 0 ] + ',' + dic_buttons[ 1 ] );
+					hide_dic_buttons( dic_buttons[ 0 ] + &#39;,&#39; + dic_buttons[ 1 ] );
 					if ( dic_name ) {
-						doc.getById( 'dic_name_' + editorName ).setValue( dic_name );
+						doc.getById( &#39;dic_name_&#39; + editorName ).setValue( dic_name );
 						display_dic_buttons( dic_buttons[ 1 ] );
 					} else
 						display_dic_buttons( dic_buttons[ 0 ] );
 
 				}, function() {
-					doc.getById( 'dic_name_' + editorName ).setValue( &quot;&quot; );
+					doc.getById( &#39;dic_name_&#39; + editorName ).setValue( &quot;&quot; );
 				});
 				dic_success_message( &quot;&quot; );
 			}
@@ -461,29 +461,29 @@ CKEDITOR.dialog.add( 'scaytcheck', function( editor ) {
 		};
 
 	function dic_error_message( m ) {
-		doc.getById( 'dic_message_' + editorName ).setHtml( '&lt;span style=&quot;color:red;&quot;&gt;' + m + '&lt;/span&gt;' );
+		doc.getById( &#39;dic_message_&#39; + editorName ).setHtml( &#39;&lt;span style=&quot;color:red;&quot;&gt;&#39; + m + &#39;&lt;/span&gt;&#39; );
 	}
 
 	function dic_success_message( m ) {
-		doc.getById( 'dic_message_' + editorName ).setHtml( '&lt;span style=&quot;color:blue;&quot;&gt;' + m + '&lt;/span&gt;' );
+		doc.getById( &#39;dic_message_&#39; + editorName ).setHtml( &#39;&lt;span style=&quot;color:blue;&quot;&gt;&#39; + m + &#39;&lt;/span&gt;&#39; );
 	}
 
 	function display_dic_buttons( sIds ) {
 		sIds = String( sIds );
-		var aIds = sIds.split( ',' );
+		var aIds = sIds.split( &#39;,&#39; );
 		for ( var i = 0, l = aIds.length; i &lt; l; i += 1 )
 			doc.getById( aIds[ i ] ).$.style.display = &quot;inline&quot;;
 	}
 
 	function hide_dic_buttons( sIds ) {
 		sIds = String( sIds );
-		var aIds = sIds.split( ',' );
+		var aIds = sIds.split( &#39;,&#39; );
 		for ( var i = 0, l = aIds.length; i &lt; l; i += 1 )
 			doc.getById( aIds[ i ] ).$.style.display = &quot;none&quot;;
 	}
 
 	function set_dic_name( dic_name ) {
-		doc.getById( 'dic_name_' + editorName ).$.value = dic_name;
+		doc.getById( &#39;dic_name_&#39; + editorName ).$.value = dic_name;
 	}
 
 	return dialogDefiniton;

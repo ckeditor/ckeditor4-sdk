@@ -20,14 +20,14 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'contextmenu', {
-	requires: 'menu',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;contextmenu&#39;, {
+	requires: &#39;menu&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
 
 	// Make sure the base class (CKEDITOR.menu) is loaded before it (#3318).
 	onLoad: function() {
 <span id='CKEDITOR-plugins-contextMenu'>		/**
-</span>		 * Class replacing the non-configurable native context menu with configurable CKEditor's equivalent.
+</span>		 * Class replacing the non-configurable native context menu with configurable CKEditor&#39;s equivalent.
 		 *
 		 * @class
 		 * @extends CKEDITOR.menu
@@ -44,9 +44,9 @@ CKEDITOR.plugins.add( 'contextmenu', {
 			$: function( editor ) {
 				this.base.call( this, editor, {
 					panel: {
-						className: 'cke_menu_panel',
+						className: &#39;cke_menu_panel&#39;,
 						attributes: {
-							'aria-label': editor.lang.contextmenu.options
+							&#39;aria-label&#39;: editor.lang.contextmenu.options
 						}
 					}
 				} );
@@ -61,10 +61,10 @@ CKEDITOR.plugins.add( 'contextmenu', {
 				 * *Ctrl* key is hold on opening the context menu. See {@link CKEDITOR.config#browserContextMenuOnCtrl}.
 				 */
 				addTarget: function( element, nativeContextMenuOnCtrl ) {
-					element.on( 'contextmenu', function( event ) {
+					element.on( &#39;contextmenu&#39;, function( event ) {
 						var domEvent = event.data,
 							isCtrlKeyDown =
-								// Safari on Windows always show 'ctrlKey' as true in 'contextmenu' event,
+								// Safari on Windows always show &#39;ctrlKey&#39; as true in &#39;contextmenu&#39; event,
 								// which make this property unreliable. (#4826)
 								( CKEDITOR.env.webkit ? holdCtrlKey : ( CKEDITOR.env.mac ? domEvent.$.metaKey : domEvent.$.ctrlKey ) );
 
@@ -97,9 +97,9 @@ CKEDITOR.plugins.add( 'contextmenu', {
 								holdCtrlKey = 0;
 							};
 
-						element.on( 'keydown', onKeyDown );
-						element.on( 'keyup', resetOnKeyUp );
-						element.on( 'contextmenu', resetOnKeyUp );
+						element.on( &#39;keydown&#39;, onKeyDown );
+						element.on( &#39;keyup&#39;, resetOnKeyUp );
+						element.on( &#39;contextmenu&#39;, resetOnKeyUp );
 					}
 				},
 
@@ -115,7 +115,7 @@ CKEDITOR.plugins.add( 'contextmenu', {
 					this.editor.focus();
 					offsetParent = offsetParent || CKEDITOR.document.getDocumentElement();
 
-					// #9362: Force selection check to update commands' states in the new context.
+					// #9362: Force selection check to update commands&#39; states in the new context.
 					this.editor.selectionChange( 1 );
 
 					this.show( offsetParent, corner, offsetX, offsetY );
@@ -132,18 +132,18 @@ CKEDITOR.plugins.add( 'contextmenu', {
 		 */
 		var contextMenu = editor.contextMenu = new CKEDITOR.plugins.contextMenu( editor );
 
-		editor.on( 'contentDom', function() {
+		editor.on( &#39;contentDom&#39;, function() {
 			contextMenu.addTarget( editor.editable(), editor.config.browserContextMenuOnCtrl !== false );
 		} );
 
-		editor.addCommand( 'contextMenu', {
+		editor.addCommand( &#39;contextMenu&#39;, {
 			exec: function() {
 				editor.contextMenu.open( editor.document.getBody() );
 			}
 		} );
 
-		editor.setKeystroke( CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
-		editor.setKeystroke( CKEDITOR.CTRL + CKEDITOR.SHIFT + 121 /*F10*/, 'contextMenu' );
+		editor.setKeystroke( CKEDITOR.SHIFT + 121 /*F10*/, &#39;contextMenu&#39; );
+		editor.setKeystroke( CKEDITOR.CTRL + CKEDITOR.SHIFT + 121 /*F10*/, &#39;contextMenu&#39; );
 	}
 } );
 

@@ -20,106 +20,106 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'link', {
-	requires: 'dialog,fakeobjects',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'anchor,anchor-rtl,link,unlink', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;link&#39;, {
+	requires: &#39;dialog,fakeobjects&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;anchor,anchor-rtl,link,unlink&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	onLoad: function() {
 		// Add the CSS styles for anchor placeholders.
-		var iconPath = CKEDITOR.getUrl( this.path + 'images' + ( CKEDITOR.env.hidpi ? '/hidpi' : '' ) + '/anchor.png' ),
-			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;border:1px dotted #00f;background-size:16px;';
+		var iconPath = CKEDITOR.getUrl( this.path + &#39;images&#39; + ( CKEDITOR.env.hidpi ? &#39;/hidpi&#39; : &#39;&#39; ) + &#39;/anchor.png&#39; ),
+			baseStyle = &#39;background:url(&#39; + iconPath + &#39;) no-repeat %1 center;border:1px dotted #00f;background-size:16px;&#39;;
 
-		var template = '.%2 a.cke_anchor,' +
-			'.%2 a.cke_anchor_empty' +
-			',.cke_editable.%2 a[name]' +
-			',.cke_editable.%2 a[data-cke-saved-name]' +
-			'{' +
+		var template = &#39;.%2 a.cke_anchor,&#39; +
+			&#39;.%2 a.cke_anchor_empty&#39; +
+			&#39;,.cke_editable.%2 a[name]&#39; +
+			&#39;,.cke_editable.%2 a[data-cke-saved-name]&#39; +
+			&#39;{&#39; +
 				baseStyle +
-				'padding-%1:18px;' +
+				&#39;padding-%1:18px;&#39; +
 				// Show the arrow cursor for the anchor image (FF at least).
-				'cursor:auto;' +
-			'}' +
-			( CKEDITOR.plugins.link.synAnchorSelector ? ( 'a.cke_anchor_empty' +
-			'{' +
+				&#39;cursor:auto;&#39; +
+			&#39;}&#39; +
+			( CKEDITOR.plugins.link.synAnchorSelector ? ( &#39;a.cke_anchor_empty&#39; +
+			&#39;{&#39; +
 				// Make empty anchor selectable on IE.
-				'display:inline-block;' +
-				// IE11 doesn't display empty inline-block elements.
-				( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &gt; 10 ? 'min-height:16px;vertical-align:middle' : '' ) +
-			'}'
-			) : '' ) +
-			'.%2 img.cke_anchor' +
-			'{' +
+				&#39;display:inline-block;&#39; +
+				// IE11 doesn&#39;t display empty inline-block elements.
+				( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &gt; 10 ? &#39;min-height:16px;vertical-align:middle&#39; : &#39;&#39; ) +
+			&#39;}&#39;
+			) : &#39;&#39; ) +
+			&#39;.%2 img.cke_anchor&#39; +
+			&#39;{&#39; +
 				baseStyle +
-				'width:16px;' +
-				'min-height:15px;' +
+				&#39;width:16px;&#39; +
+				&#39;min-height:15px;&#39; +
 				// The default line-height on IE.
-				'height:1.15em;' +
+				&#39;height:1.15em;&#39; +
 				// Opera works better with &quot;middle&quot; (even if not perfect)
-				'vertical-align:' + ( CKEDITOR.env.opera ? 'middle' : 'text-bottom' ) + ';' +
-			'}';
+				&#39;vertical-align:&#39; + ( CKEDITOR.env.opera ? &#39;middle&#39; : &#39;text-bottom&#39; ) + &#39;;&#39; +
+			&#39;}&#39;;
 
 		// Styles with contents direction awareness.
 		function cssWithDir( dir ) {
-			return template.replace( /%1/g, dir == 'rtl' ? 'right' : 'left' ).replace( /%2/g, 'cke_contents_' + dir );
+			return template.replace( /%1/g, dir == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; ).replace( /%2/g, &#39;cke_contents_&#39; + dir );
 		}
 
-		CKEDITOR.addCss( cssWithDir( 'ltr' ) + cssWithDir( 'rtl' ) );
+		CKEDITOR.addCss( cssWithDir( &#39;ltr&#39; ) + cssWithDir( &#39;rtl&#39; ) );
 	},
 
 	init: function( editor ) {
-		var allowed = 'a[!href]',
-			required = 'a[href]';
+		var allowed = &#39;a[!href]&#39;,
+			required = &#39;a[href]&#39;;
 
-		if ( CKEDITOR.dialog.isTabEnabled( editor, 'link', 'advanced' ) )
-			allowed = allowed.replace( ']', ',accesskey,charset,dir,id,lang,name,rel,tabindex,title,type]{*}(*)' );
-		if ( CKEDITOR.dialog.isTabEnabled( editor, 'link', 'target' ) )
-			allowed = allowed.replace( ']', ',target,onclick]' );
+		if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;link&#39;, &#39;advanced&#39; ) )
+			allowed = allowed.replace( &#39;]&#39;, &#39;,accesskey,charset,dir,id,lang,name,rel,tabindex,title,type]{*}(*)&#39; );
+		if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;link&#39;, &#39;target&#39; ) )
+			allowed = allowed.replace( &#39;]&#39;, &#39;,target,onclick]&#39; );
 
 		// Add the link and unlink buttons.
-		editor.addCommand( 'link', new CKEDITOR.dialogCommand( 'link', {
+		editor.addCommand( &#39;link&#39;, new CKEDITOR.dialogCommand( &#39;link&#39;, {
 			allowedContent: allowed,
 			requiredContent: required
 		} ) );
-		editor.addCommand( 'anchor', new CKEDITOR.dialogCommand( 'anchor', {
-			allowedContent: 'a[!name,id]',
-			requiredContent: 'a[name]'
+		editor.addCommand( &#39;anchor&#39;, new CKEDITOR.dialogCommand( &#39;anchor&#39;, {
+			allowedContent: &#39;a[!name,id]&#39;,
+			requiredContent: &#39;a[name]&#39;
 		} ) );
-		editor.addCommand( 'unlink', new CKEDITOR.unlinkCommand() );
-		editor.addCommand( 'removeAnchor', new CKEDITOR.removeAnchorCommand() );
+		editor.addCommand( &#39;unlink&#39;, new CKEDITOR.unlinkCommand() );
+		editor.addCommand( &#39;removeAnchor&#39;, new CKEDITOR.removeAnchorCommand() );
 
-		editor.setKeystroke( CKEDITOR.CTRL + 76 /*L*/, 'link' );
+		editor.setKeystroke( CKEDITOR.CTRL + 76 /*L*/, &#39;link&#39; );
 
 		if ( editor.ui.addButton ) {
-			editor.ui.addButton( 'Link', {
+			editor.ui.addButton( &#39;Link&#39;, {
 				label: editor.lang.link.toolbar,
-				command: 'link',
-				toolbar: 'links,10'
+				command: &#39;link&#39;,
+				toolbar: &#39;links,10&#39;
 			} );
-			editor.ui.addButton( 'Unlink', {
+			editor.ui.addButton( &#39;Unlink&#39;, {
 				label: editor.lang.link.unlink,
-				command: 'unlink',
-				toolbar: 'links,20'
+				command: &#39;unlink&#39;,
+				toolbar: &#39;links,20&#39;
 			} );
-			editor.ui.addButton( 'Anchor', {
+			editor.ui.addButton( &#39;Anchor&#39;, {
 				label: editor.lang.link.anchor.toolbar,
-				command: 'anchor',
-				toolbar: 'links,30'
+				command: &#39;anchor&#39;,
+				toolbar: &#39;links,30&#39;
 			} );
 		}
 
-		CKEDITOR.dialog.add( 'link', this.path + 'dialogs/link.js' );
-		CKEDITOR.dialog.add( 'anchor', this.path + 'dialogs/anchor.js' );
+		CKEDITOR.dialog.add( &#39;link&#39;, this.path + &#39;dialogs/link.js&#39; );
+		CKEDITOR.dialog.add( &#39;anchor&#39;, this.path + &#39;dialogs/anchor.js&#39; );
 
-		editor.on( 'doubleclick', function( evt ) {
+		editor.on( &#39;doubleclick&#39;, function( evt ) {
 			var element = CKEDITOR.plugins.link.getSelectedLink( editor ) || evt.data.element;
 
 			if ( !element.isReadOnly() ) {
-				if ( element.is( 'a' ) ) {
-					evt.data.dialog = ( element.getAttribute( 'name' ) &amp;&amp; ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) ? 'anchor' : 'link';
+				if ( element.is( &#39;a&#39; ) ) {
+					evt.data.dialog = ( element.getAttribute( &#39;name&#39; ) &amp;&amp; ( !element.getAttribute( &#39;href&#39; ) || !element.getChildCount() ) ) ? &#39;anchor&#39; : &#39;link&#39;;
 					editor.getSelection().selectElement( element );
 				} else if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) )
-					evt.data.dialog = 'anchor';
+					evt.data.dialog = &#39;anchor&#39;;
 			}
 		} );
 
@@ -128,29 +128,29 @@ CKEDITOR.plugins.add( 'link', {
 			editor.addMenuItems( {
 				anchor: {
 					label: editor.lang.link.anchor.menu,
-					command: 'anchor',
-					group: 'anchor',
+					command: &#39;anchor&#39;,
+					group: &#39;anchor&#39;,
 					order: 1
 				},
 
 				removeAnchor: {
 					label: editor.lang.link.anchor.remove,
-					command: 'removeAnchor',
-					group: 'anchor',
+					command: &#39;removeAnchor&#39;,
+					group: &#39;anchor&#39;,
 					order: 5
 				},
 
 				link: {
 					label: editor.lang.link.menu,
-					command: 'link',
-					group: 'link',
+					command: &#39;link&#39;,
+					group: &#39;link&#39;,
 					order: 1
 				},
 
 				unlink: {
 					label: editor.lang.link.unlink,
-					command: 'unlink',
-					group: 'link',
+					command: &#39;unlink&#39;,
+					group: &#39;link&#39;,
 					order: 5
 				}
 			} );
@@ -169,10 +169,10 @@ CKEDITOR.plugins.add( 'link', {
 
 				var menu = {};
 
-				if ( anchor.getAttribute( 'href' ) &amp;&amp; anchor.getChildCount() )
+				if ( anchor.getAttribute( &#39;href&#39; ) &amp;&amp; anchor.getChildCount() )
 					menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
 
-				if ( anchor &amp;&amp; anchor.hasAttribute( 'name' ) )
+				if ( anchor &amp;&amp; anchor.hasAttribute( &#39;name&#39; ) )
 					menu.anchor = menu.removeAnchor = CKEDITOR.TRISTATE_OFF;
 
 				return menu;
@@ -201,17 +201,17 @@ CKEDITOR.plugins.add( 'link', {
 						if ( CKEDITOR.plugins.link.synAnchorSelector ) {
 							// IE needs a specific class name to be applied
 							// to the anchors, for appropriate styling.
-							var ieClass = isEmpty ? 'cke_anchor_empty' : 'cke_anchor';
-							var cls = attributes[ 'class' ];
+							var ieClass = isEmpty ? &#39;cke_anchor_empty&#39; : &#39;cke_anchor&#39;;
+							var cls = attributes[ &#39;class&#39; ];
 							if ( attributes.name &amp;&amp; ( !cls || cls.indexOf( ieClass ) &lt; 0 ) )
-								attributes[ 'class' ] = ( cls || '' ) + ' ' + ieClass;
+								attributes[ &#39;class&#39; ] = ( cls || &#39;&#39; ) + &#39; &#39; + ieClass;
 
 							if ( isEmpty &amp;&amp; CKEDITOR.plugins.link.emptyAnchorFix ) {
-								attributes.contenteditable = 'false';
-								attributes[ 'data-cke-editable' ] = 1;
+								attributes.contenteditable = &#39;false&#39;;
+								attributes[ &#39;data-cke-editable&#39; ] = 1;
 							}
 						} else if ( CKEDITOR.plugins.link.fakeAnchor &amp;&amp; isEmpty )
-							return editor.createFakeParserElement( element, 'cke_anchor', 'anchor' );
+							return editor.createFakeParserElement( element, &#39;cke_anchor&#39;, &#39;anchor&#39; );
 
 						return null;
 					}
@@ -231,9 +231,9 @@ CKEDITOR.plugins.add( 'link', {
 
 		if ( pathFilters ) {
 			pathFilters.push( function( element, name ) {
-				if ( name == 'a' ) {
-					if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) || ( element.getAttribute( 'name' ) &amp;&amp; ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) )
-						return 'anchor';
+				if ( name == &#39;a&#39; ) {
+					if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) || ( element.getAttribute( &#39;name&#39; ) &amp;&amp; ( !element.getAttribute( &#39;href&#39; ) || !element.getChildCount() ) ) )
+						return &#39;anchor&#39;;
 
 				}
 			} );
@@ -268,14 +268,14 @@ CKEDITOR.plugins.link = {
 	getSelectedLink: function( editor ) {
 		var selection = editor.getSelection();
 		var selectedElement = selection.getSelectedElement();
-		if ( selectedElement &amp;&amp; selectedElement.is( 'a' ) )
+		if ( selectedElement &amp;&amp; selectedElement.is( &#39;a&#39; ) )
 			return selectedElement;
 
 		var range = selection.getRanges()[ 0 ];
 
 		if ( range ) {
 			range.shrink( CKEDITOR.SHRINK_TEXT );
-			return editor.elementPath( range.getCommonAncestor() ).contains( 'a', 1 );
+			return editor.elementPath( range.getCommonAncestor() ).contains( &#39;a&#39;, 1 );
 		}
 		return null;
 	},
@@ -293,35 +293,35 @@ CKEDITOR.plugins.link = {
 		var editable = editor.editable(),
 
 			// The scope of search for anchors is the entire document for inline editors
-			// and editor's editable for classic editor/divarea (#11359).
+			// and editor&#39;s editable for classic editor/divarea (#11359).
 			scope = ( editable.isInline() &amp;&amp; !editor.plugins.divarea ) ? editor.document : editable,
 
-			links = scope.getElementsByTag( 'a' ),
+			links = scope.getElementsByTag( &#39;a&#39; ),
 			anchors = [],
 			i = 0,
 			item;
 
 		// Retrieve all anchors within the scope.
 		while ( ( item = links.getItem( i++ ) ) ) {
-			if ( item.data( 'cke-saved-name' ) || item.hasAttribute( 'name' ) ) {
+			if ( item.data( &#39;cke-saved-name&#39; ) || item.hasAttribute( &#39;name&#39; ) ) {
 				anchors.push( {
-					name: item.data( 'cke-saved-name' ) || item.getAttribute( 'name' ),
-					id: item.getAttribute( 'id' )
+					name: item.data( &#39;cke-saved-name&#39; ) || item.getAttribute( &#39;name&#39; ),
+					id: item.getAttribute( &#39;id&#39; )
 				} );
 			}
 		}
 
 		// Retrieve all &quot;fake anchors&quot; within the scope.
 		if ( this.fakeAnchor ) {
-			var imgs = scope.getElementsByTag( 'img' );
+			var imgs = scope.getElementsByTag( &#39;img&#39; );
 
 			i = 0;
 
 			while ( ( item = imgs.getItem( i++ ) ) ) {
 				if ( ( item = this.tryRestoreFakeAnchor( editor, item ) ) ) {
 					anchors.push( {
-						name: item.getAttribute( 'name' ),
-						id: item.getAttribute( 'id' )
+						name: item.getAttribute( &#39;name&#39; ),
+						id: item.getAttribute( &#39;id&#39; )
 					} );
 				}
 			}
@@ -364,20 +364,20 @@ CKEDITOR.plugins.link = {
 	 * passed element was not a fake anchor.
 	 */
 	tryRestoreFakeAnchor: function( editor, element ) {
-		if ( element &amp;&amp; element.data( 'cke-real-element-type' ) &amp;&amp; element.data( 'cke-real-element-type' ) == 'anchor' ) {
+		if ( element &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;anchor&#39; ) {
 			var link = editor.restoreRealElement( element );
-			if ( link.data( 'cke-saved-name' ) )
+			if ( link.data( &#39;cke-saved-name&#39; ) )
 				return link;
 		}
 	}
 };
 
-// TODO Much probably there's no need to expose these as public objects.
+// TODO Much probably there&#39;s no need to expose these as public objects.
 
 CKEDITOR.unlinkCommand = function() {};
 CKEDITOR.unlinkCommand.prototype = {
 	exec: function( editor ) {
-		var style = new CKEDITOR.style( { element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 } );
+		var style = new CKEDITOR.style( { element: &#39;a&#39;, type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 } );
 		editor.removeStyle( style );
 	},
 
@@ -385,9 +385,9 @@ CKEDITOR.unlinkCommand.prototype = {
 		// Despite our initial hope, document.queryCommandEnabled() does not work
 		// for this in Firefox. So we must detect the state by element paths.
 
-		var element = path.lastElement &amp;&amp; path.lastElement.getAscendant( 'a', true );
+		var element = path.lastElement &amp;&amp; path.lastElement.getAscendant( &#39;a&#39;, true );
 
-		if ( element &amp;&amp; element.getName() == 'a' &amp;&amp; element.getAttribute( 'href' ) &amp;&amp; element.getChildCount() )
+		if ( element &amp;&amp; element.getName() == &#39;a&#39; &amp;&amp; element.getAttribute( &#39;href&#39; ) &amp;&amp; element.getChildCount() )
 			this.setState( CKEDITOR.TRISTATE_OFF );
 		else
 			this.setState( CKEDITOR.TRISTATE_DISABLED );
@@ -395,7 +395,7 @@ CKEDITOR.unlinkCommand.prototype = {
 
 	contextSensitive: 1,
 	startDisabled: 1,
-	requiredContent: 'a[href]'
+	requiredContent: &#39;a[href]&#39;
 };
 
 CKEDITOR.removeAnchorCommand = function() {};
@@ -404,20 +404,20 @@ CKEDITOR.removeAnchorCommand.prototype = {
 		var sel = editor.getSelection(),
 			bms = sel.createBookmarks(),
 			anchor;
-		if ( sel &amp;&amp; ( anchor = sel.getSelectedElement() ) &amp;&amp; ( CKEDITOR.plugins.link.fakeAnchor &amp;&amp; !anchor.getChildCount() ? CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, anchor ) : anchor.is( 'a' ) ) )
+		if ( sel &amp;&amp; ( anchor = sel.getSelectedElement() ) &amp;&amp; ( CKEDITOR.plugins.link.fakeAnchor &amp;&amp; !anchor.getChildCount() ? CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, anchor ) : anchor.is( &#39;a&#39; ) ) )
 			anchor.remove( 1 );
 		else {
 			if ( ( anchor = CKEDITOR.plugins.link.getSelectedLink( editor ) ) ) {
-				if ( anchor.hasAttribute( 'href' ) ) {
-					anchor.removeAttributes( { name: 1, 'data-cke-saved-name': 1 } );
-					anchor.removeClass( 'cke_anchor' );
+				if ( anchor.hasAttribute( &#39;href&#39; ) ) {
+					anchor.removeAttributes( { name: 1, &#39;data-cke-saved-name&#39;: 1 } );
+					anchor.removeClass( &#39;cke_anchor&#39; );
 				} else
 					anchor.remove( 1 );
 			}
 		}
 		sel.selectBookmarks( bms );
 	},
-	requiredContent: 'a[name]'
+	requiredContent: &#39;a[name]&#39;
 };
 
 CKEDITOR.tools.extend( CKEDITOR.config, {

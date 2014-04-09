@@ -28,11 +28,11 @@
 	var cssLoaded = {};
 
 	function getName() {
-		return CKEDITOR.skinName.split( ',' )[ 0 ];
+		return CKEDITOR.skinName.split( &#39;,&#39; )[ 0 ];
 	}
 
 	function getConfigPath() {
-		return CKEDITOR.getUrl( CKEDITOR.skinName.split( ',' )[ 1 ] || ( 'skins/' + getName() + '/' ) );
+		return CKEDITOR.getUrl( CKEDITOR.skinName.split( &#39;,&#39; )[ 1 ] || ( &#39;skins/&#39; + getName() + &#39;/&#39; ) );
 	}
 
 <span id='CKEDITOR-skin'>	/**
@@ -58,14 +58,14 @@
 		 * that do not have to be displayed until requested.
 		 *
 		 *		// Load the dialog part.
-		 *		editor.skin.loadPart( 'dialog' );
+		 *		editor.skin.loadPart( &#39;dialog&#39; );
 		 *
 		 * @param {String} part The name of the skin part CSS file that resides in the skin directory.
 		 * @param {Function} fn The provided callback function which is invoked after the part is loaded.
 		 */
 		loadPart: function( part, fn ) {
 			if ( CKEDITOR.skin.name != getName() ) {
-				CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( getConfigPath() + 'skin.js' ), function() {
+				CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( getConfigPath() + &#39;skin.js&#39; ), function() {
 					loadCss( part, fn );
 				} );
 			} else
@@ -102,7 +102,7 @@
 				this.icons[ name ] = {
 					path: path,
 					offset: offset || 0,
-					bgsize : bgsize || '16px'
+					bgsize : bgsize || &#39;16px&#39;
 				};
 			}
 		},
@@ -128,48 +128,48 @@
 
 			if ( name ) {
 				name = name.toLowerCase();
-				// If we're in RTL, try to get the RTL version of the icon.
+				// If we&#39;re in RTL, try to get the RTL version of the icon.
 				if ( rtl )
-					icon = this.icons[ name + '-rtl' ];
+					icon = this.icons[ name + &#39;-rtl&#39; ];
 
 				// If not in LTR or no RTL version available, get the generic one.
 				if ( !icon )
 					icon = this.icons[ name ];
 			}
 
-			path = overridePath || ( icon &amp;&amp; icon.path ) || '';
+			path = overridePath || ( icon &amp;&amp; icon.path ) || &#39;&#39;;
 			offset = overrideOffset || ( icon &amp;&amp; icon.offset );
-			bgsize = overrideBgsize || ( icon &amp;&amp; icon.bgsize ) || '16px';
+			bgsize = overrideBgsize || ( icon &amp;&amp; icon.bgsize ) || &#39;16px&#39;;
 
 			return path &amp;&amp;
-				( 'background-image:url(' + CKEDITOR.getUrl( path ) + ');background-position:0 ' + offset + 'px;background-size:' + bgsize + ';' );
+				( &#39;background-image:url(&#39; + CKEDITOR.getUrl( path ) + &#39;);background-position:0 &#39; + offset + &#39;px;background-size:&#39; + bgsize + &#39;;&#39; );
 		}
 	};
 
 	function getCssPath( part ) {
 			// Check for ua-specific version of skin part.
-			var uas = CKEDITOR.skin[ 'ua_' + part ], env = CKEDITOR.env;
+			var uas = CKEDITOR.skin[ &#39;ua_&#39; + part ], env = CKEDITOR.env;
 			if ( uas ) {
 
 				// Having versioned UA checked first.
-				uas = uas.split( ',' ).sort( function( a, b ) { return a &gt; b ? -1 : 1; } );
+				uas = uas.split( &#39;,&#39; ).sort( function( a, b ) { return a &gt; b ? -1 : 1; } );
 
 				// Loop through all ua entries, checking is any of them match the current ua.
 				for ( var i = 0, ua; i &lt; uas.length; i++ ) {
 					ua = uas[ i ];
 
 					if ( env.ie ) {
-						if ( ( ua.replace( /^ie/, '' ) == env.version ) || ( env.quirks &amp;&amp; ua == 'iequirks' ) )
-							ua = 'ie';
+						if ( ( ua.replace( /^ie/, &#39;&#39; ) == env.version ) || ( env.quirks &amp;&amp; ua == &#39;iequirks&#39; ) )
+							ua = &#39;ie&#39;;
 					}
 
 					if ( env[ ua ] ) {
-						part += '_' + uas[ i ];
+						part += &#39;_&#39; + uas[ i ];
 						break;
 					}
 				}
 			}
-			return CKEDITOR.getUrl( getConfigPath() + part + '.css' );
+			return CKEDITOR.getUrl( getConfigPath() + part + &#39;.css&#39; );
 	}
 
 	function loadCss( part, callback ) {
@@ -199,7 +199,7 @@
 <span id='CKEDITOR-editor-method-setUiColor'>		/** Sets the color of the editor user interface. This method accepts a color value in
 </span>		 * hexadecimal notation, with a `#` character (e.g. #ffffff).
 		 *
-		 * 		CKEDITOR.instances.editor1.setUiColor( '#ff00ff' );
+		 * 		CKEDITOR.instances.editor1.setUiColor( &#39;#ff00ff&#39; );
 		 *
 		 * @method
 		 * @member CKEDITOR.editor
@@ -215,22 +215,22 @@
 				this.uiColor = color;
 
 				// Update general style.
-				updateStylesheets( [ uiStyle ], chameleon( this, 'editor' ), replace );
+				updateStylesheets( [ uiStyle ], chameleon( this, &#39;editor&#39; ), replace );
 
 				// Update panel styles.
-				updateStylesheets( uiColorMenus, chameleon( this, 'panel' ), replace );
+				updateStylesheets( uiColorMenus, chameleon( this, &#39;panel&#39; ), replace );
 			} ).call( this, color );
 		}
 	} );
 
-	var uiColorStylesheetId = 'cke_ui_color',
+	var uiColorStylesheetId = &#39;cke_ui_color&#39;,
 		uiColorMenus = [],
 		uiColorRegexp = /\$color/g;
 
 	function getStylesheet( document ) {
 		var node = document.getById( uiColorStylesheetId );
 		if ( !node ) {
-			node = document.getHead().append( 'style' );
+			node = document.getHead().append( &#39;style&#39; );
 			node.setAttribute( &quot;id&quot;, uiColorStylesheetId );
 			node.setAttribute( &quot;type&quot;, &quot;text/css&quot; );
 		}
@@ -242,9 +242,9 @@
 
 		// We have to split CSS declarations for webkit.
 		if ( CKEDITOR.env.webkit ) {
-			styleContent = styleContent.split( '}' ).slice( 0, -1 );
+			styleContent = styleContent.split( &#39;}&#39; ).slice( 0, -1 );
 			for ( i = 0; i &lt; styleContent.length; i++ )
-				styleContent[ i ] = styleContent[ i ].split( '{' );
+				styleContent[ i ] = styleContent[ i ].split( &#39;{&#39; );
 		}
 
 		for ( var id = 0; id &lt; styleNodes.length; id++ ) {
@@ -269,7 +269,7 @@
 		}
 	}
 
-	CKEDITOR.on( 'instanceLoaded', function( evt ) {
+	CKEDITOR.on( &#39;instanceLoaded&#39;, function( evt ) {
 		// The chameleon feature is not for IE quirks.
 		if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.quirks )
 			return;
@@ -277,23 +277,23 @@
 		var editor = evt.editor,
 			showCallback = function( event ) {
 				var panel = event.data[ 0 ] || event.data;
-				var iframe = panel.element.getElementsByTag( 'iframe' ).getItem( 0 ).getFrameDocument();
+				var iframe = panel.element.getElementsByTag( &#39;iframe&#39; ).getItem( 0 ).getFrameDocument();
 
 				// Add stylesheet if missing.
-				if ( !iframe.getById( 'cke_ui_color' ) ) {
+				if ( !iframe.getById( &#39;cke_ui_color&#39; ) ) {
 					var node = getStylesheet( iframe );
 					uiColorMenus.push( node );
 
 					var color = editor.getUiColor();
 					// Set uiColor for new panel.
 					if ( color )
-						updateStylesheets( [ node ], CKEDITOR.skin.chameleon( editor, 'panel' ), [ [ uiColorRegexp, color ] ] );
+						updateStylesheets( [ node ], CKEDITOR.skin.chameleon( editor, &#39;panel&#39; ), [ [ uiColorRegexp, color ] ] );
 
 				}
 			};
 
-		editor.on( 'panelShow', showCallback );
-		editor.on( 'menuShow', showCallback );
+		editor.on( &#39;panelShow&#39;, showCallback );
+		editor.on( &#39;menuShow&#39;, showCallback );
 
 		// Apply UI color if specified in config.
 		if ( editor.config.uiColor )
@@ -330,11 +330,11 @@
  *
  * It is possible to install skins outside the default `skin` folder in the
  * editor installation. In that case, the absolute URL path to that folder
- * should be provided, separated by a comma (`'skin_name,skin_path'`).
+ * should be provided, separated by a comma (`&#39;skin_name,skin_path&#39;`).
  *
- *		config.skin = 'moono';
+ *		config.skin = &#39;moono&#39;;
  *
- *		config.skin = 'myskin,/customstuff/myskin/';
+ *		config.skin = &#39;myskin,/customstuff/myskin/&#39;;
  *
  * @cfg {String} skin
  * @member CKEDITOR.config

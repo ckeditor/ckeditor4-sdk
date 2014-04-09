@@ -80,7 +80,7 @@ CKEDITOR.resourceManager.prototype = {
 <span id='CKEDITOR-resourceManager-method-add'>	/**
 </span>	 * Registers a resource.
 	 *
-	 *		CKEDITOR.plugins.add( 'sample', { ... plugin definition ... } );
+	 *		CKEDITOR.plugins.add( &#39;sample&#39;, { ... plugin definition ... } );
 	 *
 	 * @param {String} name The resource name.
 	 * @param {Object} [definition] The resource definition.
@@ -88,13 +88,13 @@ CKEDITOR.resourceManager.prototype = {
 	 */
 	add: function( name, definition ) {
 		if ( this.registered[ name ] )
-			throw '[CKEDITOR.resourceManager.add] The resource name &quot;' + name + '&quot; is already registered.';
+			throw &#39;[CKEDITOR.resourceManager.add] The resource name &quot;&#39; + name + &#39;&quot; is already registered.&#39;;
 
 		var resource = this.registered[ name ] = definition || {};
 		resource.name = name;
 		resource.path = this.getPath( name );
 
-		CKEDITOR.fire( name + CKEDITOR.tools.capitalize( this.fileName ) + 'Ready', resource );
+		CKEDITOR.fire( name + CKEDITOR.tools.capitalize( this.fileName ) + &#39;Ready&#39;, resource );
 
 		return this.get( name );
 	},
@@ -102,7 +102,7 @@ CKEDITOR.resourceManager.prototype = {
 <span id='CKEDITOR-resourceManager-method-get'>	/**
 </span>	 * Gets the definition of a specific resource.
 	 *
-	 *		var definition = CKEDITOR.plugins.get( 'sample' );
+	 *		var definition = CKEDITOR.plugins.get( &#39;sample&#39; );
 	 *
 	 * @param {String} name The resource name.
 	 * @returns {Object} The registered object.
@@ -114,41 +114,41 @@ CKEDITOR.resourceManager.prototype = {
 <span id='CKEDITOR-resourceManager-method-getPath'>	/**
 </span>	 * Get the folder path for a specific loaded resource.
 	 *
-	 *		alert( CKEDITOR.plugins.getPath( 'sample' ) ); // '&lt;editor path&gt;/plugins/sample/'
+	 *		alert( CKEDITOR.plugins.getPath( &#39;sample&#39; ) ); // &#39;&lt;editor path&gt;/plugins/sample/&#39;
 	 *
 	 * @param {String} name The resource name.
 	 * @returns {String}
 	 */
 	getPath: function( name ) {
 		var external = this.externals[ name ];
-		return CKEDITOR.getUrl( ( external &amp;&amp; external.dir ) || this.basePath + name + '/' );
+		return CKEDITOR.getUrl( ( external &amp;&amp; external.dir ) || this.basePath + name + &#39;/&#39; );
 	},
 
 <span id='CKEDITOR-resourceManager-method-getFilePath'>	/**
 </span>	 * Get the file path for a specific loaded resource.
 	 *
-	 *		alert( CKEDITOR.plugins.getFilePath( 'sample' ) ); // '&lt;editor path&gt;/plugins/sample/plugin.js'
+	 *		alert( CKEDITOR.plugins.getFilePath( &#39;sample&#39; ) ); // &#39;&lt;editor path&gt;/plugins/sample/plugin.js&#39;
 	 *
 	 * @param {String} name The resource name.
 	 * @returns {String}
 	 */
 	getFilePath: function( name ) {
 		var external = this.externals[ name ];
-		return CKEDITOR.getUrl( this.getPath( name ) + ( external ? external.file : this.fileName + '.js' ) );
+		return CKEDITOR.getUrl( this.getPath( name ) + ( external ? external.file : this.fileName + &#39;.js&#39; ) );
 	},
 
 <span id='CKEDITOR-resourceManager-method-addExternal'>	/**
 </span>	 * Registers one or more resources to be loaded from an external path
 	 * instead of the core base path.
 	 *
-	 *		// Loads a plugin from '/myplugin/samples/plugin.js'.
-	 *		CKEDITOR.plugins.addExternal( 'sample', '/myplugins/sample/' );
+	 *		// Loads a plugin from &#39;/myplugin/samples/plugin.js&#39;.
+	 *		CKEDITOR.plugins.addExternal( &#39;sample&#39;, &#39;/myplugins/sample/&#39; );
 	 *
-	 *		// Loads a plugin from '/myplugin/samples/my_plugin.js'.
-	 *		CKEDITOR.plugins.addExternal( 'sample', '/myplugins/sample/', 'my_plugin.js' );
+	 *		// Loads a plugin from &#39;/myplugin/samples/my_plugin.js&#39;.
+	 *		CKEDITOR.plugins.addExternal( &#39;sample&#39;, &#39;/myplugins/sample/&#39;, &#39;my_plugin.js&#39; );
 	 *
-	 *		// Loads a plugin from '/myplugin/samples/my_plugin.js'.
-	 *		CKEDITOR.plugins.addExternal( 'sample', '/myplugins/sample/my_plugin.js', '' );
+	 *		// Loads a plugin from &#39;/myplugin/samples/my_plugin.js&#39;.
+	 *		CKEDITOR.plugins.addExternal( &#39;sample&#39;, &#39;/myplugins/sample/my_plugin.js&#39;, &#39;&#39; );
 	 *
 	 * @param {String} names The resource names, separated by commas.
 	 * @param {String} path The path of the folder containing the resource.
@@ -157,7 +157,7 @@ CKEDITOR.resourceManager.prototype = {
 	 * is already the full path.
 	 */
 	addExternal: function( names, path, fileName ) {
-		names = names.split( ',' );
+		names = names.split( &#39;,&#39; );
 		for ( var i = 0; i &lt; names.length; i++ ) {
 			var name = names[ i ];
 
@@ -166,7 +166,7 @@ CKEDITOR.resourceManager.prototype = {
 			if ( !fileName ) {
 				path = path.replace( /[^\/]+$/, function( match ) {
 					fileName = match;
-					return '';
+					return &#39;&#39;;
 				} );
 			}
 
@@ -175,7 +175,7 @@ CKEDITOR.resourceManager.prototype = {
 
 				// Use the default file name if there is no &quot;fileName&quot; and it
 				// was not found in &quot;path&quot;.
-				file: fileName || ( this.fileName + '.js' )
+				file: fileName || ( this.fileName + &#39;.js&#39; )
 			};
 		}
 	},
@@ -183,8 +183,8 @@ CKEDITOR.resourceManager.prototype = {
 <span id='CKEDITOR-resourceManager-method-load'>	/**
 </span>	 * Loads one or more resources.
 	 *
-	 *		CKEDITOR.plugins.load( 'myplugin', function( plugins ) {
-	 *			alert( plugins[ 'myplugin' ] ); // object
+	 *		CKEDITOR.plugins.load( &#39;myplugin&#39;, function( plugins ) {
+	 *			alert( plugins[ &#39;myplugin&#39; ] ); // object
 	 *		} );
 	 *
 	 * @param {String/Array} name The name of the resource to load. It may be a
@@ -224,8 +224,8 @@ CKEDITOR.resourceManager.prototype = {
 
 		CKEDITOR.scriptLoader.load( urls, function( completed, failed ) {
 			if ( failed.length ) {
-				throw '[CKEDITOR.resourceManager.load] Resource name &quot;' + urlsNames[ failed[ 0 ] ].join( ',' )
-					+ '&quot; was not found at &quot;' + failed[ 0 ] + '&quot;.';
+				throw &#39;[CKEDITOR.resourceManager.load] Resource name &quot;&#39; + urlsNames[ failed[ 0 ] ].join( &#39;,&#39; )
+					+ &#39;&quot; was not found at &quot;&#39; + failed[ 0 ] + &#39;&quot;.&#39;;
 			}
 
 			for ( var i = 0; i &lt; completed.length; i++ ) {

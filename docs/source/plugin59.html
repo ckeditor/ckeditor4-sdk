@@ -21,7 +21,7 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'panel', {
+	CKEDITOR.plugins.add( &#39;panel&#39;, {
 		beforeInit: function( editor ) {
 			editor.ui.addHandler( CKEDITOR.UI_PANEL, CKEDITOR.ui.panel.handler );
 		}
@@ -31,10 +31,10 @@
 </span>	 * Panel UI element.
 	 *
 	 * @readonly
-	 * @property {String} [='panel']
+	 * @property {String} [=&#39;panel&#39;]
 	 * @member CKEDITOR
 	 */
-	CKEDITOR.UI_PANEL = 'panel';
+	CKEDITOR.UI_PANEL = &#39;panel&#39;;
 
 <span id='CKEDITOR-ui-panel-method-constructor'><span id='CKEDITOR-ui-panel'>	/**
 </span></span>	 * @class
@@ -49,7 +49,7 @@
 
 		// Set defaults.
 		CKEDITOR.tools.extend( this, {
-			className: '',
+			className: &#39;&#39;,
 			css: []
 		} );
 
@@ -81,20 +81,20 @@
 		}
 	};
 
-	var panelTpl = CKEDITOR.addTemplate( 'panel', '&lt;div lang=&quot;{langCode}&quot; id=&quot;{id}&quot; dir={dir}' +
-		' class=&quot;cke cke_reset_all {editorId} cke_panel cke_panel {cls} cke_{dir}&quot;' +
-		' style=&quot;z-index:{z-index}&quot; role=&quot;presentation&quot;&gt;' +
-		'{frame}' +
-		'&lt;/div&gt;' );
+	var panelTpl = CKEDITOR.addTemplate( &#39;panel&#39;, &#39;&lt;div lang=&quot;{langCode}&quot; id=&quot;{id}&quot; dir={dir}&#39; +
+		&#39; class=&quot;cke cke_reset_all {editorId} cke_panel cke_panel {cls} cke_{dir}&quot;&#39; +
+		&#39; style=&quot;z-index:{z-index}&quot; role=&quot;presentation&quot;&gt;&#39; +
+		&#39;{frame}&#39; +
+		&#39;&lt;/div&gt;&#39; );
 
-	var frameTpl = CKEDITOR.addTemplate( 'panel-frame', '&lt;iframe id=&quot;{id}&quot; class=&quot;cke_panel_frame&quot; role=&quot;presentation&quot; frameborder=&quot;0&quot; src=&quot;{src}&quot;&gt;&lt;/iframe&gt;' );
+	var frameTpl = CKEDITOR.addTemplate( &#39;panel-frame&#39;, &#39;&lt;iframe id=&quot;{id}&quot; class=&quot;cke_panel_frame&quot; role=&quot;presentation&quot; frameborder=&quot;0&quot; src=&quot;{src}&quot;&gt;&lt;/iframe&gt;&#39; );
 
-	var frameDocTpl = CKEDITOR.addTemplate( 'panel-frame-inner', '&lt;!DOCTYPE html&gt;' +
-		'&lt;html class=&quot;cke_panel_container {env}&quot; dir=&quot;{dir}&quot; lang=&quot;{langCode}&quot;&gt;' +
-			'&lt;head&gt;{css}&lt;/head&gt;' +
-			'&lt;body class=&quot;cke_{dir}&quot;' +
-				' style=&quot;margin:0;padding:0&quot; onload=&quot;{onload}&quot;&gt;&lt;/body&gt;' +
-		'&lt;\/html&gt;' );
+	var frameDocTpl = CKEDITOR.addTemplate( &#39;panel-frame-inner&#39;, &#39;&lt;!DOCTYPE html&gt;&#39; +
+		&#39;&lt;html class=&quot;cke_panel_container {env}&quot; dir=&quot;{dir}&quot; lang=&quot;{langCode}&quot;&gt;&#39; +
+			&#39;&lt;head&gt;{css}&lt;/head&gt;&#39; +
+			&#39;&lt;body class=&quot;cke_{dir}&quot;&#39; +
+				&#39; style=&quot;margin:0;padding:0&quot; onload=&quot;{onload}&quot;&gt;&lt;/body&gt;&#39; +
+		&#39;&lt;\/html&gt;&#39; );
 
 <span id='CKEDITOR-ui-panel'>	/** @class CKEDITOR.ui.panel */
 </span>	CKEDITOR.ui.panel.prototype = {
@@ -112,14 +112,14 @@
 
 				if ( !holder ) {
 					if ( this.isFramed ) {
-						var iframe = this.document.getById( this.id + '_frame' ),
+						var iframe = this.document.getById( this.id + &#39;_frame&#39; ),
 							parentDiv = iframe.getParent(),
 							doc = iframe.getFrameDocument();
 
 						// Make it scrollable on iOS. (#8308)
 						CKEDITOR.env.iOS &amp;&amp; parentDiv.setStyles( {
-							'overflow': 'scroll',
-							'-webkit-overflow-scrolling': 'touch'
+							&#39;overflow&#39;: &#39;scroll&#39;,
+							&#39;-webkit-overflow-scrolling&#39;: &#39;touch&#39;
 						} );
 
 						var onLoad = CKEDITOR.tools.addFunction( CKEDITOR.tools.bind( function( ev ) {
@@ -130,7 +130,7 @@
 
 						doc.write( frameDocTpl.output( CKEDITOR.tools.extend( {
 							css: CKEDITOR.tools.buildStyleHtml( this.css ),
-							onload: 'window.parent.CKEDITOR.tools.callFunction(' + onLoad + ');'
+							onload: &#39;window.parent.CKEDITOR.tools.callFunction(&#39; + onLoad + &#39;);&#39;
 						}, data ) ) );
 
 						var win = doc.getWindow();
@@ -138,10 +138,10 @@
 						// Register the CKEDITOR global.
 						win.$.CKEDITOR = CKEDITOR;
 
-						// Arrow keys for scrolling is only preventable with 'keypress' event in Opera (#4534).
-						doc.on( 'key' + ( CKEDITOR.env.opera ? 'press' : 'down' ), function( evt ) {
+						// Arrow keys for scrolling is only preventable with &#39;keypress&#39; event in Opera (#4534).
+						doc.on( &#39;key&#39; + ( CKEDITOR.env.opera ? &#39;press&#39; : &#39;down&#39; ), function( evt ) {
 							var keystroke = evt.data.getKeystroke(),
-								dir = this.document.getById( this.id ).getAttribute( 'dir' );
+								dir = this.document.getById( this.id ).getAttribute( &#39;dir&#39; );
 
 							// Delegate key processing to block.
 							if ( this._.onKeyDown &amp;&amp; this._.onKeyDown( keystroke ) === false ) {
@@ -150,7 +150,7 @@
 							}
 
 							// ESC/ARROW-LEFT(ltr) OR ARROW-RIGHT(rtl)
-							if ( keystroke == 27 || keystroke == ( dir == 'rtl' ? 39 : 37 ) ) {
+							if ( keystroke == 27 || keystroke == ( dir == &#39;rtl&#39; ? 39 : 37 ) ) {
 								if ( this.onEscape &amp;&amp; this.onEscape( keystroke ) === false )
 									evt.data.preventDefault();
 							}
@@ -174,27 +174,27 @@
 				langCode: editor.langCode,
 				dir: editor.lang.dir,
 				cls: this.className,
-				frame: '',
+				frame: &#39;&#39;,
 				env: CKEDITOR.env.cssClass,
-				'z-index': editor.config.baseFloatZIndex + 1
+				&#39;z-index&#39;: editor.config.baseFloatZIndex + 1
 			};
 
 			if ( this.isFramed ) {
 				// With IE, the custom domain has to be taken care at first,
-				// for other browers, the 'src' attribute should be left empty to
-				// trigger iframe's 'load' event.
+				// for other browers, the &#39;src&#39; attribute should be left empty to
+				// trigger iframe&#39;s &#39;load&#39; event.
 				var src =
-					CKEDITOR.env.air ? 'javascript:void(0)' :
-					CKEDITOR.env.ie ? 'javascript:void(function(){' + encodeURIComponent(
-						'document.open();' +
+					CKEDITOR.env.air ? &#39;javascript:void(0)&#39; :
+					CKEDITOR.env.ie ? &#39;javascript:void(function(){&#39; + encodeURIComponent(
+						&#39;document.open();&#39; +
 						// In IE, the document domain must be set any time we call document.open().
-						'(' + CKEDITOR.tools.fixDomain + ')();' +
-						'document.close();'
-					) + '}())' :
-					'';
+						&#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; +
+						&#39;document.close();&#39;
+					) + &#39;}())&#39; :
+					&#39;&#39;;
 
 				data.frame = frameTpl.output( {
-					id: this.id + '_frame',
+					id: this.id + &#39;_frame&#39;,
 					src: src
 				} );
 			}
@@ -236,14 +236,14 @@
 
 			// ARIA role works better in IE on the body element, while on the iframe
 			// for FF. (#8864)
-			var holder = !this.forceIFrame || CKEDITOR.env.ie ? this._.holder : this.document.getById( this.id + '_frame' );
+			var holder = !this.forceIFrame || CKEDITOR.env.ie ? this._.holder : this.document.getById( this.id + &#39;_frame&#39; );
 
 			if ( current )
 				current.hide();
 
 			this._.currentBlock = block;
 
-			CKEDITOR.fire( 'ariaWidget', holder );
+			CKEDITOR.fire( &#39;ariaWidget&#39;, holder );
 
 			// Reset the focus index, so it will always go into the first one.
 			block._.focusIndex = -1;
@@ -276,13 +276,13 @@
 		 * @todo
 		 */
 		$: function( blockHolder, blockDefinition ) {
-			this.element = blockHolder.append( blockHolder.getDocument().createElement( 'div', {
+			this.element = blockHolder.append( blockHolder.getDocument().createElement( &#39;div&#39;, {
 				attributes: {
-					'tabindex': -1,
-					'class': 'cke_panel_block'
+					&#39;tabindex&#39;: -1,
+					&#39;class&#39;: &#39;cke_panel_block&#39;
 				},
 				styles: {
-					display: 'none'
+					display: &#39;none&#39;
 				}
 			} ) );
 
@@ -292,9 +292,9 @@
 
 			// Set the a11y attributes of this element ...
 			this.element.setAttributes( {
-				'role': this.attributes.role || 'presentation',
-				'aria-label': this.attributes[ 'aria-label' ],
-				'title': this.attributes.title || this.attributes[ 'aria-label' ]
+				&#39;role&#39;: this.attributes.role || &#39;presentation&#39;,
+				&#39;aria-label&#39;: this.attributes[ &#39;aria-label&#39; ],
+				&#39;title&#39;: this.attributes.title || this.attributes[ &#39;aria-label&#39; ]
 			} );
 
 			this.keys = {};
@@ -313,7 +313,7 @@
 			markItem: function( index ) {
 				if ( index == -1 )
 					return;
-				var links = this.element.getElementsByTag( 'a' );
+				var links = this.element.getElementsByTag( &#39;a&#39; );
 				var item = links.getItem( this._.focusIndex = index );
 
 				// Safari need focus on the iframe window first(#3389), but we need
@@ -328,28 +328,28 @@
 
 		proto: {
 			show: function() {
-				this.element.setStyle( 'display', '' );
+				this.element.setStyle( &#39;display&#39;, &#39;&#39; );
 			},
 
 			hide: function() {
 				if ( !this.onHide || this.onHide.call( this ) !== true )
-					this.element.setStyle( 'display', 'none' );
+					this.element.setStyle( &#39;display&#39;, &#39;none&#39; );
 			},
 
 			onKeyDown: function( keystroke, noCycle ) {
 				var keyAction = this.keys[ keystroke ];
 				switch ( keyAction ) {
 					// Move forward.
-					case 'next':
+					case &#39;next&#39;:
 						var index = this._.focusIndex,
-							links = this.element.getElementsByTag( 'a' ),
+							links = this.element.getElementsByTag( &#39;a&#39; ),
 							link;
 
 						while ( ( link = links.getItem( ++index ) ) ) {
 							// Move the focus only if the element is marked with
-							// the _cke_focus and it it's visible (check if it has
+							// the _cke_focus and it it&#39;s visible (check if it has
 							// width).
-							if ( link.getAttribute( '_cke_focus' ) &amp;&amp; link.$.offsetWidth ) {
+							if ( link.getAttribute( &#39;_cke_focus&#39; ) &amp;&amp; link.$.offsetWidth ) {
 								this._.focusIndex = index;
 								link.focus();
 								break;
@@ -365,15 +365,15 @@
 						return false;
 
 						// Move backward.
-					case 'prev':
+					case &#39;prev&#39;:
 						index = this._.focusIndex;
-						links = this.element.getElementsByTag( 'a' );
+						links = this.element.getElementsByTag( &#39;a&#39; );
 
 						while ( index &gt; 0 &amp;&amp; ( link = links.getItem( --index ) ) ) {
 							// Move the focus only if the element is marked with
-							// the _cke_focus and it it's visible (check if it has
+							// the _cke_focus and it it&#39;s visible (check if it has
 							// width).
-							if ( link.getAttribute( '_cke_focus' ) &amp;&amp; link.$.offsetWidth ) {
+							if ( link.getAttribute( &#39;_cke_focus&#39; ) &amp;&amp; link.$.offsetWidth ) {
 								this._.focusIndex = index;
 								link.focus();
 								break;
@@ -392,13 +392,13 @@
 
 						return false;
 
-					case 'click':
-					case 'mouseup':
+					case &#39;click&#39;:
+					case &#39;mouseup&#39;:
 						index = this._.focusIndex;
-						link = index &gt;= 0 &amp;&amp; this.element.getElementsByTag( 'a' ).getItem( index );
+						link = index &gt;= 0 &amp;&amp; this.element.getElementsByTag( &#39;a&#39; ).getItem( index );
 
 						if ( link )
-							link.$[ keyAction ] ? link.$[ keyAction ]() : link.$[ 'on' + keyAction ]();
+							link.$[ keyAction ] ? link.$[ keyAction ]() : link.$[ &#39;on&#39; + keyAction ]();
 
 						return false;
 				}

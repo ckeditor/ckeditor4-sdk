@@ -68,8 +68,8 @@
 		return this;
 	};
 
-	var SLOT_NAME = 'focusmanager',
-		SLOT_NAME_LISTENERS = 'focusmanager_handlers';
+	var SLOT_NAME = &#39;focusmanager&#39;,
+		SLOT_NAME_LISTENERS = &#39;focusmanager_handlers&#39;;
 
 <span id='CKEDITOR-focusManager-_'>	/**
 </span>	 * Object used to hold private stuff.
@@ -97,7 +97,7 @@
 		 * interaction session.
 		 *
 		 * **Note:** This method will not introduce UI focus
-		 * impact on DOM, it's here to record editor UI focus state internally.
+		 * impact on DOM, it&#39;s here to record editor UI focus state internally.
 		 * If you want to make the cursor blink inside of the editable, use
 		 * {@link CKEDITOR.editor#method-focus} instead.
 		 *
@@ -126,8 +126,8 @@
 				this.hasFocus = true;
 
 				var ct = this._.editor.container;
-				ct &amp;&amp; ct.addClass( 'cke_focus' );
-				this._.editor.fire( 'focus' );
+				ct &amp;&amp; ct.addClass( &#39;cke_focus&#39; );
+				this._.editor.fire( &#39;focus&#39; );
 			}
 		},
 
@@ -172,8 +172,8 @@
 					this.hasFocus = false;
 
 					var ct = this._.editor.container;
-					ct &amp;&amp; ct.removeClass( 'cke_focus' );
-					this._.editor.fire( 'blur' );
+					ct &amp;&amp; ct.removeClass( &#39;cke_focus&#39; );
+					this._.editor.fire( &#39;blur&#39; );
 				}
 			}
 
@@ -193,7 +193,7 @@
 
 <span id='CKEDITOR-focusManager-method-add'>		/**
 </span>		 * Register an UI DOM element to the focus manager, which will make the focus manager &quot;hasFocus&quot;
-		 * once input focus is relieved on the element, it's to be used by plugins to expand the jurisdiction of the editor focus.
+		 * once input focus is relieved on the element, it&#39;s to be used by plugins to expand the jurisdiction of the editor focus.
 		 *
 		 * @param {CKEDITOR.dom.element} element The container (top most) element of one UI part.
 		 * @param {Boolean} isCapture If specified {@link CKEDITOR.event#useCapture} will be used when listening to the focus event.
@@ -205,17 +205,17 @@
 				// If this element is already taken by another instance, dismiss it first.
 				fm &amp;&amp; fm.remove( element );
 
-				var focusEvent = 'focus',
-					blurEvent = 'blur';
+				var focusEvent = &#39;focus&#39;,
+					blurEvent = &#39;blur&#39;;
 
-				// Bypass the element's internal DOM focus change.
+				// Bypass the element&#39;s internal DOM focus change.
 				if ( isCapture ) {
 
 					// Use &quot;focusin/focusout&quot; events instead of capture phase in IEs,
 					// which fires synchronously.
 					if ( CKEDITOR.env.ie ) {
-						focusEvent = 'focusin';
-						blurEvent = 'focusout';
+						focusEvent = &#39;focusin&#39;;
+						blurEvent = &#39;focusout&#39;;
 					} else
 						CKEDITOR.event.useCapture = 1;
 				}
@@ -250,8 +250,8 @@
 		remove: function( element ) {
 			element.removeCustomData( SLOT_NAME );
 			var listeners = element.removeCustomData( SLOT_NAME_LISTENERS );
-			element.removeListener( 'blur', listeners.blur );
-			element.removeListener( 'focus', listeners.focus );
+			element.removeListener( &#39;blur&#39;, listeners.blur );
+			element.removeListener( &#39;focus&#39;, listeners.focus );
 		}
 
 	};
@@ -261,8 +261,8 @@
 <span id='CKEDITOR-editor-event-focus'>/**
 </span> * Fired when the editor instance receives the input focus.
  *
- *		editor.on( 'focus', function( e ) {
- *			alert( 'The editor named ' + e.editor.name + ' is now focused' );
+ *		editor.on( &#39;focus&#39;, function( e ) {
+ *			alert( &#39;The editor named &#39; + e.editor.name + &#39; is now focused&#39; );
  *		} );
  *
  * @event focus
@@ -275,11 +275,11 @@
  *
  * **Note:** This event will **NOT** be triggered when focus is moved internally, e.g. from
  * the editable to other part of the editor UI like dialog.
- * If you're interested on only the editable focus state listen to the {@link CKEDITOR.editable#event-focus}
+ * If you&#39;re interested on only the editable focus state listen to the {@link CKEDITOR.editable#event-focus}
  * and {@link CKEDITOR.editable#blur} events instead.
  *
- *		editor.on( 'blur', function( e ) {
- *			alert( 'The editor named ' + e.editor.name + ' lost the focus' );
+ *		editor.on( &#39;blur&#39;, function( e ) {
+ *			alert( &#39;The editor named &#39; + e.editor.name + &#39; lost the focus&#39; );
  *		} );
  *
  * @event blur

@@ -20,9 +20,9 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'about', function( editor ) {
+CKEDITOR.dialog.add( &#39;about&#39;, function( editor ) {
 	var lang = editor.lang.about,
-		imagePath = CKEDITOR.plugins.get( 'about' ).path + 'dialogs/' + ( CKEDITOR.env.hidpi ? 'hidpi/' : '' ) + 'logo_ckeditor.png';
+		imagePath = CKEDITOR.plugins.get( &#39;about&#39; ).path + &#39;dialogs/&#39; + ( CKEDITOR.env.hidpi ? &#39;hidpi/&#39; : &#39;&#39; ) + &#39;logo_ckeditor.png&#39;;
 
 	return {
 		title: CKEDITOR.env.ie ? lang.dlgTitle : lang.title,
@@ -30,59 +30,59 @@ CKEDITOR.dialog.add( 'about', function( editor ) {
 		minHeight: 230,
 		contents: [
 			{
-			id: 'tab1',
-			label: '',
-			title: '',
+			id: &#39;tab1&#39;,
+			label: &#39;&#39;,
+			title: &#39;&#39;,
 			expand: true,
 			padding: 0,
 			elements: [
 				{
-				type: 'html',
-				html: '&lt;style type=&quot;text/css&quot;&gt;' +
-					'.cke_about_container' +
-					'{' +
-						'color:#000 !important;' +
-						'padding:10px 10px 0;' +
-						'margin-top:5px' +
-					'}' +
-					'.cke_about_container p' +
-					'{' +
-						'margin: 0 0 10px;' +
-					'}' +
-					'.cke_about_container .cke_about_logo' +
-					'{' +
-						'height:81px;' +
-						'background-color:#fff;' +
-						'background-image:url(' + imagePath + ');' +
-						( CKEDITOR.env.hidpi ? 'background-size:163px 58px;' : '' ) +
-						'background-position:center; ' +
-						'background-repeat:no-repeat;' +
-						'margin-bottom:10px;' +
-					'}' +
-					'.cke_about_container a' +
-					'{' +
-						'cursor:pointer !important;' +
-						'color:#00B2CE !important;' +
-						'text-decoration:underline !important;' +
-					'}' +
-					'&lt;/style&gt;' +
-					'&lt;div class=&quot;cke_about_container&quot;&gt;' +
-					'&lt;div class=&quot;cke_about_logo&quot;&gt;&lt;/div&gt;' +
-					'&lt;p&gt;' +
-						'CKEditor ' + CKEDITOR.version + ' (revision ' + CKEDITOR.revision + ')&lt;br&gt;' +
-						'&lt;a target=&quot;_blank&quot; href=&quot;http://ckeditor.com/&quot;&gt;http://ckeditor.com&lt;/a&gt;' +
-					'&lt;/p&gt;' +
-					'&lt;p&gt;' +
-						lang.help.replace( '$1', '&lt;a target=&quot;_blank&quot; href=&quot;http://docs.ckeditor.com/user&quot;&gt;' + lang.userGuide + '&lt;/a&gt;' ) +
-					'&lt;/p&gt;' +
-					'&lt;p&gt;' +
-						lang.moreInfo + '&lt;br&gt;' +
-						'&lt;a target=&quot;_blank&quot; href=&quot;http://ckeditor.com/about/license&quot;&gt;http://ckeditor.com/about/license&lt;/a&gt;' +
-					'&lt;/p&gt;' +
-					'&lt;p&gt;' +
-						lang.copy.replace( '$1', '&lt;a target=&quot;_blank&quot; href=&quot;http://cksource.com/&quot;&gt;CKSource&lt;/a&gt; - Frederico Knabben' ) +
-					'&lt;/p&gt;' +
-					'&lt;/div&gt;'
+				type: &#39;html&#39;,
+				html: &#39;&lt;style type=&quot;text/css&quot;&gt;&#39; +
+					&#39;.cke_about_container&#39; +
+					&#39;{&#39; +
+						&#39;color:#000 !important;&#39; +
+						&#39;padding:10px 10px 0;&#39; +
+						&#39;margin-top:5px&#39; +
+					&#39;}&#39; +
+					&#39;.cke_about_container p&#39; +
+					&#39;{&#39; +
+						&#39;margin: 0 0 10px;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_about_container .cke_about_logo&#39; +
+					&#39;{&#39; +
+						&#39;height:81px;&#39; +
+						&#39;background-color:#fff;&#39; +
+						&#39;background-image:url(&#39; + imagePath + &#39;);&#39; +
+						( CKEDITOR.env.hidpi ? &#39;background-size:163px 58px;&#39; : &#39;&#39; ) +
+						&#39;background-position:center; &#39; +
+						&#39;background-repeat:no-repeat;&#39; +
+						&#39;margin-bottom:10px;&#39; +
+					&#39;}&#39; +
+					&#39;.cke_about_container a&#39; +
+					&#39;{&#39; +
+						&#39;cursor:pointer !important;&#39; +
+						&#39;color:#00B2CE !important;&#39; +
+						&#39;text-decoration:underline !important;&#39; +
+					&#39;}&#39; +
+					&#39;&lt;/style&gt;&#39; +
+					&#39;&lt;div class=&quot;cke_about_container&quot;&gt;&#39; +
+					&#39;&lt;div class=&quot;cke_about_logo&quot;&gt;&lt;/div&gt;&#39; +
+					&#39;&lt;p&gt;&#39; +
+						&#39;CKEditor &#39; + CKEDITOR.version + &#39; (revision &#39; + CKEDITOR.revision + &#39;)&lt;br&gt;&#39; +
+						&#39;&lt;a target=&quot;_blank&quot; href=&quot;http://ckeditor.com/&quot;&gt;http://ckeditor.com&lt;/a&gt;&#39; +
+					&#39;&lt;/p&gt;&#39; +
+					&#39;&lt;p&gt;&#39; +
+						lang.help.replace( &#39;$1&#39;, &#39;&lt;a target=&quot;_blank&quot; href=&quot;http://docs.ckeditor.com/user&quot;&gt;&#39; + lang.userGuide + &#39;&lt;/a&gt;&#39; ) +
+					&#39;&lt;/p&gt;&#39; +
+					&#39;&lt;p&gt;&#39; +
+						lang.moreInfo + &#39;&lt;br&gt;&#39; +
+						&#39;&lt;a target=&quot;_blank&quot; href=&quot;http://ckeditor.com/about/license&quot;&gt;http://ckeditor.com/about/license&lt;/a&gt;&#39; +
+					&#39;&lt;/p&gt;&#39; +
+					&#39;&lt;p&gt;&#39; +
+						lang.copy.replace( &#39;$1&#39;, &#39;&lt;a target=&quot;_blank&quot; href=&quot;http://cksource.com/&quot;&gt;CKSource&lt;/a&gt; - Frederico Knabben&#39; ) +
+					&#39;&lt;/p&gt;&#39; +
+					&#39;&lt;/div&gt;&#39;
 			}
 			]
 		}

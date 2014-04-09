@@ -26,12 +26,12 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'xml', {} );
+	CKEDITOR.plugins.add( &#39;xml&#39;, {} );
 
 <span id='CKEDITOR-xml-method-constructor'><span id='CKEDITOR-xml'>	/**
 </span></span>	 * Represents a loaded XML document.
 	 *
-	 *		var xml = new CKEDITOR.xml( '&lt;books&gt;&lt;book title=&quot;My Book&quot; /&gt;&lt;/books&gt;' );
+	 *		var xml = new CKEDITOR.xml( &#39;&lt;books&gt;&lt;book title=&quot;My Book&quot; /&gt;&lt;/books&gt;&#39; );
 	 *
 	 * @class
 	 * @constructor Creates xml class instance.
@@ -41,20 +41,20 @@
 	CKEDITOR.xml = function( xmlObjectOrData ) {
 		var baseXml = null;
 
-		if ( typeof xmlObjectOrData == 'object' )
+		if ( typeof xmlObjectOrData == &#39;object&#39; )
 			baseXml = xmlObjectOrData;
 		else {
-			var data = ( xmlObjectOrData || '' ).replace( /&amp;nbsp;/g, '\xA0' );
+			var data = ( xmlObjectOrData || &#39;&#39; ).replace( /&amp;nbsp;/g, &#39;\xA0&#39; );
 
 			// Check ActiveXObject before DOMParser, because IE10+ support both, but
-			// there's no XPath support in DOMParser instance.
+			// there&#39;s no XPath support in DOMParser instance.
 			// Also, the only check for ActiveXObject which still works in IE11+ is with `in` operator.
-			if ( 'ActiveXObject' in window ) {
+			if ( &#39;ActiveXObject&#39; in window ) {
 				try {
-					baseXml = new ActiveXObject( 'MSXML2.DOMDocument' );
+					baseXml = new ActiveXObject( &#39;MSXML2.DOMDocument&#39; );
 				} catch ( e ) {
 					try {
-						baseXml = new ActiveXObject( 'Microsoft.XmlDom' );
+						baseXml = new ActiveXObject( &#39;Microsoft.XmlDom&#39; );
 					} catch ( e ) {}
 				}
 
@@ -66,7 +66,7 @@
 				}
 			}
 			else if ( window.DOMParser )
-				baseXml = ( new DOMParser() ).parseFromString( data, 'text/xml' );
+				baseXml = ( new DOMParser() ).parseFromString( data, &#39;text/xml&#39; );
 		}
 
 <span id='CKEDITOR-xml-property-baseXml'>		/**
@@ -82,9 +82,9 @@
 </span>		 * Get a single node from the XML document, based on a XPath query.
 		 *
 		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		var xml = new CKEDITOR.xml( &#39;&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;&#39; );
 		 *		// Get the first &lt;item&gt; node.
-		 *		var itemNode = &lt;b&gt;xml.selectSingleNode( 'list/item' )&lt;/b&gt;;
+		 *		var itemNode = &lt;b&gt;xml.selectSingleNode( &#39;list/item&#39; )&lt;/b&gt;;
 		 *		// Alert &quot;item&quot;.
 		 *		alert( itemNode.nodeName );
 		 *
@@ -97,7 +97,7 @@
 			var baseXml = this.baseXml;
 
 			if ( contextNode || ( contextNode = baseXml ) ) {
-				if ( 'selectSingleNode' in contextNode ) // IEs
+				if ( &#39;selectSingleNode&#39; in contextNode ) // IEs
 					return contextNode.selectSingleNode( xpath );
 				else if ( baseXml.evaluate ) { // Others
 					var result = baseXml.evaluate( xpath, contextNode, null, 9, null );
@@ -112,9 +112,9 @@
 </span>		 * Gets a list node from the XML document, based on a XPath query.
 		 *
 		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		var xml = new CKEDITOR.xml( &#39;&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;&#39; );
 		 *		// Get all &lt;item&gt; nodes.
-		 *		var itemNodes = xml.selectNodes( 'list/item' );
+		 *		var itemNodes = xml.selectNodes( &#39;list/item&#39; );
 		 *		// Alert &quot;item&quot; twice, one for each &lt;item&gt;.
 		 *		for ( var i = 0; i &lt; itemNodes.length; i++ )
 		 *			alert( itemNodes[i].nodeName );
@@ -130,7 +130,7 @@
 				nodes = [];
 
 			if ( contextNode || ( contextNode = baseXml ) ) {
-				if ( 'selectNodes' in contextNode ) // IEs
+				if ( &#39;selectNodes&#39; in contextNode ) // IEs
 					return contextNode.selectNodes( xpath );
 				else if ( baseXml.evaluate ) { // Others
 					var result = baseXml.evaluate( xpath, contextNode, null, 5, null );
@@ -151,9 +151,9 @@
 		 * based on a XPath query.
 		 *
 		 *		// Create the XML instance.
-		 *		var xml = new CKEDITOR.xml( '&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;' );
+		 *		var xml = new CKEDITOR.xml( &#39;&lt;list&gt;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&lt;/list&gt;&#39; );
 		 *		// Alert &quot;&lt;item id=&quot;test1&quot; /&gt;&lt;item id=&quot;test2&quot; /&gt;&quot;.
-		 *		alert( xml.getInnerXml( 'list' ) );
+		 *		alert( xml.getInnerXml( &#39;list&#39; ) );
 		 *
 		 * @param {String} xpath The XPath query to execute.
 		 * @param {Object} [contextNode] The XML DOM node to be used as the context
@@ -176,7 +176,7 @@
 				}
 			}
 
-			return xml.length ? xml.join( '' ) : null;
+			return xml.length ? xml.join( &#39;&#39; ) : null;
 		}
 	};
 } )();

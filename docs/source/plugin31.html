@@ -21,37 +21,37 @@
  */
 
 ( function() {
-	var floatSpaceTpl = CKEDITOR.addTemplate( 'floatcontainer', '&lt;div' +
-			' id=&quot;cke_{name}&quot;' +
-			' class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_float cke_{langDir} ' + CKEDITOR.env.cssClass + '&quot;' +
-			' dir=&quot;{langDir}&quot;' +
-			' title=&quot;' + ( CKEDITOR.env.gecko ? ' ' : '' ) + '&quot;' +
-			' lang=&quot;{langCode}&quot;' +
-			' role=&quot;application&quot;' +
-			' style=&quot;{style}&quot;' +
-			' aria-labelledby=&quot;cke_{name}_arialbl&quot;' +
-			'&gt;' +
-				'&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;' +
-				'&lt;div class=&quot;cke_inner&quot;&gt;' +
-					'&lt;div id=&quot;{topId}&quot; class=&quot;cke_top&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;' +
-				'&lt;/div&gt;' +
-			'&lt;/div&gt;' ),
+	var floatSpaceTpl = CKEDITOR.addTemplate( &#39;floatcontainer&#39;, &#39;&lt;div&#39; +
+			&#39; id=&quot;cke_{name}&quot;&#39; +
+			&#39; class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_float cke_{langDir} &#39; + CKEDITOR.env.cssClass + &#39;&quot;&#39; +
+			&#39; dir=&quot;{langDir}&quot;&#39; +
+			&#39; title=&quot;&#39; + ( CKEDITOR.env.gecko ? &#39; &#39; : &#39;&#39; ) + &#39;&quot;&#39; +
+			&#39; lang=&quot;{langCode}&quot;&#39; +
+			&#39; role=&quot;application&quot;&#39; +
+			&#39; style=&quot;{style}&quot;&#39; +
+			&#39; aria-labelledby=&quot;cke_{name}_arialbl&quot;&#39; +
+			&#39;&gt;&#39; +
+				&#39;&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;&#39; +
+				&#39;&lt;div class=&quot;cke_inner&quot;&gt;&#39; +
+					&#39;&lt;div id=&quot;{topId}&quot; class=&quot;cke_top&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;&#39; +
+				&#39;&lt;/div&gt;&#39; +
+			&#39;&lt;/div&gt;&#39; ),
 		win = CKEDITOR.document.getWindow(),
 		pixelate = CKEDITOR.tools.cssLength;
 
-	CKEDITOR.plugins.add( 'floatingspace', {
+	CKEDITOR.plugins.add( &#39;floatingspace&#39;, {
 		init: function( editor ) {
 			// Add listener with lower priority than that in themedui creator.
-			// Thereby floatingspace will be created only if themedui wasn't used.
-			editor.on( 'loaded', function() {
+			// Thereby floatingspace will be created only if themedui wasn&#39;t used.
+			editor.on( &#39;loaded&#39;, function() {
 				attach( this );
 			}, null, null, 20 );
 		}
 	} );
 
 	function scrollOffset( side ) {
-		var pageOffset = side == 'left' ? 'pageXOffset' : 'pageYOffset',
-			docScrollOffset = side == 'left' ? 'scrollLeft' : 'scrollTop';
+		var pageOffset = side == &#39;left&#39; ? &#39;pageXOffset&#39; : &#39;pageYOffset&#39;,
+			docScrollOffset = side == &#39;left&#39; ? &#39;scrollLeft&#39; : &#39;scrollTop&#39;;
 
 		return ( pageOffset in win.$ ) ?
 				win.$[ pageOffset ]
@@ -63,7 +63,7 @@
 		var config = editor.config,
 
 			// Get the HTML for the predefined spaces.
-			topHtml = editor.fire( 'uiSpace', { space: 'top', html: '' } ).html,
+			topHtml = editor.fire( &#39;uiSpace&#39;, { space: &#39;top&#39;, html: &#39;&#39; } ).html,
 
 			// Re-positioning of the space.
 			layout = ( function() {
@@ -80,7 +80,7 @@
 				// Update the float space position.
 				function updatePos( pos, prop, val ) {
 					floatSpace.setStyle( prop, pixelate( val ) );
-					floatSpace.setStyle( 'position', pos );
+					floatSpace.setStyle( &#39;position&#39;, pos );
 				}
 
 				// Change the current mode and update float space position accordingly.
@@ -88,14 +88,14 @@
 					var editorPos = editable.getDocumentPosition();
 
 					switch ( newMode ) {
-						case 'top':
-							updatePos( 'absolute', 'top', editorPos.y - spaceHeight - dockedOffsetY );
+						case &#39;top&#39;:
+							updatePos( &#39;absolute&#39;, &#39;top&#39;, editorPos.y - spaceHeight - dockedOffsetY );
 							break;
-						case 'pin':
-							updatePos( 'fixed', 'top', pinnedOffsetY );
+						case &#39;pin&#39;:
+							updatePos( &#39;fixed&#39;, &#39;top&#39;, pinnedOffsetY );
 							break;
-						case 'bottom':
-							updatePos( 'absolute', 'top', editorPos.y + ( editorRect.height || editorRect.bottom - editorRect.top ) + dockedOffsetY );
+						case &#39;bottom&#39;:
+							updatePos( &#39;absolute&#39;, &#39;top&#39;, editorPos.y + ( editorRect.height || editorRect.bottom - editorRect.top ) + dockedOffsetY );
 							break;
 					}
 
@@ -108,27 +108,27 @@
 						return;
 
 					// Show up the space on focus gain.
-					evt &amp;&amp; evt.name == 'focus' &amp;&amp; floatSpace.show();
+					evt &amp;&amp; evt.name == &#39;focus&#39; &amp;&amp; floatSpace.show();
 
 					// Reset the horizontal position for below measurement.
-					floatSpace.removeStyle( 'left' );
-					floatSpace.removeStyle( 'right' );
+					floatSpace.removeStyle( &#39;left&#39; );
+					floatSpace.removeStyle( &#39;right&#39; );
 
 					// Compute the screen position from the TextRectangle object would
 					// be very simple, even though the &quot;width&quot;/&quot;height&quot; property is not
-					// available for all, it's safe to figure that out from the rest.
+					// available for all, it&#39;s safe to figure that out from the rest.
 
 					// http://help.dottoro.com/ljgupwlp.php
 					spaceRect = floatSpace.getClientRect();
 					editorRect = editable.getClientRect();
 					viewRect = win.getViewPaneSize();
 					spaceHeight = spaceRect.height;
-					pageScrollX = scrollOffset( 'left' );
+					pageScrollX = scrollOffset( &#39;left&#39; );
 
 					// We initialize it as pin mode.
 					if ( !mode ) {
-						mode = 'pin';
-						changeMode( 'pin' );
+						mode = &#39;pin&#39;;
+						changeMode( &#39;pin&#39; );
 						// Call for a refresh to the actual layout.
 						layout( evt );
 						return;
@@ -145,7 +145,7 @@
 					// |   |                           |   |
 					//
 					if ( spaceHeight + dockedOffsetY &lt;= editorRect.top )
-						changeMode( 'top' );
+						changeMode( &#39;top&#39; );
 
 					//     +- - - - - - - - -  Editor -+
 					//     |                           |
@@ -160,7 +160,7 @@
 					// +-----------------------------------+
 					//
 					else if ( spaceHeight + dockedOffsetY &gt; viewRect.height - editorRect.bottom )
-						changeMode( 'pin' );
+						changeMode( &#39;pin&#39; );
 
 					//     +- - - - - - - - -  Editor -+
 					//     |                           |
@@ -175,25 +175,25 @@
 					// |   +--------------+                |
 					//
 					else
-						changeMode( 'bottom' );
+						changeMode( &#39;bottom&#39; );
 
 					var mid = viewRect.width / 2,
 						alignSide =
 								( editorRect.left &gt; 0 &amp;&amp; editorRect.right &lt; viewRect.width &amp;&amp; editorRect.width &gt; spaceRect.width ) ?
-										( editor.config.contentsLangDirection == 'rtl' ? 'right' : 'left' )
+										( editor.config.contentsLangDirection == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; )
 									:
-										( mid - editorRect.left &gt; editorRect.right - mid ? 'left' : 'right' ),
+										( mid - editorRect.left &gt; editorRect.right - mid ? &#39;left&#39; : &#39;right&#39; ),
 						offset;
 
 					// (#9769) If viewport width is less than space width,
 					// make sure space never cross the left boundary of the viewport.
 					// In other words: top-left corner of the space is always visible.
 					if ( spaceRect.width &gt; viewRect.width ) {
-						alignSide = 'left';
+						alignSide = &#39;left&#39;;
 						offset = 0;
 					}
 					else {
-						if ( alignSide == 'left' ) {
+						if ( alignSide == &#39;left&#39; ) {
 							// If the space rect fits into viewport, align it
 							// to the left edge of editor:
 							//
@@ -253,7 +253,7 @@
 						}
 
 						// (#9769) Finally, stick the space to the opposite side of
-						// the viewport when it's cut off horizontally on the left/right
+						// the viewport when it&#39;s cut off horizontally on the left/right
 						// side like below.
 						//
 						// This trick reveals cut off space in some edge cases and
@@ -278,19 +278,19 @@
 						// |              |                |   |
 						//
 						if ( offset + spaceRect.width &gt; viewRect.width ) {
-							alignSide = alignSide == 'left' ? 'right' : 'left';
+							alignSide = alignSide == &#39;left&#39; ? &#39;right&#39; : &#39;left&#39;;
 							offset = 0;
 						}
 					}
 
-					// Pin mode is fixed, so don't include scroll-x.
+					// Pin mode is fixed, so don&#39;t include scroll-x.
 					// (#9903) For mode is &quot;top&quot; or &quot;bottom&quot;, add opposite scroll-x for right-aligned space.
-					var scroll = mode == 'pin' ?
+					var scroll = mode == &#39;pin&#39; ?
 							0
 						:
-							alignSide == 'left' ? pageScrollX : -pageScrollX;
+							alignSide == &#39;left&#39; ? pageScrollX : -pageScrollX;
 
-					floatSpace.setStyle( alignSide, pixelate( ( mode == 'pin' ? pinnedOffsetX : dockedOffsetX ) + offset + scroll ) );
+					floatSpace.setStyle( alignSide, pixelate( ( mode == &#39;pin&#39; ? pinnedOffsetX : dockedOffsetX ) + offset + scroll ) );
 				};
 			} )();
 
@@ -301,42 +301,42 @@
 					langDir: editor.lang.dir,
 					langCode: editor.langCode,
 					name: editor.name,
-					style: 'display:none;z-index:' + ( config.baseFloatZIndex - 1 ),
-					topId: editor.ui.spaceId( 'top' ),
-					voiceLabel: editor.lang.editorPanel + ', ' + editor.name
+					style: &#39;display:none;z-index:&#39; + ( config.baseFloatZIndex - 1 ),
+					topId: editor.ui.spaceId( &#39;top&#39; ),
+					voiceLabel: editor.lang.editorPanel + &#39;, &#39; + editor.name
 				} ) ) ),
 
 				// Use event buffers to reduce CPU load when tons of events are fired.
 				changeBuffer = CKEDITOR.tools.eventsBuffer( 500, layout ),
 				uiBuffer = CKEDITOR.tools.eventsBuffer( 100, layout );
 
-			// There's no need for the floatSpace to be selectable.
+			// There&#39;s no need for the floatSpace to be selectable.
 			floatSpace.unselectable();
 
 			// Prevent clicking on non-buttons area of the space from blurring editor.
-			floatSpace.on( 'mousedown', function( evt ) {
+			floatSpace.on( &#39;mousedown&#39;, function( evt ) {
 				evt = evt.data;
-				if ( !evt.getTarget().hasAscendant( 'a', 1 ) )
+				if ( !evt.getTarget().hasAscendant( &#39;a&#39;, 1 ) )
 					evt.preventDefault();
 			} );
 
-			editor.on( 'focus', function( evt ) {
+			editor.on( &#39;focus&#39;, function( evt ) {
 				layout( evt );
-				editor.on( 'change', changeBuffer.input );
-				win.on( 'scroll', uiBuffer.input );
-				win.on( 'resize', uiBuffer.input );
+				editor.on( &#39;change&#39;, changeBuffer.input );
+				win.on( &#39;scroll&#39;, uiBuffer.input );
+				win.on( &#39;resize&#39;, uiBuffer.input );
 			} );
 
-			editor.on( 'blur', function() {
+			editor.on( &#39;blur&#39;, function() {
 				floatSpace.hide();
-				editor.removeListener( 'change', changeBuffer.input );
-				win.removeListener( 'scroll', uiBuffer.input );
-				win.removeListener( 'resize', uiBuffer.input );
+				editor.removeListener( &#39;change&#39;, changeBuffer.input );
+				win.removeListener( &#39;scroll&#39;, uiBuffer.input );
+				win.removeListener( &#39;resize&#39;, uiBuffer.input );
 			} );
 
-			editor.on( 'destroy', function() {
-				win.removeListener( 'scroll', uiBuffer.input );
-				win.removeListener( 'resize', uiBuffer.input );
+			editor.on( &#39;destroy&#39;, function() {
+				win.removeListener( &#39;scroll&#39;, uiBuffer.input );
+				win.removeListener( &#39;resize&#39;, uiBuffer.input );
 				floatSpace.clearCustomData();
 				floatSpace.remove();
 			} );

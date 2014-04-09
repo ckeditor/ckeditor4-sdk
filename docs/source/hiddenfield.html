@@ -19,7 +19,7 @@
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
-CKEDITOR.dialog.add( 'hiddenfield', function( editor ) {
+CKEDITOR.dialog.add( &#39;hiddenfield&#39;, function( editor ) {
 	return {
 		title: editor.lang.forms.hidden.title,
 		hiddenField: null,
@@ -32,7 +32,7 @@ CKEDITOR.dialog.add( 'hiddenfield', function( editor ) {
 				selection = editor.getSelection(),
 				element = selection.getSelectedElement();
 
-			if ( element &amp;&amp; element.data( 'cke-real-element-type' ) &amp;&amp; element.data( 'cke-real-element-type' ) == 'hiddenfield' ) {
+			if ( element &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;hiddenfield&#39; ) {
 				this.hiddenField = element;
 				element = editor.restoreRealElement( this.hiddenField );
 				this.setupContent( element );
@@ -40,14 +40,14 @@ CKEDITOR.dialog.add( 'hiddenfield', function( editor ) {
 			}
 		},
 		onOk: function() {
-			var name = this.getValueOf( 'info', '_cke_saved_name' ),
-				value = this.getValueOf( 'info', 'value' ),
+			var name = this.getValueOf( &#39;info&#39;, &#39;_cke_saved_name&#39; ),
+				value = this.getValueOf( &#39;info&#39;, &#39;value&#39; ),
 				editor = this.getParentEditor(),
-				element = CKEDITOR.env.ie &amp;&amp; !( CKEDITOR.document.$.documentMode &gt;= 8 ) ? editor.document.createElement( '&lt;input name=&quot;' + CKEDITOR.tools.htmlEncode( name ) + '&quot;&gt;' ) : editor.document.createElement( 'input' );
+				element = CKEDITOR.env.ie &amp;&amp; !( CKEDITOR.document.$.documentMode &gt;= 8 ) ? editor.document.createElement( &#39;&lt;input name=&quot;&#39; + CKEDITOR.tools.htmlEncode( name ) + &#39;&quot;&gt;&#39; ) : editor.document.createElement( &#39;input&#39; );
 
-			element.setAttribute( 'type', 'hidden' );
+			element.setAttribute( &#39;type&#39;, &#39;hidden&#39; );
 			this.commitContent( element );
-			var fakeElement = editor.createFakeElement( element, 'cke_hidden', 'hiddenfield' );
+			var fakeElement = editor.createFakeElement( element, &#39;cke_hidden&#39;, &#39;hiddenfield&#39; );
 			if ( !this.hiddenField )
 				editor.insertElement( fakeElement );
 			else {
@@ -58,41 +58,41 @@ CKEDITOR.dialog.add( 'hiddenfield', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.forms.hidden.title,
 			title: editor.lang.forms.hidden.title,
 			elements: [
 				{
-				id: '_cke_saved_name',
-				type: 'text',
+				id: &#39;_cke_saved_name&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.forms.hidden.name,
-				'default': '',
-				accessKey: 'N',
+				&#39;default&#39;: &#39;&#39;,
+				accessKey: &#39;N&#39;,
 				setup: function( element ) {
-					this.setValue( element.data( 'cke-saved-name' ) || element.getAttribute( 'name' ) || '' );
+					this.setValue( element.data( &#39;cke-saved-name&#39; ) || element.getAttribute( &#39;name&#39; ) || &#39;&#39; );
 				},
 				commit: function( element ) {
 					if ( this.getValue() )
-						element.setAttribute( 'name', this.getValue() );
+						element.setAttribute( &#39;name&#39;, this.getValue() );
 					else
-						element.removeAttribute( 'name' );
+						element.removeAttribute( &#39;name&#39; );
 
 				}
 			},
 				{
-				id: 'value',
-				type: 'text',
+				id: &#39;value&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.forms.hidden.value,
-				'default': '',
-				accessKey: 'V',
+				&#39;default&#39;: &#39;&#39;,
+				accessKey: &#39;V&#39;,
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'value' ) || '' );
+					this.setValue( element.getAttribute( &#39;value&#39; ) || &#39;&#39; );
 				},
 				commit: function( element ) {
 					if ( this.getValue() )
-						element.setAttribute( 'value', this.getValue() );
+						element.setAttribute( &#39;value&#39;, this.getValue() );
 					else
-						element.removeAttribute( 'value' );
+						element.removeAttribute( &#39;value&#39; );
 				}
 			}
 			]

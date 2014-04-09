@@ -60,7 +60,7 @@
 								return next;
 							}, function() {
 								var row = cell.getParent(),
-									table = row.getAscendant( 'table' ),
+									table = row.getAscendant( &#39;table&#39; ),
 									nextRow = table.$.rows[ row.$.rowIndex + ( backward ? -1 : 1 ) ];
 
 								return nextRow.cells[ backward ? nextRow.cells.length - 1 : 0 ];
@@ -68,7 +68,7 @@
 
 						// Clone one more row at the end of table and select the first newly established cell.
 						if ( !( next || backward ) ) {
-							var table = cell.getAscendant( 'table' ).$,
+							var table = cell.getAscendant( &#39;table&#39; ).$,
 								cells = cell.getParent().$.cells;
 
 							var newRow = new CKEDITOR.dom.element( table.insertRow( -1 ), editor.document );
@@ -98,17 +98,17 @@
 		};
 	}
 
-	CKEDITOR.plugins.add( 'tab', {
+	CKEDITOR.plugins.add( &#39;tab&#39;, {
 		init: function( editor ) {
 			var tabTools = editor.config.enableTabKeyTools !== false,
 				tabSpaces = editor.config.tabSpaces || 0,
-				tabText = '';
+				tabText = &#39;&#39;;
 
 			while ( tabSpaces-- )
-				tabText += '\xa0';
+				tabText += &#39;\xa0&#39;;
 
 			if ( tabText ) {
-				editor.on( 'key', function( ev ) {
+				editor.on( &#39;key&#39;, function( ev ) {
 					if ( ev.data.keyCode == 9 ) // TAB
 					{
 						editor.insertHtml( tabText );
@@ -118,17 +118,17 @@
 			}
 
 			if ( tabTools ) {
-				editor.on( 'key', function( ev ) {
-					if ( ev.data.keyCode == 9 &amp;&amp; editor.execCommand( 'selectNextCell' ) || // TAB
-					ev.data.keyCode == ( CKEDITOR.SHIFT + 9 ) &amp;&amp; editor.execCommand( 'selectPreviousCell' ) ) // SHIFT+TAB
+				editor.on( &#39;key&#39;, function( ev ) {
+					if ( ev.data.keyCode == 9 &amp;&amp; editor.execCommand( &#39;selectNextCell&#39; ) || // TAB
+					ev.data.keyCode == ( CKEDITOR.SHIFT + 9 ) &amp;&amp; editor.execCommand( &#39;selectPreviousCell&#39; ) ) // SHIFT+TAB
 					ev.cancel();
 				} );
 			}
 
-			editor.addCommand( 'blur', CKEDITOR.tools.extend( blurCommand, meta ) );
-			editor.addCommand( 'blurBack', CKEDITOR.tools.extend( blurBackCommand, meta ) );
-			editor.addCommand( 'selectNextCell', selectNextCellCommand() );
-			editor.addCommand( 'selectPreviousCell', selectNextCellCommand( true ) );
+			editor.addCommand( &#39;blur&#39;, CKEDITOR.tools.extend( blurCommand, meta ) );
+			editor.addCommand( &#39;blurBack&#39;, CKEDITOR.tools.extend( blurBackCommand, meta ) );
+			editor.addCommand( &#39;selectNextCell&#39;, selectNextCellCommand() );
+			editor.addCommand( &#39;selectPreviousCell&#39;, selectNextCellCommand( true ) );
 		}
 	} );
 } )();
@@ -136,7 +136,7 @@
 <span id='CKEDITOR-dom-element-method-focusNext'>/**
 </span> * Moves the UI focus to the element following this element in the tabindex order.
  *
- *		var element = CKEDITOR.document.getById( 'example' );
+ *		var element = CKEDITOR.document.getById( &#39;example&#39; );
  *		element.focusNext();
  *
  * @param {Boolean} [ignoreChildren=false]
@@ -211,7 +211,7 @@ CKEDITOR.dom.element.prototype.focusNext = function( ignoreChildren, indexToUse 
 <span id='CKEDITOR-dom-element-method-focusPrevious'>/**
 </span> * Moves the UI focus to the element before this element in the tabindex order.
  *
- *		var element = CKEDITOR.document.getById( 'example' );
+ *		var element = CKEDITOR.document.getById( &#39;example&#39; );
  *		element.focusPrevious();
  *
  * @param {Boolean} [ignoreChildren=false]
@@ -300,7 +300,7 @@ CKEDITOR.dom.element.prototype.focusPrevious = function( ignoreChildren, indexTo
  * * If *TAB* is pressed, select the contents of the &quot;next&quot; cell. If in the last
  *     cell in the table, add a new row to it and focus its first cell.
  * * If *SHIFT+TAB* is pressed, select the contents of the &quot;previous&quot; cell.
- *     Do nothing when it's in the first cell.
+ *     Do nothing when it&#39;s in the first cell.
  *
  * Example:
  *
@@ -313,8 +313,8 @@ CKEDITOR.dom.element.prototype.focusPrevious = function( ignoreChildren, indexTo
 // If the TAB key is not supposed to be enabled for navigation, the following
 // settings could be used alternatively:
 // config.keystrokes.push(
-//	[ CKEDITOR.ALT + 38 /*Arrow Up*/, 'selectPreviousCell' ],
-//	[ CKEDITOR.ALT + 40 /*Arrow Down*/, 'selectNextCell' ]
+//	[ CKEDITOR.ALT + 38 /*Arrow Up*/, &#39;selectPreviousCell&#39; ],
+//	[ CKEDITOR.ALT + 40 /*Arrow Down*/, &#39;selectNextCell&#39; ]
 // );
 </pre>
 </body>

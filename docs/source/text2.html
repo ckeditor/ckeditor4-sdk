@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
- 'use strict';
+ &#39;use strict&#39;;
 
 ( function() {
 <span id='CKEDITOR-htmlParser-text-method-constructor'><span id='CKEDITOR-htmlParser-text'>	/**
@@ -61,7 +61,7 @@
 		 * @param {CKEDITOR.htmlParser.filter} filter
 		 * @returns {Boolean} Method returns `false` when this text node has
 		 * been removed. This is an information for {@link CKEDITOR.htmlParser.element#filterChildren}
-		 * that it has to repeat filter on current position in parent's children array.
+		 * that it has to repeat filter on current position in parent&#39;s children array.
 		 */
 		filter: function( filter, context ) {
 			if ( !( this.value = filter.onText( context, this.value, this ) ) ) {
@@ -75,7 +75,7 @@
 		 *
 		 * @param {CKEDITOR.htmlParser.basicWriter} writer The writer to which write the HTML.
 		 * @param {CKEDITOR.htmlParser.filter} [filter] The filter to be applied to this node.
-		 * **Note:** it's unsafe to filter offline (not appended) node.
+		 * **Note:** it&#39;s unsafe to filter offline (not appended) node.
 		 */
 		writeHtml: function( writer, filter ) {
 			if ( filter )

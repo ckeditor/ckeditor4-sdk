@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
- 'use strict';
+ &#39;use strict&#39;;
 
 <span id='CKEDITOR-htmlParser-comment-method-constructor'><span id='CKEDITOR-htmlParser-comment'>/**
 </span></span> * A lightweight representation of an HTML comment.
@@ -61,7 +61,7 @@ CKEDITOR.htmlParser.comment.prototype = CKEDITOR.tools.extend( new CKEDITOR.html
 	 * @returns {Boolean} Method returns `false` when this comment has
 	 * been removed or replaced with other node. This is an information for
 	 * {@link CKEDITOR.htmlParser.element#filterChildren} that it has
-	 * to repeat filter on current position in parent's children array.
+	 * to repeat filter on current position in parent&#39;s children array.
 	 */
 	filter: function( filter, context ) {
 		var comment = this.value;
@@ -71,7 +71,7 @@ CKEDITOR.htmlParser.comment.prototype = CKEDITOR.tools.extend( new CKEDITOR.html
 			return false;
 		}
 
-		if ( typeof comment != 'string' ) {
+		if ( typeof comment != &#39;string&#39; ) {
 			this.replaceWith( comment );
 			return false;
 		}
@@ -86,7 +86,7 @@ CKEDITOR.htmlParser.comment.prototype = CKEDITOR.tools.extend( new CKEDITOR.html
 	 *
 	 * @param {CKEDITOR.htmlParser.basicWriter} writer The writer to which write the HTML.
 	 * @param {CKEDITOR.htmlParser.filter} [filter] The filter to be applied to this node.
-	 * **Note:** it's unsafe to filter offline (not appended) node.
+	 * **Note:** it&#39;s unsafe to filter offline (not appended) node.
 	 */
 	writeHtml: function( writer, filter ) {
 		if ( filter )

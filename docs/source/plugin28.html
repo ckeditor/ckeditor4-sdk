@@ -33,9 +33,9 @@
  *
  * &lt;pre&gt;
  * {
- * 	type : 'button',
- * 	id : 'browse',
- * 	filebrowser : 'tabId:elementId',
+ * 	type : &#39;button&#39;,
+ * 	id : &#39;browse&#39;,
+ * 	filebrowser : &#39;tabId:elementId&#39;,
  * 	label : editor.lang.common.browseServer
  * }
  * &lt;/pre&gt;
@@ -47,11 +47,11 @@
  *
  * &lt;pre&gt;
  * {
- * 	type : 'fileButton',
- * 	id : 'uploadButton',
- * 	filebrowser : 'tabId:elementId',
+ * 	type : &#39;fileButton&#39;,
+ * 	id : &#39;uploadButton&#39;,
+ * 	filebrowser : &#39;tabId:elementId&#39;,
  * 	label : editor.lang.common.uploadSubmit,
- * 	'for' : [ 'upload', 'upload' ]
+ * 	&#39;for&#39; : [ &#39;upload&#39;, &#39;upload&#39; ]
  * }
  * &lt;/pre&gt;
  *
@@ -75,17 +75,17 @@
  *
  * &lt;pre&gt;
  * {
- * 	type : 'fileButton',
+ * 	type : &#39;fileButton&#39;,
  * 	label : editor.lang.common.uploadSubmit,
- * 	id : 'buttonId',
+ * 	id : &#39;buttonId&#39;,
  * 	filebrowser :
  * 	{
- * 		action : 'QuickUpload', // required
- * 		target : 'tab1:elementId', // required
+ * 		action : &#39;QuickUpload&#39;, // required
+ * 		target : &#39;tab1:elementId&#39;, // required
  * 		params : // optional
  * 		{
- * 			type : 'Files',
- * 			currentFolder : '/folder/'
+ * 			type : &#39;Files&#39;,
+ * 			currentFolder : &#39;/folder/&#39;
  * 		},
  * 		onSelect : function( fileUrl, errorMessage ) // optional
  * 		{
@@ -93,7 +93,7 @@
  * 			// return false;
  * 		}
  * 	},
- * 	'for' : [ 'tab1', 'myFile' ]
+ * 	&#39;for&#39; : [ &#39;tab1&#39;, &#39;myFile&#39; ]
  * }
  * &lt;/pre&gt;
  *
@@ -110,14 +110,14 @@
  *
  * &lt;pre&gt;
  * {
- * 	type : 'button',
- * 	id : 'buttonId',
+ * 	type : &#39;button&#39;,
+ * 	id : &#39;buttonId&#39;,
  * 	label : editor.lang.common.browseServer,
  * 	filebrowser :
  * 	{
- * 		action : 'Browse',
- * 		url : '/ckfinder/ckfinder.html&amp;amp;type=Images',
- * 		target : 'tab1:elementId'
+ * 		action : &#39;Browse&#39;,
+ * 		url : &#39;/ckfinder/ckfinder.html&amp;amp;type=Images&#39;,
+ * 		target : &#39;tab1:elementId&#39;
  * 	}
  * }
  * &lt;/pre&gt;
@@ -150,17 +150,17 @@
 		return url + ( ( url.indexOf( &quot;?&quot; ) != -1 ) ? &quot;&amp;&quot; : &quot;?&quot; ) + queryString.join( &quot;&amp;&quot; );
 	}
 
-	// Make a string's first character uppercase.
+	// Make a string&#39;s first character uppercase.
 	//
 	// @param {String}
 	//            str String.
 	function ucFirst( str ) {
-		str += '';
+		str += &#39;&#39;;
 		var f = str.charAt( 0 ).toUpperCase();
 		return f + str.substr( 1 );
 	}
 
-	// The onlick function assigned to the 'Browse Server' button. Opens the
+	// The onlick function assigned to the &#39;Browse Server&#39; button. Opens the
 	// file browser and updates target field when file is selected.
 	//
 	// @param {CKEDITOR.event}
@@ -171,8 +171,8 @@
 
 		editor._.filebrowserSe = this;
 
-		var width = editor.config[ 'filebrowser' + ucFirst( dialog.getName() ) + 'WindowWidth' ] || editor.config.filebrowserWindowWidth || '80%';
-		var height = editor.config[ 'filebrowser' + ucFirst( dialog.getName() ) + 'WindowHeight' ] || editor.config.filebrowserWindowHeight || '70%';
+		var width = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowWidth&#39; ] || editor.config.filebrowserWindowWidth || &#39;80%&#39;;
+		var height = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowHeight&#39; ] || editor.config.filebrowserWindowHeight || &#39;70%&#39;;
 
 		var params = this.filebrowser.params || {};
 		params.CKEditor = editor.name;
@@ -185,7 +185,7 @@
 		editor.popup( url, width, height, editor.config.filebrowserWindowFeatures || editor.config.fileBrowserWindowFeatures );
 	}
 
-	// The onlick function assigned to the 'Upload' button. Makes the final
+	// The onlick function assigned to the &#39;Upload&#39; button. Makes the final
 	// decision whether form is really submitted and updates target field when
 	// file is uploaded.
 	//
@@ -197,11 +197,11 @@
 
 		editor._.filebrowserSe = this;
 
-		// If user didn't select the file, stop the upload.
-		if ( !dialog.getContentElement( this[ 'for' ][ 0 ], this[ 'for' ][ 1 ] ).getInputElement().$.value )
+		// If user didn&#39;t select the file, stop the upload.
+		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getInputElement().$.value )
 			return false;
 
-		if ( !dialog.getContentElement( this[ 'for' ][ 0 ], this[ 'for' ][ 1 ] ).getAction() )
+		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getAction() )
 			return false;
 
 		return true;
@@ -226,7 +226,7 @@
 	}
 
 	// Traverse through the content definition and attach filebrowser to
-	// elements with 'filebrowser' attribute.
+	// elements with &#39;filebrowser&#39; attribute.
 	//
 	// @param String
 	//            dialogName Dialog name.
@@ -244,24 +244,24 @@
 		for ( var i = elements.length; i--; ) {
 			element = elements[ i ];
 
-			if ( element.type == 'hbox' || element.type == 'vbox' || element.type == 'fieldset' )
+			if ( element.type == &#39;hbox&#39; || element.type == &#39;vbox&#39; || element.type == &#39;fieldset&#39; )
 				attachFileBrowser( editor, dialogName, definition, element.children );
 
 			if ( !element.filebrowser )
 				continue;
 
-			if ( typeof element.filebrowser == 'string' ) {
+			if ( typeof element.filebrowser == &#39;string&#39; ) {
 				var fb = {
-					action: ( element.type == 'fileButton' ) ? 'QuickUpload' : 'Browse',
+					action: ( element.type == &#39;fileButton&#39; ) ? &#39;QuickUpload&#39; : &#39;Browse&#39;,
 					target: element.filebrowser
 				};
 				element.filebrowser = fb;
 			}
 
-			if ( element.filebrowser.action == 'Browse' ) {
+			if ( element.filebrowser.action == &#39;Browse&#39; ) {
 				var url = element.filebrowser.url;
 				if ( url === undefined ) {
-					url = editor.config[ 'filebrowser' + ucFirst( dialogName ) + 'BrowseUrl' ];
+					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;BrowseUrl&#39; ];
 					if ( url === undefined )
 						url = editor.config.filebrowserBrowseUrl;
 				}
@@ -271,10 +271,10 @@
 					element.filebrowser.url = url;
 					element.hidden = false;
 				}
-			} else if ( element.filebrowser.action == 'QuickUpload' &amp;&amp; element[ 'for' ] ) {
+			} else if ( element.filebrowser.action == &#39;QuickUpload&#39; &amp;&amp; element[ &#39;for&#39; ] ) {
 				url = element.filebrowser.url;
 				if ( url === undefined ) {
-					url = editor.config[ 'filebrowser' + ucFirst( dialogName ) + 'UploadUrl' ];
+					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;UploadUrl&#39; ];
 					if ( url === undefined )
 						url = editor.config.filebrowserUploadUrl;
 				}
@@ -293,7 +293,7 @@
 
 					element.filebrowser.url = url;
 					element.hidden = false;
-					setupFileElement( editor, definition.getContents( element[ 'for' ][ 0 ] ).get( element[ 'for' ][ 1 ] ), element.filebrowser );
+					setupFileElement( editor, definition.getContents( element[ &#39;for&#39; ][ 0 ] ).get( element[ &#39;for&#39; ][ 1 ] ), element.filebrowser );
 				}
 			}
 		}
@@ -309,7 +309,7 @@
 
 		// If there is a reference to targetElement, update it.
 		if ( targetElement ) {
-			var target = targetElement.split( ':' );
+			var target = targetElement.split( &#39;:&#39; );
 			var element = dialog.getContentElement( target[ 0 ], target[ 1 ] );
 			if ( element ) {
 				element.setValue( url );
@@ -342,49 +342,49 @@
 
 	function setUrl( fileUrl, data ) {
 		var dialog = this._.filebrowserSe.getDialog(),
-			targetInput = this._.filebrowserSe[ 'for' ],
+			targetInput = this._.filebrowserSe[ &#39;for&#39; ],
 			onSelect = this._.filebrowserSe.filebrowser.onSelect;
 
 		if ( targetInput )
 			dialog.getContentElement( targetInput[ 0 ], targetInput[ 1 ] ).reset();
 
-		if ( typeof data == 'function' &amp;&amp; data.call( this._.filebrowserSe ) === false )
+		if ( typeof data == &#39;function&#39; &amp;&amp; data.call( this._.filebrowserSe ) === false )
 			return;
 
 		if ( onSelect &amp;&amp; onSelect.call( this._.filebrowserSe, fileUrl, data ) === false )
 			return;
 
 		// The &quot;data&quot; argument may be used to pass the error message to the editor.
-		if ( typeof data == 'string' &amp;&amp; data )
+		if ( typeof data == &#39;string&#39; &amp;&amp; data )
 			alert( data );
 
 		if ( fileUrl )
 			updateTargetElement( fileUrl, this._.filebrowserSe );
 	}
 
-	CKEDITOR.plugins.add( 'filebrowser', {
-		requires: 'popup',
+	CKEDITOR.plugins.add( &#39;filebrowser&#39;, {
+		requires: &#39;popup&#39;,
 		init: function( editor, pluginPath ) {
 			editor._.filebrowserFn = CKEDITOR.tools.addFunction( setUrl, editor );
-			editor.on( 'destroy', function() {
+			editor.on( &#39;destroy&#39;, function() {
 				CKEDITOR.tools.removeFunction( this._.filebrowserFn );
 			} );
 		}
 	} );
 
-	CKEDITOR.on( 'dialogDefinition', function( evt ) {
+	CKEDITOR.on( &#39;dialogDefinition&#39;, function( evt ) {
 		// We require filebrowser plugin to be loaded.
 		if ( !evt.editor.plugins.filebrowser )
 			return;
 
 		var definition = evt.data.definition,
 			element;
-		// Associate filebrowser to elements with 'filebrowser' attribute.
+		// Associate filebrowser to elements with &#39;filebrowser&#39; attribute.
 		for ( var i = 0; i &lt; definition.contents.length; ++i ) {
 			if ( ( element = definition.contents[ i ] ) ) {
 				attachFileBrowser( evt.editor, evt.data.name, definition, element.elements );
 				if ( element.hidden &amp;&amp; element.filebrowser )
-					element.hidden = !isConfigured( definition, element[ 'id' ], element.filebrowser );
+					element.hidden = !isConfigured( definition, element[ &#39;id&#39; ], element.filebrowser );
 
 			}
 		}
@@ -399,10 +399,10 @@
  *
  * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
  *
- *		config.filebrowserBrowseUrl = '/browser/browse.php';
+ *		config.filebrowserBrowseUrl = &#39;/browser/browse.php&#39;;
  *
  * @since 3.0
- * @cfg {String} [filebrowserBrowseUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserBrowseUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -413,10 +413,10 @@
  *
  * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
  *
- *		config.filebrowserUploadUrl = '/uploader/upload.php';
+ *		config.filebrowserUploadUrl = &#39;/uploader/upload.php&#39;;
  *
  * @since 3.0
- * @cfg {String} [filebrowserUploadUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserUploadUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -426,10 +426,10 @@
  *
  * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
  *
- *		config.filebrowserImageBrowseUrl = '/browser/browse.php?type=Images';
+ *		config.filebrowserImageBrowseUrl = &#39;/browser/browse.php?type=Images&#39;;
  *
  * @since 3.0
- * @cfg {String} [filebrowserImageBrowseUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserImageBrowseUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -439,10 +439,10 @@
  *
  * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
  *
- *		config.filebrowserFlashBrowseUrl = '/browser/browse.php?type=Flash';
+ *		config.filebrowserFlashBrowseUrl = &#39;/browser/browse.php?type=Flash&#39;;
  *
  * @since 3.0
- * @cfg {String} [filebrowserFlashBrowseUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserFlashBrowseUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -451,10 +451,10 @@
  *
  * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
  *
- *		config.filebrowserImageUploadUrl = '/uploader/upload.php?type=Images';
+ *		config.filebrowserImageUploadUrl = &#39;/uploader/upload.php?type=Images&#39;;
  *
  * @since 3.0
- * @cfg {String} [filebrowserImageUploadUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserImageUploadUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -463,10 +463,10 @@
  *
  * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
  *
- *		config.filebrowserFlashUploadUrl = '/uploader/upload.php?type=Flash';
+ *		config.filebrowserFlashUploadUrl = &#39;/uploader/upload.php?type=Flash&#39;;
  *
  * @since 3.0
- * @cfg {String} filebrowserFlashUploadUrl='' (empty string = disabled)]
+ * @cfg {String} filebrowserFlashUploadUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
@@ -476,20 +476,20 @@
  *
  * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
  *
- *		config.filebrowserImageBrowseLinkUrl = '/browser/browse.php';
+ *		config.filebrowserImageBrowseLinkUrl = &#39;/browser/browse.php&#39;;
  *
  * @since 3.2
- * @cfg {String} [filebrowserImageBrowseLinkUrl='' (empty string = disabled)]
+ * @cfg {String} [filebrowserImageBrowseLinkUrl=&#39;&#39; (empty string = disabled)]
  * @member CKEDITOR.config
  */
 
 <span id='CKEDITOR-config-cfg-filebrowserWindowFeatures'>/**
 </span> * The features to use in the file browser popup window.
  *
- *		config.filebrowserWindowFeatures = 'resizable=yes,scrollbars=no';
+ *		config.filebrowserWindowFeatures = &#39;resizable=yes,scrollbars=no&#39;;
  *
  * @since 3.4.1
- * @cfg {String} [filebrowserWindowFeatures='location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes']
+ * @cfg {String} [filebrowserWindowFeatures=&#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39;]
  * @member CKEDITOR.config
  */
 
@@ -499,9 +499,9 @@
  *
  *		config.filebrowserWindowWidth = 750;
  *
- *		config.filebrowserWindowWidth = '50%';
+ *		config.filebrowserWindowWidth = &#39;50%&#39;;
  *
- * @cfg {Number/String} [filebrowserWindowWidth='80%']
+ * @cfg {Number/String} [filebrowserWindowWidth=&#39;80%&#39;]
  * @member CKEDITOR.config
  */
 
@@ -511,9 +511,9 @@
  *
  *		config.filebrowserWindowHeight = 580;
  *
- *		config.filebrowserWindowHeight = '50%';
+ *		config.filebrowserWindowHeight = &#39;50%&#39;;
  *
- * @cfg {Number/String} [filebrowserWindowHeight='70%']
+ * @cfg {Number/String} [filebrowserWindowHeight=&#39;70%&#39;]
  * @member CKEDITOR.config
  */
 </pre>

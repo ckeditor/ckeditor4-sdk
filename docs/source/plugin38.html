@@ -21,55 +21,55 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'iframe', {
-		requires: 'dialog,fakeobjects',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'iframe', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;iframe&#39;, {
+		requires: &#39;dialog,fakeobjects&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;iframe&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		onLoad: function() {
-			CKEDITOR.addCss( 'img.cke_iframe' +
-				'{' +
-					'background-image: url(' + CKEDITOR.getUrl( this.path + 'images/placeholder.png' ) + ');' +
-					'background-position: center center;' +
-					'background-repeat: no-repeat;' +
-					'border: 1px solid #a9a9a9;' +
-					'width: 80px;' +
-					'height: 80px;' +
-				'}'
+			CKEDITOR.addCss( &#39;img.cke_iframe&#39; +
+				&#39;{&#39; +
+					&#39;background-image: url(&#39; + CKEDITOR.getUrl( this.path + &#39;images/placeholder.png&#39; ) + &#39;);&#39; +
+					&#39;background-position: center center;&#39; +
+					&#39;background-repeat: no-repeat;&#39; +
+					&#39;border: 1px solid #a9a9a9;&#39; +
+					&#39;width: 80px;&#39; +
+					&#39;height: 80px;&#39; +
+				&#39;}&#39;
 				);
 		},
 		init: function( editor ) {
-			var pluginName = 'iframe',
+			var pluginName = &#39;iframe&#39;,
 				lang = editor.lang.iframe,
-				allowed = 'iframe[align,longdesc,frameborder,height,name,scrolling,src,title,width]';
+				allowed = &#39;iframe[align,longdesc,frameborder,height,name,scrolling,src,title,width]&#39;;
 
 			if ( editor.plugins.dialogadvtab )
-				allowed += ';iframe' + editor.plugins.dialogadvtab.allowedContent( { id: 1, classes: 1, styles: 1 } );
+				allowed += &#39;;iframe&#39; + editor.plugins.dialogadvtab.allowedContent( { id: 1, classes: 1, styles: 1 } );
 
-			CKEDITOR.dialog.add( pluginName, this.path + 'dialogs/iframe.js' );
+			CKEDITOR.dialog.add( pluginName, this.path + &#39;dialogs/iframe.js&#39; );
 			editor.addCommand( pluginName, new CKEDITOR.dialogCommand( pluginName, {
 				allowedContent: allowed,
-				requiredContent: 'iframe'
+				requiredContent: &#39;iframe&#39;
 			} ) );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Iframe', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Iframe&#39;, {
 				label: lang.toolbar,
 				command: pluginName,
-				toolbar: 'insert,80'
+				toolbar: &#39;insert,80&#39;
 			} );
 
-			editor.on( 'doubleclick', function( evt ) {
+			editor.on( &#39;doubleclick&#39;, function( evt ) {
 				var element = evt.data.element;
-				if ( element.is( 'img' ) &amp;&amp; element.data( 'cke-real-element-type' ) == 'iframe' )
-					evt.data.dialog = 'iframe';
+				if ( element.is( &#39;img&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;iframe&#39; )
+					evt.data.dialog = &#39;iframe&#39;;
 			} );
 
 			if ( editor.addMenuItems ) {
 				editor.addMenuItems( {
 					iframe: {
 						label: lang.title,
-						command: 'iframe',
-						group: 'image'
+						command: &#39;iframe&#39;,
+						group: &#39;image&#39;
 					}
 				} );
 			}
@@ -77,7 +77,7 @@
 			// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
 			if ( editor.contextMenu ) {
 				editor.contextMenu.addListener( function( element, selection ) {
-					if ( element &amp;&amp; element.is( 'img' ) &amp;&amp; element.data( 'cke-real-element-type' ) == 'iframe' )
+					if ( element &amp;&amp; element.is( &#39;img&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;iframe&#39; )
 						return { iframe: CKEDITOR.TRISTATE_OFF };
 				} );
 			}
@@ -90,7 +90,7 @@
 				dataFilter.addRules( {
 					elements: {
 						iframe: function( element ) {
-							return editor.createFakeParserElement( element, 'cke_iframe', 'iframe', true );
+							return editor.createFakeParserElement( element, &#39;cke_iframe&#39;, &#39;iframe&#39;, true );
 						}
 					}
 				} );

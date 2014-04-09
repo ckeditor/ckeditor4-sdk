@@ -21,13 +21,13 @@
  */
 
 ( function() {
-	'use strict';
+	&#39;use strict&#39;;
 
 	var DTD = CKEDITOR.dtd,
 		copy = CKEDITOR.tools.copy,
 		trim = CKEDITOR.tools.trim,
-		TEST_VALUE = 'cke-test',
-		enterModeTags = [ '', 'p', 'br', 'div' ];
+		TEST_VALUE = &#39;cke-test&#39;,
+		enterModeTags = [ &#39;&#39;, &#39;p&#39;, &#39;br&#39;, &#39;div&#39; ];
 
 <span id='CKEDITOR-filter-method-constructor'><span id='CKEDITOR-filter'>	/**
 </span></span>	 * Highly configurable class which implements input data filtering mechanisms
@@ -49,9 +49,9 @@
 	 * depending on the {@link CKEDITOR.config#enterMode} and
 	 * {@link CKEDITOR.config#shiftEnterMode} settings:
 	 *
-	 *	* `'p'` &amp;ndash; for {@link CKEDITOR#ENTER_P},
-	 *	* `'div'` &amp;ndash; for {@link CKEDITOR#ENTER_DIV},
-	 *	* `'br'` &amp;ndash; for {@link CKEDITOR#ENTER_BR}.
+	 *	* `&#39;p&#39;` &amp;ndash; for {@link CKEDITOR#ENTER_P},
+	 *	* `&#39;div&#39;` &amp;ndash; for {@link CKEDITOR#ENTER_DIV},
+	 *	* `&#39;br&#39;` &amp;ndash; for {@link CKEDITOR#ENTER_BR}.
 	 *
 	 * **Read more** about the Advanced Content Filter in [guides](#!/guide/dev_advanced_content_filter).
 	 *
@@ -59,12 +59,12 @@
 	 * {@link CKEDITOR.filter.allowedContentRules} instead of {@link CKEDITOR.editor}
 	 * to the constructor:
 	 *
-	 *		var filter = new CKEDITOR.filter( 'b' );
+	 *		var filter = new CKEDITOR.filter( &#39;b&#39; );
 	 *
-	 *		filter.check( 'b' ); // -&gt; true
-	 *		filter.check( 'i' ); // -&gt; false
-	 *		filter.allow( 'i' );
-	 *		filter.check( 'i' ); // -&gt; true
+	 *		filter.check( &#39;b&#39; ); // -&gt; true
+	 *		filter.check( &#39;i&#39; ); // -&gt; false
+	 *		filter.allow( &#39;i&#39; );
+	 *		filter.check( &#39;i&#39; ); // -&gt; true
 	 *
 	 * @since 4.1
 	 * @class
@@ -114,7 +114,7 @@
 		this.editor = null;
 
 <span id='CKEDITOR-filter-property-id'>		/**
-</span>		 * Filter's unique id. It can be used to find filter instance in
+</span>		 * Filter&#39;s unique id. It can be used to find filter instance in
 		 * {@link CKEDITOR.filter#instances CKEDITOR.filter.instance} object.
 		 *
 		 * @since 4.3
@@ -149,16 +149,16 @@
 			if ( !allowedContent )
 				this.customConfig = false;
 
-			this.allow( allowedContent, 'config', 1 );
-			this.allow( editor.config.extraAllowedContent, 'extra', 1 );
+			this.allow( allowedContent, &#39;config&#39;, 1 );
+			this.allow( editor.config.extraAllowedContent, &#39;extra&#39;, 1 );
 
-			// Enter modes should extend filter rules (ENTER_P adds 'p' rule, etc.).
-			this.allow( enterModeTags[ editor.enterMode ] + ' ' + enterModeTags[ editor.shiftEnterMode ], 'default', 1 );
+			// Enter modes should extend filter rules (ENTER_P adds &#39;p&#39; rule, etc.).
+			this.allow( enterModeTags[ editor.enterMode ] + &#39; &#39; + enterModeTags[ editor.shiftEnterMode ], &#39;default&#39;, 1 );
 		}
 		// Rules object passed in editorOrRules argument - initialize standalone filter.
 		else {
 			this.customConfig = false;
-			this.allow( editorOrRules, 'default', 1 );
+			this.allow( editorOrRules, &#39;default&#39;, 1 );
 		}
 	};
 
@@ -166,7 +166,7 @@
 </span>	 * Object containing all filter instances stored under their
 	 * {@link #id} properties.
 	 *
-	 *		var filter = new CKEDITOR.filter( 'p' );
+	 *		var filter = new CKEDITOR.filter( &#39;p&#39; );
 	 *		filter === CKEDITOR.filter.instances[ filter.id ];
 	 *
 	 * @since 4.3
@@ -181,13 +181,13 @@
 		 *
 		 * Read about rules formats in [Allowed Content Rules guide](#!/guide/dev_allowed_content_rules).
 		 *
-		 *		// Add a basic rule for custom image feature (e.g. 'MyImage' button).
-		 *		editor.filter.allow( 'img[!src,alt]', 'MyImage' );
+		 *		// Add a basic rule for custom image feature (e.g. &#39;MyImage&#39; button).
+		 *		editor.filter.allow( &#39;img[!src,alt]&#39;, &#39;MyImage&#39; );
 		 *
-		 *		// Add rules for two header styles allowed by 'HeadersCombo'.
-		 *		var header1Style = new CKEDITOR.style( { element: 'h1' } ),
-		 *			header2Style = new CKEDITOR.style( { element: 'h2' } );
-		 *		editor.filter.allow( [ header1Style, header2Style ], 'HeadersCombo' );
+		 *		// Add rules for two header styles allowed by &#39;HeadersCombo&#39;.
+		 *		var header1Style = new CKEDITOR.style( { element: &#39;h1&#39; } ),
+		 *			header2Style = new CKEDITOR.style( { element: &#39;h2&#39; } );
+		 *		editor.filter.allow( [ header1Style, header2Style ], &#39;HeadersCombo&#39; );
 		 *
 		 * @param {CKEDITOR.filter.allowedContentRules} newRules Rule(s) to be added.
 		 * @param {String} [featureName] Name of a feature that allows this content (most often plugin/button/command name).
@@ -200,7 +200,7 @@
 			if ( this.disabled )
 				return false;
 
-			// Don't override custom user's configuration if not explicitly requested.
+			// Don&#39;t override custom user&#39;s configuration if not explicitly requested.
 			if ( this.customConfig &amp;&amp; !overrideCustom )
 				return false;
 
@@ -212,7 +212,7 @@
 
 			var i, ret;
 
-			if ( typeof newRules == 'string' )
+			if ( typeof newRules == &#39;string&#39; )
 				newRules = parseRulesString( newRules );
 			else if ( newRules instanceof CKEDITOR.style )
 				newRules = convertStyleToRules( newRules );
@@ -228,19 +228,19 @@
 			for ( groupName in newRules ) {
 				rule = newRules[ groupName ];
 
-				// { 'p h1': true } =&gt; { 'p h1': {} }.
-				if ( typeof rule == 'boolean' )
+				// { &#39;p h1&#39;: true } =&gt; { &#39;p h1&#39;: {} }.
+				if ( typeof rule == &#39;boolean&#39; )
 					rule = {};
-				// { 'p h1': func } =&gt; { 'p h1': { match: func } }.
-				else if ( typeof rule == 'function' )
+				// { &#39;p h1&#39;: func } =&gt; { &#39;p h1&#39;: { match: func } }.
+				else if ( typeof rule == &#39;function&#39; )
 					rule = { match: rule };
-				// Clone (shallow) rule, because we'll modify it later.
+				// Clone (shallow) rule, because we&#39;ll modify it later.
 				else
 					rule = copy( rule );
 
-				// If this is not an unnamed rule ({ '$1' =&gt; { ... } })
+				// If this is not an unnamed rule ({ &#39;$1&#39; =&gt; { ... } })
 				// move elements list to property.
-				if ( groupName.charAt( 0 ) != '$' )
+				if ( groupName.charAt( 0 ) != &#39;$&#39; )
 					rule.elements = groupName;
 
 				if ( featureName )
@@ -262,22 +262,22 @@
 </span>		 * Applies this filter to passed {@link CKEDITOR.htmlParser.fragment} or {@link CKEDITOR.htmlParser.element}.
 		 * The result of filtering is a DOM tree without disallowed content.
 		 *
-		 *			// Create standalone filter passing 'p' and 'b' elements.
-		 *		var filter = new CKEDITOR.filter( 'p b' ),
+		 *			// Create standalone filter passing &#39;p&#39; and &#39;b&#39; elements.
+		 *		var filter = new CKEDITOR.filter( &#39;p b&#39; ),
 		 *			// Parse HTML string to pseudo DOM structure.
-		 *			fragment = CKEDITOR.htmlParser.fragment.fromHtml( '&lt;p&gt;&lt;b&gt;foo&lt;/b&gt; &lt;i&gt;bar&lt;/i&gt;&lt;/p&gt;' ),
+		 *			fragment = CKEDITOR.htmlParser.fragment.fromHtml( &#39;&lt;p&gt;&lt;b&gt;foo&lt;/b&gt; &lt;i&gt;bar&lt;/i&gt;&lt;/p&gt;&#39; ),
 		 *			writer = new CKEDITOR.htmlParser.basicWriter();
 		 *
 		 *		filter.applyTo( fragment );
 		 *		fragment.writeHtml( writer );
-		 *		writer.getHtml(); // -&gt; '&lt;p&gt;&lt;b&gt;foo&lt;/b&gt; bar&lt;/p&gt;'
+		 *		writer.getHtml(); // -&gt; &#39;&lt;p&gt;&lt;b&gt;foo&lt;/b&gt; bar&lt;/p&gt;&#39;
 		 *
 		 * @param {CKEDITOR.htmlParser.fragment/CKEDITOR.htmlParser.element} fragment Node to be filtered.
 		 * @param {Boolean} [toHtml] Set to `true` if the filter is used together with {@link CKEDITOR.htmlDataProcessor#toHtml}.
 		 * @param {Boolean} [transformOnly] If set to `true` only transformations will be applied. Content
 		 * will not be filtered with allowed content rules.
 		 * @param {Number} [enterMode] Enter mode used by the filter when deciding how to strip disallowed element.
-		 * Defaults to {@link CKEDITOR.editor#activeEnterMode} for a editor's filter or to {@link CKEDITOR#ENTER_P} for standalone filter.
+		 * Defaults to {@link CKEDITOR.editor#activeEnterMode} for a editor&#39;s filter or to {@link CKEDITOR#ENTER_P} for standalone filter.
 		 * @returns {Boolean} Whether some part of the `fragment` was removed by the filter.
 		 */
 		applyTo: function( fragment, toHtml, transformOnly, enterMode ) {
@@ -295,18 +295,18 @@
 			fragment.forEach( function( el ) {
 				if ( el.type == CKEDITOR.NODE_ELEMENT ) {
 					// Do not filter element with data-cke-filter=&quot;off&quot; and all their descendants.
-					if ( el.attributes[ 'data-cke-filter' ] == 'off' )
+					if ( el.attributes[ &#39;data-cke-filter&#39; ] == &#39;off&#39; )
 						return false;
 
-					// (#10260) Don't touch elements like spans with data-cke-* attribute since they're
+					// (#10260) Don&#39;t touch elements like spans with data-cke-* attribute since they&#39;re
 					// responsible e.g. for placing markers, bookmarks, odds and stuff.
-					// We love 'em and we don't wanna lose anything during the filtering.
-					// '|' is to avoid tricky joints like data-=&quot;foo&quot; + cke-=&quot;bar&quot;. Yes, they're possible.
+					// We love &#39;em and we don&#39;t wanna lose anything during the filtering.
+					// &#39;|&#39; is to avoid tricky joints like data-=&quot;foo&quot; + cke-=&quot;bar&quot;. Yes, they&#39;re possible.
 					//
 					// NOTE: data-cke-* assigned elements are preserved only when filter is used with
-					//       htmlDataProcessor.toHtml because we don't want to protect them when outputting data
+					//       htmlDataProcessor.toHtml because we don&#39;t want to protect them when outputting data
 					//       (toDataFormat).
-					if ( toHtml &amp;&amp; el.name == 'span' &amp;&amp; ~CKEDITOR.tools.objectKeys( el.attributes ).join( '|' ).indexOf( 'data-cke-' ) )
+					if ( toHtml &amp;&amp; el.name == &#39;span&#39; &amp;&amp; ~CKEDITOR.tools.objectKeys( el.attributes ).join( &#39;|&#39; ).indexOf( &#39;data-cke-&#39; ) )
 						return;
 
 					if ( filterFn( el, rules, transformations, toBeRemoved, toHtml ) )
@@ -343,7 +343,7 @@
 
 				switch ( check.check ) {
 					// Check if element itself is correct.
-					case 'it':
+					case &#39;it&#39;:
 						// Check if element included in $removeEmpty has no children.
 						if ( DTD.$removeEmpty[ element.name ] &amp;&amp; !element.children.length )
 							removeElement( element, enterTag, toBeChecked );
@@ -353,7 +353,7 @@
 						break;
 
 					// Check if element is in correct context. If not - remove element.
-					case 'el-up':
+					case &#39;el-up&#39;:
 						// Check if e.g. li is a child of body after ul has been removed.
 						if ( element.parent.type != CKEDITOR.NODE_DOCUMENT_FRAGMENT &amp;&amp;
 							!DTD[ element.parent.name ][ element.name ]
@@ -362,7 +362,7 @@
 						break;
 
 					// Check if element is in correct context. If not - remove parent.
-					case 'parent-down':
+					case &#39;parent-down&#39;:
 						if ( element.parent.type != CKEDITOR.NODE_DOCUMENT_FRAGMENT &amp;&amp;
 							!DTD[ element.parent.name ][ element.name ]
 						)
@@ -417,12 +417,12 @@
 </span>		 * Adds an array of {@link CKEDITOR.feature} content forms. All forms
 		 * will then be transformed to the first form which is allowed by the filter.
 		 *
-		 *		editor.filter.allow( 'i; span{!font-style}' );
+		 *		editor.filter.allow( &#39;i; span{!font-style}&#39; );
 		 *		editor.filter.addContentForms( [
-		 *			'em',
-		 *			'i',
-		 *			[ 'span', function( el ) {
-		 *				return el.styles[ 'font-style' ] == 'italic';
+		 *			&#39;em&#39;,
+		 *			&#39;i&#39;,
+		 *			[ &#39;span&#39;, function( el ) {
+		 *				return el.styles[ &#39;font-style&#39; ] == &#39;italic&#39;;
 		 *			} ]
 		 *		] );
 		 *		// Now &lt;em&gt; and &lt;span style=&quot;font-style:italic&quot;&gt; will be replaced with &lt;i&gt;
@@ -451,12 +451,12 @@
 			for ( i = 0; i &lt; forms.length &amp;&amp; !preferredForm; ++i ) {
 				form = forms[ i ];
 
-				// Check only strings and styles - array format isn't supported by #check().
-				if ( ( typeof form == 'string' || form instanceof CKEDITOR.style ) &amp;&amp; this.check( form ) )
+				// Check only strings and styles - array format isn&#39;t supported by #check().
+				if ( ( typeof form == &#39;string&#39; || form instanceof CKEDITOR.style ) &amp;&amp; this.check( form ) )
 					preferredForm = form;
 			}
 
-			// This feature doesn't have preferredForm, so ignore it.
+			// This feature doesn&#39;t have preferredForm, so ignore it.
 			if ( !preferredForm )
 				return;
 
@@ -526,7 +526,7 @@
 		 *		that should be called on an element.
 		 *
 		 * A shorthand format is also available. A transformation rule can be defined by
-		 * a single string `'check:right'`. The string before `':'` will be used as
+		 * a single string `&#39;check:right&#39;`. The string before `&#39;:&#39;` will be used as
 		 * the `check` property and the second part as the `right` property.
 		 *
 		 * Transformation rules can be grouped. The filter will try to apply
@@ -540,43 +540,43 @@
 		 *			[
 		 *				// First rule. If table{width} is allowed, it
 		 *				// executes {@link CKEDITOR.filter.transformationsTools#sizeToStyle} on a table element.
-		 *				'table{width}: sizeToStyle',
+		 *				&#39;table{width}: sizeToStyle&#39;,
 		 *				// Second rule should not be executed if the first was.
-		 *				'table[width]: sizeToAttribute'
+		 *				&#39;table[width]: sizeToAttribute&#39;
 		 *			],
 		 *			// Second group.
 		 *			[
 		 *				// This rule will add the foo=&quot;1&quot; attribute to all images that
 		 *				// do not have it.
 		 *				{
-		 *					element: 'img',
+		 *					element: &#39;img&#39;,
 		 *					left: function( el ) {
 		 *						return !el.attributes.foo;
 		 *					},
 		 *					right: function( el, tools ) {
-		 *						el.attributes.foo = '1';
+		 *						el.attributes.foo = &#39;1&#39;;
 		 *					}
 		 *				}
 		 *			]
 		 *		] );
 		 *
 		 *		// Case 1:
-		 *		// config.allowedContent = 'table{height,width}; tr td'.
+		 *		// config.allowedContent = &#39;table{height,width}; tr td&#39;.
 		 *		//
-		 *		// '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'		-&gt; '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'
-		 *		// '&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;'				-&gt; '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'
+		 *		// &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;		-&gt; &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;
+		 *		// &#39;&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;&#39;				-&gt; &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;
 		 *
 		 *		// Case 2:
-		 *		// config.allowedContent = 'table[height,width]; tr td'.
+		 *		// config.allowedContent = &#39;table[height,width]; tr td&#39;.
 		 *		//
-		 *		// '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'		-&gt; '&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;'
-		 *		// '&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;'				-&gt; '&lt;table height=&quot;100&quot; width=&quot;200&quot;&quot;&gt;...&lt;/table&gt;'
+		 *		// &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;		-&gt; &#39;&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;&#39;
+		 *		// &#39;&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;&#39;				-&gt; &#39;&lt;table height=&quot;100&quot; width=&quot;200&quot;&quot;&gt;...&lt;/table&gt;&#39;
 		 *
 		 *		// Case 3:
-		 *		// config.allowedContent = 'table{width,height}[height,width]; tr td'.
+		 *		// config.allowedContent = &#39;table{width,height}[height,width]; tr td&#39;.
 		 *		//
-		 *		// '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'		-&gt; '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'
-		 *		// '&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;'				-&gt; '&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;'
+		 *		// &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;		-&gt; &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;
+		 *		// &#39;&lt;table height=&quot;100&quot; width=&quot;200&quot;&gt;...&lt;/table&gt;&#39;				-&gt; &#39;&lt;table style=&quot;height:100px; width:200px&quot;&gt;...&lt;/table&gt;&#39;
 		 *		//
 		 *		// Note: Both forms are allowed (size set by style and by attributes), but only
 		 *		// the first transformation is applied &amp;mdash; the size is always transformed to a style.
@@ -618,15 +618,15 @@
 		 *
 		 * For example:
 		 *
-		 *		// Rule: 'img[!src,alt]'.
-		 *		filter.check( 'img[alt]' ); // -&gt; true
-		 *		filter.check( 'img[alt]', true, true ); // -&gt; false
+		 *		// Rule: &#39;img[!src,alt]&#39;.
+		 *		filter.check( &#39;img[alt]&#39; ); // -&gt; true
+		 *		filter.check( &#39;img[alt]&#39;, true, true ); // -&gt; false
 		 *
 		 * Second `check()` call returned `false` because `src` is required.
 		 *
 		 * **Note:** The `test` argument is of {@link CKEDITOR.filter.contentRule} type, which is
 		 * a limited version of {@link CKEDITOR.filter.allowedContentRules}. Read more about it
-		 * in the {@link CKEDITOR.filter.contentRule}'s documentation.
+		 * in the {@link CKEDITOR.filter.contentRule}&#39;s documentation.
 		 *
 		 * @param {CKEDITOR.filter.contentRule} test
 		 * @param {Boolean} [applyTransformations=true] Whether to use registered transformations.
@@ -650,10 +650,10 @@
 
 			var element, result, cacheKey;
 
-			if ( typeof test == 'string' ) {
-				cacheKey = test + '&lt;' + ( applyTransformations === false ? '0' : '1' ) + ( strictCheck ? '1' : '0' ) + '&gt;';
+			if ( typeof test == &#39;string&#39; ) {
+				cacheKey = test + &#39;&lt;&#39; + ( applyTransformations === false ? &#39;0&#39; : &#39;1&#39; ) + ( strictCheck ? &#39;1&#39; : &#39;0&#39; ) + &#39;&gt;&#39;;
 
-				// Check if result of this check hasn't been already cached.
+				// Check if result of this check hasn&#39;t been already cached.
 				if ( cacheKey in this._.cachedChecks )
 					return this._.cachedChecks[ cacheKey ];
 
@@ -693,7 +693,7 @@
 				result = true;
 
 			// Cache result of this test - we can build cache only for string tests.
-			if ( typeof test == 'string' )
+			if ( typeof test == &#39;string&#39; )
 				this._.cachedChecks[ cacheKey ] = result;
 
 			return result;
@@ -709,7 +709,7 @@
 		 * @returns {Number} Allowed enter mode.
 		 */
 		getAllowedEnterMode: ( function() {
-			var tagsToCheck = [ 'p', 'div', 'br' ],
+			var tagsToCheck = [ &#39;p&#39;, &#39;div&#39;, &#39;br&#39; ],
 				enterModes = {
 					p: CKEDITOR.ENTER_P,
 					div: CKEDITOR.ENTER_DIV,
@@ -742,32 +742,32 @@
 	// Apply ACR to an element
 	// @param rule
 	// @param element
-	// @param status Object containing status of element's filtering.
-	// @param {Boolean} isSpecific True if this is specific element's rule, false if generic.
-	// @param {Boolean} skipRequired If true don't check if element has all required properties.
+	// @param status Object containing status of element&#39;s filtering.
+	// @param {Boolean} isSpecific True if this is specific element&#39;s rule, false if generic.
+	// @param {Boolean} skipRequired If true don&#39;t check if element has all required properties.
 	function applyRule( rule, element, status, isSpecific, skipRequired ) {
 		var name = element.name;
 
-		// This generic rule doesn't apply to this element - skip it.
-		if ( !isSpecific &amp;&amp; typeof rule.elements == 'function' &amp;&amp; !rule.elements( name ) )
+		// This generic rule doesn&#39;t apply to this element - skip it.
+		if ( !isSpecific &amp;&amp; typeof rule.elements == &#39;function&#39; &amp;&amp; !rule.elements( name ) )
 			return;
 
-		// This rule doesn't match this element - skip it.
+		// This rule doesn&#39;t match this element - skip it.
 		if ( rule.match ) {
 			if ( !rule.match( element ) )
 				return;
 		}
 
-		// If element doesn't have all required styles/attrs/classes
-		// this rule doesn't match it.
+		// If element doesn&#39;t have all required styles/attrs/classes
+		// this rule doesn&#39;t match it.
 		if ( !skipRequired &amp;&amp; !hasAllRequired( rule, element ) )
 			return;
 
-		// If this rule doesn't validate properties only mark element as valid.
+		// If this rule doesn&#39;t validate properties only mark element as valid.
 		if ( !rule.propertiesOnly )
 			status.valid = true;
 
-		// Apply rule only when all attrs/styles/classes haven't been marked as valid.
+		// Apply rule only when all attrs/styles/classes haven&#39;t been marked as valid.
 		if ( !status.allAttributes )
 			status.allAttributes = applyRuleToHash( rule.attributes, element.attributes, status.validAttributes );
 
@@ -813,7 +813,7 @@
 		return false;
 	}
 
-	// Convert CKEDITOR.style to filter's rule.
+	// Convert CKEDITOR.style to filter&#39;s rule.
 	function convertStyleToRules( style ) {
 		var styleDef = style.getDefinition(),
 			rules = {},
@@ -827,9 +827,9 @@
 
 		if ( attrs ) {
 			attrs = copy( attrs );
-			rule.classes = attrs[ 'class' ] ? attrs[ 'class' ].split( /\s+/ ) : null;
+			rule.classes = attrs[ &#39;class&#39; ] ? attrs[ &#39;class&#39; ].split( /\s+/ ) : null;
 			rule.requiredClasses = rule.classes;
-			delete attrs[ 'class' ];
+			delete attrs[ &#39;class&#39; ];
 			rule.attributes = attrs;
 			rule.requiredAttributes = attrs &amp;&amp; CKEDITOR.tools.objectKeys( attrs );
 		}
@@ -838,7 +838,7 @@
 	}
 
 	// Convert all validator formats (string, array, object, boolean) to hash or boolean:
-	// * true is returned for '*'/true validator,
+	// * true is returned for &#39;*&#39;/true validator,
 	// * false is returned for empty validator (no validator at all (false/null) or e.g. empty array),
 	// * object is returned in other cases.
 	function convertValidatorToHash( validator, delimiter ) {
@@ -848,9 +848,9 @@
 		if ( validator === true )
 			return validator;
 
-		if ( typeof validator == 'string' ) {
+		if ( typeof validator == &#39;string&#39; ) {
 			validator = trim( validator );
-			if ( validator == '*' )
+			if ( validator == &#39;*&#39; )
 				return true;
 			else
 				return CKEDITOR.tools.convertArrayToObject( validator.split( delimiter ) );
@@ -880,7 +880,7 @@
 	//
 	// E.g.:
 	// requiredClasses = { cl1: true }
-	// (all) classes = { cl1: true, cl2: true, '!cl3': true }
+	// (all) classes = { cl1: true, cl2: true, &#39;!cl3&#39;: true }
 	//
 	// result:
 	// returned = { cl1: true, cl3: true }
@@ -898,7 +898,7 @@
 			required = {};
 
 		for ( i in all ) {
-			if ( i.charAt( 0 ) == '!' ) {
+			if ( i.charAt( 0 ) == &#39;!&#39; ) {
 				i = i.slice( 1 );
 				unbang.push( i );
 				required[ i ] = true;
@@ -907,8 +907,8 @@
 		}
 
 		while ( ( i = unbang.pop() ) ) {
-			all[ i ] = all[ '!' + i ];
-			delete all[ '!' + i ];
+			all[ i ] = all[ &#39;!&#39; + i ];
+			delete all[ &#39;!&#39; + i ];
 		}
 
 		return empty ? false : required;
@@ -917,19 +917,19 @@
 	// Filter element protected with a comment.
 	// Returns true if protected content is ok, false otherwise.
 	function filterProtectedElement( comment, protectedRegexs, filterFn, rules, transformations, toHtml ) {
-		var source = decodeURIComponent( comment.value.replace( /^\{cke_protected\}/, '' ) ),
+		var source = decodeURIComponent( comment.value.replace( /^\{cke_protected\}/, &#39;&#39; ) ),
 			protectedFrag,
 			toBeRemoved = [],
 			node, i, match;
 
-		// Protected element's and protected source's comments look exactly the same.
-		// Check if what we have isn't a protected source instead of protected script/noscript.
+		// Protected element&#39;s and protected source&#39;s comments look exactly the same.
+		// Check if what we have isn&#39;t a protected source instead of protected script/noscript.
 		if ( protectedRegexs ) {
 			for ( i = 0; i &lt; protectedRegexs.length; ++i ) {
 				if ( ( match = source.match( protectedRegexs[ i ] ) ) &amp;&amp;
 					match[ 0 ].length == source.length	// Check whether this pattern matches entire source
-														// to avoid '&lt;script&gt;alert(&quot;&lt;? 1 ?&gt;&quot;)&lt;/script&gt;' matching
-														// the PHP's protectedSource regexp.
+														// to avoid &#39;&lt;script&gt;alert(&quot;&lt;? 1 ?&gt;&quot;)&lt;/script&gt;&#39; matching
+														// the PHP&#39;s protectedSource regexp.
 				)
 					return true;
 			}
@@ -940,7 +940,7 @@
 		if ( protectedFrag.children.length == 1 &amp;&amp; ( node = protectedFrag.children[ 0 ] ).type == CKEDITOR.NODE_ELEMENT )
 			filterFn( node, rules, transformations, toBeRemoved, toHtml );
 
-		// If protected element has been marked to be removed, return 'false' - comment was rejected.
+		// If protected element has been marked to be removed, return &#39;false&#39; - comment was rejected.
 		return !toBeRemoved.length;
 	}
 
@@ -963,7 +963,7 @@
 		// @param [transformations] Transformations to be applied.
 		// @param {Array} toBeRemoved Array into which elements rejected by the filter will be pushed.
 		// @param {Boolean} [toHtml] Set to true if filter used together with htmlDP#toHtml
-		// @param {Boolean} [skipRequired] Whether element's required properties shouldn't be verified.
+		// @param {Boolean} [skipRequired] Whether element&#39;s required properties shouldn&#39;t be verified.
 		// @param {Boolean} [skipFinalValidation] Whether to not perform final element validation (a,img).
 		// @returns {Boolean} Whether content has been modified.
 		return that._.filterFunction = function( element, optimizedRules, transformations, toBeRemoved, toHtml, skipRequired, skipFinalValidation ) {
@@ -975,7 +975,7 @@
 			// (see protectElementNames and protectSelfClosingElements functions).
 			// Note: body, title, etc. are not protected by htmlDataP (or are protected and then unprotected).
 			if ( toHtml )
-				element.name = name = name.replace( unprotectElementsNamesRegexp, '$1' );
+				element.name = name = name.replace( unprotectElementsNamesRegexp, &#39;$1&#39; );
 
 			// If transformations are set apply all groups.
 			if ( ( transformations = transformations &amp;&amp; transformations[ name ] ) ) {
@@ -1005,7 +1005,7 @@
 						validClasses: {},
 						validStyles: {},
 						// Whether all are valid.
-						// If we know that all element's attrs/classes/styles are valid
+						// If we know that all element&#39;s attrs/classes/styles are valid
 						// we can skip their validation, to improve performance.
 						allAttributes: false,
 						allClasses: false,
@@ -1032,13 +1032,13 @@
 						applyRule( genericRules[ i ], element, status, false, skipRequired );
 				}
 
-				// Finally, if after running all filter rules it still hasn't been allowed - remove it.
+				// Finally, if after running all filter rules it still hasn&#39;t been allowed - remove it.
 				if ( !status.valid ) {
 					toBeRemoved.push( element );
 					return true;
 				}
 
-				// Update element's attributes based on status of filtering.
+				// Update element&#39;s attributes based on status of filtering.
 				if ( updateElement( element, status ) )
 					isModified = true;
 
@@ -1050,7 +1050,7 @@
 
 			// Protect previously unprotected elements.
 			if ( toHtml )
-				element.name = element.name.replace( protectElementsNamesRegexp, 'cke:$1' );
+				element.name = element.name.replace( protectElementsNamesRegexp, &#39;cke:$1&#39; );
 
 			return isModified;
 		};
@@ -1091,7 +1091,7 @@
 	// Create pseudo element that will be passed through filter
 	// to check if tested string is allowed.
 	function mockElementFromString( str ) {
-		var element = parseRulesString( str )[ '$1' ],
+		var element = parseRulesString( str )[ &#39;$1&#39; ],
 			styles = element.styles,
 			classes = element.classes;
 
@@ -1102,7 +1102,7 @@
 		element.children = [];
 
 		if ( classes.length )
-			element.attributes[ 'class' ] = classes.join( ' ' );
+			element.attributes[ &#39;class&#39; ] = classes.join( &#39; &#39; );
 		if ( styles )
 			element.attributes.style = CKEDITOR.tools.writeCssText( element.styles );
 
@@ -1125,7 +1125,7 @@
 		var el = {
 			name: styleDef.element,
 			attributes: attrs,
-			classes: attrs[ 'class' ] ? attrs[ 'class' ].split( /\s+/ ) : [],
+			classes: attrs[ &#39;class&#39; ] ? attrs[ &#39;class&#39; ].split( /\s+/ ) : [],
 			styles: styles,
 			children: []
 		};
@@ -1134,7 +1134,7 @@
 	}
 
 	// Mock hash based on string.
-	// 'a,b,c' =&gt; { a: 'cke-test', b: 'cke-test', c: 'cke-test' }
+	// &#39;a,b,c&#39; =&gt; { a: &#39;cke-test&#39;, b: &#39;cke-test&#39;, c: &#39;cke-test&#39; }
 	// Used to mock styles and attributes objects.
 	function mockHash( str ) {
 		// It may be a null or empty string.
@@ -1152,9 +1152,9 @@
 
 	var validators = { styles: 1, attributes: 1, classes: 1 },
 		validatorsRequired = {
-			styles: 'requiredStyles',
-			attributes: 'requiredAttributes',
-			classes: 'requiredClasses'
+			styles: &#39;requiredStyles&#39;,
+			attributes: &#39;requiredAttributes&#39;,
+			classes: &#39;requiredClasses&#39;
 		};
 
 	// Optimize a rule by replacing validators with functions
@@ -1187,18 +1187,18 @@
 			priority = rule.classes === true || rule.styles === true || rule.attributes === true;
 			optimizeRule( rule );
 
-			// E.g. &quot;*(xxx)[xxx]&quot; - it's a generic rule that
+			// E.g. &quot;*(xxx)[xxx]&quot; - it&#39;s a generic rule that
 			// validates properties only.
-			// Or '$1': { match: function() {...} }
+			// Or &#39;$1&#39;: { match: function() {...} }
 			if ( rule.elements === true || rule.elements === null ) {
 				rule.elements = validatorFunction( rule.elements );
 				// Add priority rules at the beginning.
-				genericRules[ priority ? 'unshift' : 'push' ]( rule );
+				genericRules[ priority ? &#39;unshift&#39; : &#39;push&#39; ]( rule );
 			}
 			// If elements list was explicitly defined,
 			// add this rule for every defined element.
 			else {
-				// We don't need elements validator for this kind of rule.
+				// We don&#39;t need elements validator for this kind of rule.
 				var elements = rule.elements;
 				delete rule.elements;
 
@@ -1206,7 +1206,7 @@
 					if ( !elementsRules[ element ] )
 						elementsRules[ element ] = [ rule ];
 					else
-						elementsRules[ element ][ priority ? 'unshift' : 'push' ]( rule );
+						elementsRules[ element ][ priority ? &#39;unshift&#39; : &#39;push&#39; ]( rule );
 				}
 			}
 		}
@@ -1233,15 +1233,15 @@
 
 		while ( ( match = input.match( rulePattern ) ) ) {
 			if ( ( props = match[ 2 ] ) ) {
-				styles = parseProperties( props, 'styles' );
-				attrs = parseProperties( props, 'attrs' );
-				classes = parseProperties( props, 'classes' );
+				styles = parseProperties( props, &#39;styles&#39; );
+				attrs = parseProperties( props, &#39;attrs&#39; );
+				classes = parseProperties( props, &#39;classes&#39; );
 			} else
 				styles = attrs = classes = null;
 
 			// Add as an unnamed rule, because there can be two rules
 			// for one elements set defined in string format.
-			rules[ '$' + groupNum++ ] = {
+			rules[ &#39;$&#39; + groupNum++ ] = {
 				elements: match[ 1 ],
 				classes: classes,
 				styles: styles,
@@ -1263,11 +1263,11 @@
 	}
 
 	function populateProperties( element ) {
-		// Parse classes and styles if that hasn't been done before.
+		// Parse classes and styles if that hasn&#39;t been done before.
 		if ( !element.styles )
-			element.styles = CKEDITOR.tools.parseCssText( element.attributes.style || '', 1 );
+			element.styles = CKEDITOR.tools.parseCssText( element.attributes.style || &#39;&#39;, 1 );
 		if ( !element.classes )
-			element.classes = element.attributes[ 'class' ] ? element.attributes[ 'class' ].split( /\s+/ ) : [];
+			element.classes = element.attributes[ &#39;class&#39; ] ? element.attributes[ &#39;class&#39; ].split( /\s+/ ) : [];
 	}
 
 	// Standardize a rule by converting all validators to hashes.
@@ -1287,7 +1287,7 @@
 		rule.match = rule.match || null;
 	}
 
-	// Copy element's styles and classes back to attributes array.
+	// Copy element&#39;s styles and classes back to attributes array.
 	function updateAttributes( element ) {
 		var attrs = element.attributes,
 			stylesArr = [],
@@ -1295,13 +1295,13 @@
 
 		// Will be recreated later if any of styles/classes exists.
 		delete attrs.style;
-		delete attrs[ 'class' ];
+		delete attrs[ &#39;class&#39; ];
 
 		if ( ( styles = CKEDITOR.tools.writeCssText( element.styles, true ) ) )
 			attrs.style = styles;
 
 		if ( element.classes.length )
-			attrs[ 'class' ] = element.classes.sort().join( ' ' );
+			attrs[ &#39;class&#39; ] = element.classes.sort().join( &#39; &#39; );
 	}
 
 	// Update element object based on status of filtering.
@@ -1312,7 +1312,7 @@
 			validClasses = status.validClasses,
 			attrs = element.attributes,
 			styles = element.styles,
-			origClasses = attrs[ 'class' ],
+			origClasses = attrs[ &#39;class&#39; ],
 			origStyles = attrs.style,
 			name, origName,
 			stylesArr = [],
@@ -1322,7 +1322,7 @@
 
 		// Will be recreated later if any of styles/classes were passed.
 		delete attrs.style;
-		delete attrs[ 'class' ];
+		delete attrs[ &#39;class&#39; ];
 
 		if ( !status.allAttributes ) {
 			for ( name in attrs ) {
@@ -1330,8 +1330,8 @@
 				if ( !validAttrs[ name ] ) {
 					// Allow all internal attibutes...
 					if ( internalAttr.test( name ) ) {
-						// ... unless this is a saved attribute and the original one isn't allowed.
-						if ( name != ( origName = name.replace( /^data-cke-saved-/, '' ) ) &amp;&amp;
+						// ... unless this is a saved attribute and the original one isn&#39;t allowed.
+						if ( name != ( origName = name.replace( /^data-cke-saved-/, &#39;&#39; ) ) &amp;&amp;
 							!validAttrs[ origName ]
 						) {
 							delete attrs[ name ];
@@ -1349,12 +1349,12 @@
 		if ( !status.allStyles ) {
 			for ( name in styles ) {
 				if ( validStyles[ name ] )
-					stylesArr.push( name + ':' + styles[ name ] );
+					stylesArr.push( name + &#39;:&#39; + styles[ name ] );
 				else
 					isModified = true;
 			}
 			if ( stylesArr.length )
-				attrs.style = stylesArr.sort().join( '; ' );
+				attrs.style = stylesArr.sort().join( &#39;; &#39; );
 		}
 		else if ( origStyles )
 			attrs.style = origStyles;
@@ -1365,13 +1365,13 @@
 					classesArr.push( name );
 			}
 			if ( classesArr.length )
-				attrs[ 'class' ] = classesArr.sort().join( ' ' );
+				attrs[ &#39;class&#39; ] = classesArr.sort().join( &#39; &#39; );
 
 			if ( origClasses &amp;&amp; classesArr.length &lt; origClasses.split( /\s+/ ).length )
 				isModified = true;
 		}
 		else if ( origClasses )
-			attrs[ 'class' ] = origClasses;
+			attrs[ &#39;class&#39; ] = origClasses;
 
 		return isModified;
 	}
@@ -1380,12 +1380,12 @@
 		var attrs;
 
 		switch ( element.name ) {
-			case 'a':
+			case &#39;a&#39;:
 				// Code borrowed from htmlDataProcessor, so ACF does the same clean up.
 				if ( !( element.children.length || element.attributes.name ) )
 					return false;
 				break;
-			case 'img':
+			case &#39;img&#39;:
 				if ( !element.attributes.src )
 					return false;
 				break;
@@ -1414,12 +1414,12 @@
 		if ( node.type == CKEDITOR.NODE_ELEMENT )
 			return parentDtd[ node.name ];
 		if ( node.type == CKEDITOR.NODE_TEXT )
-			return parentDtd[ '#' ];
+			return parentDtd[ &#39;#&#39; ];
 		return true;
 	}
 
 	// Check whether all children will be valid in new context.
-	// Note: it doesn't verify if text node is valid, because
+	// Note: it doesn&#39;t verify if text node is valid, because
 	// new parent should accept them.
 	function checkChildren( children, newParentName ) {
 		var allowed = DTD[ newParentName ];
@@ -1434,7 +1434,7 @@
 	}
 
 	function createBr() {
-		return new CKEDITOR.htmlParser.element( 'br' );
+		return new CKEDITOR.htmlParser.element( &#39;br&#39; );
 	}
 
 	// Whether this is an inline element or text.
@@ -1445,7 +1445,7 @@
 
 	function isBrOrBlock( node ) {
 		return node.type == CKEDITOR.NODE_ELEMENT &amp;&amp;
-			( node.name == 'br' || DTD.$block[ node.name ] );
+			( node.name == &#39;br&#39; || DTD.$block[ node.name ] );
 	}
 
 	// Try to remove element in the best possible way.
@@ -1461,17 +1461,17 @@
 
 		if ( DTD.$empty[ name ] || !element.children.length ) {
 			// Special case - hr in br mode should be replaced with br, not removed.
-			if ( name == 'hr' &amp;&amp; enterTag == 'br' )
+			if ( name == &#39;hr&#39; &amp;&amp; enterTag == &#39;br&#39; )
 				element.replaceWith( createBr() );
 			else {
 				// Parent might become an empty inline specified in $removeEmpty or empty a[href].
 				if ( element.parent )
-					toBeChecked.push( { check: 'it', el: element.parent } );
+					toBeChecked.push( { check: &#39;it&#39;, el: element.parent } );
 
 				element.remove();
 			}
-		} else if ( DTD.$block[ name ] || name == 'tr' ) {
-			if ( enterTag == 'br' )
+		} else if ( DTD.$block[ name ] || name == &#39;tr&#39; ) {
+			if ( enterTag == &#39;br&#39; )
 				stripBlockBr( element, toBeChecked );
 			else
 				stripBlock( element, enterTag, toBeChecked );
@@ -1479,24 +1479,24 @@
 		// Special case - elements that may contain CDATA
 		// should be removed completely. &lt;script&gt; is handled
 		// by filterProtectedElement().
-		else if ( name == 'style' )
+		else if ( name == &#39;style&#39; )
 			element.remove();
 		// The rest of inline elements. May also be the last resort
 		// for some special elements.
 		else {
 			// Parent might become an empty inline specified in $removeEmpty or empty a[href].
 			if ( element.parent )
-				toBeChecked.push( { check: 'it', el: element.parent } );
+				toBeChecked.push( { check: &#39;it&#39;, el: element.parent } );
 			element.replaceWithChildren();
 		}
 	}
 
 	// Strip element block, but leave its content.
-	// Works in 'div' and 'p' enter modes.
+	// Works in &#39;div&#39; and &#39;p&#39; enter modes.
 	function stripBlock( element, enterTag, toBeChecked ) {
 		var children = element.children;
 
-		// First, check if element's children may be wrapped with &lt;p/div&gt;.
+		// First, check if element&#39;s children may be wrapped with &lt;p/div&gt;.
 		// Ignore that &lt;p/div&gt; may not be allowed in element.parent.
 		// This will be fixed when removing parent or by toBeChecked rule.
 		if ( checkChildren( children, enterTag ) ) {
@@ -1504,12 +1504,12 @@
 			element.attributes = {};
 			// Check if this p/div was put in correct context.
 			// If not - strip parent.
-			toBeChecked.push( { check: 'parent-down', el: element } );
+			toBeChecked.push( { check: &#39;parent-down&#39;, el: element } );
 			return;
 		}
 
 		var parent = element.parent,
-			shouldAutoP = parent.type == CKEDITOR.NODE_DOCUMENT_FRAGMENT || parent.name == 'body',
+			shouldAutoP = parent.type == CKEDITOR.NODE_DOCUMENT_FRAGMENT || parent.name == &#39;body&#39;,
 			i, j, child, p, node,
 			toBeRemoved = [];
 
@@ -1525,11 +1525,11 @@
 
 					// Check if this p/div was put in correct context.
 					// If not - strip parent.
-					toBeChecked.push( { check: 'parent-down', el: p } );
+					toBeChecked.push( { check: &#39;parent-down&#39;, el: p } );
 				}
 				p.add( child, 0 );
 			}
-			// Child which doesn't need to be auto paragraphed.
+			// Child which doesn&#39;t need to be auto paragraphed.
 			else {
 				p = null;
 				child.insertAfter( element );
@@ -1539,17 +1539,17 @@
 					child.type == CKEDITOR.NODE_ELEMENT &amp;&amp;
 					!DTD[ parent.name ][ child.name ]
 				)
-					toBeChecked.push( { check: 'el-up', el: child } );
+					toBeChecked.push( { check: &#39;el-up&#39;, el: child } );
 			}
 		}
 
-		// All children have been moved to element's parent, so remove it.
+		// All children have been moved to element&#39;s parent, so remove it.
 		element.remove();
 	}
 
-	// Prepend/append block with &lt;br&gt; if isn't
+	// Prepend/append block with &lt;br&gt; if isn&#39;t
 	// already prepended/appended with &lt;br&gt; or block and
-	// isn't first/last child of its parent.
+	// isn&#39;t first/last child of its parent.
 	// Then replace element with its children.
 	// &lt;p&gt;a&lt;/p&gt;&lt;p&gt;b&lt;/p&gt; =&gt; &lt;p&gt;a&lt;/p&gt;&lt;br&gt;b =&gt; a&lt;br&gt;b
 	function stripBlockBr( element, toBeChecked ) {
@@ -1579,7 +1579,7 @@
 		for ( i = 0; i &lt; group.length; ++i ) {
 			rule = group[ i ];
 
-			// Test with #check or #left only if it's set.
+			// Test with #check or #left only if it&#39;s set.
 			// Do not apply transformations because that creates infinite loop.
 			if ( ( !rule.check || filter.check( rule.check, false ) ) &amp;&amp;
 				( !rule.left || rule.left( element ) ) ) {
@@ -1604,9 +1604,9 @@
 			return false;
 
 		for ( attrName in defAttrs ) {
-			if ( attrName == 'class' ) {
+			if ( attrName == &#39;class&#39; ) {
 				classes = defAttrs[ attrName ].split( /\s+/ );
-				classPattern = element.classes.join( '|' );
+				classPattern = element.classes.join( &#39;|&#39; );
 				while ( ( cl = classes.pop() ) ) {
 					if ( classPattern.indexOf( cl ) == -1 )
 						return false;
@@ -1630,7 +1630,7 @@
 	function getContentFormTransformationGroup( form, preferredForm ) {
 		var element, left;
 
-		if ( typeof form == 'string' )
+		if ( typeof form == &#39;string&#39; )
 			element = form;
 		else if ( form instanceof CKEDITOR.style )
 			left = form;
@@ -1648,7 +1648,7 @@
 		} ];
 	}
 
-	// Obtain element's name from transformation rule.
+	// Obtain element&#39;s name from transformation rule.
 	// It will be defined by #element, or #check or #left (styleDef.element).
 	function getElementNameForTransformation( rule, check ) {
 		if ( rule.element )
@@ -1678,7 +1678,7 @@
 		for ( i = 0; i &lt; rules.length; ++i ) {
 			rule = rules[ i ];
 
-			if ( typeof rule == 'string' ) {
+			if ( typeof rule == &#39;string&#39; ) {
 				rule = rule.split( /\s*:\s*/ );
 				check = rule[ 0 ];
 				left = null;
@@ -1697,13 +1697,13 @@
 				left = getMatchStyleFn( left );
 
 			optimizedRules.push( {
-				// It doesn't make sense to test against name rule (e.g. 'table'), so don't save it.
+				// It doesn&#39;t make sense to test against name rule (e.g. &#39;table&#39;), so don&#39;t save it.
 				check: check == groupName ? null : check,
 
 				left: left,
 
-				// Handle shorthand format. E.g.: 'table[width]:sizeToAttribute'.
-				right: typeof right == 'string' ? getTransformationFn( right ) : right
+				// Handle shorthand format. E.g.: &#39;table[width]:sizeToAttribute&#39;.
+				right: typeof right == &#39;string&#39; ? getTransformationFn( right ) : right
 			} );
 		}
 
@@ -1726,8 +1726,8 @@
 		 * @param {CKEDITOR.htmlParser.element} element
 		 */
 		sizeToStyle: function( element ) {
-			this.lengthToStyle( element, 'width' );
-			this.lengthToStyle( element, 'height' );
+			this.lengthToStyle( element, &#39;width&#39; );
+			this.lengthToStyle( element, &#39;height&#39; );
 		},
 
 <span id='CKEDITOR-filter-transformationsTools-method-sizeToAttribute'>		/**
@@ -1736,8 +1736,8 @@
 		 * @param {CKEDITOR.htmlParser.element} element
 		 */
 		sizeToAttribute: function( element ) {
-			this.lengthToAttribute( element, 'width' );
-			this.lengthToAttribute( element, 'height' );
+			this.lengthToAttribute( element, &#39;width&#39; );
+			this.lengthToAttribute( element, &#39;height&#39; );
 		},
 
 <span id='CKEDITOR-filter-transformationsTools-method-lengthToStyle'>		/**
@@ -1755,7 +1755,7 @@
 
 				if ( value ) {
 					if ( ( /^\d+$/ ).test( value ) )
-						value += 'px';
+						value += &#39;px&#39;;
 
 					element.styles[ styleName ] = value;
 				}
@@ -1795,11 +1795,11 @@
 		 * @param {CKEDITOR.htmlParser.element} element
 		 */
 		alignmentToStyle: function( element ) {
-			if ( !( 'float' in element.styles ) ) {
+			if ( !( &#39;float&#39; in element.styles ) ) {
 				var value = element.attributes.align;
 
-				if ( value == 'left' || value == 'right' )
-					element.styles[ 'float' ] = value; // Uh... GCC doesn't like the 'float' prop name.
+				if ( value == &#39;left&#39; || value == &#39;right&#39; )
+					element.styles[ &#39;float&#39; ] = value; // Uh... GCC doesn&#39;t like the &#39;float&#39; prop name.
 			}
 
 			delete element.attributes.align;
@@ -1812,14 +1812,14 @@
 		 * @param {CKEDITOR.htmlParser.element} element
 		 */
 		alignmentToAttribute: function( element ) {
-			if ( !( 'align' in element.attributes ) ) {
-				var value = element.styles[ 'float' ];
+			if ( !( &#39;align&#39; in element.attributes ) ) {
+				var value = element.styles[ &#39;float&#39; ];
 
-				if ( value == 'left' || value == 'right' )
+				if ( value == &#39;left&#39; || value == &#39;right&#39; )
 					element.attributes.align = value;
 			}
 
-			delete element.styles[ 'float' ]; // Uh... GCC doesn't like the 'float' prop name.
+			delete element.styles[ &#39;float&#39; ]; // Uh... GCC doesn&#39;t like the &#39;float&#39; prop name.
 		},
 
 <span id='CKEDITOR-filter-transformationsTools-method-matchesStyle'>		/**
@@ -1844,7 +1844,7 @@
 		 * @param {CKEDITOR.style/String} form
 		 */
 		transform: function( el, form ) {
-			if ( typeof form == 'string' )
+			if ( typeof form == &#39;string&#39; )
 				el.name = form;
 			// Form is an instance of CKEDITOR.style.
 			else {
@@ -1857,8 +1857,8 @@
 				el.name = def.element;
 
 				for ( attrName in defAttrs ) {
-					if ( attrName == 'class' ) {
-						existingClassesPattern = el.classes.join( '|' );
+					if ( attrName == &#39;class&#39; ) {
+						existingClassesPattern = el.classes.join( &#39;|&#39; );
 						defClasses = defAttrs[ attrName ].split( /\s+/ );
 
 						while ( ( cl = defClasses.pop() ) ) {
@@ -1897,16 +1897,16 @@
  * useful when you want to use the default `allowedContent` value
  * along with some additional rules.
  *
- *		CKEDITOR.replace( 'textarea_id', {
- *			allowedContent: 'p b i; a[!href]',
+ *		CKEDITOR.replace( &#39;textarea_id&#39;, {
+ *			allowedContent: &#39;p b i; a[!href]&#39;,
  *			on: {
  *				instanceReady: function( evt ) {
  *					var editor = evt.editor;
  *
- *					editor.filter.check( 'h1' ); // -&gt; false
- *					editor.setData( '&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p class=&quot;left&quot;&gt;&lt;span&gt;Bar&lt;/span&gt; &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;' );
+ *					editor.filter.check( &#39;h1&#39; ); // -&gt; false
+ *					editor.setData( &#39;&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p class=&quot;left&quot;&gt;&lt;span&gt;Bar&lt;/span&gt; &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;&#39; );
  *					// Editor contents will be:
- *					'&lt;p&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/p&gt;&lt;p&gt;Bar &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;'
+ *					&#39;&lt;p&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/p&gt;&lt;p&gt;Bar &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;&#39;
  *				}
  *			}
  *		} );
@@ -1923,18 +1923,18 @@
  * It is especially useful in combination with the default
  * {@link CKEDITOR.config#allowedContent} value:
  *
- *		CKEDITOR.replace( 'textarea_id', {
- *			plugins: 'wysiwygarea,toolbar,format',
- *			extraAllowedContent: 'b i',
+ *		CKEDITOR.replace( &#39;textarea_id&#39;, {
+ *			plugins: &#39;wysiwygarea,toolbar,format&#39;,
+ *			extraAllowedContent: &#39;b i&#39;,
  *			on: {
  *				instanceReady: function( evt ) {
  *					var editor = evt.editor;
  *
- *					editor.filter.check( 'h1' ); // -&gt; true (thanks to Format combo)
- *					editor.filter.check( 'b' ); // -&gt; true (thanks to extraAllowedContent)
- *					editor.setData( '&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p class=&quot;left&quot;&gt;&lt;b&gt;Bar&lt;/b&gt; &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;' );
+ *					editor.filter.check( &#39;h1&#39; ); // -&gt; true (thanks to Format combo)
+ *					editor.filter.check( &#39;b&#39; ); // -&gt; true (thanks to extraAllowedContent)
+ *					editor.setData( &#39;&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p class=&quot;left&quot;&gt;&lt;b&gt;Bar&lt;/b&gt; &lt;a href=&quot;http://foo.bar&quot;&gt;foo&lt;/a&gt;&lt;/p&gt;&#39; );
  *					// Editor contents will be:
- *					'&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;Bar&lt;/b&gt; foo&lt;/p&gt;'
+ *					&#39;&lt;h1&gt;&lt;i&gt;Foo&lt;/i&gt;&lt;/h1&gt;&lt;p&gt;&lt;b&gt;Bar&lt;/b&gt; foo&lt;/p&gt;&#39;
  *				}
  *			}
  *		} );
@@ -1987,8 +1987,8 @@
  *
  * Example:
  *
- *		'img[src,alt](foo)'	// Correct rule.
- *		'ol, ul(!foo)'		// Incorrect rule. Multiple elements and required
+ *		&#39;img[src,alt](foo)&#39;	// Correct rule.
+ *		&#39;ol, ul(!foo)&#39;		// Incorrect rule. Multiple elements and required
  *							// properties are not supported.
  *
  * @since 4.1
@@ -2027,7 +2027,7 @@
  *
  * By default all buttons that are included in [toolbar layout configuration](#!/guide/dev_toolbar)
  * are checked and registered with {@link CKEDITOR.editor#addFeature}, all styles available in the
- * 'Format' and 'Styles' drop-down lists are checked and registered too and so on.
+ * &#39;Format&#39; and &#39;Styles&#39; drop-down lists are checked and registered too and so on.
  *
  * @since 4.1
  * @class CKEDITOR.feature
@@ -2038,7 +2038,7 @@
 </span> * HTML code that can be generated by this feature.
  *
  * For example a basic image feature (image button displaying the image dialog window)
- * may allow `'img[!src,alt,width,height]'`.
+ * may allow `&#39;img[!src,alt,width,height]&#39;`.
  *
  * During the feature activation this value is passed to {@link CKEDITOR.filter#allow}.
  *
@@ -2050,7 +2050,7 @@
  * generate in order to work.
  *
  * For example a basic image feature (image button displaying the image dialog window)
- * needs `'img[src,alt]'` in order to be activated.
+ * needs `&#39;img[src,alt]&#39;` in order to be activated.
  *
  * During the feature validation this value is passed to {@link CKEDITOR.filter#check}.
  *

@@ -27,10 +27,10 @@
 	// @param {Object} element
 	// @param {Object} database
 	function addSafely( collection, element, database ) {
-		// 1. IE doesn't support customData on text nodes;
+		// 1. IE doesn&#39;t support customData on text nodes;
 		// 2. Text nodes never get chance to appear twice;
-		if ( !element.is || !element.getCustomData( 'block_processed' ) ) {
-			element.is &amp;&amp; CKEDITOR.dom.element.setMarker( database, element, 'block_processed', true );
+		if ( !element.is || !element.getCustomData( &#39;block_processed&#39; ) ) {
+			element.is &amp;&amp; CKEDITOR.dom.element.setMarker( database, element, &#39;block_processed&#39;, true );
 			collection.push( element );
 		}
 	}
@@ -46,7 +46,7 @@
 		return retval;
 	}
 
-	// Dialog reused by both 'creatediv' and 'editdiv' commands.
+	// Dialog reused by both &#39;creatediv&#39; and &#39;editdiv&#39; commands.
 	// @param {Object} editor
 	// @param {String} command	The command name which indicate what the current command is.
 	function divDialog( editor, command ) {
@@ -63,10 +63,10 @@
 			return definition;
 		} )();
 
-		// DTD of 'div' element
+		// DTD of &#39;div&#39; element
 		var dtd = CKEDITOR.dtd.div;
 
-		// Get the first div limit element on the element's path.
+		// Get the first div limit element on the element&#39;s path.
 		// @param {Object} element
 		function getDivContainer( element ) {
 			var container = editor.elementPath( element ).blockLimit;
@@ -76,8 +76,8 @@
 			if ( container.isReadOnly() )
 				container = container.getParent();
 
-			// Dont stop at 'td' and 'th' when div should wrap entire table.
-			if ( editor.config.div_wrapTable &amp;&amp; container.is( [ 'td', 'th' ] ) ) {
+			// Dont stop at &#39;td&#39; and &#39;th&#39; when div should wrap entire table.
+			if ( editor.config.div_wrapTable &amp;&amp; container.is( [ &#39;td&#39;, &#39;th&#39; ] ) ) {
 				var parentPath = editor.elementPath( container.getParent() );
 				container = parentPath.blockLimit;
 			}
@@ -85,7 +85,7 @@
 			return container;
 		}
 
-		// Init all fields' setup/commit function.
+		// Init all fields&#39; setup/commit function.
 		// @memberof divDialog
 		function setupFields() {
 			this.foreach( function( field ) {
@@ -95,7 +95,7 @@
 						// Read the dialog fields values from the specified
 						// element attributes.
 						field.setup = function( element ) {
-							field.setValue( element.getAttribute( field.id ) || '', 1 );
+							field.setValue( element.getAttribute( field.id ) || &#39;&#39;, 1 );
 						};
 					}
 					if ( !field.commit ) {
@@ -104,7 +104,7 @@
 						field.commit = function( element ) {
 							var fieldValue = this.getValue();
 							// ignore default element attribute values
-							if ( 'dir' == field.id &amp;&amp; element.getComputedStyle( 'direction' ) == fieldValue )
+							if ( &#39;dir&#39; == field.id &amp;&amp; element.getComputedStyle( &#39;direction&#39; ) == fieldValue )
 								return;
 
 							if ( fieldValue )
@@ -117,7 +117,7 @@
 			} );
 		}
 
-		// Wrapping 'div' element around appropriate blocks among the selected ranges.
+		// Wrapping &#39;div&#39; element around appropriate blocks among the selected ranges.
 		// @param {Object} editor
 		function createDiv( editor ) {
 			// new adding containers OR detected pre-existed containers.
@@ -135,7 +135,7 @@
 			var i, iterator;
 
 			// Calcualte a default block tag if we need to create blocks.
-			var blockTag = editor.config.enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p';
+			var blockTag = editor.config.enterMode == CKEDITOR.ENTER_DIV ? &#39;div&#39; : &#39;p&#39;;
 
 			// collect all included elements from dom-iterator
 			for ( i = 0; i &lt; ranges.length; i++ ) {
@@ -168,7 +168,7 @@
 				for ( j = 1; j &lt; blockGroups[ i ].length; j++ )
 					ancestor = ancestor.getCommonAncestor( blockGroups[ i ][ j ] );
 
-				divElement = new CKEDITOR.dom.element( 'div', editor.document );
+				divElement = new CKEDITOR.dom.element( &#39;div&#39;, editor.document );
 
 				// Normalize the blocks in each group to a common parent.
 				for ( j = 0; j &lt; blockGroups[ i ].length; j++ ) {
@@ -187,8 +187,8 @@
 					currentNode = blockGroups[ i ][ j ];
 
 					// Avoid DUP elements introduced by grouping.
-					if ( !( currentNode.getCustomData &amp;&amp; currentNode.getCustomData( 'block_processed' ) ) ) {
-						currentNode.is &amp;&amp; CKEDITOR.dom.element.setMarker( database, currentNode, 'block_processed', true );
+					if ( !( currentNode.getCustomData &amp;&amp; currentNode.getCustomData( &#39;block_processed&#39; ) ) ) {
+						currentNode.is &amp;&amp; CKEDITOR.dom.element.setMarker( database, currentNode, &#39;block_processed&#39;, true );
 
 						// Establish new container, wrapping all elements in this group.
 						if ( !j )
@@ -206,7 +206,7 @@
 			return containers;
 		}
 
-		// Divide a set of nodes to different groups by their path's blocklimit element.
+		// Divide a set of nodes to different groups by their path&#39;s blocklimit element.
 		// Note: the specified nodes should be in source order naturally, which mean they are supposed to producea by following class:
 		//  * CKEDITOR.dom.range.Iterator
 		//  * CKEDITOR.dom.domWalker
@@ -231,7 +231,7 @@
 		// change should also alter inline-style text.
 		function commitInternally( targetFields ) {
 			var dialog = this.getDialog(),
-				element = dialog._element &amp;&amp; dialog._element.clone() || new CKEDITOR.dom.element( 'div', editor.document );
+				element = dialog._element &amp;&amp; dialog._element.clone() || new CKEDITOR.dom.element( &#39;div&#39;, editor.document );
 
 			// Commit this field and broadcast to target fields.
 			this.commit( element, true );
@@ -240,13 +240,13 @@
 			var length = targetFields.length,
 				field;
 			for ( var i = 0; i &lt; length; i++ ) {
-				field = dialog.getContentElement.apply( dialog, targetFields[ i ].split( ':' ) );
+				field = dialog.getContentElement.apply( dialog, targetFields[ i ].split( &#39;:&#39; ) );
 				field &amp;&amp; field.setup &amp;&amp; field.setup( element, true );
 			}
 		}
 
 
-		// Registered 'CKEDITOR.style' instances.
+		// Registered &#39;CKEDITOR.style&#39; instances.
 		var styles = {};
 
 		// Hold a collection of created block container elements.
@@ -259,26 +259,26 @@
 			minHeight: 165,
 			contents: [
 				{
-				id: 'info',
+				id: &#39;info&#39;,
 				label: editor.lang.common.generalTab,
 				title: editor.lang.common.generalTab,
 				elements: [
 					{
-					type: 'hbox',
-					widths: [ '50%', '50%' ],
+					type: &#39;hbox&#39;,
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
 						{
-						id: 'elementStyle',
-						type: 'select',
-						style: 'width: 100%;',
+						id: &#39;elementStyle&#39;,
+						type: &#39;select&#39;,
+						style: &#39;width: 100%;&#39;,
 						label: editor.lang.div.styleSelectLabel,
-						'default': '',
+						&#39;default&#39;: &#39;&#39;,
 						// Options are loaded dynamically.
 						items: [
-							[ editor.lang.common.notSet, '' ]
+							[ editor.lang.common.notSet, &#39;&#39; ]
 							],
 						onChange: function() {
-							commitInternally.call( this, [ 'info:elementStyle', 'info:class', 'advanced:dir', 'advanced:style' ] );
+							commitInternally.call( this, [ &#39;info:elementStyle&#39;, &#39;info:class&#39;, &#39;advanced:dir&#39;, &#39;advanced:style&#39; ] );
 						},
 						setup: function( element ) {
 							for ( var name in styles )
@@ -291,94 +291,94 @@
 								style.applyToObject( element );
 							}
 							else
-								element.removeAttribute( 'style' );
+								element.removeAttribute( &#39;style&#39; );
 						}
 					},
 						{
-						id: 'class',
-						type: 'text',
-						requiredContent: 'div(cke-xyz)', // Random text like 'xyz' will check if all are allowed.
+						id: &#39;class&#39;,
+						type: &#39;text&#39;,
+						requiredContent: &#39;div(cke-xyz)&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
 						label: editor.lang.common.cssClass,
-						'default': ''
+						&#39;default&#39;: &#39;&#39;
 					}
 					]
 				}
 				]
 			},
 				{
-				id: 'advanced',
+				id: &#39;advanced&#39;,
 				label: editor.lang.common.advancedTab,
 				title: editor.lang.common.advancedTab,
 				elements: [
 					{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					padding: 1,
 					children: [
 						{
-						type: 'hbox',
-						widths: [ '50%', '50%' ],
+						type: &#39;hbox&#39;,
+						widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 						children: [
 							{
-							type: 'text',
-							id: 'id',
-							requiredContent: 'div[id]',
+							type: &#39;text&#39;,
+							id: &#39;id&#39;,
+							requiredContent: &#39;div[id]&#39;,
 							label: editor.lang.common.id,
-							'default': ''
+							&#39;default&#39;: &#39;&#39;
 						},
 							{
-							type: 'text',
-							id: 'lang',
-							requiredContent: 'div[lang]',
+							type: &#39;text&#39;,
+							id: &#39;lang&#39;,
+							requiredContent: &#39;div[lang]&#39;,
 							label: editor.lang.common.langCode,
-							'default': ''
+							&#39;default&#39;: &#39;&#39;
 						}
 						]
 					},
 						{
-						type: 'hbox',
+						type: &#39;hbox&#39;,
 						children: [
 							{
-							type: 'text',
-							id: 'style',
-							requiredContent: 'div{cke-xyz}', // Random text like 'xyz' will check if all are allowed.
-							style: 'width: 100%;',
+							type: &#39;text&#39;,
+							id: &#39;style&#39;,
+							requiredContent: &#39;div{cke-xyz}&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
+							style: &#39;width: 100%;&#39;,
 							label: editor.lang.common.cssStyle,
-							'default': '',
+							&#39;default&#39;: &#39;&#39;,
 							commit: function( element ) {
-								element.setAttribute( 'style', this.getValue() );
+								element.setAttribute( &#39;style&#39;, this.getValue() );
 							}
 						}
 						]
 					},
 						{
-						type: 'hbox',
+						type: &#39;hbox&#39;,
 						children: [
 							{
-							type: 'text',
-							id: 'title',
-							requiredContent: 'div[title]',
-							style: 'width: 100%;',
+							type: &#39;text&#39;,
+							id: &#39;title&#39;,
+							requiredContent: &#39;div[title]&#39;,
+							style: &#39;width: 100%;&#39;,
 							label: editor.lang.common.advisoryTitle,
-							'default': ''
+							&#39;default&#39;: &#39;&#39;
 						}
 						]
 					},
 						{
-						type: 'select',
-						id: 'dir',
-						requiredContent: 'div[dir]',
-						style: 'width: 100%;',
+						type: &#39;select&#39;,
+						id: &#39;dir&#39;,
+						requiredContent: &#39;div[dir]&#39;,
+						style: &#39;width: 100%;&#39;,
 						label: editor.lang.common.langDir,
-						'default': '',
+						&#39;default&#39;: &#39;&#39;,
 						items: [
-							[ editor.lang.common.notSet, '' ],
+							[ editor.lang.common.notSet, &#39;&#39; ],
 							[
 							editor.lang.common.langDirLtr,
-							'ltr'
+							&#39;ltr&#39;
 							],
 							[
 							editor.lang.common.langDirRtl,
-							'rtl'
+							&#39;rtl&#39;
 							]
 							]
 					}
@@ -390,19 +390,19 @@
 			onLoad: function() {
 				setupFields.call( this );
 
-				// Preparing for the 'elementStyle' field.
+				// Preparing for the &#39;elementStyle&#39; field.
 				var dialog = this,
-					stylesField = this.getContentElement( 'info', 'elementStyle' );
+					stylesField = this.getContentElement( &#39;info&#39;, &#39;elementStyle&#39; );
 
-				// Reuse the 'stylescombo' plugin's styles definition.
+				// Reuse the &#39;stylescombo&#39; plugin&#39;s styles definition.
 				editor.getStylesSet( function( stylesDefinitions ) {
 					var styleName, style;
 
 					if ( stylesDefinitions ) {
-						// Digg only those styles that apply to 'div'.
+						// Digg only those styles that apply to &#39;div&#39;.
 						for ( var i = 0; i &lt; stylesDefinitions.length; i++ ) {
 							var styleDefinition = stylesDefinitions[ i ];
-							if ( styleDefinition.element &amp;&amp; styleDefinition.element == 'div' ) {
+							if ( styleDefinition.element &amp;&amp; styleDefinition.element == &#39;div&#39; ) {
 								styleName = styleDefinition.name;
 								styles[ styleName ] = style = new CKEDITOR.style( styleDefinition );
 
@@ -417,7 +417,7 @@
 
 					// We should disable the content element
 					// it if no options are available at all.
-					stylesField[ stylesField.items.length &gt; 1 ? 'enable' : 'disable' ]();
+					stylesField[ stylesField.items.length &gt; 1 ? &#39;enable&#39; : &#39;disable&#39; ]();
 
 					// Now setup the field value manually if dialog was opened on element. (#9689)
 					setTimeout( function() {
@@ -428,7 +428,7 @@
 			onShow: function() {
 				// Whether always create new container regardless of existed
 				// ones.
-				if ( command == 'editdiv' ) {
+				if ( command == &#39;editdiv&#39; ) {
 					// Try to discover the containers that already existed in
 					// ranges
 					// update dialog field values
@@ -436,7 +436,7 @@
 				}
 			},
 			onOk: function() {
-				if ( command == 'editdiv' )
+				if ( command == &#39;editdiv&#39; )
 					containers = [ this._element ];
 				else
 					containers = createDiv( editor, true );
@@ -446,26 +446,26 @@
 				for ( var i = 0; i &lt; size; i++ ) {
 					this.commitContent( containers[ i ] );
 
-					// Remove empty 'style' attribute.
-					!containers[ i ].getAttribute( 'style' ) &amp;&amp; containers[ i ].removeAttribute( 'style' );
+					// Remove empty &#39;style&#39; attribute.
+					!containers[ i ].getAttribute( &#39;style&#39; ) &amp;&amp; containers[ i ].removeAttribute( &#39;style&#39; );
 				}
 
 				this.hide();
 			},
 			onHide: function() {
 				// Remove style only when editing existing DIV. (#6315)
-				if ( command == 'editdiv' )
-					this._element.removeCustomData( 'elementStyle' );
+				if ( command == &#39;editdiv&#39; )
+					this._element.removeCustomData( &#39;elementStyle&#39; );
 				delete this._element;
 			}
 		};
 	}
 
-	CKEDITOR.dialog.add( 'creatediv', function( editor ) {
-		return divDialog( editor, 'creatediv' );
+	CKEDITOR.dialog.add( &#39;creatediv&#39;, function( editor ) {
+		return divDialog( editor, &#39;creatediv&#39; );
 	} );
-	CKEDITOR.dialog.add( 'editdiv', function( editor ) {
-		return divDialog( editor, 'editdiv' );
+	CKEDITOR.dialog.add( &#39;editdiv&#39;, function( editor ) {
+		return divDialog( editor, &#39;editdiv&#39; );
 	} );
 } )();
 

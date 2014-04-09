@@ -25,41 +25,41 @@
  */
 
 ( function() {
-	'use strict';
+	&#39;use strict&#39;;
 
 	var TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
 		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
 
-	CKEDITOR.plugins.add( 'indent', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'indent,indent-rtl,outdent,outdent-rtl', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;indent&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;indent,indent-rtl,outdent,outdent-rtl&#39;, // %REMOVE_LINE_CORE%
 
 		init: function( editor ) {
 			var genericDefinition = CKEDITOR.plugins.indent.genericDefinition;
 
 			// Register generic commands.
-			setupGenericListeners( editor, editor.addCommand( 'indent', new genericDefinition( true ) ) );
-			setupGenericListeners( editor, editor.addCommand( 'outdent', new genericDefinition() ) );
+			setupGenericListeners( editor, editor.addCommand( &#39;indent&#39;, new genericDefinition( true ) ) );
+			setupGenericListeners( editor, editor.addCommand( &#39;outdent&#39;, new genericDefinition() ) );
 
 			// Create and register toolbar button if possible.
 			if ( editor.ui.addButton ) {
-				editor.ui.addButton( 'Indent', {
+				editor.ui.addButton( &#39;Indent&#39;, {
 					label: editor.lang.indent.indent,
-					command: 'indent',
+					command: &#39;indent&#39;,
 					directional: true,
-					toolbar: 'indent,20'
+					toolbar: &#39;indent,20&#39;
 				} );
 
-				editor.ui.addButton( 'Outdent', {
+				editor.ui.addButton( &#39;Outdent&#39;, {
 					label: editor.lang.indent.outdent,
-					command: 'outdent',
+					command: &#39;outdent&#39;,
 					directional: true,
-					toolbar: 'indent,10'
+					toolbar: &#39;indent,10&#39;
 				} );
 			}
 
 			// Register dirChanged listener.
-			editor.on( 'dirChanged', function( evt ) {
+			editor.on( &#39;dirChanged&#39;, function( evt ) {
 				var range = editor.createRange(),
 					dataNode = evt.data.node;
 
@@ -81,7 +81,7 @@
 						// Switch alignment classes.
 						var classes = editor.config.indentClasses;
 						if ( classes ) {
-							var suffix = ( evt.data.dir == 'ltr' ) ? [ '_rtl', '' ] : [ '', '_rtl' ];
+							var suffix = ( evt.data.dir == &#39;ltr&#39; ) ? [ &#39;_rtl&#39;, &#39;&#39; ] : [ &#39;&#39;, &#39;_rtl&#39; ];
 							for ( var i = 0; i &lt; classes.length; i++ ) {
 								if ( node.hasClass( classes[ i ] + suffix[ 0 ] ) ) {
 									node.removeClass( classes[ i ] + suffix[ 0 ] );
@@ -91,11 +91,11 @@
 						}
 
 						// Switch the margins.
-						var marginLeft = node.getStyle( 'margin-right' ),
-							marginRight = node.getStyle( 'margin-left' );
+						var marginLeft = node.getStyle( &#39;margin-right&#39; ),
+							marginRight = node.getStyle( &#39;margin-left&#39; );
 
-						marginLeft ? node.setStyle( 'margin-left', marginLeft ) : node.removeStyle( 'margin-left' );
-						marginRight ? node.setStyle( 'margin-right', marginRight ) : node.removeStyle( 'margin-right' );
+						marginLeft ? node.setStyle( &#39;margin-left&#39;, marginLeft ) : node.removeStyle( &#39;margin-left&#39; );
+						marginRight ? node.setStyle( &#39;margin-right&#39;, marginRight ) : node.removeStyle( &#39;margin-right&#39; );
 					}
 				}
 			} );
@@ -185,7 +185,7 @@
 			 *
 			 *		command.jobs = {
 			 *			// Priority = 20.
-			 *			'20': {
+			 *			&#39;20&#39;: {
 			 *				refresh( editor, path ) {
 			 *					if ( condition )
 			 *						return CKEDITOR.TRISTATE_OFF;
@@ -198,7 +198,7 @@
 			 *				}
 			 *			},
 			 *			// Priority = 60. This job is done later.
-			 *			'60': {
+			 *			&#39;60&#39;: {
 			 *				// Another job.
 			 *			}
 			 *		};
@@ -235,7 +235,7 @@
 			 *
 			 * @readonly
 			 */
-			this.relatedGlobal = isIndent ? 'indent' : 'outdent';
+			this.relatedGlobal = isIndent ? &#39;indent&#39; : &#39;outdent&#39;;
 
 <span id='CKEDITOR-plugins-indent-specificDefinition-property-indentKey'>			/**
 </span>			 * A keystroke associated with this command (*Tab* or *Shift+Tab*).
@@ -257,15 +257,15 @@
 		 * it listens for events of a related generic command.
 		 *
 		 *		CKEDITOR.plugins.indent.registerCommands( editor, {
-		 *			'indentlist': new indentListCommand( editor, 'indentlist' ),
-		 *			'outdentlist': new indentListCommand( editor, 'outdentlist' )
+		 *			&#39;indentlist&#39;: new indentListCommand( editor, &#39;indentlist&#39; ),
+		 *			&#39;outdentlist&#39;: new indentListCommand( editor, &#39;outdentlist&#39; )
 		 *		} );
 		 *
-		 * Content-specific commands listen for the generic command's `exec` and
+		 * Content-specific commands listen for the generic command&#39;s `exec` and
 		 * try to execute their own jobs, one after another. If some execution is
 		 * successful, `evt.data.done` is set so no more jobs (commands) are involved.
 		 *
-		 * Content-specific commands also listen for the generic command's `refresh`
+		 * Content-specific commands also listen for the generic command&#39;s `refresh`
 		 * and fill the `evt.data.states` object with states of jobs. A generic command
 		 * uses this data to determine its own state and to update the UI.
 		 *
@@ -275,7 +275,7 @@
 		 * @param {Object} commands An object of {@link CKEDITOR.command}.
 		 */
 		registerCommands: function( editor, commands ) {
-			editor.on( 'pluginsLoaded', function() {
+			editor.on( &#39;pluginsLoaded&#39;, function() {
 				for ( var name in commands ) {
 					( function( editor, command ) {
 						var relatedGlobal = editor.getCommand( command.relatedGlobal );
@@ -285,19 +285,19 @@
 							// If the command was successfully handled by the command and
 							// DOM has been modified, stop event propagation so no other plugin
 							// will bother. Job is done.
-							relatedGlobal.on( 'exec', function( evt ) {
+							relatedGlobal.on( &#39;exec&#39;, function( evt ) {
 								if ( evt.data.done )
 									return;
 
 								// Make sure that anything this command will do is invisible
 								// for undoManager. What undoManager only can see and
 								// remember is the execution of the global command (relatedGlobal).
-								editor.fire( 'lockSnapshot' );
+								editor.fire( &#39;lockSnapshot&#39; );
 
 								if ( command.execJob( editor, priority ) )
 									evt.data.done = true;
 
-								editor.fire( 'unlockSnapshot' );
+								editor.fire( &#39;unlockSnapshot&#39; );
 
 								// Clean up the markers.
 								CKEDITOR.dom.element.clearAllMarkers( command.database );
@@ -306,11 +306,11 @@
 							// Observe generic refresh event and force command refresh.
 							// Once refreshed, save command state in event data
 							// so generic command plugin can update its own state and UI.
-							relatedGlobal.on( 'refresh', function( evt ) {
+							relatedGlobal.on( &#39;refresh&#39;, function( evt ) {
 								if ( !evt.data.states )
 									evt.data.states = {};
 
-								evt.data.states[ command.name + '@' + priority ] =
+								evt.data.states[ command.name + &#39;@&#39; + priority ] =
 									command.refreshJob( editor, priority, evt.data.path );
 							}, this, null, priority );
 						}
@@ -325,7 +325,7 @@
 	};
 
 	CKEDITOR.plugins.indent.genericDefinition.prototype = {
-		context: 'p',
+		context: &#39;p&#39;,
 
 		exec: function() {}
 	};
@@ -442,7 +442,7 @@
 
 		// Set the command state according to content-specific
 		// command states.
-		command.on( 'refresh', function( evt ) {
+		command.on( &#39;refresh&#39;, function( evt ) {
 			// If no state comes with event data, disable command.
 			var states = [ TRISTATE_DISABLED ];
 
@@ -457,7 +457,7 @@
 
 		// Initialization. Save bookmarks and mark event as not handled
 		// by any plugin (command) yet.
-		command.on( 'exec', function( evt ) {
+		command.on( &#39;exec&#39;, function( evt ) {
 			selection = editor.getSelection();
 			bookmarks = selection.createBookmarks( 1 );
 
@@ -470,7 +470,7 @@
 
 		// Housekeeping. Make sure selectionChange will be called.
 		// Also re-select previously saved bookmarks.
-		command.on( 'exec', function( evt ) {
+		command.on( &#39;exec&#39;, function( evt ) {
 			editor.forceNextSelectionCheck();
 			selection.selectBookmarks( bookmarks );
 		}, command, null, 100 );

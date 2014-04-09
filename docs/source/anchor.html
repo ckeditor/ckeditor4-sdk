@@ -20,17 +20,17 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'anchor', function( editor ) {
+CKEDITOR.dialog.add( &#39;anchor&#39;, function( editor ) {
 	// Function called in onShow to load selected element.
 	var loadElements = function( element ) {
 			this._.selectedElement = element;
 
-			var attributeValue = element.data( 'cke-saved-name' );
-			this.setValueOf( 'info', 'txtName', attributeValue || '' );
+			var attributeValue = element.data( &#39;cke-saved-name&#39; );
+			this.setValueOf( &#39;info&#39;, &#39;txtName&#39;, attributeValue || &#39;&#39; );
 		};
 
 	function createFakeAnchor( editor, anchor ) {
-		return editor.createFakeElement( anchor, 'cke_anchor', 'anchor' );
+		return editor.createFakeElement( anchor, &#39;cke_anchor&#39;, &#39;anchor&#39; );
 	}
 
 	return {
@@ -38,16 +38,16 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 		minWidth: 300,
 		minHeight: 60,
 		onOk: function() {
-			var name = CKEDITOR.tools.trim( this.getValueOf( 'info', 'txtName' ) );
+			var name = CKEDITOR.tools.trim( this.getValueOf( &#39;info&#39;, &#39;txtName&#39; ) );
 			var attributes = {
 				id: name,
 				name: name,
-				'data-cke-saved-name': name
+				&#39;data-cke-saved-name&#39;: name
 			};
 
 			if ( this._.selectedElement ) {
-				if ( this._.selectedElement.data( 'cke-realelement' ) ) {
-					var newFake = createFakeAnchor( editor, editor.document.createElement( 'a', { attributes: attributes } ) );
+				if ( this._.selectedElement.data( &#39;cke-realelement&#39; ) ) {
+					var newFake = createFakeAnchor( editor, editor.document.createElement( &#39;a&#39;, { attributes: attributes } ) );
 					newFake.replace( this._.selectedElement );
 				} else
 					this._.selectedElement.setAttributes( attributes );
@@ -58,14 +58,14 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 				// Empty anchor
 				if ( range.collapsed ) {
 					if ( CKEDITOR.plugins.link.synAnchorSelector )
-						attributes[ 'class' ] = 'cke_anchor_empty';
+						attributes[ &#39;class&#39; ] = &#39;cke_anchor_empty&#39;;
 
 					if ( CKEDITOR.plugins.link.emptyAnchorFix ) {
-						attributes[ 'contenteditable' ] = 'false';
-						attributes[ 'data-cke-editable' ] = 1;
+						attributes[ &#39;contenteditable&#39; ] = &#39;false&#39;;
+						attributes[ &#39;data-cke-editable&#39; ] = 1;
 					}
 
-					var anchor = editor.document.createElement( 'a', { attributes: attributes } );
+					var anchor = editor.document.createElement( &#39;a&#39;, { attributes: attributes } );
 
 					// Transform the anchor into a fake element for browsers that need it.
 					if ( CKEDITOR.plugins.link.fakeAnchor )
@@ -74,10 +74,10 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 					range.insertNode( anchor );
 				} else {
 					if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 )
-						attributes[ 'class' ] = 'cke_anchor';
+						attributes[ &#39;class&#39; ] = &#39;cke_anchor&#39;;
 
 					// Apply style.
-					var style = new CKEDITOR.style( { element: 'a', attributes: attributes } );
+					var style = new CKEDITOR.style( { element: &#39;a&#39;, attributes: attributes } );
 					style.type = CKEDITOR.STYLE_INLINE;
 					editor.applyStyle( style );
 				}
@@ -99,7 +99,7 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 					var realElement = CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, fullySelected );
 					realElement &amp;&amp; loadElements.call( this, realElement );
 					this._.selectedElement = fullySelected;
-				} else if ( fullySelected.is( 'a' ) &amp;&amp; fullySelected.hasAttribute( 'name' ) )
+				} else if ( fullySelected.is( &#39;a&#39; ) &amp;&amp; fullySelected.hasAttribute( &#39;name&#39; ) )
 					loadElements.call( this, fullySelected );
 			} else {
 				partialSelected = CKEDITOR.plugins.link.getSelectedLink( editor );
@@ -109,17 +109,17 @@ CKEDITOR.dialog.add( 'anchor', function( editor ) {
 				}
 			}
 
-			this.getContentElement( 'info', 'txtName' ).focus();
+			this.getContentElement( &#39;info&#39;, &#39;txtName&#39; ).focus();
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.link.anchor.title,
-			accessKey: 'I',
+			accessKey: &#39;I&#39;,
 			elements: [
 				{
-				type: 'text',
-				id: 'txtName',
+				type: &#39;text&#39;,
+				id: &#39;txtName&#39;,
 				label: editor.lang.link.anchor.name,
 				required: true,
 				validate: function() {

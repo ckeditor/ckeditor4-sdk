@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'colordialog', function( editor ) {
+CKEDITOR.dialog.add( &#39;colordialog&#39;, function( editor ) {
 	// Define some shorthands.
 	var $el = CKEDITOR.dom.element,
 		$doc = CKEDITOR.document,
@@ -30,16 +30,16 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 	var dialog;
 
 	var spacer = {
-		type: 'html',
-		html: '&amp;nbsp;'
+		type: &#39;html&#39;,
+		html: &#39;&amp;nbsp;&#39;
 	};
 
 	var selected;
 
 	function clearSelected() {
-		$doc.getById( selHiColorId ).removeStyle( 'background-color' );
-		dialog.getContentElement( 'picker', 'selectedColor' ).setValue( '' );
-		selected &amp;&amp; selected.removeAttribute( 'aria-selected' );
+		$doc.getById( selHiColorId ).removeStyle( &#39;background-color&#39; );
+		dialog.getContentElement( &#39;picker&#39;, &#39;selectedColor&#39; ).setValue( &#39;&#39; );
+		selected &amp;&amp; selected.removeAttribute( &#39;aria-selected&#39; );
 		selected = null;
 	}
 
@@ -47,20 +47,20 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 		var target = evt.data.getTarget(),
 			color;
 
-		if ( target.getName() == 'td' &amp;&amp; ( color = target.getChild( 0 ).getHtml() ) ) {
+		if ( target.getName() == &#39;td&#39; &amp;&amp; ( color = target.getChild( 0 ).getHtml() ) ) {
 			selected = target;
-			selected.setAttribute( 'aria-selected', true );
-			dialog.getContentElement( 'picker', 'selectedColor' ).setValue( color );
+			selected.setAttribute( &#39;aria-selected&#39;, true );
+			dialog.getContentElement( &#39;picker&#39;, &#39;selectedColor&#39; ).setValue( color );
 		}
 	}
 
 	// Basing black-white decision off of luma scheme using the Rec. 709 version
 	function whiteOrBlack( color ) {
-		color = color.replace( /^#/, '' );
+		color = color.replace( /^#/, &#39;&#39; );
 		for ( var i = 0, rgb = []; i &lt;= 2; i++ )
 			rgb[ i ] = parseInt( color.substr( i * 2, 2 ), 16 );
 		var luma = ( 0.2126 * rgb[ 0 ] ) + ( 0.7152 * rgb[ 1 ] ) + ( 0.0722 * rgb[ 2 ] );
-		return '#' + ( luma &gt;= 165 ? '000' : 'fff' );
+		return &#39;#&#39; + ( luma &gt;= 165 ? &#39;000&#39; : &#39;fff&#39; );
 	}
 
 	// Distinguish focused and hover states.
@@ -75,28 +75,28 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 			target = event.data.getTarget(),
 			color;
 
-		if ( target.getName() == 'td' &amp;&amp; ( color = target.getChild( 0 ).getHtml() ) ) {
+		if ( target.getName() == &#39;td&#39; &amp;&amp; ( color = target.getChild( 0 ).getHtml() ) ) {
 			removeHighlight( event );
 
 			isFocus ? focused = target : hovered = target;
 
 			// Apply outline style to show focus.
 			if ( isFocus ) {
-				target.setStyle( 'border-color', whiteOrBlack( color ) );
-				target.setStyle( 'border-style', 'dotted' );
+				target.setStyle( &#39;border-color&#39;, whiteOrBlack( color ) );
+				target.setStyle( &#39;border-style&#39;, &#39;dotted&#39; );
 			}
 
-			$doc.getById( hicolorId ).setStyle( 'background-color', color );
+			$doc.getById( hicolorId ).setStyle( &#39;background-color&#39;, color );
 			$doc.getById( hicolorTextId ).setHtml( color );
 		}
 	}
 
 	function clearHighlight() {
 		var color = focused.getChild( 0 ).getHtml();
-		focused.setStyle( 'border-color', color );
-		focused.setStyle( 'border-style', 'solid' );
-		$doc.getById( hicolorId ).removeStyle( 'background-color' );
-		$doc.getById( hicolorTextId ).setHtml( '&amp;nbsp;' );
+		focused.setStyle( &#39;border-color&#39;, color );
+		focused.setStyle( &#39;border-style&#39;, &#39;solid&#39; );
+		$doc.getById( hicolorId ).removeStyle( &#39;background-color&#39; );
+		$doc.getById( hicolorTextId ).setHtml( &#39;&amp;nbsp;&#39; );
 		focused = null;
 	}
 
@@ -107,13 +107,13 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 
 		if ( target ) {
 			var color = target.getChild( 0 ).getHtml();
-			target.setStyle( 'border-color', color );
-			target.setStyle( 'border-style', 'solid' );
+			target.setStyle( &#39;border-color&#39;, color );
+			target.setStyle( &#39;border-style&#39;, &#39;solid&#39; );
 		}
 
 		if ( !( focused || hovered ) ) {
-			$doc.getById( hicolorId ).removeStyle( 'background-color' );
-			$doc.getById( hicolorTextId ).setHtml( '&amp;nbsp;' );
+			$doc.getById( hicolorId ).removeStyle( &#39;background-color&#39; );
+			$doc.getById( hicolorTextId ).setHtml( &#39;&amp;nbsp;&#39; );
 		}
 	}
 
@@ -123,7 +123,7 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 		var element = domEvt.getTarget();
 		var relative, nodeToMove;
 		var keystroke = domEvt.getKeystroke(),
-			rtl = editor.lang.dir == 'rtl';
+			rtl = editor.lang.dir == &#39;rtl&#39;;
 
 		switch ( keystroke ) {
 			// UP-ARROW
@@ -195,26 +195,26 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 	}
 
 	function createColorTable() {
-		table = CKEDITOR.dom.element.createFromHtml( '&lt;table tabIndex=&quot;-1&quot; aria-label=&quot;' + lang.options + '&quot;' +
-			' role=&quot;grid&quot; style=&quot;border-collapse:separate;&quot; cellspacing=&quot;0&quot;&gt;' +
-			'&lt;caption class=&quot;cke_voice_label&quot;&gt;' + lang.options + '&lt;/caption&gt;' +
-			'&lt;tbody role=&quot;presentation&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;' );
+		table = CKEDITOR.dom.element.createFromHtml( &#39;&lt;table tabIndex=&quot;-1&quot; aria-label=&quot;&#39; + lang.options + &#39;&quot;&#39; +
+			&#39; role=&quot;grid&quot; style=&quot;border-collapse:separate;&quot; cellspacing=&quot;0&quot;&gt;&#39; +
+			&#39;&lt;caption class=&quot;cke_voice_label&quot;&gt;&#39; + lang.options + &#39;&lt;/caption&gt;&#39; +
+			&#39;&lt;tbody role=&quot;presentation&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;&#39; );
 
-		table.on( 'mouseover', updateHighlight );
-		table.on( 'mouseout', removeHighlight );
+		table.on( &#39;mouseover&#39;, updateHighlight );
+		table.on( &#39;mouseout&#39;, removeHighlight );
 
 		// Create the base colors array.
-		var aColors = [ '00', '33', '66', '99', 'cc', 'ff' ];
+		var aColors = [ &#39;00&#39;, &#39;33&#39;, &#39;66&#39;, &#39;99&#39;, &#39;cc&#39;, &#39;ff&#39; ];
 
 		// This function combines two ranges of three values from the color array into a row.
 		function appendColorRow( rangeA, rangeB ) {
 			for ( var i = rangeA; i &lt; rangeA + 3; i++ ) {
 				var row = new $el( table.$.insertRow( -1 ) );
-				row.setAttribute( 'role', 'row' );
+				row.setAttribute( &#39;role&#39;, &#39;row&#39; );
 
 				for ( var j = rangeB; j &lt; rangeB + 3; j++ ) {
 					for ( var n = 0; n &lt; 6; n++ ) {
-						appendColorCell( row.$, '#' + aColors[ j ] + aColors[ n ] + aColors[ i ] );
+						appendColorCell( row.$, &#39;#&#39; + aColors[ j ] + aColors[ n ] + aColors[ i ] );
 					}
 				}
 			}
@@ -223,24 +223,24 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 		// This function create a single color cell in the color table.
 		function appendColorCell( targetRow, color ) {
 			var cell = new $el( targetRow.insertCell( -1 ) );
-			cell.setAttribute( 'class', 'ColorCell' );
-			cell.setAttribute( 'tabIndex', -1 );
-			cell.setAttribute( 'role', 'gridcell' );
+			cell.setAttribute( &#39;class&#39;, &#39;ColorCell&#39; );
+			cell.setAttribute( &#39;tabIndex&#39;, -1 );
+			cell.setAttribute( &#39;role&#39;, &#39;gridcell&#39; );
 
-			cell.on( 'keydown', onKeyStrokes );
-			cell.on( 'click', updateSelected );
-			cell.on( 'focus', updateHighlight );
-			cell.on( 'blur', removeHighlight );
+			cell.on( &#39;keydown&#39;, onKeyStrokes );
+			cell.on( &#39;click&#39;, updateSelected );
+			cell.on( &#39;focus&#39;, updateHighlight );
+			cell.on( &#39;blur&#39;, removeHighlight );
 
-			cell.setStyle( 'background-color', color );
-			cell.setStyle( 'border', '1px solid ' + color );
+			cell.setStyle( &#39;background-color&#39;, color );
+			cell.setStyle( &#39;border&#39;, &#39;1px solid &#39; + color );
 
-			cell.setStyle( 'width', '14px' );
-			cell.setStyle( 'height', '14px' );
+			cell.setStyle( &#39;width&#39;, &#39;14px&#39; );
+			cell.setStyle( &#39;height&#39;, &#39;14px&#39; );
 
-			var colorLabel = numbering( 'color_table_cell' );
-			cell.setAttribute( 'aria-labelledby', colorLabel );
-			cell.append( CKEDITOR.dom.element.createFromHtml( '&lt;span id=&quot;' + colorLabel + '&quot; class=&quot;cke_voice_label&quot;&gt;' + color + '&lt;/span&gt;', CKEDITOR.document ) );
+			var colorLabel = numbering( &#39;color_table_cell&#39; );
+			cell.setAttribute( &#39;aria-labelledby&#39;, colorLabel );
+			cell.append( CKEDITOR.dom.element.createFromHtml( &#39;&lt;span id=&quot;&#39; + colorLabel + &#39;&quot; class=&quot;cke_voice_label&quot;&gt;&#39; + color + &#39;&lt;/span&gt;&#39;, CKEDITOR.document ) );
 		}
 
 		appendColorRow( 0, 0 );
@@ -250,25 +250,25 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 
 		// Create the last row.
 		var oRow = new $el( table.$.insertRow( -1 ) );
-		oRow.setAttribute( 'role', 'row' );
+		oRow.setAttribute( &#39;role&#39;, &#39;row&#39; );
 
 		// Create the gray scale colors cells.
 		for ( var n = 0; n &lt; 6; n++ ) {
-			appendColorCell( oRow.$, '#' + aColors[ n ] + aColors[ n ] + aColors[ n ] );
+			appendColorCell( oRow.$, &#39;#&#39; + aColors[ n ] + aColors[ n ] + aColors[ n ] );
 		}
 
 		// Fill the row with black cells.
 		for ( var i = 0; i &lt; 12; i++ ) {
-			appendColorCell( oRow.$, '#000000' );
+			appendColorCell( oRow.$, &#39;#000000&#39; );
 		}
 	}
 
 	var numbering = function( id ) {
-			return CKEDITOR.tools.getNextId() + '_' + id;
+			return CKEDITOR.tools.getNextId() + &#39;_&#39; + id;
 		},
-		hicolorId = numbering( 'hicolor' ),
-		hicolorTextId = numbering( 'hicolortext' ),
-		selHiColorId = numbering( 'selhicolor' ),
+		hicolorId = numbering( &#39;hicolor&#39; ),
+		hicolorTextId = numbering( &#39;hicolortext&#39; ),
+		selHiColorId = numbering( &#39;selhicolor&#39; ),
 		table;
 
 	createColorTable();
@@ -287,50 +287,50 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'picker',
+			id: &#39;picker&#39;,
 			label: lang.title,
-			accessKey: 'I',
+			accessKey: &#39;I&#39;,
 			elements: [
 				{
-				type: 'hbox',
+				type: &#39;hbox&#39;,
 				padding: 0,
-				widths: [ '70%', '10%', '30%' ],
+				widths: [ &#39;70%&#39;, &#39;10%&#39;, &#39;30%&#39; ],
 				children: [
 					{
-					type: 'html',
-					html: '&lt;div&gt;&lt;/div&gt;',
+					type: &#39;html&#39;,
+					html: &#39;&lt;div&gt;&lt;/div&gt;&#39;,
 					onLoad: function() {
 						CKEDITOR.document.getById( this.domId ).append( table );
 					},
 					focus: function() {
 						// Restore the previously focused cell,
 						// otherwise put the initial focus on the first table cell.
-						( focused || this.getElement().getElementsByTag( 'td' ).getItem( 0 ) ).focus();
+						( focused || this.getElement().getElementsByTag( &#39;td&#39; ).getItem( 0 ) ).focus();
 					}
 				},
 					spacer,
 				{
-					type: 'vbox',
+					type: &#39;vbox&#39;,
 					padding: 0,
-					widths: [ '70%', '5%', '25%' ],
+					widths: [ &#39;70%&#39;, &#39;5%&#39;, &#39;25%&#39; ],
 					children: [
 						{
-						type: 'html',
-						html: '&lt;span&gt;' + lang.highlight + '&lt;/span&gt;\
-												&lt;div id=&quot;' + hicolorId + '&quot; style=&quot;border: 1px solid; height: 74px; width: 74px;&quot;&gt;&lt;/div&gt;\
-												&lt;div id=&quot;' + hicolorTextId + '&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;span&gt;' + lang.selected + '&lt;/span&gt;\
-												&lt;div id=&quot;' + selHiColorId + '&quot; style=&quot;border: 1px solid; height: 20px; width: 74px;&quot;&gt;&lt;/div&gt;'
+						type: &#39;html&#39;,
+						html: &#39;&lt;span&gt;&#39; + lang.highlight + &#39;&lt;/span&gt;\
+												&lt;div id=&quot;&#39; + hicolorId + &#39;&quot; style=&quot;border: 1px solid; height: 74px; width: 74px;&quot;&gt;&lt;/div&gt;\
+												&lt;div id=&quot;&#39; + hicolorTextId + &#39;&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;span&gt;&#39; + lang.selected + &#39;&lt;/span&gt;\
+												&lt;div id=&quot;&#39; + selHiColorId + &#39;&quot; style=&quot;border: 1px solid; height: 20px; width: 74px;&quot;&gt;&lt;/div&gt;&#39;
 					},
 						{
-						type: 'text',
+						type: &#39;text&#39;,
 						label: lang.selected,
-						labelStyle: 'display:none',
-						id: 'selectedColor',
-						style: 'width: 74px',
+						labelStyle: &#39;display:none&#39;,
+						id: &#39;selectedColor&#39;,
+						style: &#39;width: 74px&#39;,
 						onChange: function() {
 							// Try to update color preview with new value. If fails, then set it no none.
 							try {
-								$doc.getById( selHiColorId ).setStyle( 'background-color', this.getValue() );
+								$doc.getById( selHiColorId ).setStyle( &#39;background-color&#39;, this.getValue() );
 							} catch ( e ) {
 								clearSelected();
 							}
@@ -338,9 +338,9 @@ CKEDITOR.dialog.add( 'colordialog', function( editor ) {
 					},
 						spacer,
 					{
-						type: 'button',
-						id: 'clear',
-						style: 'margin-top: 5px',
+						type: &#39;button&#39;,
+						id: &#39;clear&#39;,
+						style: &#39;margin-top: 5px&#39;,
 						label: lang.clear,
 						onClick: clearSelected
 					}

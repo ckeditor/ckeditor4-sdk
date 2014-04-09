@@ -26,9 +26,9 @@
  *
  */
 
-'use strict';
+&#39;use strict&#39;;
 
-CKEDITOR.dialog.add( 'placeholder', function( editor ) {
+CKEDITOR.dialog.add( &#39;placeholder&#39;, function( editor ) {
 	var lang = editor.lang.placeholder,
 		generalLabel = editor.lang.common.generalTab,
 		validNameRegex = /^[^\[\]\&lt;\&gt;]+$/;
@@ -39,24 +39,24 @@ CKEDITOR.dialog.add( 'placeholder', function( editor ) {
 		minHeight: 80,
 		contents: [
 			{
-				id: 'info',
+				id: &#39;info&#39;,
 				label: generalLabel,
 				title: generalLabel,
 				elements: [
 					// Dialog window UI elements.
 					{
-						id: 'name',
-						type: 'text',
-						style: 'width: 100%;',
+						id: &#39;name&#39;,
+						type: &#39;text&#39;,
+						style: &#39;width: 100%;&#39;,
 						label: lang.name,
-						'default': '',
+						&#39;default&#39;: &#39;&#39;,
 						required: true,
 						validate: CKEDITOR.dialog.validate.regex( validNameRegex, lang.invalidName ),
 						setup: function( widget ) {
 							this.setValue( widget.data.name );
 						},
 						commit: function( widget ) {
-							widget.setData( 'name', this.getValue() );
+							widget.setData( &#39;name&#39;, this.getValue() );
 						}
 					}
 				]

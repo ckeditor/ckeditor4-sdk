@@ -24,8 +24,8 @@
 </span> * @fileOverview Plugin for making iframe based dialogs.
  */
 
-CKEDITOR.plugins.add( 'iframedialog', {
-	requires: 'dialog',
+CKEDITOR.plugins.add( &#39;iframedialog&#39;, {
+	requires: &#39;dialog&#39;,
 	onLoad: function() {
 <span id='CKEDITOR-dialog-static-method-addIframe'>		/**
 </span>		 * An iframe base dialog.
@@ -37,19 +37,19 @@ CKEDITOR.plugins.add( 'iframedialog', {
 		 * @param {Number} minWidth Minimum width of the dialog.
 		 * @param {Number} minHeight Minimum height of the dialog.
 		 * @param {Function} [onContentLoad] Function called when the iframe has been loaded.
-		 * If it isn't specified, the inner frame is notified of the dialog events (`'load'`,
-		 * `'resize'`, `'ok'` and `'cancel'`) on a function called `'onDialogEvent'`.
+		 * If it isn&#39;t specified, the inner frame is notified of the dialog events (`&#39;load&#39;`,
+		 * `&#39;resize&#39;`, `&#39;ok&#39;` and `&#39;cancel&#39;`) on a function called `&#39;onDialogEvent&#39;`.
 		 * @param {Object} [userDefinition] Additional properties for the dialog definition.
 		 */
 		CKEDITOR.dialog.addIframe = function( name, title, src, minWidth, minHeight, onContentLoad, userDefinition ) {
 			var element = {
-				type: 'iframe',
+				type: &#39;iframe&#39;,
 				src: src,
-				width: '100%',
-				height: '100%'
+				width: &#39;100%&#39;,
+				height: &#39;100%&#39;
 			};
 
-			if ( typeof( onContentLoad ) == 'function' )
+			if ( typeof( onContentLoad ) == &#39;function&#39; )
 				element.onContentLoad = onContentLoad;
 			else
 				element.onContentLoad = function() {
@@ -63,22 +63,22 @@ CKEDITOR.plugins.add( 'iframedialog', {
 							return childWindow.onDialogEvent( e );
 						};
 
-					dialog.on( 'ok', notifyEvent );
-					dialog.on( 'cancel', notifyEvent );
-					dialog.on( 'resize', notifyEvent );
+					dialog.on( &#39;ok&#39;, notifyEvent );
+					dialog.on( &#39;cancel&#39;, notifyEvent );
+					dialog.on( &#39;resize&#39;, notifyEvent );
 
 					// Clear listeners
-					dialog.on( 'hide', function( e ) {
-						dialog.removeListener( 'ok', notifyEvent );
-						dialog.removeListener( 'cancel', notifyEvent );
-						dialog.removeListener( 'resize', notifyEvent );
+					dialog.on( &#39;hide&#39;, function( e ) {
+						dialog.removeListener( &#39;ok&#39;, notifyEvent );
+						dialog.removeListener( &#39;cancel&#39;, notifyEvent );
+						dialog.removeListener( &#39;resize&#39;, notifyEvent );
 
 						e.removeListener();
 					} );
 
 					// Notify child iframe of load:
 					childWindow.onDialogEvent( {
-						name: 'load',
+						name: &#39;load&#39;,
 						sender: this,
 						editor: dialog._.editor
 					} );
@@ -91,11 +91,11 @@ CKEDITOR.plugins.add( 'iframedialog', {
 				minHeight: minHeight,
 				contents: [
 					{
-					id: 'iframe',
+					id: &#39;iframe&#39;,
 					label: title,
 					expand: true,
 					elements: [ element ],
-					style: 'width:' + element.width + ';height:' + element.height
+					style: &#39;width:&#39; + element.width + &#39;;height:&#39; + element.height
 				}
 				]
 			};
@@ -121,10 +121,10 @@ CKEDITOR.plugins.add( 'iframedialog', {
 			 * The element definition. Accepted fields:
 			 *
 			 * * `src` (Required) The src field of the iframe.
-			 * * `width` (Required) The iframe's width.
-			 * * `height` (Required) The iframe's height.
+			 * * `width` (Required) The iframe&#39;s width.
+			 * * `height` (Required) The iframe&#39;s height.
 			 * * `onContentLoad` (Optional) A function to be executed
-			 *     after the iframe's contents has finished loading.
+			 *     after the iframe&#39;s contents has finished loading.
 			 *
 			 * @param {Array} htmlList List of HTML code to output to.
 			 */
@@ -136,10 +136,10 @@ CKEDITOR.plugins.add( 'iframedialog', {
 						contentLoad = elementDefinition.onContentLoad &amp;&amp; CKEDITOR.tools.bind( elementDefinition.onContentLoad, this ),
 						cssWidth = CKEDITOR.tools.cssLength( elementDefinition.width ),
 						cssHeight = CKEDITOR.tools.cssLength( elementDefinition.height );
-					_.frameId = CKEDITOR.tools.getNextId() + '_iframe';
+					_.frameId = CKEDITOR.tools.getNextId() + &#39;_iframe&#39;;
 
 					// IE BUG: Parent container does not resize to contain the iframe automatically.
-					dialog.on( 'load', function() {
+					dialog.on( &#39;load&#39;, function() {
 						var iframe = CKEDITOR.document.getById( _.frameId ),
 							parentContainer = iframe.getParent();
 
@@ -150,38 +150,38 @@ CKEDITOR.plugins.add( 'iframedialog', {
 					} );
 
 					var attributes = {
-						src: '%2',
+						src: &#39;%2&#39;,
 						id: _.frameId,
 						frameborder: 0,
 						allowtransparency: true
 					};
 					var myHtml = [];
 
-					if ( typeof( elementDefinition.onContentLoad ) == 'function' )
-						attributes.onload = 'CKEDITOR.tools.callFunction(%1);';
+					if ( typeof( elementDefinition.onContentLoad ) == &#39;function&#39; )
+						attributes.onload = &#39;CKEDITOR.tools.callFunction(%1);&#39;;
 
-					CKEDITOR.ui.dialog.uiElement.call( this, dialog, elementDefinition, myHtml, 'iframe', {
+					CKEDITOR.ui.dialog.uiElement.call( this, dialog, elementDefinition, myHtml, &#39;iframe&#39;, {
 						width: cssWidth,
 						height: cssHeight
-					}, attributes, '' );
+					}, attributes, &#39;&#39; );
 
 					// Put a placeholder for the first time.
-					htmlList.push( '&lt;div style=&quot;width:' + cssWidth + ';height:' + cssHeight + ';&quot; id=&quot;' + this.domId + '&quot;&gt;&lt;/div&gt;' );
+					htmlList.push( &#39;&lt;div style=&quot;width:&#39; + cssWidth + &#39;;height:&#39; + cssHeight + &#39;;&quot; id=&quot;&#39; + this.domId + &#39;&quot;&gt;&lt;/div&gt;&#39; );
 
 					// Iframe elements should be refreshed whenever it is shown.
-					myHtml = myHtml.join( '' );
-					dialog.on( 'show', function() {
+					myHtml = myHtml.join( &#39;&#39; );
+					dialog.on( &#39;show&#39;, function() {
 						var iframe = CKEDITOR.document.getById( _.frameId ),
 							parentContainer = iframe.getParent(),
 							callIndex = CKEDITOR.tools.addFunction( contentLoad ),
-							html = myHtml.replace( '%1', callIndex ).replace( '%2', CKEDITOR.tools.htmlEncode( elementDefinition.src ) );
+							html = myHtml.replace( &#39;%1&#39;, callIndex ).replace( &#39;%2&#39;, CKEDITOR.tools.htmlEncode( elementDefinition.src ) );
 						parentContainer.setHtml( html );
 					} );
 				};
 
 			iframeElement.prototype = new CKEDITOR.ui.dialog.uiElement;
 
-			CKEDITOR.dialog.addUIElement( 'iframe', {
+			CKEDITOR.dialog.addUIElement( &#39;iframe&#39;, {
 				build: function( dialog, elementDefinition, output ) {
 					return new iframeElement( dialog, elementDefinition, output );
 				}

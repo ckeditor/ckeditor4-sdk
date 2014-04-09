@@ -32,7 +32,7 @@
  * @extends CKEDITOR.resourceManager
  * @singleton
  */
-CKEDITOR.plugins = new CKEDITOR.resourceManager( 'plugins/', 'plugin' );
+CKEDITOR.plugins = new CKEDITOR.resourceManager( &#39;plugins/&#39;, &#39;plugin&#39; );
 
 // PACKAGER_RENAME( CKEDITOR.plugins )
 
@@ -54,23 +54,23 @@ CKEDITOR.plugins.load = CKEDITOR.tools.override( CKEDITOR.plugins.load, function
 						if ( !initialized[ pluginName ] ) {
 							// Register all icons eventually defined by this plugin.
 							if ( plugin.icons ) {
-								var icons = plugin.icons.split( ',' );
+								var icons = plugin.icons.split( &#39;,&#39; );
 								for ( var ic = icons.length; ic--; ) {
 									CKEDITOR.skin.addIcon( icons[ ic ],
 										plugin.path +
-										'icons/' +
-										( CKEDITOR.env.hidpi &amp;&amp; plugin.hidpi ? 'hidpi/' : '' ) +
+										&#39;icons/&#39; +
+										( CKEDITOR.env.hidpi &amp;&amp; plugin.hidpi ? &#39;hidpi/&#39; : &#39;&#39; ) +
 										icons[ ic ] +
-										'.png' );
+										&#39;.png&#39; );
 								}
 							}
 							initialized[ pluginName ] = 1;
 						}
 
 						if ( requires ) {
-							// Trasnform it into an array, if it's not one.
+							// Trasnform it into an array, if it&#39;s not one.
 							if ( requires.split )
-								requires = requires.split( ',' );
+								requires = requires.split( &#39;,&#39; );
 
 							for ( var i = 0; i &lt; requires.length; i++ ) {
 								if ( !allPlugins[ requires[ i ] ] )
@@ -110,9 +110,9 @@ CKEDITOR.plugins.load = CKEDITOR.tools.override( CKEDITOR.plugins.load, function
 </span> * Loads a specific language file, or auto detect it. A callback is
  * then called when the file gets loaded.
  *
- *		CKEDITOR.plugins.setLang( 'myPlugin', 'en', {
- *			title: 'My plugin',
- *			selectOption: 'Please select an option'
+ *		CKEDITOR.plugins.setLang( &#39;myPlugin&#39;, &#39;en&#39;, {
+ *			title: &#39;My plugin&#39;,
+ *			selectOption: &#39;Please select an option&#39;
  *		} );
  *
  * @param {String} pluginName The name of the plugin to which the provided translation
@@ -127,7 +127,7 @@ CKEDITOR.plugins.setLang = function( pluginName, languageCode, languageEntries )
 		pluginLang = plugin.lang || ( plugin.lang = [] );
 
 	if ( pluginLang.split )
-		pluginLang = pluginLang.split( ',' );
+		pluginLang = pluginLang.split( &#39;,&#39; );
 
 	if ( CKEDITOR.tools.indexOf( pluginLang, languageCode ) == -1 )
 		pluginLang.push( languageCode );

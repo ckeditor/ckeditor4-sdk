@@ -22,11 +22,11 @@
 
 ( function() {
 	function protectFormStyles( formElement ) {
-		if ( !formElement || formElement.type != CKEDITOR.NODE_ELEMENT || formElement.getName() != 'form' )
+		if ( !formElement || formElement.type != CKEDITOR.NODE_ELEMENT || formElement.getName() != &#39;form&#39; )
 			return [];
 
 		var hijackRecord = [],
-			hijackNames = [ 'style', 'className' ];
+			hijackNames = [ &#39;style&#39;, &#39;className&#39; ];
 		for ( var i = 0; i &lt; hijackNames.length; i++ ) {
 			var name = hijackNames[ i ];
 			var $node = formElement.$.elements.namedItem( name );
@@ -41,7 +41,7 @@
 	}
 
 	function restoreFormStyles( formElement, hijackRecord ) {
-		if ( !formElement || formElement.type != CKEDITOR.NODE_ELEMENT || formElement.getName() != 'form' )
+		if ( !formElement || formElement.type != CKEDITOR.NODE_ELEMENT || formElement.getName() != &#39;form&#39; )
 			return;
 
 		if ( hijackRecord.length &gt; 0 ) {
@@ -63,13 +63,13 @@
 		var $element = element.$;
 
 		if ( !isInsideEditor ) {
-			retval[ 'class' ] = $element.className || '';
-			$element.className = '';
+			retval[ &#39;class&#39; ] = $element.className || &#39;&#39;;
+			$element.className = &#39;&#39;;
 		}
 
-		retval.inline = $element.style.cssText || '';
+		retval.inline = $element.style.cssText || &#39;&#39;;
 		if ( !isInsideEditor ) // Reset any external styles that might interfere. (#2474)
-		$element.style.cssText = 'position: static; overflow: visible';
+		$element.style.cssText = &#39;position: static; overflow: visible&#39;;
 
 		restoreFormStyles( data );
 		return retval;
@@ -78,9 +78,9 @@
 	function restoreStyles( element, savedStyles ) {
 		var data = protectFormStyles( element );
 		var $element = element.$;
-		if ( 'class' in savedStyles )
-			$element.className = savedStyles[ 'class' ];
-		if ( 'inline' in savedStyles )
+		if ( &#39;class&#39; in savedStyles )
+			$element.className = savedStyles[ &#39;class&#39; ];
+		if ( &#39;inline&#39; in savedStyles )
 			$element.style.cssText = savedStyles.inline;
 		restoreFormStyles( data );
 	}
@@ -93,12 +93,12 @@
 		var all = CKEDITOR.instances;
 		for ( var i in all ) {
 			var one = all[ i ];
-			if ( one.mode == 'wysiwyg' &amp;&amp; !one.readOnly ) {
+			if ( one.mode == &#39;wysiwyg&#39; &amp;&amp; !one.readOnly ) {
 				var body = one.document.getBody();
-				// Refresh 'contentEditable' otherwise
+				// Refresh &#39;contentEditable&#39; otherwise
 				// DOM lifting breaks design mode. (#5560)
-				body.setAttribute( 'contentEditable', false );
-				body.setAttribute( 'contentEditable', true );
+				body.setAttribute( &#39;contentEditable&#39;, false );
+				body.setAttribute( &#39;contentEditable&#39;, true );
 			}
 		}
 
@@ -108,12 +108,12 @@
 		}
 	}
 
-	CKEDITOR.plugins.add( 'maximize', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'maximize', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;maximize&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;maximize&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			// Maximize plugin isn't available in inline mode yet.
+			// Maximize plugin isn&#39;t available in inline mode yet.
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
 				return;
 
@@ -136,17 +136,17 @@
 			// Retain state after mode switches.
 			var savedState = CKEDITOR.TRISTATE_OFF;
 
-			editor.addCommand( 'maximize', {
+			editor.addCommand( &#39;maximize&#39;, {
 				// Disabled on iOS (#8307).
 				modes: { wysiwyg: !CKEDITOR.env.iOS, source: !CKEDITOR.env.iOS },
 				readOnly: 1,
 				editorFocus: false,
 				exec: function() {
 					var container = editor.container.getChild( 1 );
-					var contents = editor.ui.space( 'contents' );
+					var contents = editor.ui.space( &#39;contents&#39; );
 
 					// Save current selection and scroll position in editing area.
-					if ( editor.mode == 'wysiwyg' ) {
+					if ( editor.mode == &#39;wysiwyg&#39; ) {
 						var selection = editor.getSelection();
 						savedSelection = selection &amp;&amp; selection.getRanges();
 						savedScroll = mainWindow.getScrollPosition();
@@ -159,7 +159,7 @@
 					if ( this.state == CKEDITOR.TRISTATE_OFF ) // Go fullscreen if the state is off.
 					{
 						// Add event handler for resizing.
-						mainWindow.on( 'resize', resizeHandler );
+						mainWindow.on( &#39;resize&#39;, resizeHandler );
 
 						// Save the scroll bar position.
 						outerScroll = mainWindow.getScrollPosition();
@@ -167,22 +167,22 @@
 						// Save and reset the styles for the entire node tree.
 						var currentNode = editor.container;
 						while ( ( currentNode = currentNode.getParent() ) ) {
-							currentNode.setCustomData( 'maximize_saved_styles', saveStyles( currentNode ) );
+							currentNode.setCustomData( &#39;maximize_saved_styles&#39;, saveStyles( currentNode ) );
 							// Show under floatpanels (-1) and context menu (-2).
-							currentNode.setStyle( 'z-index', editor.config.baseFloatZIndex - 5 );
+							currentNode.setStyle( &#39;z-index&#39;, editor.config.baseFloatZIndex - 5 );
 						}
-						contents.setCustomData( 'maximize_saved_styles', saveStyles( contents, true ) );
-						container.setCustomData( 'maximize_saved_styles', saveStyles( container, true ) );
+						contents.setCustomData( &#39;maximize_saved_styles&#39;, saveStyles( contents, true ) );
+						container.setCustomData( &#39;maximize_saved_styles&#39;, saveStyles( container, true ) );
 
 						// Hide scroll bars.
 						var styles = {
-							overflow: CKEDITOR.env.webkit ? '' : 'hidden', // #6896
+							overflow: CKEDITOR.env.webkit ? &#39;&#39; : &#39;hidden&#39;, // #6896
 							width: 0,
 							height: 0
 						};
 
 						mainDocument.getDocumentElement().setStyles( styles );
-						!CKEDITOR.env.gecko &amp;&amp; mainDocument.getDocumentElement().setStyle( 'position', 'fixed' );
+						!CKEDITOR.env.gecko &amp;&amp; mainDocument.getDocumentElement().setStyle( &#39;position&#39;, &#39;fixed&#39; );
 						!( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.quirks ) &amp;&amp; mainDocument.getBody().setStyles( styles );
 
 						// Scroll to the top left (IE needs some time for it - #4923).
@@ -192,25 +192,25 @@
 
 						// Resize and move to top left.
 						// Special treatment for FF Quirks (#7284)
-						container.setStyle( 'position', CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.quirks ? 'fixed' : 'absolute' );
+						container.setStyle( &#39;position&#39;, CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.quirks ? &#39;fixed&#39; : &#39;absolute&#39; );
 						container.$.offsetLeft; // SAFARI BUG: See #2066.
 						container.setStyles( {
 							// Show under floatpanels (-1) and context menu (-2).
-							'z-index': editor.config.baseFloatZIndex - 5,
-							left: '0px',
-							top: '0px'
+							&#39;z-index&#39;: editor.config.baseFloatZIndex - 5,
+							left: &#39;0px&#39;,
+							top: &#39;0px&#39;
 						} );
 
 						// Add cke_maximized class before resize handle since that will change things sizes (#5580)
-						container.addClass( 'cke_maximized' );
+						container.addClass( &#39;cke_maximized&#39; );
 
 						resizeHandler();
 
 						// Still not top left? Fix it. (Bug #174)
 						var offset = container.getDocumentPosition();
 						container.setStyles( {
-							left: ( -1 * offset.x ) + 'px',
-							top: ( -1 * offset.y ) + 'px'
+							left: ( -1 * offset.x ) + &#39;px&#39;,
+							top: ( -1 * offset.y ) + &#39;px&#39;
 						} );
 
 						// Fixing positioning editor chrome in Firefox break design mode. (#5149)
@@ -219,19 +219,19 @@
 					} else if ( this.state == CKEDITOR.TRISTATE_ON ) // Restore from fullscreen if the state is on.
 					{
 						// Remove event handler for resizing.
-						mainWindow.removeListener( 'resize', resizeHandler );
+						mainWindow.removeListener( &#39;resize&#39;, resizeHandler );
 
 						// Restore CSS styles for the entire node tree.
 						var editorElements = [ contents, container ];
 						for ( var i = 0; i &lt; editorElements.length; i++ ) {
-							restoreStyles( editorElements[ i ], editorElements[ i ].getCustomData( 'maximize_saved_styles' ) );
-							editorElements[ i ].removeCustomData( 'maximize_saved_styles' );
+							restoreStyles( editorElements[ i ], editorElements[ i ].getCustomData( &#39;maximize_saved_styles&#39; ) );
+							editorElements[ i ].removeCustomData( &#39;maximize_saved_styles&#39; );
 						}
 
 						currentNode = editor.container;
 						while ( ( currentNode = currentNode.getParent() ) ) {
-							restoreStyles( currentNode, currentNode.getCustomData( 'maximize_saved_styles' ) );
-							currentNode.removeCustomData( 'maximize_saved_styles' );
+							restoreStyles( currentNode, currentNode.getCustomData( &#39;maximize_saved_styles&#39; ) );
+							currentNode.removeCustomData( &#39;maximize_saved_styles&#39; );
 						}
 
 						// Restore the window scroll position.
@@ -240,19 +240,19 @@
 						}, 0 ) : mainWindow.$.scrollTo( outerScroll.x, outerScroll.y );
 
 						// Remove cke_maximized class.
-						container.removeClass( 'cke_maximized' );
+						container.removeClass( &#39;cke_maximized&#39; );
 
 						// Webkit requires a re-layout on editor chrome. (#6695)
 						if ( CKEDITOR.env.webkit ) {
-							container.setStyle( 'display', 'inline' );
+							container.setStyle( &#39;display&#39;, &#39;inline&#39; );
 							setTimeout( function() {
-								container.setStyle( 'display', 'block' );
+								container.setStyle( &#39;display&#39;, &#39;block&#39; );
 							}, 0 );
 						}
 
 						// Emit a resize event, because this time the size is modified in
 						// restoreStyles.
-						editor.fire( 'resize' );
+						editor.fire( &#39;resize&#39; );
 					}
 
 					this.toggleState();
@@ -264,12 +264,12 @@
 						var label = ( this.state == CKEDITOR.TRISTATE_OFF ) ? lang.maximize.maximize : lang.maximize.minimize;
 						var buttonNode = CKEDITOR.document.getById( button._.id );
 						buttonNode.getChild( 1 ).setHtml( label );
-						buttonNode.setAttribute( 'title', label );
-						buttonNode.setAttribute( 'href', 'javascript:void(&quot;' + label + '&quot;);' );
+						buttonNode.setAttribute( &#39;title&#39;, label );
+						buttonNode.setAttribute( &#39;href&#39;, &#39;javascript:void(&quot;&#39; + label + &#39;&quot;);&#39; );
 					}
 
 					// Restore selection and scroll position in editing area.
-					if ( editor.mode == 'wysiwyg' ) {
+					if ( editor.mode == &#39;wysiwyg&#39; ) {
 						if ( savedSelection ) {
 							// Fixing positioning editor chrome in Firefox break design mode. (#5149)
 							CKEDITOR.env.gecko &amp;&amp; refreshCursor( editor );
@@ -291,20 +291,20 @@
 					savedSelection = savedScroll = null;
 					savedState = this.state;
 
-					editor.fire( 'maximize', this.state );
+					editor.fire( &#39;maximize&#39;, this.state );
 				},
 				canUndo: false
 			} );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Maximize', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Maximize&#39;, {
 				label: lang.maximize.maximize,
-				command: 'maximize',
-				toolbar: 'tools,10'
+				command: &#39;maximize&#39;,
+				toolbar: &#39;tools,10&#39;
 			} );
 
 			// Restore the command state after mode change, unless it has been changed to disabled (#6467)
-			editor.on( 'mode', function() {
-				var command = editor.getCommand( 'maximize' );
+			editor.on( &#39;mode&#39;, function() {
+				var command = editor.getCommand( &#39;maximize&#39; );
 				command.setState( command.state == CKEDITOR.TRISTATE_DISABLED ? CKEDITOR.TRISTATE_DISABLED : savedState );
 			}, null, null, 100 );
 		}

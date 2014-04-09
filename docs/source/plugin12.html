@@ -21,51 +21,51 @@
  */
 
 ( function() {
-	var template = '&lt;a id=&quot;{id}&quot;' +
-		' class=&quot;cke_button cke_button__{name} cke_button_{state} {cls}&quot;' +
-		( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &gt;= 10900 &amp;&amp; !CKEDITOR.env.hc ? '' : ' href=&quot;javascript:void(\'{titleJs}\')&quot;' ) +
-		' title=&quot;{title}&quot;' +
-		' tabindex=&quot;-1&quot;' +
-		' hidefocus=&quot;true&quot;' +
-		' role=&quot;button&quot;' +
-		' aria-labelledby=&quot;{id}_label&quot;' +
-		' aria-haspopup=&quot;{hasArrow}&quot;' +
-		' aria-disabled=&quot;{ariaDisabled}&quot;';
+	var template = &#39;&lt;a id=&quot;{id}&quot;&#39; +
+		&#39; class=&quot;cke_button cke_button__{name} cke_button_{state} {cls}&quot;&#39; +
+		( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &gt;= 10900 &amp;&amp; !CKEDITOR.env.hc ? &#39;&#39; : &#39; href=&quot;javascript:void(\&#39;{titleJs}\&#39;)&quot;&#39; ) +
+		&#39; title=&quot;{title}&quot;&#39; +
+		&#39; tabindex=&quot;-1&quot;&#39; +
+		&#39; hidefocus=&quot;true&quot;&#39; +
+		&#39; role=&quot;button&quot;&#39; +
+		&#39; aria-labelledby=&quot;{id}_label&quot;&#39; +
+		&#39; aria-haspopup=&quot;{hasArrow}&quot;&#39; +
+		&#39; aria-disabled=&quot;{ariaDisabled}&quot;&#39;;
 
-	// Some browsers don't cancel key events in the keydown but in the
+	// Some browsers don&#39;t cancel key events in the keydown but in the
 	// keypress.
 	// TODO: Check if really needed for Gecko+Mac.
 	if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
-		template += ' onkeypress=&quot;return false;&quot;';
+		template += &#39; onkeypress=&quot;return false;&quot;&#39;;
 
 	// With Firefox, we need to force the button to redraw, otherwise it
 	// will remain in the focus state.
 	if ( CKEDITOR.env.gecko )
-		template += ' onblur=&quot;this.style.cssText = this.style.cssText;&quot;';
+		template += &#39; onblur=&quot;this.style.cssText = this.style.cssText;&quot;&#39;;
 
-	template += ' onkeydown=&quot;return CKEDITOR.tools.callFunction({keydownFn},event);&quot;' +
-		' onfocus=&quot;return CKEDITOR.tools.callFunction({focusFn},event);&quot; ' +
-		' onmousedown=&quot;return CKEDITOR.tools.callFunction({mousedownFn},event);&quot; ' +
-		( CKEDITOR.env.ie ? 'onclick=&quot;return false;&quot; onmouseup' : 'onclick' ) + // #188
-			'=&quot;CKEDITOR.tools.callFunction({clickFn},this);return false;&quot;&gt;' +
-		'&lt;span class=&quot;cke_button_icon cke_button__{iconName}_icon&quot; style=&quot;{style}&quot;';
+	template += &#39; onkeydown=&quot;return CKEDITOR.tools.callFunction({keydownFn},event);&quot;&#39; +
+		&#39; onfocus=&quot;return CKEDITOR.tools.callFunction({focusFn},event);&quot; &#39; +
+		&#39; onmousedown=&quot;return CKEDITOR.tools.callFunction({mousedownFn},event);&quot; &#39; +
+		( CKEDITOR.env.ie ? &#39;onclick=&quot;return false;&quot; onmouseup&#39; : &#39;onclick&#39; ) + // #188
+			&#39;=&quot;CKEDITOR.tools.callFunction({clickFn},this);return false;&quot;&gt;&#39; +
+		&#39;&lt;span class=&quot;cke_button_icon cke_button__{iconName}_icon&quot; style=&quot;{style}&quot;&#39;;
 
 
-	template += '&gt;&amp;nbsp;&lt;/span&gt;' +
-		'&lt;span id=&quot;{id}_label&quot; class=&quot;cke_button_label cke_button__{name}_label&quot; aria-hidden=&quot;false&quot;&gt;{label}&lt;/span&gt;' +
-		'{arrowHtml}' +
-		'&lt;/a&gt;';
+	template += &#39;&gt;&amp;nbsp;&lt;/span&gt;&#39; +
+		&#39;&lt;span id=&quot;{id}_label&quot; class=&quot;cke_button_label cke_button__{name}_label&quot; aria-hidden=&quot;false&quot;&gt;{label}&lt;/span&gt;&#39; +
+		&#39;{arrowHtml}&#39; +
+		&#39;&lt;/a&gt;&#39;;
 
-	var templateArrow = '&lt;span class=&quot;cke_button_arrow&quot;&gt;' +
+	var templateArrow = &#39;&lt;span class=&quot;cke_button_arrow&quot;&gt;&#39; +
 		// BLACK DOWN-POINTING TRIANGLE
-	( CKEDITOR.env.hc ? '&amp;#9660;' : '' ) +
-		'&lt;/span&gt;';
+	( CKEDITOR.env.hc ? &#39;&amp;#9660;&#39; : &#39;&#39; ) +
+		&#39;&lt;/span&gt;&#39;;
 
-	var btnArrowTpl = CKEDITOR.addTemplate( 'buttonArrow', templateArrow ),
-		btnTpl = CKEDITOR.addTemplate( 'button', template );
+	var btnArrowTpl = CKEDITOR.addTemplate( &#39;buttonArrow&#39;, templateArrow ),
+		btnTpl = CKEDITOR.addTemplate( &#39;button&#39;, template );
 
-	CKEDITOR.plugins.add( 'button', {
-		lang: 'ca,cs,el,en,en-gb,fa,fr,gl,hu,ja,km,nl,pl,pt,pt-br,ru,sl,sv,uk,zh-cn', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;button&#39;, {
+		lang: &#39;ca,cs,el,en,en-gb,fa,fr,gl,hu,ja,km,nl,pl,pt,pt-br,ru,sl,sv,uk,zh-cn&#39;, // %REMOVE_LINE_CORE%
 		beforeInit: function( editor ) {
 			editor.ui.addHandler( CKEDITOR.UI_BUTTON, CKEDITOR.ui.button.handler );
 		}
@@ -75,10 +75,10 @@
 </span>	 * Button UI element.
 	 *
 	 * @readonly
-	 * @property {String} [='button']
+	 * @property {String} [=&#39;button&#39;]
 	 * @member CKEDITOR
 	 */
-	CKEDITOR.UI_BUTTON = 'button';
+	CKEDITOR.UI_BUTTON = &#39;button&#39;;
 
 <span id='CKEDITOR-ui-button-method-constructor'><span id='CKEDITOR-ui-button'>	/**
 </span></span>	 * Represents a button UI element. This class should not be called directly. To
@@ -135,7 +135,7 @@
 		render: function( editor, output ) {
 			var env = CKEDITOR.env,
 				id = this._.id = CKEDITOR.tools.getNextId(),
-				stateName = '',
+				stateName = &#39;&#39;,
 				command = this.command,
 				// Get the command name.
 				clickFn;
@@ -225,33 +225,33 @@
 					}
 				}
 
-				editor.on( 'beforeModeUnload', function() {
+				editor.on( &#39;beforeModeUnload&#39;, function() {
 					if ( editor.mode &amp;&amp; this._.state != CKEDITOR.TRISTATE_DISABLED )
 						modeStates[ editor.mode ] = this._.state;
 				}, this );
 
 				// Update status when activeFilter, mode or readOnly changes.
-				editor.on( 'activeFilterChange', updateState, this );
-				editor.on( 'mode', updateState, this );
+				editor.on( &#39;activeFilterChange&#39;, updateState, this );
+				editor.on( &#39;mode&#39;, updateState, this );
 				// If this button is sensitive to readOnly state, update it accordingly.
-				!this.readOnly &amp;&amp; editor.on( 'readOnly', updateState, this );
+				!this.readOnly &amp;&amp; editor.on( &#39;readOnly&#39;, updateState, this );
 
 			} else if ( command ) {
 				// Get the command instance.
 				command = editor.getCommand( command );
 
 				if ( command ) {
-					command.on( 'state', function() {
+					command.on( &#39;state&#39;, function() {
 						this.setState( command.state );
 					}, this );
 
-					stateName += ( command.state == CKEDITOR.TRISTATE_ON ? 'on' : command.state == CKEDITOR.TRISTATE_DISABLED ? 'disabled' : 'off' );
+					stateName += ( command.state == CKEDITOR.TRISTATE_ON ? &#39;on&#39; : command.state == CKEDITOR.TRISTATE_DISABLED ? &#39;disabled&#39; : &#39;off&#39; );
 				}
 			}
 
 			// For button that has text-direction awareness on selection path.
 			if ( this.directional ) {
-				editor.on( 'contentDirChanged', function( evt ) {
+				editor.on( &#39;contentDirChanged&#39;, function( evt ) {
 					var el = CKEDITOR.document.getById( this._.id ),
 						icon = el.getFirst();
 
@@ -259,22 +259,22 @@
 
 					// Make a minor direction change to become style-able for the skin icon.
 					if ( pathDir !=  editor.lang.dir )
-						el.addClass( 'cke_' + pathDir );
+						el.addClass( &#39;cke_&#39; + pathDir );
 					else
-						el.removeClass( 'cke_ltr' ).removeClass( 'cke_rtl' );
+						el.removeClass( &#39;cke_ltr&#39; ).removeClass( &#39;cke_rtl&#39; );
 
 					// Inline style update for the plugin icon.
-					icon.setAttribute( 'style', CKEDITOR.skin.getIconStyle( iconName, pathDir == 'rtl', this.icon, this.iconOffset ) );
+					icon.setAttribute( &#39;style&#39;, CKEDITOR.skin.getIconStyle( iconName, pathDir == &#39;rtl&#39;, this.icon, this.iconOffset ) );
 				}, this );
 			}
 
 			if ( !command )
-				stateName += 'off';
+				stateName += &#39;off&#39;;
 
 			var name = this.name || this.command,
 				iconName = name;
 
-			// Check if we're pointing to an icon defined by another command. (#9555)
+			// Check if we&#39;re pointing to an icon defined by another command. (#9555)
 			if ( this.icon &amp;&amp; !( /\./ ).test( this.icon ) ) {
 				iconName = this.icon;
 				this.icon = null;
@@ -285,18 +285,18 @@
 				name: name,
 				iconName: iconName,
 				label: this.label,
-				cls: this.className || '',
+				cls: this.className || &#39;&#39;,
 				state: stateName,
-				ariaDisabled: stateName == 'disabled' ? 'true' : 'false',
+				ariaDisabled: stateName == &#39;disabled&#39; ? &#39;true&#39; : &#39;false&#39;,
 				title: this.title,
-				titleJs: env.gecko &amp;&amp; env.version &gt;= 10900 &amp;&amp; !env.hc ? '' : ( this.title || '' ).replace( &quot;'&quot;, '' ),
-				hasArrow: this.hasArrow ? 'true' : 'false',
+				titleJs: env.gecko &amp;&amp; env.version &gt;= 10900 &amp;&amp; !env.hc ? &#39;&#39; : ( this.title || &#39;&#39; ).replace( &quot;&#39;&quot;, &#39;&#39; ),
+				hasArrow: this.hasArrow ? &#39;true&#39; : &#39;false&#39;,
 				keydownFn: keydownFn,
 				mousedownFn: mousedownFn,
 				focusFn: focusFn,
 				clickFn: clickFn,
-				style: CKEDITOR.skin.getIconStyle( iconName, ( editor.lang.dir == 'rtl' ), this.icon, this.iconOffset ),
-				arrowHtml: this.hasArrow ? btnArrowTpl.output() : ''
+				style: CKEDITOR.skin.getIconStyle( iconName, ( editor.lang.dir == &#39;rtl&#39; ), this.icon, this.iconOffset ),
+				arrowHtml: this.hasArrow ? btnArrowTpl.output() : &#39;&#39;
 			};
 
 			btnTpl.output( params, output );
@@ -319,21 +319,21 @@
 			var element = CKEDITOR.document.getById( this._.id );
 
 			if ( element ) {
-				element.setState( state, 'cke_button' );
+				element.setState( state, &#39;cke_button&#39; );
 
 				state == CKEDITOR.TRISTATE_DISABLED ?
-					element.setAttribute( 'aria-disabled', true ) :
-					element.removeAttribute( 'aria-disabled' );
+					element.setAttribute( &#39;aria-disabled&#39;, true ) :
+					element.removeAttribute( &#39;aria-disabled&#39; );
 
 				if ( !this.hasArrow ) {
 					// Note: aria-pressed attribute should not be added to menuButton instances. (#11331)
 					state == CKEDITOR.TRISTATE_ON ?
-						element.setAttribute( 'aria-pressed', true ) :
-						element.removeAttribute( 'aria-pressed' );
+						element.setAttribute( &#39;aria-pressed&#39;, true ) :
+						element.removeAttribute( &#39;aria-pressed&#39; );
 				} else {
 					var newLabel = state == CKEDITOR.TRISTATE_ON ?
 						this._.editor.lang.button.selectedLabel.replace( /%1/g, this.label ) : this.label;
-					CKEDITOR.document.getById( this._.id + '_label' ).setText( newLabel );
+					CKEDITOR.document.getById( this._.id + &#39;_label&#39; ).setText( newLabel );
 				}
 
 				return true;
@@ -349,7 +349,7 @@
 		},
 
 <span id='CKEDITOR-ui-button-method-toFeature'>		/**
-</span>		 * Returns this button's {@link CKEDITOR.feature} instance.
+</span>		 * Returns this button&#39;s {@link CKEDITOR.feature} instance.
 		 *
 		 * It may be this button instance if it has at least one of
 		 * `allowedContent` and `requiredContent` properties. Otherwise,
@@ -368,7 +368,7 @@
 
 			var feature = this;
 
-			// If button isn't a feature, return command if is bound.
+			// If button isn&#39;t a feature, return command if is bound.
 			if ( !this.allowedContent &amp;&amp; !this.requiredContent &amp;&amp; this.command )
 				feature = editor.getCommand( this.command ) || feature;
 
@@ -379,10 +379,10 @@
 <span id='CKEDITOR-ui-method-addButton'>	/**
 </span>	 * Adds a button definition to the UI elements list.
 	 *
-	 *		editorInstance.ui.addButton( 'MyBold', {
-	 *			label: 'My Bold',
-	 *			command: 'bold',
-	 *			toolbar: 'basicstyles,1'
+	 *		editorInstance.ui.addButton( &#39;MyBold&#39;, {
+	 *			label: &#39;My Bold&#39;,
+	 *			command: &#39;bold&#39;,
+	 *			toolbar: &#39;basicstyles,1&#39;
 	 *		} );
 	 *
 	 * @member CKEDITOR.ui

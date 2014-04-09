@@ -33,32 +33,32 @@
 		exec: function( editor ) {
 			var sHTML,
 				config = editor.config,
-				baseTag = config.baseHref ? '&lt;base href=&quot;' + config.baseHref + '&quot;/&gt;' : '',
+				baseTag = config.baseHref ? &#39;&lt;base href=&quot;&#39; + config.baseHref + &#39;&quot;/&gt;&#39; : &#39;&#39;,
 				eventData;
 
 			if ( config.fullPage )
-				sHTML = editor.getData().replace( /&lt;head&gt;/, '$&amp;' + baseTag ).replace( /[^&gt;]*(?=&lt;\/title&gt;)/, '$&amp; &amp;mdash; ' + editor.lang.preview.preview );
+				sHTML = editor.getData().replace( /&lt;head&gt;/, &#39;$&amp;&#39; + baseTag ).replace( /[^&gt;]*(?=&lt;\/title&gt;)/, &#39;$&amp; &amp;mdash; &#39; + editor.lang.preview.preview );
 			else {
-				var bodyHtml = '&lt;body ',
+				var bodyHtml = &#39;&lt;body &#39;,
 					body = editor.document &amp;&amp; editor.document.getBody();
 
 				if ( body ) {
-					if ( body.getAttribute( 'id' ) )
-						bodyHtml += 'id=&quot;' + body.getAttribute( 'id' ) + '&quot; ';
-					if ( body.getAttribute( 'class' ) )
-						bodyHtml += 'class=&quot;' + body.getAttribute( 'class' ) + '&quot; ';
+					if ( body.getAttribute( &#39;id&#39; ) )
+						bodyHtml += &#39;id=&quot;&#39; + body.getAttribute( &#39;id&#39; ) + &#39;&quot; &#39;;
+					if ( body.getAttribute( &#39;class&#39; ) )
+						bodyHtml += &#39;class=&quot;&#39; + body.getAttribute( &#39;class&#39; ) + &#39;&quot; &#39;;
 				}
 
-				bodyHtml += '&gt;';
+				bodyHtml += &#39;&gt;&#39;;
 
-				sHTML = editor.config.docType + '&lt;html dir=&quot;' + editor.config.contentsLangDirection + '&quot;&gt;' +
-					'&lt;head&gt;' +
+				sHTML = editor.config.docType + &#39;&lt;html dir=&quot;&#39; + editor.config.contentsLangDirection + &#39;&quot;&gt;&#39; +
+					&#39;&lt;head&gt;&#39; +
 						baseTag +
-						'&lt;title&gt;' + editor.lang.preview.preview + '&lt;/title&gt;' +
+						&#39;&lt;title&gt;&#39; + editor.lang.preview.preview + &#39;&lt;/title&gt;&#39; +
 						CKEDITOR.tools.buildStyleHtml( editor.config.contentsCss ) +
-					'&lt;/head&gt;' + bodyHtml +
+					&#39;&lt;/head&gt;&#39; + bodyHtml +
 						editor.getData() +
-					'&lt;/body&gt;&lt;/html&gt;';
+					&#39;&lt;/body&gt;&lt;/html&gt;&#39;;
 			}
 
 			var iWidth = 640,
@@ -74,37 +74,37 @@
 			} catch ( e ) {}
 
 			// (#9907) Allow data manipulation before preview is displayed.
-			// Also don't open the preview window when event cancelled.
-			if ( editor.fire( 'contentPreview', eventData = { dataValue: sHTML } ) === false )
+			// Also don&#39;t open the preview window when event cancelled.
+			if ( editor.fire( &#39;contentPreview&#39;, eventData = { dataValue: sHTML } ) === false )
 				return false;
 
-			var sOpenUrl = '',
+			var sOpenUrl = &#39;&#39;,
 				ieLocation;
 
 			if ( CKEDITOR.env.ie ) {
 				window._cke_htmlToLoad = eventData.dataValue;
-				ieLocation = 'javascript:void( (function(){' +
-					'document.open();' +
+				ieLocation = &#39;javascript:void( (function(){&#39; +
+					&#39;document.open();&#39; +
 					// Support for custom document.domain.
 					// Strip comments and replace parent with window.opener in the function body.
-					( '(' + CKEDITOR.tools.fixDomain + ')();' ).replace( /\/\/.*?\n/g, '' ).replace( /parent\./g, 'window.opener.' ) +
-					'document.write( window.opener._cke_htmlToLoad );' +
-					'document.close();' +
-					'window.opener._cke_htmlToLoad = null;' +
-				'})() )';
+					( &#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; ).replace( /\/\/.*?\n/g, &#39;&#39; ).replace( /parent\./g, &#39;window.opener.&#39; ) +
+					&#39;document.write( window.opener._cke_htmlToLoad );&#39; +
+					&#39;document.close();&#39; +
+					&#39;window.opener._cke_htmlToLoad = null;&#39; +
+				&#39;})() )&#39;;
 				// For IE we should use window.location rather than setting url in window.open. (#11146)
-				sOpenUrl = '';
+				sOpenUrl = &#39;&#39;;
 			}
 
 			// With Firefox only, we need to open a special preview page, so
 			// anchors will work properly on it. (#9047)
 			if ( CKEDITOR.env.gecko ) {
 				window._cke_htmlToLoad = eventData.dataValue;
-				sOpenUrl = pluginPath + 'preview.html';
+				sOpenUrl = pluginPath + &#39;preview.html&#39;;
 			}
 
-			var oWindow = window.open( sOpenUrl, null, 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
-				iWidth + ',height=' + iHeight + ',left=' + iLeft );
+			var oWindow = window.open( sOpenUrl, null, &#39;toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=&#39; +
+				iWidth + &#39;,height=&#39; + iHeight + &#39;,left=&#39; + iLeft );
 
 			// For IE we want to assign whole js stored in ieLocation, but in case of
 			// popup blocker activation oWindow variable will be null. (#11597)
@@ -122,12 +122,12 @@
 		}
 	};
 
-	var pluginName = 'preview';
+	var pluginName = &#39;preview&#39;;
 
 	// Register a plugin named &quot;preview&quot;.
 	CKEDITOR.plugins.add( pluginName, {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'preview,preview-rtl', // %REMOVE_LINE_CORE%
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;preview,preview-rtl&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 
@@ -138,10 +138,10 @@
 			pluginPath = this.path;
 
 			editor.addCommand( pluginName, previewCmd );
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Preview', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Preview&#39;, {
 				label: editor.lang.preview.preview,
 				command: pluginName,
-				toolbar: 'document,40'
+				toolbar: &#39;document,40&#39;
 			} );
 		}
 	} );

@@ -30,21 +30,21 @@
 
 		var align;
 		if ( useComputedState )
-			align = element.getComputedStyle( 'text-align' );
+			align = element.getComputedStyle( &#39;text-align&#39; );
 		else {
-			while ( !element.hasAttribute || !( element.hasAttribute( 'align' ) || element.getStyle( 'text-align' ) ) ) {
+			while ( !element.hasAttribute || !( element.hasAttribute( &#39;align&#39; ) || element.getStyle( &#39;text-align&#39; ) ) ) {
 				var parent = element.getParent();
 				if ( !parent )
 					break;
 				element = parent;
 			}
-			align = element.getStyle( 'text-align' ) || element.getAttribute( 'align' ) || '';
+			align = element.getStyle( &#39;text-align&#39; ) || element.getAttribute( &#39;align&#39; ) || &#39;&#39;;
 		}
 
-		// Sometimes computed values doesn't tell.
-		align &amp;&amp; ( align = align.replace( /(?:-(?:moz|webkit)-)?(?:start|auto)/i, '' ) );
+		// Sometimes computed values doesn&#39;t tell.
+		align &amp;&amp; ( align = align.replace( /(?:-(?:moz|webkit)-)?(?:start|auto)/i, &#39;&#39; ) );
 
-		!align &amp;&amp; useComputedState &amp;&amp; ( align = element.getComputedStyle( 'direction' ) == 'rtl' ? 'right' : 'left' );
+		!align &amp;&amp; useComputedState &amp;&amp; ( align = element.getComputedStyle( &#39;direction&#39; ) == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; );
 
 		return align;
 	}
@@ -53,38 +53,38 @@
 		this.editor = editor;
 		this.name = name;
 		this.value = value;
-		this.context = 'p';
+		this.context = &#39;p&#39;;
 
 		var classes = editor.config.justifyClasses,
-			blockTag = editor.config.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div';
+			blockTag = editor.config.enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39;;
 
 		if ( classes ) {
 			switch ( value ) {
-				case 'left':
+				case &#39;left&#39;:
 					this.cssClassName = classes[ 0 ];
 					break;
-				case 'center':
+				case &#39;center&#39;:
 					this.cssClassName = classes[ 1 ];
 					break;
-				case 'right':
+				case &#39;right&#39;:
 					this.cssClassName = classes[ 2 ];
 					break;
-				case 'justify':
+				case &#39;justify&#39;:
 					this.cssClassName = classes[ 3 ];
 					break;
 			}
 
-			this.cssClassRegex = new RegExp( '(?:^|\\s+)(?:' + classes.join( '|' ) + ')(?=$|\\s)' );
-			this.requiredContent = blockTag + '(' + this.cssClassName + ')';
+			this.cssClassRegex = new RegExp( &#39;(?:^|\\s+)(?:&#39; + classes.join( &#39;|&#39; ) + &#39;)(?=$|\\s)&#39; );
+			this.requiredContent = blockTag + &#39;(&#39; + this.cssClassName + &#39;)&#39;;
 		}
 		else
-			this.requiredContent = blockTag + '{text-align}';
+			this.requiredContent = blockTag + &#39;{text-align}&#39;;
 
 		this.allowedContent = {
-			'caption div h1 h2 h3 h4 h5 h6 p pre td th li': {
+			&#39;caption div h1 h2 h3 h4 h5 h6 p pre td th li&#39;: {
 				// Do not add elements, but only text-align style if element is validated by other rule.
 				propertiesOnly: true,
-				styles: this.cssClassName ? null : 'text-align',
+				styles: this.cssClassName ? null : &#39;text-align&#39;,
 				classes: this.cssClassName || null
 			}
 		};
@@ -130,13 +130,13 @@
 				}
 
 				// Always switch CSS margins.
-				var style = 'text-align';
+				var style = &#39;text-align&#39;;
 				var align = node.getStyle( style );
 
-				if ( align == 'left' )
-					node.setStyle( style, 'right' );
-				else if ( align == 'right' )
-					node.setStyle( style, 'left' );
+				if ( align == &#39;left&#39; )
+					node.setStyle( style, &#39;right&#39; );
+				else if ( align == &#39;right&#39; )
+					node.setStyle( style, &#39;left&#39; );
 			}
 		}
 	}
@@ -162,15 +162,15 @@
 				iterator = ranges[ i ].createIterator();
 				iterator.enlargeBr = enterMode != CKEDITOR.ENTER_BR;
 
-				while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) ) ) {
+				while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) ) ) {
 					if ( block.isReadOnly() )
 						continue;
 
-					block.removeAttribute( 'align' );
-					block.removeStyle( 'text-align' );
+					block.removeAttribute( &#39;align&#39; );
+					block.removeStyle( &#39;text-align&#39; );
 
 					// Remove any of the alignment classes from the className.
-					var className = cssClassName &amp;&amp; ( block.$.className = CKEDITOR.tools.ltrim( block.$.className.replace( this.cssClassRegex, '' ) ) );
+					var className = cssClassName &amp;&amp; ( block.$.className = CKEDITOR.tools.ltrim( block.$.className.replace( this.cssClassRegex, &#39;&#39; ) ) );
 
 					var apply = ( this.state == CKEDITOR.TRISTATE_OFF ) &amp;&amp; ( !useComputedState || ( getAlignment( block, true ) != this.value ) );
 
@@ -179,9 +179,9 @@
 						if ( apply )
 							block.addClass( cssClassName );
 						else if ( !className )
-							block.removeAttribute( 'class' );
+							block.removeAttribute( &#39;class&#39; );
 					} else if ( apply )
-						block.setStyle( 'text-align', this.value );
+						block.setStyle( &#39;text-align&#39;, this.value );
 				}
 
 			}
@@ -194,64 +194,64 @@
 		refresh: function( editor, path ) {
 			var firstBlock = path.block || path.blockLimit;
 
-			this.setState( firstBlock.getName() != 'body' &amp;&amp; getAlignment( firstBlock, this.editor.config.useComputedState ) == this.value ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+			this.setState( firstBlock.getName() != &#39;body&#39; &amp;&amp; getAlignment( firstBlock, this.editor.config.useComputedState ) == this.value ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 		}
 	};
 
-	CKEDITOR.plugins.add( 'justify', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'justifyblock,justifycenter,justifyleft,justifyright', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;justify&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;justifyblock,justifycenter,justifyleft,justifyright&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
-			var left = new justifyCommand( editor, 'justifyleft', 'left' ),
-				center = new justifyCommand( editor, 'justifycenter', 'center' ),
-				right = new justifyCommand( editor, 'justifyright', 'right' ),
-				justify = new justifyCommand( editor, 'justifyblock', 'justify' );
+			var left = new justifyCommand( editor, &#39;justifyleft&#39;, &#39;left&#39; ),
+				center = new justifyCommand( editor, &#39;justifycenter&#39;, &#39;center&#39; ),
+				right = new justifyCommand( editor, &#39;justifyright&#39;, &#39;right&#39; ),
+				justify = new justifyCommand( editor, &#39;justifyblock&#39;, &#39;justify&#39; );
 
-			editor.addCommand( 'justifyleft', left );
-			editor.addCommand( 'justifycenter', center );
-			editor.addCommand( 'justifyright', right );
-			editor.addCommand( 'justifyblock', justify );
+			editor.addCommand( &#39;justifyleft&#39;, left );
+			editor.addCommand( &#39;justifycenter&#39;, center );
+			editor.addCommand( &#39;justifyright&#39;, right );
+			editor.addCommand( &#39;justifyblock&#39;, justify );
 
 			if ( editor.ui.addButton ) {
-				editor.ui.addButton( 'JustifyLeft', {
+				editor.ui.addButton( &#39;JustifyLeft&#39;, {
 					label: editor.lang.justify.left,
-					command: 'justifyleft',
-					toolbar: 'align,10'
+					command: &#39;justifyleft&#39;,
+					toolbar: &#39;align,10&#39;
 				} );
-				editor.ui.addButton( 'JustifyCenter', {
+				editor.ui.addButton( &#39;JustifyCenter&#39;, {
 					label: editor.lang.justify.center,
-					command: 'justifycenter',
-					toolbar: 'align,20'
+					command: &#39;justifycenter&#39;,
+					toolbar: &#39;align,20&#39;
 				} );
-				editor.ui.addButton( 'JustifyRight', {
+				editor.ui.addButton( &#39;JustifyRight&#39;, {
 					label: editor.lang.justify.right,
-					command: 'justifyright',
-					toolbar: 'align,30'
+					command: &#39;justifyright&#39;,
+					toolbar: &#39;align,30&#39;
 				} );
-				editor.ui.addButton( 'JustifyBlock', {
+				editor.ui.addButton( &#39;JustifyBlock&#39;, {
 					label: editor.lang.justify.block,
-					command: 'justifyblock',
-					toolbar: 'align,40'
+					command: &#39;justifyblock&#39;,
+					toolbar: &#39;align,40&#39;
 				} );
 			}
 
-			editor.on( 'dirChanged', onDirChanged );
+			editor.on( &#39;dirChanged&#39;, onDirChanged );
 		}
 	} );
 } )();
 
 <span id='CKEDITOR-config-cfg-justifyClasses'>/**
-</span> * List of classes to use for aligning the contents. If it's `null`, no classes will be used
+</span> * List of classes to use for aligning the contents. If it&#39;s `null`, no classes will be used
  * and instead the corresponding CSS values will be used.
  *
  * The array should contain 4 members, in the following order: left, center, right, justify.
  *
- *		// Use the classes 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify'
- *		config.justifyClasses = [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ];
+ *		// Use the classes &#39;AlignLeft&#39;, &#39;AlignCenter&#39;, &#39;AlignRight&#39;, &#39;AlignJustify&#39;
+ *		config.justifyClasses = [ &#39;AlignLeft&#39;, &#39;AlignCenter&#39;, &#39;AlignRight&#39;, &#39;AlignJustify&#39; ];
  *
  * @cfg {Array} [justifyClasses=null]
  * @member CKEDITOR.config

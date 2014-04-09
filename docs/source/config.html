@@ -79,14 +79,14 @@ CKEDITOR.config = {
 	 * other custom configuration files.
 	 *
 	 *		// Load a specific configuration file.
-	 *		CKEDITOR.replace( 'myfield', { customConfig: '/myconfig.js' } );
+	 *		CKEDITOR.replace( &#39;myfield&#39;, { customConfig: &#39;/myconfig.js&#39; } );
 	 *
 	 *		// Do not load any custom configuration file.
-	 *		CKEDITOR.replace( 'myfield', { customConfig: '' } );
+	 *		CKEDITOR.replace( &#39;myfield&#39;, { customConfig: &#39;&#39; } );
 	 *
 	 * @cfg {String} [=&quot;&lt;CKEditor folder&gt;/config.js&quot;]
 	 */
-	customConfig: 'config.js',
+	customConfig: &#39;config.js&#39;,
 
 <span id='CKEDITOR-config-cfg-autoUpdateElement'>	/**
 </span>	 * Whether the replaced element (usually a `&lt;textarea&gt;`)
@@ -103,40 +103,40 @@ CKEDITOR.config = {
 	 * configuration setting is used.
 	 *
 	 *		// Load the German interface.
-	 *		config.language = 'de';
+	 *		config.language = &#39;de&#39;;
 	 *
 	 * @cfg
 	 */
-	language: '',
+	language: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-defaultLanguage'>	/**
 </span>	 * The language to be used if the {@link CKEDITOR.config#language}
 	 * setting is left empty and it is not possible to localize the editor to the user language.
 	 *
-	 *		config.defaultLanguage = 'it';
+	 *		config.defaultLanguage = &#39;it&#39;;
 	 *
 	 * @cfg
 	 */
-	defaultLanguage: 'en',
+	defaultLanguage: &#39;en&#39;,
 
 <span id='CKEDITOR-config-cfg-contentsLangDirection'>	/**
 </span>	 * The writting direction of the language used to write the editor
 	 * contents. Allowed values are:
 	 *
-	 * * `''` (empty string) - indicate content direction will be the same with either the editor
+	 * * `&#39;&#39;` (empty string) - indicate content direction will be the same with either the editor
 	 *     UI direction or page element direction depending on the creators:
 	 *     * Themed UI: The same with user interface language direction;
 	 *     * Inline: The same with the editable element text direction;
-	 * * `'ltr'` - for Left-To-Right language (like English);
-	 * * `'rtl'` - for Right-To-Left languages (like Arabic).
+	 * * `&#39;ltr&#39;` - for Left-To-Right language (like English);
+	 * * `&#39;rtl&#39;` - for Right-To-Left languages (like Arabic).
 	 *
 	 * Example:
 	 *
-	 *		config.contentsLangDirection = 'rtl';
+	 *		config.contentsLangDirection = &#39;rtl&#39;;
 	 *
 	 * @cfg
 	 */
-	contentsLangDirection: '',
+	contentsLangDirection: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-enterMode'>	/**
 </span>	 * Sets the behavior of the *Enter* key. It also determines other behavior
@@ -195,11 +195,11 @@ CKEDITOR.config = {
 </span>	 * Sets the `DOCTYPE` to be used when loading the editor content as HTML.
 	 *
 	 *		// Set the DOCTYPE to the HTML 4 (Quirks) mode.
-	 *		config.docType = '&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0 Transitional//EN&quot;&gt;';
+	 *		config.docType = &#39;&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0 Transitional//EN&quot;&gt;&#39;;
 	 *
 	 * @cfg
 	 */
-	docType: '&lt;!DOCTYPE html&gt;',
+	docType: &#39;&lt;!DOCTYPE html&gt;&#39;,
 
 <span id='CKEDITOR-config-cfg-bodyId'>	/**
 </span>	 * Sets the `id` attribute to be used on the `body` element
@@ -208,12 +208,12 @@ CKEDITOR.config = {
 	 * as the section that will include the contents. In this way ID-specific CSS rules will
 	 * be enabled.
 	 *
-	 *		config.bodyId = 'contents_id';
+	 *		config.bodyId = &#39;contents_id&#39;;
 	 *
 	 * @since 3.1
 	 * @cfg
 	 */
-	bodyId: '',
+	bodyId: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-bodyClass'>	/**
 </span>	 * Sets the `class` attribute to be used on the `body` element
@@ -222,7 +222,7 @@ CKEDITOR.config = {
 	 * as the section that will include the contents. In this way class-specific CSS rules will
 	 * be enabled.
 	 *
-	 *		config.bodyClass = 'contents';
+	 *		config.bodyClass = &#39;contents&#39;;
 	 *
 	 * **Note:** Editor needs to load stylesheets containing contents styles. You can either
 	 * copy them to the `contents.css` file that editor loads by default or set the {@link #contentsCss}
@@ -233,7 +233,7 @@ CKEDITOR.config = {
 	 * @since 3.1
 	 * @cfg
 	 */
-	bodyClass: '',
+	bodyClass: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-fullPage'>	/**
 </span>	 * Indicates whether the contents to be edited are being input as a full HTML page.
@@ -255,8 +255,8 @@ CKEDITOR.config = {
 	 * **Note:** Percent units (%) are not supported.
 	 *
 	 *		config.height = 500;		// 500 pixels.
-	 *		config.height = '25em';		// CSS length.
-	 *		config.height = '300px';	// CSS length.
+	 *		config.height = &#39;25em&#39;;		// CSS length.
+	 *		config.height = &#39;300px&#39;;	// CSS length.
 	 *
 	 * @cfg {Number/String}
 	 */
@@ -269,17 +269,17 @@ CKEDITOR.config = {
 	 *
 	 * @cfg {String} [=&quot;&lt;default list of plugins&gt;&quot;]
 	 */
-	plugins: '', // %REMOVE_LINE%
+	plugins: &#39;&#39;, // %REMOVE_LINE%
 
 <span id='CKEDITOR-config-cfg-extraPlugins'>	/**
 </span>	 * A list of additional plugins to be loaded. This setting makes it easier
 	 * to add new plugins without having to touch {@link CKEDITOR.config#plugins} setting.
 	 *
-	 *		config.extraPlugins = 'myplugin,anotherplugin';
+	 *		config.extraPlugins = &#39;myplugin,anotherplugin&#39;;
 	 *
 	 * @cfg
 	 */
-	extraPlugins: '',
+	extraPlugins: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-removePlugins'>	/**
 </span>	 * A list of plugins that must not be loaded. This setting makes it possible
@@ -288,13 +288,13 @@ CKEDITOR.config = {
 	 *
 	 * **Note:** Plugin required by other plugin cannot be removed (error will be thrown).
 	 * So e.g. if `contextmenu` is required by `tabletools`, then it can be removed
-	 * only if `tabletools` isn't loaded.
+	 * only if `tabletools` isn&#39;t loaded.
 	 *
-	 *		config.removePlugins = 'elementspath,save,font';
+	 *		config.removePlugins = &#39;elementspath,save,font&#39;;
 	 *
 	 * @cfg
 	 */
-	removePlugins: '',
+	removePlugins: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-protectedSource'>	/**
 </span>	 * List of regular expressions to be executed on input HTML,
@@ -327,11 +327,11 @@ CKEDITOR.config = {
 	 * editing area only.
 	 *
 	 *		config.width = 850;		// 850 pixels wide.
-	 *		config.width = '75%';	// CSS unit.
+	 *		config.width = &#39;75%&#39;;	// CSS unit.
 	 *
 	 * @cfg {String/Number}
 	 */
-	width: '',
+	width: &#39;&#39;,
 
 <span id='CKEDITOR-config-cfg-baseFloatZIndex'>	/**
 </span>	 * The base Z-index for floating dialog windows and popups.
@@ -382,10 +382,10 @@ CKEDITOR.config = {
  * compatible with this setting.
  *
  *		// Using a color code.
- *		config.uiColor = '#AADC6E';
+ *		config.uiColor = &#39;#AADC6E&#39;;
  *
  *		// Using an HTML color name.
- *		config.uiColor = 'Gold';
+ *		config.uiColor = &#39;Gold&#39;;
  *
  * @cfg {String} uiColor
  */

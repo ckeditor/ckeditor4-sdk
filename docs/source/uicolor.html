@@ -20,11 +20,11 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'uicolor', function( editor ) {
+CKEDITOR.dialog.add( &#39;uicolor&#39;, function( editor ) {
 	var dialog, picker, pickerContents,
 	// Actual UI color value.
 	uiColor = editor.getUiColor(),
-		pickerId = 'cke_uicolor_picker' + CKEDITOR.tools.getNextNumber();
+		pickerId = &#39;cke_uicolor_picker&#39; + CKEDITOR.tools.getNextNumber();
 
 	function setNewPickerColor( color ) {
 		// Convert HEX representation to RGB, stripping # char.
@@ -38,15 +38,15 @@ CKEDITOR.dialog.add( 'uicolor', function( editor ) {
 	function setNewUiColor( color ) {
 		editor.setUiColor( color );
 		// Write new config string into textbox.
-		dialog._.contents.tab1.configBox.setValue( 'config.uiColor = &quot;#' + picker.get( &quot;hex&quot; ) + '&quot;' );
+		dialog._.contents.tab1.configBox.setValue( &#39;config.uiColor = &quot;#&#39; + picker.get( &quot;hex&quot; ) + &#39;&quot;&#39; );
 	}
 
 	pickerContents = {
-		id: 'yuiColorPicker',
-		type: 'html',
-		html: &quot;&lt;div id='&quot; + pickerId + &quot;' class='cke_uicolor_picker' style='width: 360px; height: 200px; position: relative;'&gt;&lt;/div&gt;&quot;,
+		id: &#39;yuiColorPicker&#39;,
+		type: &#39;html&#39;,
+		html: &quot;&lt;div id=&#39;&quot; + pickerId + &quot;&#39; class=&#39;cke_uicolor_picker&#39; style=&#39;width: 360px; height: 200px; position: relative;&#39;&gt;&lt;/div&gt;&quot;,
 		onLoad: function( event ) {
-			var url = CKEDITOR.getUrl( 'plugins/uicolor/yui/' );
+			var url = CKEDITOR.getUrl( &#39;plugins/uicolor/yui/&#39; );
 
 			// Create new color picker widget.
 			picker = new window.YAHOO.widget.ColorPicker( pickerId, {
@@ -68,14 +68,14 @@ CKEDITOR.dialog.add( 'uicolor', function( editor ) {
 			// Subscribe to the rgbChange event.
 			picker.on( &quot;rgbChange&quot;, function() {
 				// Reset predefined box.
-				dialog._.contents.tab1.predefined.setValue( '' );
-				setNewUiColor( '#' + picker.get( 'hex' ) );
+				dialog._.contents.tab1.predefined.setValue( &#39;&#39; );
+				setNewUiColor( &#39;#&#39; + picker.get( &#39;hex&#39; ) );
 			} );
 
 			// Fix input class names.
-			var inputs = new CKEDITOR.dom.nodeList( picker.getElementsByTagName( 'input' ) );
+			var inputs = new CKEDITOR.dom.nodeList( picker.getElementsByTagName( &#39;input&#39; ) );
 			for ( var i = 0; i &lt; inputs.count(); i++ )
-				inputs.getItem( i ).addClass( 'cke_dialog_ui_input_text' );
+				inputs.getItem( i ).addClass( &#39;cke_dialog_ui_input_text&#39; );
 		}
 	};
 
@@ -89,51 +89,51 @@ CKEDITOR.dialog.add( 'uicolor', function( editor ) {
 
 			// #3808
 			if ( CKEDITOR.env.ie7Compat )
-				dialog.parts.contents.setStyle( 'overflow', 'hidden' );
+				dialog.parts.contents.setStyle( &#39;overflow&#39;, &#39;hidden&#39; );
 		},
 		contents: [
 			{
-			id: 'tab1',
-			label: '',
-			title: '',
+			id: &#39;tab1&#39;,
+			label: &#39;&#39;,
+			title: &#39;&#39;,
 			expand: true,
 			padding: 0,
 			elements: [
 				pickerContents,
 			{
-				id: 'tab1',
-				type: 'vbox',
+				id: &#39;tab1&#39;,
+				type: &#39;vbox&#39;,
 				children: [
 					{
-					type: 'hbox',
+					type: &#39;hbox&#39;,
 					children: [
 						{
-						id: 'predefined',
-						type: 'select',
-						'default': '',
+						id: &#39;predefined&#39;,
+						type: &#39;select&#39;,
+						&#39;default&#39;: &#39;&#39;,
 						label: editor.lang.uicolor.predefined,
 						items: [
-							[ '' ],
-							[ 'Light blue', '#9AB8F3' ],
-							[ 'Sand', '#D2B48C' ],
-							[ 'Metallic', '#949AAA' ],
-							[ 'Purple', '#C2A3C7' ],
-							[ 'Olive', '#A2C980' ],
-							[ 'Happy green', '#9BD446' ],
-							[ 'Jezebel Blue', '#14B8C4' ],
-							[ 'Burn', '#FF893A' ],
-							[ 'Easy red', '#FF6969' ],
-							[ 'Pisces 3', '#48B4F2' ],
-							[ 'Aquarius 5', '#487ED4' ],
-							[ 'Absinthe', '#A8CF76' ],
-							[ 'Scrambled Egg', '#C7A622' ],
-							[ 'Hello monday', '#8E8D80' ],
-							[ 'Lovely sunshine', '#F1E8B1' ],
-							[ 'Recycled air', '#B3C593' ],
-							[ 'Down', '#BCBCA4' ],
-							[ 'Mark Twain', '#CFE91D' ],
-							[ 'Specks of dust', '#D1B596' ],
-							[ 'Lollipop', '#F6CE23' ]
+							[ &#39;&#39; ],
+							[ &#39;Light blue&#39;, &#39;#9AB8F3&#39; ],
+							[ &#39;Sand&#39;, &#39;#D2B48C&#39; ],
+							[ &#39;Metallic&#39;, &#39;#949AAA&#39; ],
+							[ &#39;Purple&#39;, &#39;#C2A3C7&#39; ],
+							[ &#39;Olive&#39;, &#39;#A2C980&#39; ],
+							[ &#39;Happy green&#39;, &#39;#9BD446&#39; ],
+							[ &#39;Jezebel Blue&#39;, &#39;#14B8C4&#39; ],
+							[ &#39;Burn&#39;, &#39;#FF893A&#39; ],
+							[ &#39;Easy red&#39;, &#39;#FF6969&#39; ],
+							[ &#39;Pisces 3&#39;, &#39;#48B4F2&#39; ],
+							[ &#39;Aquarius 5&#39;, &#39;#487ED4&#39; ],
+							[ &#39;Absinthe&#39;, &#39;#A8CF76&#39; ],
+							[ &#39;Scrambled Egg&#39;, &#39;#C7A622&#39; ],
+							[ &#39;Hello monday&#39;, &#39;#8E8D80&#39; ],
+							[ &#39;Lovely sunshine&#39;, &#39;#F1E8B1&#39; ],
+							[ &#39;Recycled air&#39;, &#39;#B3C593&#39; ],
+							[ &#39;Down&#39;, &#39;#BCBCA4&#39; ],
+							[ &#39;Mark Twain&#39;, &#39;#CFE91D&#39; ],
+							[ &#39;Specks of dust&#39;, &#39;#D1B596&#39; ],
+							[ &#39;Lollipop&#39;, &#39;#F6CE23&#39; ]
 							],
 						onChange: function() {
 							var color = this.getValue();
@@ -141,9 +141,9 @@ CKEDITOR.dialog.add( 'uicolor', function( editor ) {
 								setNewPickerColor( color );
 								setNewUiColor( color );
 								// Refresh predefined preview box.
-								CKEDITOR.document.getById( 'predefinedPreview' ).setStyle( 'background', color );
+								CKEDITOR.document.getById( &#39;predefinedPreview&#39; ).setStyle( &#39;background&#39;, color );
 							} else
-								CKEDITOR.document.getById( 'predefinedPreview' ).setStyle( 'background', '' );
+								CKEDITOR.document.getById( &#39;predefinedPreview&#39; ).setStyle( &#39;background&#39;, &#39;&#39; );
 						},
 						onShow: function() {
 							var color = editor.getUiColor();
@@ -152,22 +152,22 @@ CKEDITOR.dialog.add( 'uicolor', function( editor ) {
 						}
 					},
 						{
-						id: 'predefinedPreview',
-						type: 'html',
-						html: '&lt;div id=&quot;cke_uicolor_preview&quot; style=&quot;border: 1px solid black; padding: 3px; width: 30px;&quot;&gt;' +
-							'&lt;div id=&quot;predefinedPreview&quot; style=&quot;width: 30px; height: 30px;&quot;&gt;&amp;nbsp;&lt;/div&gt;' +
-							'&lt;/div&gt;'
+						id: &#39;predefinedPreview&#39;,
+						type: &#39;html&#39;,
+						html: &#39;&lt;div id=&quot;cke_uicolor_preview&quot; style=&quot;border: 1px solid black; padding: 3px; width: 30px;&quot;&gt;&#39; +
+							&#39;&lt;div id=&quot;predefinedPreview&quot; style=&quot;width: 30px; height: 30px;&quot;&gt;&amp;nbsp;&lt;/div&gt;&#39; +
+							&#39;&lt;/div&gt;&#39;
 					}
 					]
 				},
 					{
-					id: 'configBox',
-					type: 'text',
+					id: &#39;configBox&#39;,
+					type: &#39;text&#39;,
 					label: editor.lang.uicolor.config,
 					onShow: function() {
 						var color = editor.getUiColor();
 						if ( color )
-							this.setValue( 'config.uiColor = &quot;' + color + '&quot;' );
+							this.setValue( &#39;config.uiColor = &quot;&#39; + color + &#39;&quot;&#39; );
 					}
 				}
 				]

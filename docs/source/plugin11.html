@@ -31,7 +31,7 @@
 
 	var commandObject = {
 		exec: function( editor ) {
-			var state = editor.getCommand( 'blockquote' ).state,
+			var state = editor.getCommand( &#39;blockquote&#39; ).state,
 				selection = editor.getSelection(),
 				range = selection &amp;&amp; selection.getRanges()[ 0 ];
 
@@ -48,7 +48,7 @@
 					bookmarkEnd = bookmarks[ 0 ].endNode,
 					cursor;
 
-				if ( bookmarkStart &amp;&amp; bookmarkStart.getParent().getName() == 'blockquote' ) {
+				if ( bookmarkStart &amp;&amp; bookmarkStart.getParent().getName() == &#39;blockquote&#39; ) {
 					cursor = bookmarkStart;
 					while ( ( cursor = cursor.getNext() ) ) {
 						if ( cursor.type == CKEDITOR.NODE_ELEMENT &amp;&amp; cursor.isBlockBoundary() ) {
@@ -58,7 +58,7 @@
 					}
 				}
 
-				if ( bookmarkEnd &amp;&amp; bookmarkEnd.getParent().getName() == 'blockquote' ) {
+				if ( bookmarkEnd &amp;&amp; bookmarkEnd.getParent().getName() == &#39;blockquote&#39; ) {
 					cursor = bookmarkEnd;
 					while ( ( cursor = cursor.getPrevious() ) ) {
 						if ( cursor.type == CKEDITOR.NODE_ELEMENT &amp;&amp; cursor.isBlockBoundary() ) {
@@ -80,10 +80,10 @@
 
 				// If no paragraphs, create one from the current selection position.
 				if ( paragraphs.length &lt; 1 ) {
-					var para = editor.document.createElement( editor.config.enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ),
+					var para = editor.document.createElement( editor.config.enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ),
 						firstBookmark = bookmarks.shift();
 					range.insertNode( para );
-					para.append( new CKEDITOR.dom.text( '\ufeff', editor.document ) );
+					para.append( new CKEDITOR.dom.text( &#39;\ufeff&#39;, editor.document ) );
 					range.moveToBookmark( firstBookmark );
 					range.selectNodeContents( para );
 					range.collapse( true );
@@ -121,7 +121,7 @@
 				// nested blockquotes.
 				while ( tmp.length &gt; 0 ) {
 					block = tmp.shift();
-					if ( block.getName() == 'blockquote' ) {
+					if ( block.getName() == &#39;blockquote&#39; ) {
 						var docFrag = new CKEDITOR.dom.documentFragment( editor.document );
 						while ( block.getFirst() ) {
 							docFrag.append( block.getFirst().remove() );
@@ -134,7 +134,7 @@
 				}
 
 				// Now we have all the blocks to be included in a new blockquote node.
-				var bqBlock = editor.document.createElement( 'blockquote' );
+				var bqBlock = editor.document.createElement( &#39;blockquote&#39; );
 				bqBlock.insertBefore( paragraphs[ 0 ] );
 				while ( paragraphs.length &gt; 0 ) {
 					block = paragraphs.shift();
@@ -148,7 +148,7 @@
 					var bqParent = null,
 						bqChild = null;
 					while ( block.getParent() ) {
-						if ( block.getParent().getName() == 'blockquote' ) {
+						if ( block.getParent().getName() == &#39;blockquote&#39; ) {
 							bqParent = block.getParent();
 							bqChild = block;
 							break;
@@ -158,9 +158,9 @@
 
 					// Remember the blocks that were recorded down in the moveOutNodes array
 					// to prevent duplicates.
-					if ( bqParent &amp;&amp; bqChild &amp;&amp; !bqChild.getCustomData( 'blockquote_moveout' ) ) {
+					if ( bqParent &amp;&amp; bqChild &amp;&amp; !bqChild.getCustomData( &#39;blockquote_moveout&#39; ) ) {
 						moveOutNodes.push( bqChild );
-						CKEDITOR.dom.element.setMarker( database, bqChild, 'blockquote_moveout', true );
+						CKEDITOR.dom.element.setMarker( database, bqChild, &#39;blockquote_moveout&#39;, true );
 					}
 				}
 
@@ -187,9 +187,9 @@
 					}
 
 					// Remember the blockquote node so we can clear it later (if it becomes empty).
-					if ( !bqBlock.getCustomData( 'blockquote_processed' ) ) {
+					if ( !bqBlock.getCustomData( &#39;blockquote_processed&#39; ) ) {
 						processedBlockquoteBlocks.push( bqBlock );
-						CKEDITOR.dom.element.setMarker( database, bqBlock, 'blockquote_processed', true );
+						CKEDITOR.dom.element.setMarker( database, bqBlock, &#39;blockquote_processed&#39;, true );
 					}
 
 					movedNodes.push( node );
@@ -209,18 +209,18 @@
 					while ( movedNodes.length ) {
 						node = movedNodes.shift();
 
-						if ( node.getName() == 'div' ) {
+						if ( node.getName() == &#39;div&#39; ) {
 							docFrag = new CKEDITOR.dom.documentFragment( editor.document );
 							var needBeginBr = firstTime &amp;&amp; node.getPrevious() &amp;&amp; !( node.getPrevious().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getPrevious().isBlockBoundary() );
 							if ( needBeginBr )
-								docFrag.append( editor.document.createElement( 'br' ) );
+								docFrag.append( editor.document.createElement( &#39;br&#39; ) );
 
 							var needEndBr = node.getNext() &amp;&amp; !( node.getNext().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getNext().isBlockBoundary() );
 							while ( node.getFirst() )
 								node.getFirst().remove().appendTo( docFrag );
 
 							if ( needEndBr )
-								docFrag.append( editor.document.createElement( 'br' ) );
+								docFrag.append( editor.document.createElement( &#39;br&#39; ) );
 
 							docFrag.replace( node );
 							firstTime = false;
@@ -236,29 +236,29 @@
 		refresh: function( editor, path ) {
 			// Check if inside of blockquote.
 			var firstBlock = path.block || path.blockLimit;
-			this.setState( editor.elementPath( firstBlock ).contains( 'blockquote', 1 ) ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+			this.setState( editor.elementPath( firstBlock ).contains( &#39;blockquote&#39;, 1 ) ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 		},
 
-		context: 'blockquote',
+		context: &#39;blockquote&#39;,
 
-		allowedContent: 'blockquote',
-		requiredContent: 'blockquote'
+		allowedContent: &#39;blockquote&#39;,
+		requiredContent: &#39;blockquote&#39;
 	};
 
-	CKEDITOR.plugins.add( 'blockquote', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'blockquote', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;blockquote&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;blockquote&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
-			editor.addCommand( 'blockquote', commandObject );
+			editor.addCommand( &#39;blockquote&#39;, commandObject );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Blockquote', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Blockquote&#39;, {
 				label: editor.lang.blockquote.toolbar,
-				command: 'blockquote',
-				toolbar: 'blocks,10'
+				command: &#39;blockquote&#39;,
+				toolbar: &#39;blocks,10&#39;
 			} );
 		}
 	} );

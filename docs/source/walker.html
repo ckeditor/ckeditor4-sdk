@@ -51,7 +51,7 @@
 			guard,
 			userGuard = this.guard,
 			type = this.type,
-			getSourceNodeFn = ( rtl ? 'getPreviousSourceNode' : 'getNextSourceNode' );
+			getSourceNodeFn = ( rtl ? &#39;getPreviousSourceNode&#39; : &#39;getNextSourceNode&#39; );
 
 		// Create the LTR guard function, if necessary.
 		if ( !rtl &amp;&amp; !this._.guardLTR ) {
@@ -152,7 +152,7 @@
 	 * be included as a whole. Outside changes to the range may break the walker.
 	 *
 	 * The walker may return nodes that are not totaly included into the
-	 * range boundaires. Let's take the following range representation,
+	 * range boundaires. Let&#39;s take the following range representation,
 	 * where the square brackets indicate the boundaries:
 	 *
 	 *		[&lt;p&gt;Some &lt;b&gt;sample] text&lt;/b&gt;
@@ -178,7 +178,7 @@
 
 <span id='CKEDITOR-dom-walker-property-evaluator'>			/**
 </span>			 * A function executed for every matched node, to check whether
-			 * it's to be considered into the walk or not. If not provided, all
+			 * it&#39;s to be considered into the walk or not. If not provided, all
 			 * matched nodes are considered good.
 			 *
 			 * If the function returns `false` the node is ignored.
@@ -189,7 +189,7 @@
 
 <span id='CKEDITOR-dom-walker-property-guard'>			/**
 </span>			 * A function executed for every node the walk pass by to check
-			 * whether the walk is to be finished. It's called when both
+			 * whether the walk is to be finished. It&#39;s called when both
 			 * entering and exiting nodes, as well as for the matched nodes.
 			 *
 			 * If this function returns `false`, the walking ends and no more
@@ -317,9 +317,9 @@
 	// table-row-group, table-header-group, table-footer-group, table-row,
 	// table-column-group, table-column, table-cell, table-caption, or whose node
 	// name is hr, br (when enterMode is br only) is a block boundary.
-	var blockBoundaryDisplayMatch = { block: 1, 'list-item': 1, table: 1, 'table-row-group': 1,
-			'table-header-group': 1, 'table-footer-group': 1, 'table-row': 1, 'table-column-group': 1,
-			'table-column': 1, 'table-cell': 1, 'table-caption': 1 },
+	var blockBoundaryDisplayMatch = { block: 1, &#39;list-item&#39;: 1, table: 1, &#39;table-row-group&#39;: 1,
+			&#39;table-header-group&#39;: 1, &#39;table-footer-group&#39;: 1, &#39;table-row&#39;: 1, &#39;table-column-group&#39;: 1,
+			&#39;table-column&#39;: 1, &#39;table-cell&#39;: 1, &#39;table-caption&#39;: 1 },
 		outOfFlowPositions = { absolute: 1, fixed: 1 };
 
 <span id='CKEDITOR-dom-element-method-isBlockBoundary'>	/**
@@ -332,10 +332,10 @@
 	 */
 	CKEDITOR.dom.element.prototype.isBlockBoundary = function( customNodeNames ) {
 		// Whether element is in normal page flow. Floated or positioned elements are out of page flow.
-		// Don't consider floated or positioned formatting as block boundary, fall back to dtd check in that case. (#6297)
-		var inPageFlow = this.getComputedStyle( 'float' ) == 'none' &amp;&amp; !( this.getComputedStyle( 'position' ) in outOfFlowPositions );
+		// Don&#39;t consider floated or positioned formatting as block boundary, fall back to dtd check in that case. (#6297)
+		var inPageFlow = this.getComputedStyle( &#39;float&#39; ) == &#39;none&#39; &amp;&amp; !( this.getComputedStyle( &#39;position&#39; ) in outOfFlowPositions );
 
-		if ( inPageFlow &amp;&amp; blockBoundaryDisplayMatch[ this.getComputedStyle( 'display' ) ] )
+		if ( inPageFlow &amp;&amp; blockBoundaryDisplayMatch[ this.getComputedStyle( &#39;display&#39; ) ] )
 			return true;
 
 		// Either in $block or in customNodeNames if defined.
@@ -377,7 +377,7 @@
 	 */
 	CKEDITOR.dom.walker.bookmark = function( contentOnly, isReject ) {
 		function isBookmarkNode( node ) {
-			return ( node &amp;&amp; node.getName &amp;&amp; node.getName() == 'span' &amp;&amp; node.data( 'cke-bookmark' ) );
+			return ( node &amp;&amp; node.getName &amp;&amp; node.getName() == &#39;span&#39; &amp;&amp; node.data( &#39;cke-bookmark&#39; ) );
 		}
 
 		return function( node ) {
@@ -403,7 +403,7 @@
 			if ( node &amp;&amp; node.type == CKEDITOR.NODE_TEXT ) {
 				// whitespace, as well as the text cursor filler node we used in Webkit. (#9384)
 				isWhitespace = !CKEDITOR.tools.trim( node.getText() ) ||
-					CKEDITOR.env.webkit &amp;&amp; node.getText() == '\u200b';
+					CKEDITOR.env.webkit &amp;&amp; node.getText() == &#39;\u200b&#39;;
 			}
 
 			return !!( isReject ^ isWhitespace );
@@ -431,8 +431,8 @@
 
 			// Nodes that take no spaces in wysiwyg:
 			// 1. White-spaces but not including NBSP;
-			// 2. Empty inline elements, e.g. &lt;b&gt;&lt;/b&gt; we're checking here
-			// 'offsetHeight' instead of 'offsetWidth' for properly excluding
+			// 2. Empty inline elements, e.g. &lt;b&gt;&lt;/b&gt; we&#39;re checking here
+			// &#39;offsetHeight&#39; instead of &#39;offsetWidth&#39; for properly excluding
 			// all sorts of empty paragraph, e.g. &lt;br /&gt;.
 				invisible = !node.$.offsetHeight;
 			}
@@ -442,7 +442,7 @@
 	};
 
 <span id='CKEDITOR-dom-walker-static-method-nodeType'>	/**
-</span>	 * Returns a function which checks whether node's type is equal to passed one.
+</span>	 * Returns a function which checks whether node&#39;s type is equal to passed one.
 	 *
 	 * @static
 	 * @param {Number} type
@@ -457,7 +457,7 @@
 
 <span id='CKEDITOR-dom-walker-static-method-bogus'>	/**
 </span>	 * Returns a function which checks whether node is a bogus (filler) node from
-	 * contenteditable element's point of view.
+	 * contenteditable element&#39;s point of view.
 	 *
 	 * @static
 	 * @param {Boolean} [isReject=false]
@@ -469,7 +469,7 @@
 		}
 
 		return function( node ) {
-			var isBogus = CKEDITOR.env.needsBrFiller ? node.is &amp;&amp; node.is( 'br' ) : node.getText &amp;&amp; tailNbspRegex.test( node.getText() );
+			var isBogus = CKEDITOR.env.needsBrFiller ? node.is &amp;&amp; node.is( &#39;br&#39; ) : node.getText &amp;&amp; tailNbspRegex.test( node.getText() );
 
 			if ( isBogus ) {
 				var parent = node.getParent(),
@@ -497,7 +497,7 @@
 			if ( node.type != CKEDITOR.NODE_ELEMENT )
 				node = node.getParent();
 
-			var isTemp = node &amp;&amp; node.hasAttribute( 'data-cke-temp' );
+			var isTemp = node &amp;&amp; node.hasAttribute( &#39;data-cke-temp&#39; );
 
 			return !!( isReject ^ isTemp );
 		};
@@ -554,7 +554,7 @@
 			name;
 
 		for ( name in dtd ) {
-			if ( CKEDITOR.dtd[ name ][ '#' ] )
+			if ( CKEDITOR.dtd[ name ][ &#39;#&#39; ] )
 				hash[ name ] = 1;
 		}
 		return hash;
@@ -574,7 +574,7 @@
 		if ( node.type == CKEDITOR.NODE_ELEMENT ) {
 			// All inline and non-editable elements are valid editable places.
 			// Note: non-editable block has to be treated differently (should be selected entirely).
-			if ( node.is( CKEDITOR.dtd.$inline ) || node.getAttribute( 'contenteditable' ) == 'false' )
+			if ( node.is( CKEDITOR.dtd.$inline ) || node.getAttribute( &#39;contenteditable&#39; ) == &#39;false&#39; )
 				return true;
 
 			// Empty blocks are editable on IE.
@@ -611,7 +611,7 @@
 	};
 
 <span id='CKEDITOR-dom-element-method-getBogus'>	/**
-</span>	 * Checks if there's a filler node at the end of an element, and returns it.
+</span>	 * Checks if there&#39;s a filler node at the end of an element, and returns it.
 	 *
 	 * @member CKEDITOR.dom.element
 	 * @returns {CKEDITOR.dom.node/Boolean} Bogus node or `false`.
@@ -624,7 +624,7 @@
 		}
 		while ( toSkip( tail ) )
 
-		if ( tail &amp;&amp; ( CKEDITOR.env.needsBrFiller ? tail.is &amp;&amp; tail.is( 'br' ) : tail.getText &amp;&amp; tailNbspRegex.test( tail.getText() ) ) )
+		if ( tail &amp;&amp; ( CKEDITOR.env.needsBrFiller ? tail.is &amp;&amp; tail.is( &#39;br&#39; ) : tail.getText &amp;&amp; tailNbspRegex.test( tail.getText() ) ) )
 			return tail;
 
 		return false;

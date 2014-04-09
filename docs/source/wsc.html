@@ -20,49 +20,49 @@
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'checkspell', function( editor ) {
+CKEDITOR.dialog.add( &#39;checkspell&#39;, function( editor ) {
 	var number = CKEDITOR.tools.getNextNumber(),
-		iframeId = 'cke_frame_' + number,
-		textareaId = 'cke_data_' + number,
-		errorBoxId = 'cke_error_' + number,
+		iframeId = &#39;cke_frame_&#39; + number,
+		textareaId = &#39;cke_data_&#39; + number,
+		errorBoxId = &#39;cke_error_&#39; + number,
 		interval,
-		protocol = document.location.protocol || 'http:',
+		protocol = document.location.protocol || &#39;http:&#39;,
 		errorMsg = editor.lang.wsc.notAvailable;
 
 	var pasteArea =
-		'&lt;textarea' +
-			' style=&quot;display: none&quot;' +
-			' id=&quot;' + textareaId + '&quot;' +
-			' rows=&quot;10&quot;' +
-			' cols=&quot;40&quot;&gt;' +
-		' &lt;/textarea&gt;&lt;div' +
-			' id=&quot;' + errorBoxId + '&quot;' +
-			' style=&quot;display:none;color:red;font-size:16px;font-weight:bold;padding-top:160px;text-align:center;z-index:11;&quot;&gt;' +
-		'&lt;/div&gt;&lt;iframe' +
-			' src=&quot;&quot;' +
-			' style=&quot;width:100%;background-color:#f1f1e3;&quot;' +
-			' frameborder=&quot;0&quot;' +
-			' name=&quot;' + iframeId + '&quot;' +
-			' id=&quot;' + iframeId + '&quot;' +
-			' allowtransparency=&quot;1&quot;&gt;' +
-		'&lt;/iframe&gt;';
+		&#39;&lt;textarea&#39; +
+			&#39; style=&quot;display: none&quot;&#39; +
+			&#39; id=&quot;&#39; + textareaId + &#39;&quot;&#39; +
+			&#39; rows=&quot;10&quot;&#39; +
+			&#39; cols=&quot;40&quot;&gt;&#39; +
+		&#39; &lt;/textarea&gt;&lt;div&#39; +
+			&#39; id=&quot;&#39; + errorBoxId + &#39;&quot;&#39; +
+			&#39; style=&quot;display:none;color:red;font-size:16px;font-weight:bold;padding-top:160px;text-align:center;z-index:11;&quot;&gt;&#39; +
+		&#39;&lt;/div&gt;&lt;iframe&#39; +
+			&#39; src=&quot;&quot;&#39; +
+			&#39; style=&quot;width:100%;background-color:#f1f1e3;&quot;&#39; +
+			&#39; frameborder=&quot;0&quot;&#39; +
+			&#39; name=&quot;&#39; + iframeId + &#39;&quot;&#39; +
+			&#39; id=&quot;&#39; + iframeId + &#39;&quot;&#39; +
+			&#39; allowtransparency=&quot;1&quot;&gt;&#39; +
+		&#39;&lt;/iframe&gt;&#39;;
 
-	var wscCoreUrl = editor.config.wsc_customLoaderScript || ( protocol + '//loader.webspellchecker.net/sproxy_fck/sproxy.php' + '?plugin=fck2'
-		+ '&amp;customerid=' + editor.config.wsc_customerId
-		+ '&amp;cmd=script&amp;doc=wsc&amp;schema=22'
+	var wscCoreUrl = editor.config.wsc_customLoaderScript || ( protocol + &#39;//loader.webspellchecker.net/sproxy_fck/sproxy.php&#39; + &#39;?plugin=fck2&#39;
+		+ &#39;&amp;customerid=&#39; + editor.config.wsc_customerId
+		+ &#39;&amp;cmd=script&amp;doc=wsc&amp;schema=22&#39;
 	);
 
 	if ( editor.config.wsc_customLoaderScript ) {
-		errorMsg += '&lt;p style=&quot;color:#000;font-size:11px;font-weight: normal;text-align:center;padding-top:10px&quot;&gt;' +
-			editor.lang.wsc.errorLoading.replace( /%s/g, editor.config.wsc_customLoaderScript ) + '&lt;/p&gt;';
+		errorMsg += &#39;&lt;p style=&quot;color:#000;font-size:11px;font-weight: normal;text-align:center;padding-top:10px&quot;&gt;&#39; +
+			editor.lang.wsc.errorLoading.replace( /%s/g, editor.config.wsc_customLoaderScript ) + &#39;&lt;/p&gt;&#39;;
 	}
 
 	function burnSpelling( dialog, errorMsg ) {
 		var i = 0;
 		return function() {
-			if ( typeof( window.doSpell ) == 'function' ) {
+			if ( typeof( window.doSpell ) == &#39;function&#39; ) {
 				//Call from window.setInteval expected at once.
-				if ( typeof( interval ) != 'undefined' )
+				if ( typeof( interval ) != &#39;undefined&#39; )
 					window.clearInterval( interval );
 
 				initAndSpell( dialog );
@@ -72,10 +72,10 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 	}
 
 	window._cancelOnError = function( m ) {
-		if ( typeof( window.WSC_Error ) == 'undefined' ) {
-			CKEDITOR.document.getById( iframeId ).setStyle( 'display', 'none' );
+		if ( typeof( window.WSC_Error ) == &#39;undefined&#39; ) {
+			CKEDITOR.document.getById( iframeId ).setStyle( &#39;display&#39;, &#39;none&#39; );
 			var errorBox = CKEDITOR.document.getById( errorBoxId );
-			errorBox.setStyle( 'display', 'block' );
+			errorBox.setStyle( &#39;display&#39;, &#39;block&#39; );
 			errorBox.setHtml( m || editor.lang.wsc.notAvailable );
 		}
 	};
@@ -83,13 +83,13 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 	function initAndSpell( dialog ) {
 		var LangComparer = new window._SP_FCK_LangCompare(),
 			// Language abbr standarts comparer.
-			pluginPath = CKEDITOR.getUrl( editor.plugins.wsc.path + 'dialogs/' ),
+			pluginPath = CKEDITOR.getUrl( editor.plugins.wsc.path + &#39;dialogs/&#39; ),
 			// Service paths corecting/preparing.
-			framesetPath = pluginPath + 'tmpFrameset.html';
+			framesetPath = pluginPath + &#39;tmpFrameset.html&#39;;
 
 		// global var is used in FCK specific core
 		// change on equal var used in fckplugin.js
-		window.gFCKPluginName = 'wsc';
+		window.gFCKPluginName = &#39;wsc&#39;;
 
 		LangComparer.setDefaulLangCode( editor.config.defaultLanguage );
 
@@ -113,10 +113,10 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 			// Some manipulations with client static pages.
 			staticFrame: framesetPath,
 			framesetPath: framesetPath,
-			iframePath: pluginPath + 'ciframe.html',
+			iframePath: pluginPath + &#39;ciframe.html&#39;,
 
 			// Styles defining.
-			schemaURI: pluginPath + 'wsc.css',
+			schemaURI: pluginPath + &#39;wsc.css&#39;,
 
 			userDictionaryName: editor.config.wsc_userDictionaryName,
 			customDictionaryName: editor.config.wsc_customDictionaryIds &amp;&amp; editor.config.wsc_customDictionaryIds.split( &quot;,&quot; ),
@@ -125,8 +125,8 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 		});
 
 		// Hide user message console (if application was loaded more then after timeout).
-		CKEDITOR.document.getById( errorBoxId ).setStyle( 'display', 'none' );
-		CKEDITOR.document.getById( iframeId ).setStyle( 'display', 'block' );
+		CKEDITOR.document.getById( errorBoxId ).setStyle( &#39;display&#39;, &#39;none&#39; );
+		CKEDITOR.document.getById( iframeId ).setStyle( &#39;display&#39;, &#39;block&#39; );
 	}
 
 	return {
@@ -135,15 +135,15 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 		minHeight: 380,
 		buttons: [ CKEDITOR.dialog.cancelButton ],
 		onShow: function() {
-			var contentArea = this.getContentElement( 'general', 'content' ).getElement();
+			var contentArea = this.getContentElement( &#39;general&#39;, &#39;content&#39; ).getElement();
 			contentArea.setHtml( pasteArea );
-			contentArea.getChild( 2 ).setStyle( 'height', this._.contentSize.height + 'px' );
+			contentArea.getChild( 2 ).setStyle( &#39;height&#39;, this._.contentSize.height + &#39;px&#39; );
 
-			if ( typeof( window.doSpell ) != 'function' ) {
+			if ( typeof( window.doSpell ) != &#39;function&#39; ) {
 				// Load script.
-				CKEDITOR.document.getHead().append( CKEDITOR.document.createElement( 'script', {
+				CKEDITOR.document.getHead().append( CKEDITOR.document.createElement( &#39;script&#39;, {
 					attributes: {
-						type: 'text/javascript',
+						type: &#39;text/javascript&#39;,
 						src: wscCoreUrl
 					}
 				}));
@@ -162,14 +162,14 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'general',
+			id: &#39;general&#39;,
 			label: editor.config.wsc_dialogTitle || editor.lang.wsc.title,
 			padding: 0,
 			elements: [
 				{
-				type: 'html',
-				id: 'content',
-				html: ''
+				type: &#39;html&#39;,
+				id: &#39;content&#39;,
+				html: &#39;&#39;
 			}
 			]
 		}
@@ -178,16 +178,16 @@ CKEDITOR.dialog.add( 'checkspell', function( editor ) {
 });
 
 // Expand the spell-check frame when dialog resized. (#6829)
-CKEDITOR.dialog.on( 'resize', function( evt ) {
+CKEDITOR.dialog.on( &#39;resize&#39;, function( evt ) {
 	var data = evt.data,
 		dialog = data.dialog;
 
-	if ( dialog._.name == 'checkspell' ) {
-		var content = dialog.getContentElement( 'general', 'content' ).getElement(),
+	if ( dialog._.name == &#39;checkspell&#39; ) {
+		var content = dialog.getContentElement( &#39;general&#39;, &#39;content&#39; ).getElement(),
 			iframe = content &amp;&amp; content.getChild( 2 );
 
-		iframe &amp;&amp; iframe.setSize( 'height', data.height );
-		iframe &amp;&amp; iframe.setSize( 'width', data.width );
+		iframe &amp;&amp; iframe.setSize( &#39;height&#39;, data.height );
+		iframe &amp;&amp; iframe.setSize( &#39;width&#39;, data.width );
 	}
 });
 </pre>

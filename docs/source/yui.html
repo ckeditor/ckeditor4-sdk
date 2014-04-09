@@ -1393,7 +1393,7 @@ YAHOO.util.CustomEvent.FLAT = 1;
 YAHOO.util.CustomEvent.prototype = {
 	subscribe: function( A, B, C ) {
 		if ( !A ) {
-			throw new Error( &quot;Invalid callback for subscriber to '&quot; + this.type + &quot;'&quot; );
+			throw new Error( &quot;Invalid callback for subscriber to &#39;&quot; + this.type + &quot;&#39;&quot; );
 		}
 		if ( this.subscribeEvent ) {
 			this.subscribeEvent.fire( A, B, C );
@@ -1482,7 +1482,7 @@ YAHOO.util.CustomEvent.prototype = {
 		this.subscribers.splice( A, 1 );
 	},
 	toString: function() {
-		return &quot;CustomEvent: &quot; + &quot;'&quot; + this.type + &quot;', &quot; + &quot;context: &quot; + this.scope;
+		return &quot;CustomEvent: &quot; + &quot;&#39;&quot; + this.type + &quot;&#39;, &quot; + &quot;context: &quot; + this.scope;
 	} }; YAHOO.util.Subscriber = function( A, B, C ) {
 	this.fn = A;
 	this.obj = YAHOO.lang.isUndefined( B ) ? null : B;

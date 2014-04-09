@@ -26,11 +26,11 @@
 </span> * The class name used to identify `&lt;textarea&gt;` elements to be replaced
  * by CKEditor instances. Set it to empty/`null` to disable this feature.
  *
- *		CKEDITOR.replaceClass = 'rich_editor';
+ *		CKEDITOR.replaceClass = &#39;rich_editor&#39;;
  *
- * @cfg {String} [replaceClass='ckeditor']
+ * @cfg {String} [replaceClass=&#39;ckeditor&#39;]
  */
-CKEDITOR.replaceClass = 'ckeditor';
+CKEDITOR.replaceClass = &#39;ckeditor&#39;;
 
 ( function() {
 <span id='CKEDITOR-method-replace'>	/**
@@ -41,9 +41,9 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 *
 	 *		&lt;textarea id=&quot;myfield&quot; name=&quot;myfield&quot;&gt;&lt;/textarea&gt;
 	 *		...
-	 *		CKEDITOR.replace( 'myfield' );
+	 *		CKEDITOR.replace( &#39;myfield&#39; );
 	 *
-	 *		var textarea = document.body.appendChild( document.createElement( 'textarea' ) );
+	 *		var textarea = document.body.appendChild( document.createElement( &#39;textarea&#39; ) );
 	 *		CKEDITOR.replace( textarea );
 	 *
 	 * @param {Object/String} element The DOM element (textarea), its ID, or name.
@@ -61,7 +61,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 *
 	 *		&lt;div id=&quot;editorSpace&quot;&gt;&lt;/div&gt;
 	 *		...
-	 *		CKEDITOR.appendTo( 'editorSpace' );
+	 *		CKEDITOR.appendTo( &#39;editorSpace&#39; );
 	 *
 	 * @param {Object/String} element The DOM element, its ID, or name.
 	 * @param {Object} [config] The specific configuration to apply to this
@@ -83,7 +83,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 *		CKEDITOR.replaceAll();
 	 *
 	 *		// Replace all &lt;textarea class=&quot;myClassName&quot;&gt; elements in the page.
-	 *		CKEDITOR.replaceAll( 'myClassName' );
+	 *		CKEDITOR.replaceAll( &#39;myClassName&#39; );
 	 *
 	 *		// Selectively replace &lt;textarea&gt; elements, based on custom assertions.
 	 *		CKEDITOR.replaceAll( function( textarea, config ) {
@@ -100,7 +100,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 * will not be replaced.
 	 */
 	CKEDITOR.replaceAll = function() {
-		var textareas = document.getElementsByTagName( 'textarea' );
+		var textareas = document.getElementsByTagName( &#39;textarea&#39; );
 
 		for ( var i = 0; i &lt; textareas.length; i++ ) {
 			var config = null,
@@ -110,15 +110,15 @@ CKEDITOR.replaceClass = 'ckeditor';
 			if ( !textarea.name &amp;&amp; !textarea.id )
 				continue;
 
-			if ( typeof arguments[ 0 ] == 'string' ) {
+			if ( typeof arguments[ 0 ] == &#39;string&#39; ) {
 				// The textarea class name could be passed as the function
 				// parameter.
 
-				var classRegex = new RegExp( '(?:^|\\s)' + arguments[ 0 ] + '(?:$|\\s)' );
+				var classRegex = new RegExp( &#39;(?:^|\\s)&#39; + arguments[ 0 ] + &#39;(?:$|\\s)&#39; );
 
 				if ( !classRegex.test( textarea.className ) )
 					continue;
-			} else if ( typeof arguments[ 0 ] == 'function' ) {
+			} else if ( typeof arguments[ 0 ] == &#39;function&#39; ) {
 				// An assertion function could be passed as the function parameter.
 				// It must explicitly return &quot;false&quot; to ignore a specific &lt;textarea&gt;.
 				config = {};
@@ -149,9 +149,9 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 * Use the `callback` to hook subsequent code.
 	 *
 	 *		// Switch to &quot;source&quot; view.
-	 *		CKEDITOR.instances.editor1.setMode( 'source' );
+	 *		CKEDITOR.instances.editor1.setMode( &#39;source&#39; );
 	 *		// Switch to &quot;wysiwyg&quot; view and be notified on completion.
-	 *		CKEDITOR.instances.editor1.setMode( 'wysiwyg', function() { alert( 'wysiwyg mode loaded!' ); } );
+	 *		CKEDITOR.instances.editor1.setMode( &#39;wysiwyg&#39;, function() { alert( &#39;wysiwyg mode loaded!&#39; ); } );
 	 *
 	 * @param {String} [newMode] If not specified, the {@link CKEDITOR.config#startupMode} will be used.
 	 * @param {Function} [callback] Optional callback function which is invoked once the mode switch has succeeded.
@@ -165,22 +165,22 @@ CKEDITOR.replaceClass = 'ckeditor';
 		if ( newMode == editor.mode || !modes || !modes[ newMode ] )
 			return;
 
-		editor.fire( 'beforeSetMode', newMode );
+		editor.fire( &#39;beforeSetMode&#39;, newMode );
 
 		if ( editor.mode ) {
 			var isDirty = editor.checkDirty();
 
 			editor._.previousMode = editor.mode;
 
-			editor.fire( 'beforeModeUnload' );
+			editor.fire( &#39;beforeModeUnload&#39; );
 
 			// Detach the current editable.
 			editor.editable( 0 );
 
 			// Clear up the mode space.
-			editor.ui.space( 'contents' ).setHtml( '' );
+			editor.ui.space( &#39;contents&#39; ).setHtml( &#39;&#39; );
 
-			editor.mode = '';
+			editor.mode = &#39;&#39;;
 		}
 
 		// Fire the mode handler.
@@ -193,7 +193,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 
 			// Delay to avoid race conditions (setMode inside setMode).
 			setTimeout( function() {
-				editor.fire( 'mode' );
+				editor.fire( &#39;mode&#39; );
 				callback &amp;&amp; callback.call( editor );
 			}, 0 );
 		} );
@@ -204,7 +204,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 *
 	 *		editor.resize( 900, 300 );
 	 *
-	 *		editor.resize( '100%', 450, true );
+	 *		editor.resize( &#39;100%&#39;, 450, true );
 	 *
 	 * @param {Number/String} width The new width. It can be an integer denoting a value
 	 * in pixels or a CSS size value with unit.
@@ -222,26 +222,26 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 */
 	CKEDITOR.editor.prototype.resize = function( width, height, isContentHeight, resizeInner ) {
 		var container = this.container,
-			contents = this.ui.space( 'contents' ),
+			contents = this.ui.space( &#39;contents&#39; ),
 			contentsFrame = CKEDITOR.env.webkit &amp;&amp; this.document &amp;&amp; this.document.getWindow().$.frameElement,
 			outer = resizeInner ? container.getChild( 1 ) : container;
 
 		// Set as border box width. (#5353)
-		outer.setSize( 'width', width, true );
+		outer.setSize( &#39;width&#39;, width, true );
 
 		// WebKit needs to refresh the iframe size to avoid rendering issues. (1/2) (#8348)
-		contentsFrame &amp;&amp; ( contentsFrame.style.width = '1%' );
+		contentsFrame &amp;&amp; ( contentsFrame.style.width = &#39;1%&#39; );
 
 		// Get the height delta between the outer table and the content area.
-		// If we're setting the content area's height, then we don't need the delta.
+		// If we&#39;re setting the content area&#39;s height, then we don&#39;t need the delta.
 		var delta = isContentHeight ? 0 : ( outer.$.offsetHeight || 0 ) - ( contents.$.clientHeight || 0 );
-		contents.setStyle( 'height', Math.max( height - delta, 0 ) + 'px' );
+		contents.setStyle( &#39;height&#39;, Math.max( height - delta, 0 ) + &#39;px&#39; );
 
 		// WebKit needs to refresh the iframe size to avoid rendering issues. (2/2) (#8348)
-		contentsFrame &amp;&amp; ( contentsFrame.style.width = '100%' );
+		contentsFrame &amp;&amp; ( contentsFrame.style.width = &#39;100%&#39; );
 
 		// Emit a resize event.
-		this.fire( 'resize' );
+		this.fire( &#39;resize&#39; );
 	};
 
 <span id='CKEDITOR-editor-method-getResizable'>	/**
@@ -253,7 +253,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 	 * @returns {CKEDITOR.dom.element} The resizable element.
 	 */
 	CKEDITOR.editor.prototype.getResizable = function( forContents ) {
-		return forContents ? this.ui.space( 'contents' ) : this.container;
+		return forContents ? this.ui.space( &#39;contents&#39; ) : this.container;
 	};
 
 	function createInstance( element, config, data, mode ) {
@@ -264,7 +264,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 
 		// Avoid multiple inline editor instances on the same element.
 		if ( element.getEditor() )
-			throw 'The editor instance &quot;' + element.getEditor().name + '&quot; is already attached to the provided element.';
+			throw &#39;The editor instance &quot;&#39; + element.getEditor().name + &#39;&quot; is already attached to the provided element.&#39;;
 
 		// Create the editor instance.
 		var editor = new CKEDITOR.editor( config, element, mode );
@@ -272,17 +272,17 @@ CKEDITOR.replaceClass = 'ckeditor';
 		if ( mode == CKEDITOR.ELEMENT_MODE_REPLACE ) {
 			// Do not replace the textarea right now, just hide it. The effective
 			// replacement will be done later in the editor creation lifecycle.
-			element.setStyle( 'visibility', 'hidden' );
+			element.setStyle( &#39;visibility&#39;, &#39;hidden&#39; );
 
 			// #8031 Remember if textarea was required and remove the attribute.
-			editor._.required = element.hasAttribute( 'required' );
-			element.removeAttribute( 'required' );
+			editor._.required = element.hasAttribute( &#39;required&#39; );
+			element.removeAttribute( &#39;required&#39; );
 		}
 
 		data &amp;&amp; editor.setData( data, null, true );
 
 		// Once the editor is loaded, start the UI.
-		editor.on( 'loaded', function() {
+		editor.on( &#39;loaded&#39;, function() {
 			loadTheme( editor );
 
 			if ( mode == CKEDITOR.ELEMENT_MODE_REPLACE &amp;&amp; editor.config.autoUpdateElement &amp;&amp; element.$.form )
@@ -293,13 +293,13 @@ CKEDITOR.replaceClass = 'ckeditor';
 				editor.resetDirty();
 
 				// Editor is completely loaded for interaction.
-				editor.status = 'ready';
-				editor.fireOnce( 'instanceReady' );
-				CKEDITOR.fire( 'instanceReady', null, editor );
+				editor.status = &#39;ready&#39;;
+				editor.fireOnce( &#39;instanceReady&#39; );
+				CKEDITOR.fire( &#39;instanceReady&#39;, null, editor );
 			} );
 		} );
 
-		editor.on( 'destroy', destroy );
+		editor.on( &#39;destroy&#39;, destroy );
 		return editor;
 	}
 
@@ -318,7 +318,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_REPLACE ) {
 				element.show();
 				if ( editor._.required )
-					element.setAttribute( 'required', 'required' );
+					element.setAttribute( &#39;required&#39;, &#39;required&#39; );
 			}
 			delete editor.element;
 		}
@@ -332,24 +332,24 @@ CKEDITOR.replaceClass = 'ckeditor';
 			elementMode = editor.elementMode;
 
 		// Get the HTML for the predefined spaces.
-		var topHtml = editor.fire( 'uiSpace', { space: 'top', html: '' } ).html;
-		var bottomHtml = editor.fire( 'uiSpace', { space: 'bottom', html: '' } ).html;
+		var topHtml = editor.fire( &#39;uiSpace&#39;, { space: &#39;top&#39;, html: &#39;&#39; } ).html;
+		var bottomHtml = editor.fire( &#39;uiSpace&#39;, { space: &#39;bottom&#39;, html: &#39;&#39; } ).html;
 
 		if ( !themedTpl ) {
-			themedTpl = CKEDITOR.addTemplate( 'maincontainer', '&lt;{outerEl}' +
-				' id=&quot;cke_{name}&quot;' +
-				' class=&quot;{id} cke cke_reset cke_chrome cke_editor_{name} cke_{langDir} ' + CKEDITOR.env.cssClass + '&quot; ' +
-				' dir=&quot;{langDir}&quot;' +
-				' lang=&quot;{langCode}&quot;' +
-				' role=&quot;application&quot;' +
-				' aria-labelledby=&quot;cke_{name}_arialbl&quot;&gt;' +
-				'&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;' +
-					'&lt;{outerEl} class=&quot;cke_inner cke_reset&quot; role=&quot;presentation&quot;&gt;' +
-						'{topHtml}' +
-						'&lt;{outerEl} id=&quot;{contentId}&quot; class=&quot;cke_contents cke_reset&quot; role=&quot;presentation&quot;&gt;&lt;/{outerEl}&gt;' +
-						'{bottomHtml}' +
-					'&lt;/{outerEl}&gt;' +
-				'&lt;/{outerEl}&gt;' );
+			themedTpl = CKEDITOR.addTemplate( &#39;maincontainer&#39;, &#39;&lt;{outerEl}&#39; +
+				&#39; id=&quot;cke_{name}&quot;&#39; +
+				&#39; class=&quot;{id} cke cke_reset cke_chrome cke_editor_{name} cke_{langDir} &#39; + CKEDITOR.env.cssClass + &#39;&quot; &#39; +
+				&#39; dir=&quot;{langDir}&quot;&#39; +
+				&#39; lang=&quot;{langCode}&quot;&#39; +
+				&#39; role=&quot;application&quot;&#39; +
+				&#39; aria-labelledby=&quot;cke_{name}_arialbl&quot;&gt;&#39; +
+				&#39;&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;&#39; +
+					&#39;&lt;{outerEl} class=&quot;cke_inner cke_reset&quot; role=&quot;presentation&quot;&gt;&#39; +
+						&#39;{topHtml}&#39; +
+						&#39;&lt;{outerEl} id=&quot;{contentId}&quot; class=&quot;cke_contents cke_reset&quot; role=&quot;presentation&quot;&gt;&lt;/{outerEl}&gt;&#39; +
+						&#39;{bottomHtml}&#39; +
+					&#39;&lt;/{outerEl}&gt;&#39; +
+				&#39;&lt;/{outerEl}&gt;&#39; );
 		}
 
 		var container = CKEDITOR.dom.element.createFromHtml( themedTpl.output( {
@@ -357,11 +357,11 @@ CKEDITOR.replaceClass = 'ckeditor';
 			name: name,
 			langDir: editor.lang.dir,
 			langCode: editor.langCode,
-			voiceLabel: [ editor.lang.editor, editor.name ].join( ', ' ),
-			topHtml: topHtml ? '&lt;span id=&quot;' + editor.ui.spaceId( 'top' ) + '&quot; class=&quot;cke_top cke_reset_all&quot; role=&quot;presentation&quot; style=&quot;height:auto&quot;&gt;' + topHtml + '&lt;/span&gt;' : '',
-			contentId: editor.ui.spaceId( 'contents' ),
-			bottomHtml: bottomHtml ? '&lt;span id=&quot;' + editor.ui.spaceId( 'bottom' ) + '&quot; class=&quot;cke_bottom cke_reset_all&quot; role=&quot;presentation&quot;&gt;' + bottomHtml + '&lt;/span&gt;' : '',
-			outerEl: CKEDITOR.env.ie ? 'span' : 'div'	// #9571
+			voiceLabel: [ editor.lang.editor, editor.name ].join( &#39;, &#39; ),
+			topHtml: topHtml ? &#39;&lt;span id=&quot;&#39; + editor.ui.spaceId( &#39;top&#39; ) + &#39;&quot; class=&quot;cke_top cke_reset_all&quot; role=&quot;presentation&quot; style=&quot;height:auto&quot;&gt;&#39; + topHtml + &#39;&lt;/span&gt;&#39; : &#39;&#39;,
+			contentId: editor.ui.spaceId( &#39;contents&#39; ),
+			bottomHtml: bottomHtml ? &#39;&lt;span id=&quot;&#39; + editor.ui.spaceId( &#39;bottom&#39; ) + &#39;&quot; class=&quot;cke_bottom cke_reset_all&quot; role=&quot;presentation&quot;&gt;&#39; + bottomHtml + &#39;&lt;/span&gt;&#39; : &#39;&#39;,
+			outerEl: CKEDITOR.env.ie ? &#39;span&#39; : &#39;div&#39;	// #9571
 		} ) );
 
 		if ( elementMode == CKEDITOR.ELEMENT_MODE_REPLACE ) {
@@ -374,26 +374,26 @@ CKEDITOR.replaceClass = 'ckeditor';
 
 		// Make top and bottom spaces unelectable, but not content space,
 		// otherwise the editable area would be affected.
-		topHtml &amp;&amp; editor.ui.space( 'top' ).unselectable();
-		bottomHtml &amp;&amp; editor.ui.space( 'bottom' ).unselectable();
+		topHtml &amp;&amp; editor.ui.space( &#39;top&#39; ).unselectable();
+		bottomHtml &amp;&amp; editor.ui.space( &#39;bottom&#39; ).unselectable();
 
 		var width = editor.config.width, height = editor.config.height;
 		if ( width )
-			container.setStyle( 'width', CKEDITOR.tools.cssLength( width ) );
+			container.setStyle( &#39;width&#39;, CKEDITOR.tools.cssLength( width ) );
 
 		// The editor height is applied to the contents space.
 		if ( height )
-			editor.ui.space( 'contents' ).setStyle( 'height', CKEDITOR.tools.cssLength( height ) );
+			editor.ui.space( &#39;contents&#39; ).setStyle( &#39;height&#39;, CKEDITOR.tools.cssLength( height ) );
 
-		// Disable browser context menu for editor's chrome.
+		// Disable browser context menu for editor&#39;s chrome.
 		container.disableContextMenu();
 
 		// Redirect the focus into editor for webkit. (#5713)
-		CKEDITOR.env.webkit &amp;&amp; container.on( 'focus', function() {
+		CKEDITOR.env.webkit &amp;&amp; container.on( &#39;focus&#39;, function() {
 			editor.focus();
 		} );
 
-		editor.fireOnce( 'uiReady' );
+		editor.fireOnce( &#39;uiReady&#39; );
 	}
 
 	// Replace all textareas with the default class name.
@@ -406,7 +406,7 @@ CKEDITOR.replaceClass = 'ckeditor';
 </span> * The current editing mode. An editing mode basically provides
  * different ways of editing or viewing the contents.
  *
- *		alert( CKEDITOR.instances.editor1.mode ); // (e.g.) 'wysiwyg'
+ *		alert( CKEDITOR.instances.editor1.mode ); // (e.g.) &#39;wysiwyg&#39;
  *
  * @readonly
  * @property {String} mode
@@ -416,12 +416,12 @@ CKEDITOR.replaceClass = 'ckeditor';
 </span> * The mode to load at the editor startup. It depends on the plugins
  * loaded. By default, the `wysiwyg` and `source` modes are available.
  *
- *		config.startupMode = 'source';
+ *		config.startupMode = &#39;source&#39;;
  *
- * @cfg {String} [startupMode='wysiwyg']
+ * @cfg {String} [startupMode=&#39;wysiwyg&#39;]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.startupMode = 'wysiwyg';
+CKEDITOR.config.startupMode = &#39;wysiwyg&#39;;
 
 <span id='CKEDITOR-editor-event-resize'>/**
 </span> * Fired after the editor instance is resized through
@@ -464,8 +464,8 @@ CKEDITOR.config.startupMode = 'wysiwyg';
  *
  * You can cancel this event to prevent the page from submitting data.
  *
- *		editor.on( 'required', function( evt ) {
- *			alert( 'Article content is required.' );
+ *		editor.on( &#39;required&#39;, function( evt ) {
+ *			alert( &#39;Article content is required.&#39; );
  *			evt.cancel();
  *		} );
  *

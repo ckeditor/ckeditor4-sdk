@@ -26,90 +26,90 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'wysiwygarea', {
+	CKEDITOR.plugins.add( &#39;wysiwygarea&#39;, {
 		init: function( editor ) {
 			if ( editor.config.fullPage ) {
 				editor.addFeature( {
-					allowedContent: 'html head title; style [media,type]; body (*)[id]; meta link [*]',
-					requiredContent: 'body'
+					allowedContent: &#39;html head title; style [media,type]; body (*)[id]; meta link [*]&#39;,
+					requiredContent: &#39;body&#39;
 				} );
 			}
 
-			editor.addMode( 'wysiwyg', function( callback ) {
-				var src = 'document.open();' +
+			editor.addMode( &#39;wysiwyg&#39;, function( callback ) {
+				var src = &#39;document.open();&#39; +
 					// In IE, the document domain must be set any time we call document.open().
-					( CKEDITOR.env.ie ? '(' + CKEDITOR.tools.fixDomain + ')();' : '' ) +
-					'document.close();';
+					( CKEDITOR.env.ie ? &#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; : &#39;&#39; ) +
+					&#39;document.close();&#39;;
 
 				// With IE, the custom domain has to be taken care at first,
-				// for other browers, the 'src' attribute should be left empty to
-				// trigger iframe's 'load' event.
-				src = CKEDITOR.env.air ? 'javascript:void(0)' : CKEDITOR.env.ie ? 'javascript:void(function(){' + encodeURIComponent( src ) + '}())'
+				// for other browers, the &#39;src&#39; attribute should be left empty to
+				// trigger iframe&#39;s &#39;load&#39; event.
+				src = CKEDITOR.env.air ? &#39;javascript:void(0)&#39; : CKEDITOR.env.ie ? &#39;javascript:void(function(){&#39; + encodeURIComponent( src ) + &#39;}())&#39;
 					:
-					'';
+					&#39;&#39;;
 
-				var iframe = CKEDITOR.dom.element.createFromHtml( '&lt;iframe src=&quot;' + src + '&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;' );
-				iframe.setStyles( { width: '100%', height: '100%' } );
-				iframe.addClass( 'cke_wysiwyg_frame cke_reset' );
+				var iframe = CKEDITOR.dom.element.createFromHtml( &#39;&lt;iframe src=&quot;&#39; + src + &#39;&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;&#39; );
+				iframe.setStyles( { width: &#39;100%&#39;, height: &#39;100%&#39; } );
+				iframe.addClass( &#39;cke_wysiwyg_frame cke_reset&#39; );
 
-				var contentSpace = editor.ui.space( 'contents' );
+				var contentSpace = editor.ui.space( &#39;contents&#39; );
 				contentSpace.append( iframe );
 
 
 				// Asynchronous iframe loading is only required in IE&gt;8 and Gecko (other reasons probably).
-				// Do not use it on WebKit as it'll break the browser-back navigation.
+				// Do not use it on WebKit as it&#39;ll break the browser-back navigation.
 				var useOnloadEvent = CKEDITOR.env.ie || CKEDITOR.env.gecko;
 				if ( useOnloadEvent )
-					iframe.on( 'load', onLoad );
+					iframe.on( &#39;load&#39;, onLoad );
 
 				var frameLabel = editor.title,
 					frameDesc = editor.lang.common.editorHelp;
 
 				if ( frameLabel ) {
 					if ( CKEDITOR.env.ie )
-						frameLabel += ', ' + frameDesc;
+						frameLabel += &#39;, &#39; + frameDesc;
 
-					iframe.setAttribute( 'title', frameLabel );
+					iframe.setAttribute( &#39;title&#39;, frameLabel );
 				}
 
 				var labelId = CKEDITOR.tools.getNextId(),
-					desc = CKEDITOR.dom.element.createFromHtml( '&lt;span id=&quot;' + labelId + '&quot; class=&quot;cke_voice_label&quot;&gt;' + frameDesc + '&lt;/span&gt;' );
+					desc = CKEDITOR.dom.element.createFromHtml( &#39;&lt;span id=&quot;&#39; + labelId + &#39;&quot; class=&quot;cke_voice_label&quot;&gt;&#39; + frameDesc + &#39;&lt;/span&gt;&#39; );
 
 				contentSpace.append( desc, 1 );
 
 				// Remove the ARIA description.
-				editor.on( 'beforeModeUnload', function( evt ) {
+				editor.on( &#39;beforeModeUnload&#39;, function( evt ) {
 					evt.removeListener();
 					desc.remove();
 				} );
 
 				iframe.setAttributes( {
-					'aria-describedby': labelId,
+					&#39;aria-describedby&#39;: labelId,
 					tabIndex: editor.tabIndex,
-					allowTransparency: 'true'
+					allowTransparency: &#39;true&#39;
 				} );
 
 				// Execute onLoad manually for all non IE||Gecko browsers.
 				!useOnloadEvent &amp;&amp; onLoad();
 
 				if ( CKEDITOR.env.webkit ) {
-					// Webkit: iframe size doesn't auto fit well. (#7360)
+					// Webkit: iframe size doesn&#39;t auto fit well. (#7360)
 					var onResize = function() {
 						// Hide the iframe to get real size of the holder. (#8941)
-						contentSpace.setStyle( 'width', '100%' );
+						contentSpace.setStyle( &#39;width&#39;, &#39;100%&#39; );
 
 						iframe.hide();
-						iframe.setSize( 'width', contentSpace.getSize( 'width' ) );
-						contentSpace.removeStyle( 'width' );
+						iframe.setSize( &#39;width&#39;, contentSpace.getSize( &#39;width&#39; ) );
+						contentSpace.removeStyle( &#39;width&#39; );
 						iframe.show();
 					};
 
-					iframe.setCustomData( 'onResize', onResize );
+					iframe.setCustomData( &#39;onResize&#39;, onResize );
 
-					CKEDITOR.document.getWindow().on( 'resize', onResize );
+					CKEDITOR.document.getWindow().on( &#39;resize&#39;, onResize );
 				}
 
-				editor.fire( 'ariaWidget', iframe );
+				editor.fire( &#39;ariaWidget&#39;, iframe );
 
 				function onLoad( evt ) {
 					evt &amp;&amp; evt.removeListener();
@@ -126,14 +126,14 @@
 			body = doc.body;
 
 		// Remove helper scripts from the DOM.
-		var script = doc.getElementById( 'cke_actscrpt' );
+		var script = doc.getElementById( &#39;cke_actscrpt&#39; );
 		script &amp;&amp; script.parentNode.removeChild( script );
-		script = doc.getElementById( 'cke_shimscrpt' );
+		script = doc.getElementById( &#39;cke_shimscrpt&#39; );
 		script &amp;&amp; script.parentNode.removeChild( script );
 
 		if ( CKEDITOR.env.gecko ) {
 			// Force Gecko to change contentEditable from false to true on domReady
-			// (because it's previously set to true on iframe's body creation).
+			// (because it&#39;s previously set to true on iframe&#39;s body creation).
 			// Otherwise del/backspace and some other editable features will be broken in Fx &lt;4
 			// See: #107 and https://bugzilla.mozilla.org/show_bug.cgi?id=440916
 			body.contentEditable = false;
@@ -142,7 +142,7 @@
 			// This one fixes Firefox 3.6 bug: the browser inserts a leading &lt;br&gt;
 			// on document.write if the body has contenteditable=&quot;true&quot;.
 			if ( CKEDITOR.env.version &lt; 20000 ) {
-				body.innerHTML = body.innerHTML.replace( /^.*&lt;!-- cke-content-start --&gt;/, '' );
+				body.innerHTML = body.innerHTML.replace( /^.*&lt;!-- cke-content-start --&gt;/, &#39;&#39; );
 
 				// The above hack messes up the selection in FF36.
 				// To clean this up, manually select collapsed range that
@@ -158,13 +158,13 @@
 		body.contentEditable = true;
 
 		if ( CKEDITOR.env.ie ) {
-			// Don't display the focus border.
+			// Don&#39;t display the focus border.
 			body.hideFocus = true;
 
 			// Disable and re-enable the body to avoid IE from
 			// taking the editing focus at startup. (#141 / #523)
 			body.disabled = true;
-			body.removeAttribute( 'disabled' );
+			body.removeAttribute( &#39;disabled&#39; );
 		}
 
 		delete this._.isLoadingData;
@@ -180,7 +180,7 @@
 			doc.getDocumentElement().addClass( doc.$.compatMode );
 
 			// Prevent IE from leaving new paragraph after deleting all contents in body. (#6966)
-			editor.config.enterMode != CKEDITOR.ENTER_P &amp;&amp; this.attachListener( doc, 'selectionchange', function() {
+			editor.config.enterMode != CKEDITOR.ENTER_P &amp;&amp; this.attachListener( doc, &#39;selectionchange&#39;, function() {
 				var body = doc.getBody(),
 					sel = editor.getSelection(),
 					range = sel &amp;&amp; sel.getRanges()[ 0 ];
@@ -189,7 +189,7 @@
 					// Avoid the ambiguity from a real user cursor position.
 					setTimeout( function() {
 						range = editor.getSelection().getRanges()[ 0 ];
-						if ( !range.startContainer.equals( 'body' ) ) {
+						if ( !range.startContainer.equals( &#39;body&#39; ) ) {
 							body.getFirst().remove( 1 );
 							range.moveToElementEditEnd( body );
 							range.select();
@@ -202,8 +202,8 @@
 		// Fix problem with cursor not appearing in Webkit and IE11+ when clicking below the body (#10945, #10906).
 		// Fix for older IEs (8-10 and QM) is placed inside selection.js.
 		if ( CKEDITOR.env.webkit || ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &gt; 10 ) ) {
-			doc.getDocumentElement().on( 'mousedown', function( evt ) {
-				if ( evt.data.getTarget().is( 'html' ) ) {
+			doc.getDocumentElement().on( &#39;mousedown&#39;, function( evt ) {
+				if ( evt.data.getTarget().is( &#39;html&#39; ) ) {
 					// IE needs this timeout. Webkit does not, but it does not cause problems too.
 					setTimeout( function() {
 						editor.editable().focus();
@@ -216,27 +216,27 @@
 
 		// Enable dragging of position:absolute elements in IE.
 		try {
-			editor.document.$.execCommand( '2D-position', false, true );
+			editor.document.$.execCommand( &#39;2D-position&#39;, false, true );
 		} catch ( e ) {}
 
 		// IE, Opera and Safari may not support it and throw errors.
 		try {
-			editor.document.$.execCommand( 'enableInlineTableEditing', false, !editor.config.disableNativeTableHandles );
+			editor.document.$.execCommand( &#39;enableInlineTableEditing&#39;, false, !editor.config.disableNativeTableHandles );
 		} catch ( e ) {}
 
 		if ( editor.config.disableObjectResizing ) {
 			try {
-				this.getDocument().$.execCommand( 'enableObjectResizing', false, false );
+				this.getDocument().$.execCommand( &#39;enableObjectResizing&#39;, false, false );
 			} catch ( e ) {
 				// For browsers in which the above method failed, we can cancel the resizing on the fly (#4208)
-				this.attachListener( this, CKEDITOR.env.ie ? 'resizestart' : 'resize', function( evt ) {
+				this.attachListener( this, CKEDITOR.env.ie ? &#39;resizestart&#39; : &#39;resize&#39;, function( evt ) {
 					evt.data.preventDefault();
 				} );
 			}
 		}
 
-		if ( CKEDITOR.env.gecko || CKEDITOR.env.ie &amp;&amp; editor.document.$.compatMode == 'CSS1Compat' ) {
-			this.attachListener( this, 'keydown', function( evt ) {
+		if ( CKEDITOR.env.gecko || CKEDITOR.env.ie &amp;&amp; editor.document.$.compatMode == &#39;CSS1Compat&#39; ) {
+			this.attachListener( this, &#39;keydown&#39;, function( evt ) {
 				var keyCode = evt.data.getKeystroke();
 
 				// PageUp OR PageDown
@@ -254,7 +254,7 @@
 					// when editor contents are not overflowed. (#7955)
 					else if ( editor.window.$.innerHeight &gt; this.$.offsetHeight ) {
 						var range = editor.createRange();
-						range[ keyCode == 33 ? 'moveToElementEditStart' : 'moveToElementEditEnd' ]( this );
+						range[ keyCode == 33 ? &#39;moveToElementEditStart&#39; : &#39;moveToElementEditEnd&#39; ]( this );
 						range.select();
 						evt.data.preventDefault();
 					}
@@ -273,7 +273,7 @@
 			//
 			// Now the range restore is disabled, so we simply force IE to clean
 			// up the selection before blur.
-			this.attachListener( doc, 'blur', function() {
+			this.attachListener( doc, &#39;blur&#39;, function() {
 				// Error proof when the editor is not visible. (#6375)
 				try {
 					doc.$.selection.empty();
@@ -284,8 +284,8 @@
 		// ## END
 
 
-		var title = editor.document.getElementsByTag( 'title' ).getItem( 0 );
-		title.data( 'cke-title', editor.document.$.title );
+		var title = editor.document.getElementsByTag( &#39;title&#39; ).getItem( 0 );
+		title.data( &#39;cke-title&#39;, editor.document.$.title );
 
 		// [IE] JAWS will not recognize the aria label we used on the iframe
 		// unless the frame window title string is used as the voice label,
@@ -294,7 +294,7 @@
 			editor.document.$.title = this._.docTitle;
 
 		CKEDITOR.tools.setTimeout( function() {
-			editor.fire( 'contentDom' );
+			editor.fire( &#39;contentDom&#39; );
 
 			if ( this._.isPendingFocus ) {
 				editor.focus();
@@ -302,7 +302,7 @@
 			}
 
 			setTimeout( function() {
-				editor.fire( 'dataReady' );
+				editor.fire( &#39;dataReady&#39; );
 			}, 0 );
 
 			// IE BUG: IE might have rendered the iframe with invisible contents.
@@ -315,8 +315,8 @@
 				setTimeout( function() {
 					if ( editor.document ) {
 						var $body = editor.document.$.body;
-						$body.runtimeStyle.marginBottom = '0px';
-						$body.runtimeStyle.marginBottom = '';
+						$body.runtimeStyle.marginBottom = &#39;0px&#39;;
+						$body.runtimeStyle.marginBottom = &#39;&#39;;
 					}
 				}, 1000 );
 			}
@@ -333,7 +333,7 @@
 				CKEDITOR.tools.setTimeout( onDomReady, 0, this, win );
 			}, this );
 
-			this._.docTitle = this.getWindow().getFrame().getAttribute( 'title' );
+			this._.docTitle = this.getWindow().getFrame().getAttribute( &#39;title&#39; );
 		},
 
 		base: CKEDITOR.editable,
@@ -346,7 +346,7 @@
 					this.setHtml( data );
 					// Fire dataReady for the consistency with inline editors
 					// and because it makes sense. (#10370)
-					editor.fire( 'dataReady' );
+					editor.fire( &#39;dataReady&#39; );
 				}
 				else {
 					this._.isLoadingData = true;
@@ -358,21 +358,21 @@
 
 					// Build the additional stuff to be included into &lt;head&gt;.
 					var headExtra = CKEDITOR.tools.buildStyleHtml( iframeCssFixes() )
-						                .replace( /&lt;style&gt;/, '&lt;style data-cke-temp=&quot;1&quot;&gt;' );
+						                .replace( /&lt;style&gt;/, &#39;&lt;style data-cke-temp=&quot;1&quot;&gt;&#39; );
 
 					if ( !fullPage )
 						headExtra += CKEDITOR.tools.buildStyleHtml( editor.config.contentsCss );
 
-					var baseTag = config.baseHref ? '&lt;base href=&quot;' + config.baseHref + '&quot; data-cke-temp=&quot;1&quot; /&gt;' : '';
+					var baseTag = config.baseHref ? &#39;&lt;base href=&quot;&#39; + config.baseHref + &#39;&quot; data-cke-temp=&quot;1&quot; /&gt;&#39; : &#39;&#39;;
 
 					if ( fullPage ) {
 						// Search and sweep out the doctype declaration.
 						data = data.replace( /&lt;!DOCTYPE[^&gt;]*&gt;/i, function( match ) {
 							editor.docType = docType = match;
-							return '';
+							return &#39;&#39;;
 						} ).replace( /&lt;\?xml\s[^\?]*\?&gt;/i, function( match ) {
 							editor.xmlDeclaration = match;
-							return '';
+							return &#39;&#39;;
 						} );
 					}
 
@@ -382,79 +382,79 @@
 					if ( fullPage ) {
 						// Check if the &lt;body&gt; tag is available.
 						if ( !( /&lt;body[\s|&gt;]/ ).test( data ) )
-							data = '&lt;body&gt;' + data;
+							data = &#39;&lt;body&gt;&#39; + data;
 
 						// Check if the &lt;html&gt; tag is available.
 						if ( !( /&lt;html[\s|&gt;]/ ).test( data ) )
-							data = '&lt;html&gt;' + data + '&lt;/html&gt;';
+							data = &#39;&lt;html&gt;&#39; + data + &#39;&lt;/html&gt;&#39;;
 
 						// Check if the &lt;head&gt; tag is available.
 						if ( !( /&lt;head[\s|&gt;]/ ).test( data ) )
-							data = data.replace( /&lt;html[^&gt;]*&gt;/, '$&amp;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;' );
+							data = data.replace( /&lt;html[^&gt;]*&gt;/, &#39;$&amp;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;&#39; );
 						else if ( !( /&lt;title[\s|&gt;]/ ).test( data ) )
-							data = data.replace( /&lt;head[^&gt;]*&gt;/, '$&amp;&lt;title&gt;&lt;/title&gt;' );
+							data = data.replace( /&lt;head[^&gt;]*&gt;/, &#39;$&amp;&lt;title&gt;&lt;/title&gt;&#39; );
 
 						// The base must be the first tag in the HEAD, e.g. to get relative
 						// links on styles.
-						baseTag &amp;&amp; ( data = data.replace( /&lt;head&gt;/, '$&amp;' + baseTag ) );
+						baseTag &amp;&amp; ( data = data.replace( /&lt;head&gt;/, &#39;$&amp;&#39; + baseTag ) );
 
 						// Inject the extra stuff into &lt;head&gt;.
 						// Attention: do not change it before testing it well. (V2)
 						// This is tricky... if the head ends with &lt;meta ... content type&gt;,
 						// Firefox will break. But, it works if we place our extra stuff as
 						// the last elements in the HEAD.
-						data = data.replace( /&lt;\/head\s*&gt;/, headExtra + '$&amp;' );
+						data = data.replace( /&lt;\/head\s*&gt;/, headExtra + &#39;$&amp;&#39; );
 
 						// Add the DOCTYPE back to it.
 						data = docType + data;
 					} else {
 						data = config.docType +
-							'&lt;html dir=&quot;' + config.contentsLangDirection + '&quot;' +
-								' lang=&quot;' + ( config.contentsLanguage || editor.langCode ) + '&quot;&gt;' +
-							'&lt;head&gt;' +
-								'&lt;title&gt;' + this._.docTitle + '&lt;/title&gt;' +
+							&#39;&lt;html dir=&quot;&#39; + config.contentsLangDirection + &#39;&quot;&#39; +
+								&#39; lang=&quot;&#39; + ( config.contentsLanguage || editor.langCode ) + &#39;&quot;&gt;&#39; +
+							&#39;&lt;head&gt;&#39; +
+								&#39;&lt;title&gt;&#39; + this._.docTitle + &#39;&lt;/title&gt;&#39; +
 								baseTag +
 								headExtra +
-							'&lt;/head&gt;' +
-							'&lt;body' + ( config.bodyId ? ' id=&quot;' + config.bodyId + '&quot;' : '' ) +
-								( config.bodyClass ? ' class=&quot;' + config.bodyClass + '&quot;' : '' ) +
-							'&gt;' +
+							&#39;&lt;/head&gt;&#39; +
+							&#39;&lt;body&#39; + ( config.bodyId ? &#39; id=&quot;&#39; + config.bodyId + &#39;&quot;&#39; : &#39;&#39; ) +
+								( config.bodyClass ? &#39; class=&quot;&#39; + config.bodyClass + &#39;&quot;&#39; : &#39;&#39; ) +
+							&#39;&gt;&#39; +
 								data +
-							'&lt;/body&gt;' +
-							'&lt;/html&gt;';
+							&#39;&lt;/body&gt;&#39; +
+							&#39;&lt;/html&gt;&#39;;
 					}
 
 					if ( CKEDITOR.env.gecko ) {
 						// Hack to make Fx put cursor at the start of doc on fresh focus.
-						data = data.replace( /&lt;body/, '&lt;body contenteditable=&quot;true&quot; ' );
+						data = data.replace( /&lt;body/, &#39;&lt;body contenteditable=&quot;true&quot; &#39; );
 
 						// Another hack which is used by onDomReady to remove a leading
 						// &lt;br&gt; which is inserted by Firefox 3.6 when document.write is called.
 						// This additional &lt;br&gt; is present because of contenteditable=&quot;true&quot;
 						if ( CKEDITOR.env.version &lt; 20000 )
-							data = data.replace( /&lt;body[^&gt;]*&gt;/, '$&amp;&lt;!-- cke-content-start --&gt;'  );
+							data = data.replace( /&lt;body[^&gt;]*&gt;/, &#39;$&amp;&lt;!-- cke-content-start --&gt;&#39;  );
 					}
 
-					// The script that launches the bootstrap logic on 'domReady', so the document
+					// The script that launches the bootstrap logic on &#39;domReady&#39;, so the document
 					// is fully editable even before the editing iframe is fully loaded (#4455).
 					var bootstrapCode =
-						'&lt;script id=&quot;cke_actscrpt&quot; type=&quot;text/javascript&quot;' + ( CKEDITOR.env.ie ? ' defer=&quot;defer&quot; ' : '' ) + '&gt;' +
-							'var wasLoaded=0;' +	// It must be always set to 0 as it remains as a window property.
-							'function onload(){' +
-								'if(!wasLoaded)' +	// FF3.6 calls onload twice when editor.setData. Stop that.
-									'window.parent.CKEDITOR.tools.callFunction(' + this._.frameLoadedHandler + ',window);' +
-								'wasLoaded=1;' +
-							'}' +
-							( CKEDITOR.env.ie ? 'onload();' : 'document.addEventListener(&quot;DOMContentLoaded&quot;, onload, false );' ) +
-						'&lt;/script&gt;';
+						&#39;&lt;script id=&quot;cke_actscrpt&quot; type=&quot;text/javascript&quot;&#39; + ( CKEDITOR.env.ie ? &#39; defer=&quot;defer&quot; &#39; : &#39;&#39; ) + &#39;&gt;&#39; +
+							&#39;var wasLoaded=0;&#39; +	// It must be always set to 0 as it remains as a window property.
+							&#39;function onload(){&#39; +
+								&#39;if(!wasLoaded)&#39; +	// FF3.6 calls onload twice when editor.setData. Stop that.
+									&#39;window.parent.CKEDITOR.tools.callFunction(&#39; + this._.frameLoadedHandler + &#39;,window);&#39; +
+								&#39;wasLoaded=1;&#39; +
+							&#39;}&#39; +
+							( CKEDITOR.env.ie ? &#39;onload();&#39; : &#39;document.addEventListener(&quot;DOMContentLoaded&quot;, onload, false );&#39; ) +
+						&#39;&lt;/script&gt;&#39;;
 
-					// For IE&lt;9 add support for HTML5's elements.
+					// For IE&lt;9 add support for HTML5&#39;s elements.
 					// Note: this code must not be deferred.
 					if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 ) {
 						bootstrapCode +=
-							'&lt;script id=&quot;cke_shimscrpt&quot;&gt;' +
-								'window.parent.CKEDITOR.tools.enableHtml5Elements(document)' +
-							'&lt;/script&gt;';
+							&#39;&lt;script id=&quot;cke_shimscrpt&quot;&gt;&#39; +
+								&#39;window.parent.CKEDITOR.tools.enableHtml5Elements(document)&#39; +
+							&#39;&lt;/script&gt;&#39;;
 					}
 
 					data = data.replace( /(?=\s*&lt;\/(:?head)&gt;)/, bootstrapCode );
@@ -463,7 +463,7 @@
 					this.clearCustomData();
 					this.clearListeners();
 
-					editor.fire( 'contentDomUnload' );
+					editor.fire( &#39;contentDomUnload&#39; );
 
 					var doc = this.getDocument();
 
@@ -492,14 +492,14 @@
 					// Prevent BRs from disappearing from the end of the content
 					// while enterMode is ENTER_BR (#10146).
 					if ( CKEDITOR.env.gecko &amp;&amp; config.enterMode != CKEDITOR.ENTER_BR )
-						data = data.replace( /&lt;br&gt;(?=\s*(:?$|&lt;\/body&gt;))/, '' );
+						data = data.replace( /&lt;br&gt;(?=\s*(:?$|&lt;\/body&gt;))/, &#39;&#39; );
 
 					data = editor.dataProcessor.toDataFormat( data );
 
 					if ( xmlDeclaration )
-						data = xmlDeclaration + '\n' + data;
+						data = xmlDeclaration + &#39;\n&#39; + data;
 					if ( docType )
-						data = docType + '\n' + data;
+						data = docType + &#39;\n&#39; + data;
 
 					return data;
 				}
@@ -525,11 +525,11 @@
 				iframe.clearCustomData();
 				CKEDITOR.tools.removeFunction( this._.frameLoadedHandler );
 
-				var onResize = iframe.removeCustomData( 'onResize' );
+				var onResize = iframe.removeCustomData( &#39;onResize&#39; );
 				onResize &amp;&amp; onResize.removeListener();
 
 				// IE BUG: When destroying editor DOM with the selection remains inside
-				// editing area would break IE7/8's selection system, we have to put the editing
+				// editing area would break IE7/8&#39;s selection system, we have to put the editing
 				// iframe offline first. (#3812 and #5441)
 				iframe.remove();
 			}
@@ -547,32 +547,32 @@
 	function iframeCssFixes() {
 		var css = [];
 
-		// IE&gt;=8 stricts mode doesn't have 'contentEditable' in effect
+		// IE&gt;=8 stricts mode doesn&#39;t have &#39;contentEditable&#39; in effect
 		// on element unless it has layout. (#5562)
 		if ( CKEDITOR.document.$.documentMode &gt;= 8 ) {
-			css.push( 'html.CSS1Compat [contenteditable=false]{min-height:0 !important}' );
+			css.push( &#39;html.CSS1Compat [contenteditable=false]{min-height:0 !important}&#39; );
 
 			var selectors = [];
 
 			for ( var tag in CKEDITOR.dtd.$removeEmpty )
-				selectors.push( 'html.CSS1Compat ' + tag + '[contenteditable=false]' );
+				selectors.push( &#39;html.CSS1Compat &#39; + tag + &#39;[contenteditable=false]&#39; );
 
-			css.push( selectors.join( ',' ) + '{display:inline-block}' );
+			css.push( selectors.join( &#39;,&#39; ) + &#39;{display:inline-block}&#39; );
 		}
 		// Set the HTML style to 100% to have the text cursor in affect (#6341)
 		else if ( CKEDITOR.env.gecko ) {
-			css.push( 'html{height:100% !important}' );
-			css.push( 'img:-moz-broken{-moz-force-broken-image-icon:1;min-width:24px;min-height:24px}' );
+			css.push( &#39;html{height:100% !important}&#39; );
+			css.push( &#39;img:-moz-broken{-moz-force-broken-image-icon:1;min-width:24px;min-height:24px}&#39; );
 		}
 
 		// #6341: The text cursor must be set on the editor area.
 		// #6632: Avoid having &quot;text&quot; shape of cursor in IE7 scrollbars.
-		css.push( 'html{cursor:text;*cursor:auto}' );
+		css.push( &#39;html{cursor:text;*cursor:auto}&#39; );
 
 		// Use correct cursor for these elements
-		css.push( 'img,input,textarea{cursor:default}' );
+		css.push( &#39;img,input,textarea{cursor:default}&#39; );
 
-		return css.join( '\n' );
+		return css.join( &#39;\n&#39; );
 	}
 } )();
 
@@ -602,10 +602,10 @@ CKEDITOR.config.disableNativeTableHandles = true;
 </span> * Disables the built-in words spell checker if browser provides one.
  *
  * **Note:** Although word suggestions provided by browsers (natively) will
- * not appear in CKEditor's default context menu,
+ * not appear in CKEditor&#39;s default context menu,
  * users can always reach the native context menu by holding the
  * *Ctrl* key when right-clicking if {@link #browserContextMenuOnCtrl}
- * is enabled or you're simply not using the context menu plugin.
+ * is enabled or you&#39;re simply not using the context menu plugin.
  *
  *		config.disableNativeSpellChecker = false;
  *
@@ -619,21 +619,21 @@ CKEDITOR.config.disableNativeSpellChecker = true;
  * reflect the CSS used in the final pages where the contents are to be
  * used.
  *
- *		config.contentsCss = '/css/mysitestyles.css';
- *		config.contentsCss = ['/css/mysitestyles.css', '/css/anotherfile.css'];
+ *		config.contentsCss = &#39;/css/mysitestyles.css&#39;;
+ *		config.contentsCss = [&#39;/css/mysitestyles.css&#39;, &#39;/css/anotherfile.css&#39;];
  *
- * @cfg {String/Array} [contentsCss=CKEDITOR.getUrl( 'contents.css' )]
+ * @cfg {String/Array} [contentsCss=CKEDITOR.getUrl( &#39;contents.css&#39; )]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.contentsCss = CKEDITOR.getUrl( 'contents.css' );
+CKEDITOR.config.contentsCss = CKEDITOR.getUrl( &#39;contents.css&#39; );
 
 <span id='CKEDITOR-config-cfg-contentsLanguage'>/**
 </span> * Language code of  the writting language which is used to author the editor
  * contents.
  *
- *		config.contentsLanguage = 'fr';
+ *		config.contentsLanguage = &#39;fr&#39;;
  *
- * @cfg {String} [contentsLanguage=same value with editor's UI language]
+ * @cfg {String} [contentsLanguage=same value with editor&#39;s UI language]
  * @member CKEDITOR.config
  */
 
@@ -641,9 +641,9 @@ CKEDITOR.config.contentsCss = CKEDITOR.getUrl( 'contents.css' );
 </span> * The base href URL used to resolve relative and absolute URLs in the
  * editor content.
  *
- *		config.baseHref = 'http://www.example.com/path/';
+ *		config.baseHref = &#39;http://www.example.com/path/&#39;;
  *
- * @cfg {String} [baseHref='']
+ * @cfg {String} [baseHref=&#39;&#39;]
  * @member CKEDITOR.config
  */
 

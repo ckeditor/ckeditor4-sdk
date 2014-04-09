@@ -20,7 +20,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
 <span id='CKEDITOR-htmlParser-filter'>	/**
@@ -30,20 +30,20 @@
 	 *
 	 *		var filter = new CKEDITOR.htmlParser.filter( {
 	 *			text: function( value ) {
-	 *				return '@' + value + '@';
+	 *				return &#39;@&#39; + value + &#39;@&#39;;
 	 *			},
 	 *			elements: {
 	 *				p: function( element ) {
-	 *					element.attributes.foo = '1';
+	 *					element.attributes.foo = &#39;1&#39;;
 	 *				}
 	 *			}
 	 *		} );
 	 *
-	 *		var fragment = CKEDITOR.htmlParser.fragment.fromHtml( '&lt;p&gt;Foo&lt;b&gt;bar!&lt;/b&gt;&lt;/p&gt;' ),
+	 *		var fragment = CKEDITOR.htmlParser.fragment.fromHtml( &#39;&lt;p&gt;Foo&lt;b&gt;bar!&lt;/b&gt;&lt;/p&gt;&#39; ),
 	 *			writer = new CKEDITOR.htmlParser.basicWriter();
 	 *		filter.applyTo( fragment );
 	 *		fragment.writeHtml( writer );
-	 *		writer.getHtml(); // '&lt;p foo=&quot;1&quot;&gt;@Foo@&lt;b&gt;@bar!@&lt;/b&gt;&lt;/p&gt;'
+	 *		writer.getHtml(); // &#39;&lt;p foo=&quot;1&quot;&gt;@Foo@&lt;b&gt;@bar!@&lt;/b&gt;&lt;/p&gt;&#39;
 	 *
 	 * @class
 	 */
@@ -125,7 +125,7 @@
 </span>			 * Add rules to this filter.
 			 *
 			 * @param {CKEDITOR.htmlParser.filterRulesDefinition} rules Object containing filter rules.
-			 * @param {Object/Number} [options] Object containing rules' options or a priority
+			 * @param {Object/Number} [options] Object containing rules&#39; options or a priority
 			 * (for a backward compatibility with CKEditor versions up to 4.2.x).
 			 * @param {Number} [options.priority=10] The priority of a rule.
 			 * @param {Boolean} [options.applyToAll=false] Whether to apply rule to non-editable
@@ -135,16 +135,16 @@
 				var priority;
 
 				// Backward compatibility.
-				if ( typeof options == 'number' )
+				if ( typeof options == &#39;number&#39; )
 					priority = options;
 				// New version - try reading from options.
-				else if ( options &amp;&amp; ( 'priority' in options ) )
+				else if ( options &amp;&amp; ( &#39;priority&#39; in options ) )
 					priority = options.priority;
 
 				// Defaults.
-				if ( typeof priority != 'number' )
+				if ( typeof priority != &#39;number&#39; )
 					priority = 10;
-				if ( typeof options != 'object' )
+				if ( typeof options != &#39;object&#39; )
 					options = {};
 
 				// Add the elementNames.
@@ -209,7 +209,7 @@
 				// We must apply filters set to the specific element name as
 				// well as those set to the generic ^/$ name. So, add both to an
 				// array and process them in a small loop.
-				var rulesGroups = [ this.elementsRules[ '^' ], this.elementsRules[ element.name ], this.elementsRules.$ ],
+				var rulesGroups = [ this.elementsRules[ &#39;^&#39; ], this.elementsRules[ element.name ], this.elementsRules.$ ],
 					rulesGroup, ret;
 
 				for ( var i = 0; i &lt; 3; i++ ) {
@@ -327,14 +327,14 @@
 <span id='CKEDITOR-htmlParser-filterRulesGroup-method-exec'>		/**
 </span>		 * Executes this rules group on given value. Applicable only if function based rules were added.
 		 *
-		 * All arguments passed to this function will be forwarded to rules' functions.
+		 * All arguments passed to this function will be forwarded to rules&#39; functions.
 		 *
 		 * @param {CKEDITOR.htmlParser.node/CKEDITOR.htmlParser.fragment/String} currentValue The value to be filtered.
 		 * @returns {CKEDITOR.htmlParser.node/CKEDITOR.htmlParser.fragment/String} Filtered value.
 		 */
 		exec: function( context, currentValue ) {
 			var isNode = currentValue instanceof CKEDITOR.htmlParser.node || currentValue instanceof CKEDITOR.htmlParser.fragment,
-				// Splice '1' to remove context, which we don't want to pass to filter rules.
+				// Splice &#39;1&#39; to remove context, which we don&#39;t want to pass to filter rules.
 				args = Array.prototype.slice.call( arguments, 1 ),
 				rules = this.rules,
 				len = rules.length,
@@ -354,8 +354,8 @@
 					if ( ret === false )
 						return ret;
 
-					// We're filtering node (element/fragment).
-					// No further filtering if it's not anymore fitable for the subsequent filters.
+					// We&#39;re filtering node (element/fragment).
+					// No further filtering if it&#39;s not anymore fitable for the subsequent filters.
 					if ( isNode &amp;&amp; ret &amp;&amp; ( ret.name != orgName || ret.type != orgType ) )
 						return ret;
 

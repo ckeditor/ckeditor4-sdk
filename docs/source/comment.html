@@ -28,10 +28,10 @@
 <span id='CKEDITOR-dom-comment-method-constructor'><span id='CKEDITOR-dom-comment'>/**
 </span></span> * Represents a DOM comment node.
  *
- *		var nativeNode = document.createComment( 'Example' );
+ *		var nativeNode = document.createComment( &#39;Example&#39; );
  *		var comment = new CKEDITOR.dom.comment( nativeNode );
  *
- *		var comment = new CKEDITOR.dom.comment( 'Example' );
+ *		var comment = new CKEDITOR.dom.comment( &#39;Example&#39; );
  *
  * @class
  * @extends CKEDITOR.dom.node
@@ -42,7 +42,7 @@
  * the node in case of new node creation. Defaults to the current document.
  */
 CKEDITOR.dom.comment = function( comment, ownerDocument ) {
-	if ( typeof comment == 'string' )
+	if ( typeof comment == &#39;string&#39; )
 		comment = ( ownerDocument ? ownerDocument.$ : document ).createComment( comment );
 
 	CKEDITOR.dom.domObject.call( this, comment );
@@ -65,7 +65,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.comment.prototype, {
 	 * @returns {String} The HTML `&lt;!-- comment value --&gt;`.
 	 */
 	getOuterHtml: function() {
-		return '&lt;!--' + this.$.nodeValue + '--&gt;';
+		return &#39;&lt;!--&#39; + this.$.nodeValue + &#39;--&gt;&#39;;
 	}
 } );
 </pre>

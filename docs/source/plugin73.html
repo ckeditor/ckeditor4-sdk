@@ -27,7 +27,7 @@
  */
 
 ( function() {
-	'use strict';
+	&#39;use strict&#39;;
 
 	var commandDefinition = {
 		readOnly: 1,
@@ -46,58 +46,58 @@
 				   ( editor.elementMode != CKEDITOR.ELEMENT_MODE_INLINE ||
 					   editor.focusManager.hasFocus );
 
-				var funcName = showBlocks ? 'attachClass' : 'removeClass';
-				editor.editable()[ funcName ]( 'cke_show_blocks' );
+				var funcName = showBlocks ? &#39;attachClass&#39; : &#39;removeClass&#39;;
+				editor.editable()[ funcName ]( &#39;cke_show_blocks&#39; );
 			}
 		}
 	};
 
-	CKEDITOR.plugins.add( 'showblocks', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'showblocks,showblocks-rtl', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;showblocks&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;showblocks,showblocks-rtl&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		onLoad: function() {
-			var tags = [ 'p', 'div', 'pre', 'address', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ],
+			var tags = [ &#39;p&#39;, &#39;div&#39;, &#39;pre&#39;, &#39;address&#39;, &#39;blockquote&#39;, &#39;h1&#39;, &#39;h2&#39;, &#39;h3&#39;, &#39;h4&#39;, &#39;h5&#39;, &#39;h6&#39; ],
 				cssStd, cssImg, cssLtr, cssRtl,
 				path = CKEDITOR.getUrl( this.path ),
-				// #10884 don't apply showblocks styles to non-editable elements and chosen ones.
+				// #10884 don&#39;t apply showblocks styles to non-editable elements and chosen ones.
 				// IE8 does not support :not() pseudoclass, so we need to reset showblocks rather
-				// than 'prevent' its application. We do that by additional rules.
+				// than &#39;prevent&#39; its application. We do that by additional rules.
 				supportsNotPseudoclass = !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 ),
-				notDisabled = supportsNotPseudoclass ? ':not([contenteditable=false]):not(.cke_show_blocks_off)' : '',
+				notDisabled = supportsNotPseudoclass ? &#39;:not([contenteditable=false]):not(.cke_show_blocks_off)&#39; : &#39;&#39;,
 				tag, trailing;
 
-			cssStd = cssImg = cssLtr = cssRtl = '';
+			cssStd = cssImg = cssLtr = cssRtl = &#39;&#39;;
 
 			while ( ( tag = tags.pop() ) ) {
-				trailing = tags.length ? ',' : '';
+				trailing = tags.length ? &#39;,&#39; : &#39;&#39;;
 
-				cssStd += '.cke_show_blocks ' + tag + notDisabled + trailing;
-				cssLtr += '.cke_show_blocks.cke_contents_ltr ' + tag + notDisabled + trailing;
-				cssRtl += '.cke_show_blocks.cke_contents_rtl ' + tag + notDisabled + trailing;
-				cssImg += '.cke_show_blocks ' + tag + notDisabled + '{' +
-					'background-image:url(' + path + 'images/block_' + tag + '.png)' +
-				'}';
+				cssStd += &#39;.cke_show_blocks &#39; + tag + notDisabled + trailing;
+				cssLtr += &#39;.cke_show_blocks.cke_contents_ltr &#39; + tag + notDisabled + trailing;
+				cssRtl += &#39;.cke_show_blocks.cke_contents_rtl &#39; + tag + notDisabled + trailing;
+				cssImg += &#39;.cke_show_blocks &#39; + tag + notDisabled + &#39;{&#39; +
+					&#39;background-image:url(&#39; + path + &#39;images/block_&#39; + tag + &#39;.png)&#39; +
+				&#39;}&#39;;
 			}
 
 			// .cke_show_blocks p { ... }
-			cssStd += '{' +
-				'background-repeat:no-repeat;' +
-				'border:1px dotted gray;' +
-				'padding-top:8px' +
-			'}';
+			cssStd += &#39;{&#39; +
+				&#39;background-repeat:no-repeat;&#39; +
+				&#39;border:1px dotted gray;&#39; +
+				&#39;padding-top:8px&#39; +
+			&#39;}&#39;;
 
 			// .cke_show_blocks.cke_contents_ltr p { ... }
-			cssLtr += '{' +
-				'background-position:top left;' +
-				'padding-left:8px' +
-			'}';
+			cssLtr += &#39;{&#39; +
+				&#39;background-position:top left;&#39; +
+				&#39;padding-left:8px&#39; +
+			&#39;}&#39;;
 
 			// .cke_show_blocks.cke_contents_rtl p { ... }
-			cssRtl += '{' +
-				'background-position:top right;' +
-				'padding-right:8px' +
-			'}';
+			cssRtl += &#39;{&#39; +
+				&#39;background-position:top right;&#39; +
+				&#39;padding-right:8px&#39; +
+			&#39;}&#39;;
 
 			CKEDITOR.addCss( cssStd.concat( cssImg, cssLtr, cssRtl ) );
 
@@ -105,17 +105,17 @@
 			// it could not be done using :not() pseudoclass (#10884).
 			if ( !supportsNotPseudoclass ) {
 				CKEDITOR.addCss(
-					'.cke_show_blocks [contenteditable=false],.cke_show_blocks .cke_show_blocks_off{' +
-						'border:none;' +
-						'padding-top:0;' +
-						'background-image:none' +
-					'}' +
-					'.cke_show_blocks.cke_contents_rtl [contenteditable=false],.cke_show_blocks.cke_contents_rtl .cke_show_blocks_off{' +
-						'padding-right:0' +
-					'}' +
-					'.cke_show_blocks.cke_contents_ltr [contenteditable=false],.cke_show_blocks.cke_contents_ltr .cke_show_blocks_off{' +
-						'padding-left:0' +
-					'}'
+					&#39;.cke_show_blocks [contenteditable=false],.cke_show_blocks .cke_show_blocks_off{&#39; +
+						&#39;border:none;&#39; +
+						&#39;padding-top:0;&#39; +
+						&#39;background-image:none&#39; +
+					&#39;}&#39; +
+					&#39;.cke_show_blocks.cke_contents_rtl [contenteditable=false],.cke_show_blocks.cke_contents_rtl .cke_show_blocks_off{&#39; +
+						&#39;padding-right:0&#39; +
+					&#39;}&#39; +
+					&#39;.cke_show_blocks.cke_contents_ltr [contenteditable=false],.cke_show_blocks.cke_contents_ltr .cke_show_blocks_off{&#39; +
+						&#39;padding-left:0&#39; +
+					&#39;}&#39;
 				);
 			}
 		},
@@ -123,32 +123,32 @@
 			if ( editor.blockless )
 				return;
 
-			var command = editor.addCommand( 'showblocks', commandDefinition );
+			var command = editor.addCommand( &#39;showblocks&#39;, commandDefinition );
 			command.canUndo = false;
 
 			if ( editor.config.startupOutlineBlocks )
 				command.setState( CKEDITOR.TRISTATE_ON );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'ShowBlocks', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;ShowBlocks&#39;, {
 				label: editor.lang.showblocks.toolbar,
-				command: 'showblocks',
-				toolbar: 'tools,20'
+				command: &#39;showblocks&#39;,
+				toolbar: &#39;tools,20&#39;
 			} );
 
 			// Refresh the command on setData.
-			editor.on( 'mode', function() {
+			editor.on( &#39;mode&#39;, function() {
 				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
 					command.refresh( editor );
 			} );
 
 			// Refresh the command on focus/blur in inline.
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ) {
-				editor.on( 'focus', onFocusBlur );
-				editor.on( 'blur', onFocusBlur );
+				editor.on( &#39;focus&#39;, onFocusBlur );
+				editor.on( &#39;blur&#39;, onFocusBlur );
 			}
 
 			// Refresh the command on setData.
-			editor.on( 'contentDom', function() {
+			editor.on( &#39;contentDom&#39;, function() {
 				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
 					command.refresh( editor );
 			} );

@@ -21,14 +21,14 @@
  */
 
 ( function() {
-	var eventNameList = [ 'click', 'keydown', 'mousedown', 'keypress', 'mouseover', 'mouseout' ];
+	var eventNameList = [ &#39;click&#39;, &#39;keydown&#39;, &#39;mousedown&#39;, &#39;keypress&#39;, &#39;mouseover&#39;, &#39;mouseout&#39; ];
 
 	// Inline event callbacks assigned via innerHTML/outerHTML, such as
 	// onclick/onmouseover, are ignored in AIR.
 	// Use DOM2 event listeners to substitue inline handlers instead.
 	function convertInlineHandlers( container ) {
 		// TODO: document.querySelectorAll is not supported in AIR.
-		var children = container.getElementsByTag( '*' ),
+		var children = container.getElementsByTag( &#39;*&#39; ),
 			count = children.count(),
 			child;
 
@@ -38,13 +38,13 @@
 			( function( node ) {
 				for ( var j = 0; j &lt; eventNameList.length; j++ ) {
 					( function( eventName ) {
-						var inlineEventHandler = node.getAttribute( 'on' + eventName );
-						if ( node.hasAttribute( 'on' + eventName ) ) {
-							node.removeAttribute( 'on' + eventName );
+						var inlineEventHandler = node.getAttribute( &#39;on&#39; + eventName );
+						if ( node.hasAttribute( &#39;on&#39; + eventName ) ) {
+							node.removeAttribute( &#39;on&#39; + eventName );
 							node.on( eventName, function( evt ) {
 								var callFunc = /(return\s*)?CKEDITOR\.tools\.callFunction\(([^)]+)\)/.exec( inlineEventHandler ),
 									hasReturn = callFunc &amp;&amp; callFunc[ 1 ],
-									callFuncArgs = callFunc &amp;&amp; callFunc[ 2 ].split( ',' ),
+									callFuncArgs = callFunc &amp;&amp; callFunc[ 2 ].split( &#39;,&#39; ),
 									preventDefault = /return false;/.test( inlineEventHandler );
 
 								if ( callFuncArgs ) {
@@ -56,7 +56,7 @@
 										callFuncArgs[ i ] = argName = CKEDITOR.tools.trim( callFuncArgs[ i ] );
 
 										// String form param.
-										var strPattern = argName.match( /^([&quot;'])([^&quot;']*?)\1$/ );
+										var strPattern = argName.match( /^([&quot;&#39;])([^&quot;&#39;]*?)\1$/ );
 										if ( strPattern ) {
 											callFuncArgs[ i ] = strPattern[ 2 ];
 											continue;
@@ -70,13 +70,13 @@
 
 										// Speical variables.
 										switch ( argName ) {
-											case 'this':
+											case &#39;this&#39;:
 												callFuncArgs[ i ] = node.$;
 												break;
-											case 'event':
+											case &#39;event&#39;:
 												callFuncArgs[ i ] = evt.data.$;
 												break;
-											case 'null':
+											case &#39;null&#39;:
 												callFuncArgs[ i ] = null;
 												break;
 										}
@@ -97,7 +97,7 @@
 		}
 	}
 
-	CKEDITOR.plugins.add( 'adobeair', {
+	CKEDITOR.plugins.add( &#39;adobeair&#39;, {
 		onLoad: function() {
 			if ( !CKEDITOR.env.air )
 				return;
@@ -115,25 +115,25 @@
 					// the page load event in Adobe AIR.
 					// DOM manipulation could be used instead.
 					if ( this.getBody() ) {
-						// We're taking the below extra work only because innerHTML
-						// on &lt;html&gt; element doesn't work as expected.
+						// We&#39;re taking the below extra work only because innerHTML
+						// on &lt;html&gt; element doesn&#39;t work as expected.
 						var doc = this,
 							head = this.getHead();
 
-						// Create style nodes for inline css. ( &lt;style&gt; content doesn't applied when setting via innerHTML )
+						// Create style nodes for inline css. ( &lt;style&gt; content doesn&#39;t applied when setting via innerHTML )
 						html = html.replace( /(&lt;style[^&gt;]*&gt;)([\s\S]*?)&lt;\/style&gt;/gi, function( match, startTag, styleText ) {
-							appendElement( head, 'style', startTag, styleText );
-							return '';
+							appendElement( head, &#39;style&#39;, startTag, styleText );
+							return &#39;&#39;;
 						} );
 
 						html = html.replace( /&lt;base\b[^&gt;]*\/&gt;/i, function( match ) {
-							appendElement( head, 'base', match );
-							return '';
+							appendElement( head, &#39;base&#39;, match );
+							return &#39;&#39;;
 						} );
 
 						html = html.replace( /&lt;title&gt;([\s\S]*)&lt;\/title&gt;/i, function( match, title ) {
 							doc.$.title = title;
-							return '';
+							return &#39;&#39;;
 						} );
 
 						// Move the rest of head stuff.
@@ -141,11 +141,11 @@
 							// Inject the &lt;head&gt; HTML inside a &lt;div&gt;.
 							// Do that before getDocumentHead because WebKit moves
 							// &lt;link css&gt; elements to the &lt;head&gt; at this point.
-							var div = new CKEDITOR.dom.element( 'div', doc );
+							var div = new CKEDITOR.dom.element( &#39;div&#39;, doc );
 							div.setHtml( headHtml );
 							// Move the &lt;div&gt; nodes to &lt;head&gt;.
 							div.moveChildren( head );
-							return '';
+							return &#39;&#39;;
 						} );
 
 						html.replace( /(&lt;body[^&gt;]*&gt;)([\s\S]*)(?=$|&lt;\/body&gt;)/i, function( match, startTag, innerHTML ) {
@@ -158,9 +158,9 @@
 				};
 			} );
 
-			// Body doesn't get default margin on AIR.
-			CKEDITOR.addCss( 'body.cke_editable { padding: 8px }' );
-			CKEDITOR.ui.on( 'ready', function( evt ) {
+			// Body doesn&#39;t get default margin on AIR.
+			CKEDITOR.addCss( &#39;body.cke_editable { padding: 8px }&#39; );
+			CKEDITOR.ui.on( &#39;ready&#39;, function( evt ) {
 				var ui = evt.data;
 				// richcombo, panelbutton and menu
 				if ( ui._.panel ) {
@@ -185,18 +185,18 @@
 			if ( !CKEDITOR.env.air )
 				return;
 
-			editor.on( 'uiReady', function() {
+			editor.on( &#39;uiReady&#39;, function() {
 				convertInlineHandlers( editor.container );
 
-				editor.on( 'elementsPathUpdate', function( evt ) {
+				editor.on( &#39;elementsPathUpdate&#39;, function( evt ) {
 					convertInlineHandlers( evt.data.space );
 				} );
 			} );
 
-			editor.on( 'contentDom', function() {
+			editor.on( &#39;contentDom&#39;, function() {
 				// Hyperlinks are enabled in editable documents in Adobe
 				// AIR. Prevent their click behavior.
-				editor.document.on( 'click', function( ev ) {
+				editor.document.on( &#39;click&#39;, function( ev ) {
 					ev.data.preventDefault( true );
 				} );
 			} );

@@ -26,8 +26,8 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'ajax', {
-		requires: 'xml'
+	CKEDITOR.plugins.add( &#39;ajax&#39;, {
+		requires: &#39;xml&#39;
 	} );
 
 <span id='CKEDITOR-ajax'>	/**
@@ -40,16 +40,16 @@
 		var createXMLHttpRequest = function() {
 				// In IE, using the native XMLHttpRequest for local files may throw
 				// &quot;Access is Denied&quot; errors.
-				if ( !CKEDITOR.env.ie || location.protocol != 'file:' )
+				if ( !CKEDITOR.env.ie || location.protocol != &#39;file:&#39; )
 					try {
 					return new XMLHttpRequest();
 				} catch ( e ) {}
 
 				try {
-					return new ActiveXObject( 'Msxml2.XMLHTTP' );
+					return new ActiveXObject( &#39;Msxml2.XMLHTTP&#39; );
 				} catch ( e ) {}
 				try {
-					return new ActiveXObject( 'Microsoft.XMLHTTP' );
+					return new ActiveXObject( &#39;Microsoft.XMLHTTP&#39; );
 				} catch ( e ) {}
 
 				return null;
@@ -87,7 +87,7 @@
 				if ( !xhr )
 					return null;
 
-				xhr.open( 'GET', url, async );
+				xhr.open( &#39;GET&#39;, url, async );
 
 				if ( async ) {
 					// TODO: perform leak checks on this closure.
@@ -101,7 +101,7 @@
 
 				xhr.send( null );
 
-				return async ? '' : getResponseFn( xhr );
+				return async ? &#39;&#39; : getResponseFn( xhr );
 			};
 
 		return {
@@ -109,11 +109,11 @@
 </span>			 * Loads data from an URL as plain text.
 			 *
 			 *		// Load data synchronously.
-			 *		var data = CKEDITOR.ajax.load( 'somedata.txt' );
+			 *		var data = CKEDITOR.ajax.load( &#39;somedata.txt&#39; );
 			 *		alert( data );
 			 *
 			 *		// Load data asynchronously.
-			 *		var data = CKEDITOR.ajax.load( 'somedata.txt', function( data ) {
+			 *		var data = CKEDITOR.ajax.load( &#39;somedata.txt&#39;, function( data ) {
 			 *			alert( data );
 			 *		} );
 			 *
@@ -132,12 +132,12 @@
 </span>			 * Loads data from an URL as XML.
 			 *
 			 *		// Load XML synchronously.
-			 *		var xml = CKEDITOR.ajax.loadXml( 'somedata.xml' );
-			 *		alert( xml.getInnerXml( '//' ) );
+			 *		var xml = CKEDITOR.ajax.loadXml( &#39;somedata.xml&#39; );
+			 *		alert( xml.getInnerXml( &#39;//&#39; ) );
 			 *
 			 *		// Load XML asynchronously.
-			 *		var data = CKEDITOR.ajax.loadXml( 'somedata.xml', function( xml ) {
-			 *			alert( xml.getInnerXml( '//' ) );
+			 *		var data = CKEDITOR.ajax.loadXml( &#39;somedata.xml&#39;, function( xml ) {
+			 *			alert( xml.getInnerXml( &#39;//&#39; ) );
 			 *		} );
 			 *
 			 * @param {String} url The URL from which load data.

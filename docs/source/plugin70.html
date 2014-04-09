@@ -29,15 +29,15 @@
 		readOnly: 1,
 
 		exec: function( editor ) {
-			if ( editor.fire( 'save' ) ) {
+			if ( editor.fire( &#39;save&#39; ) ) {
 				var $form = editor.element.$.form;
 
 				if ( $form ) {
 					try {
 						$form.submit();
 					} catch ( e ) {
-						// If there's a button named &quot;submit&quot; then the form.submit
-						// function is masked and can't be called in IE/FF, so we
+						// If there&#39;s a button named &quot;submit&quot; then the form.submit
+						// function is masked and can&#39;t be called in IE/FF, so we
 						// call the click() method of that button.
 						if ( $form.submit.click )
 							$form.submit.click();
@@ -47,12 +47,12 @@
 		}
 	};
 
-	var pluginName = 'save';
+	var pluginName = &#39;save&#39;;
 
 	// Register a plugin named &quot;save&quot;.
 	CKEDITOR.plugins.add( pluginName, {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'save', // %REMOVE_LINE_CORE%
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;save&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			// Save plugin is for replace mode only.
@@ -62,10 +62,10 @@
 			var command = editor.addCommand( pluginName, saveCmd );
 			command.modes = { wysiwyg: !!( editor.element.$.form ) };
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Save', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Save&#39;, {
 				label: editor.lang.save.toolbar,
 				command: pluginName,
-				toolbar: 'document,10'
+				toolbar: &#39;document,10&#39;
 			} );
 		}
 	} );

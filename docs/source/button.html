@@ -19,17 +19,17 @@
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
-CKEDITOR.dialog.add( 'button', function( editor ) {
+CKEDITOR.dialog.add( &#39;button&#39;, function( editor ) {
 	function commitAttributes( element ) {
 		var val = this.getValue();
 		if ( val ) {
 			element.attributes[ this.id ] = val;
-			if ( this.id == 'name' )
-				element.attributes[ 'data-cke-saved-name' ] = val;
+			if ( this.id == &#39;name&#39; )
+				element.attributes[ &#39;data-cke-saved-name&#39; ] = val;
 		} else {
 			delete element.attributes[ this.id ];
-			if ( this.id == 'name' )
-				delete element.attributes[ 'data-cke-saved-name' ];
+			if ( this.id == &#39;name&#39; )
+				delete element.attributes[ &#39;data-cke-saved-name&#39; ];
 		}
 	}
 
@@ -40,8 +40,8 @@ CKEDITOR.dialog.add( 'button', function( editor ) {
 		onShow: function() {
 			delete this.button;
 			var element = this.getParentEditor().getSelection().getSelectedElement();
-			if ( element &amp;&amp; element.is( 'input' ) ) {
-				var type = element.getAttribute( 'type' );
+			if ( element &amp;&amp; element.is( &#39;input&#39; ) ) {
+				var type = element.getAttribute( &#39;type&#39; );
 				if ( type in { button: 1, reset: 1, submit: 1 } ) {
 					this.button = element;
 					this.setupContent( element );
@@ -53,7 +53,7 @@ CKEDITOR.dialog.add( 'button', function( editor ) {
 				element = this.button,
 				isInsertMode = !element;
 
-			var fake = element ? CKEDITOR.htmlParser.fragment.fromHtml( element.getOuterHtml() ).children[ 0 ] : new CKEDITOR.htmlParser.element( 'input' );
+			var fake = element ? CKEDITOR.htmlParser.fragment.fromHtml( element.getOuterHtml() ).children[ 0 ] : new CKEDITOR.htmlParser.element( &#39;input&#39; );
 			this.commitContent( fake );
 
 			var writer = new CKEDITOR.htmlParser.basicWriter();
@@ -69,44 +69,44 @@ CKEDITOR.dialog.add( 'button', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.forms.button.title,
 			title: editor.lang.forms.button.title,
 			elements: [
 				{
-				id: 'name',
-				type: 'text',
+				id: &#39;name&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.common.name,
-				'default': '',
+				&#39;default&#39;: &#39;&#39;,
 				setup: function( element ) {
-					this.setValue( element.data( 'cke-saved-name' ) || element.getAttribute( 'name' ) || '' );
+					this.setValue( element.data( &#39;cke-saved-name&#39; ) || element.getAttribute( &#39;name&#39; ) || &#39;&#39; );
 				},
 				commit: commitAttributes
 			},
 				{
-				id: 'value',
-				type: 'text',
+				id: &#39;value&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.forms.button.text,
-				accessKey: 'V',
-				'default': '',
+				accessKey: &#39;V&#39;,
+				&#39;default&#39;: &#39;&#39;,
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'value' ) || '' );
+					this.setValue( element.getAttribute( &#39;value&#39; ) || &#39;&#39; );
 				},
 				commit: commitAttributes
 			},
 				{
-				id: 'type',
-				type: 'select',
+				id: &#39;type&#39;,
+				type: &#39;select&#39;,
 				label: editor.lang.forms.button.type,
-				'default': 'button',
-				accessKey: 'T',
+				&#39;default&#39;: &#39;button&#39;,
+				accessKey: &#39;T&#39;,
 				items: [
-					[ editor.lang.forms.button.typeBtn, 'button' ],
-					[ editor.lang.forms.button.typeSbm, 'submit' ],
-					[ editor.lang.forms.button.typeRst, 'reset' ]
+					[ editor.lang.forms.button.typeBtn, &#39;button&#39; ],
+					[ editor.lang.forms.button.typeSbm, &#39;submit&#39; ],
+					[ editor.lang.forms.button.typeRst, &#39;reset&#39; ]
 					],
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'type' ) || '' );
+					this.setValue( element.getAttribute( &#39;type&#39; ) || &#39;&#39; );
 				},
 				commit: commitAttributes
 			}

@@ -40,7 +40,7 @@
 
 		selectedElement = selectedElement || path.block || path.blockLimit;
 
-		// If we're having BODY here, user probably done CTRL+A, let's try to get the enclosed node, if any.
+		// If we&#39;re having BODY here, user probably done CTRL+A, let&#39;s try to get the enclosed node, if any.
 		if ( selectedElement.equals( editor.editable() ) ) {
 			var enclosedNode = editor.getSelection().getRanges()[ 0 ].getEnclosedNode();
 			enclosedNode &amp;&amp; enclosedNode.type == CKEDITOR.NODE_ELEMENT &amp;&amp; ( selectedElement = enclosedNode );
@@ -49,10 +49,10 @@
 		if ( !selectedElement )
 			return;
 
-		var selectionDir = useComputedState ? selectedElement.getComputedStyle( 'direction' ) : selectedElement.getStyle( 'direction' ) || selectedElement.getAttribute( 'dir' );
+		var selectionDir = useComputedState ? selectedElement.getComputedStyle( &#39;direction&#39; ) : selectedElement.getStyle( &#39;direction&#39; ) || selectedElement.getAttribute( &#39;dir&#39; );
 
-		editor.getCommand( 'bidirtl' ).setState( selectionDir == 'rtl' ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
-		editor.getCommand( 'bidiltr' ).setState( selectionDir == 'ltr' ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+		editor.getCommand( &#39;bidirtl&#39; ).setState( selectionDir == &#39;rtl&#39; ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+		editor.getCommand( &#39;bidiltr&#39; ).setState( selectionDir == &#39;ltr&#39; ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 	}
 
 	function handleMixedDirContent( editor, path ) {
@@ -60,7 +60,7 @@
 		var pathDir = directionNode.getDirection( 1 );
 		if ( pathDir != ( editor._.selDir || editor.lang.dir ) ) {
 			editor._.selDir = pathDir;
-			editor.fire( 'contentDirChanged', pathDir );
+			editor.fire( &#39;contentDirChanged&#39;, pathDir );
 		}
 	}
 
@@ -83,40 +83,40 @@
 			return;
 
 		// Mark this element as processed by switchDir.
-		CKEDITOR.dom.element.setMarker( database, element, 'bidi_processed', 1 );
+		CKEDITOR.dom.element.setMarker( database, element, &#39;bidi_processed&#39;, 1 );
 
 		// Check whether one of the ancestors has already been styled.
 		var parent = element,
 			editable = editor.editable();
 		while ( ( parent = parent.getParent() ) &amp;&amp; !parent.equals( editable ) ) {
-			if ( parent.getCustomData( 'bidi_processed' ) ) {
+			if ( parent.getCustomData( &#39;bidi_processed&#39; ) ) {
 				// Ancestor style must dominate.
-				element.removeStyle( 'direction' );
-				element.removeAttribute( 'dir' );
+				element.removeStyle( &#39;direction&#39; );
+				element.removeAttribute( &#39;dir&#39; );
 				return;
 			}
 		}
 
-		var useComputedState = ( 'useComputedState' in editor.config ) ? editor.config.useComputedState : 1;
+		var useComputedState = ( &#39;useComputedState&#39; in editor.config ) ? editor.config.useComputedState : 1;
 
-		var elementDir = useComputedState ? element.getComputedStyle( 'direction' ) : element.getStyle( 'direction' ) || element.hasAttribute( 'dir' );
+		var elementDir = useComputedState ? element.getComputedStyle( &#39;direction&#39; ) : element.getStyle( &#39;direction&#39; ) || element.hasAttribute( &#39;dir&#39; );
 
 		// Stop if direction is same as present.
 		if ( elementDir == dir )
 			return;
 
 		// Clear direction on this element.
-		element.removeStyle( 'direction' );
+		element.removeStyle( &#39;direction&#39; );
 
 		// Do the second check when computed state is ON, to check
 		// if we need to apply explicit direction on this element.
 		if ( useComputedState ) {
-			element.removeAttribute( 'dir' );
-			if ( dir != element.getComputedStyle( 'direction' ) )
-				element.setAttribute( 'dir', dir );
+			element.removeAttribute( &#39;dir&#39; );
+			if ( dir != element.getComputedStyle( &#39;direction&#39; ) )
+				element.setAttribute( &#39;dir&#39;, dir );
 		} else
 			// Set new direction for this element.
-			element.setAttribute( 'dir', dir );
+			element.setAttribute( &#39;dir&#39;, dir );
 
 		editor.forceNextSelectionCheck();
 
@@ -141,14 +141,14 @@
 	function bidiCommand( dir ) {
 		return {
 			// It applies to a &quot;block-like&quot; context.
-			context: 'p',
+			context: &#39;p&#39;,
 			allowedContent: {
-				'h1 h2 h3 h4 h5 h6 table ul ol blockquote div tr p div li td': {
+				&#39;h1 h2 h3 h4 h5 h6 table ul ol blockquote div tr p div li td&#39;: {
 					propertiesOnly: true,
-					attributes: 'dir'
+					attributes: &#39;dir&#39;
 				}
 			},
-			requiredContent: 'p[dir]',
+			requiredContent: &#39;p[dir]&#39;,
 			refresh: function( editor, path ) {
 				setToolbarStates( editor, path );
 				handleMixedDirContent( editor, path );
@@ -187,7 +187,7 @@
 							end = bookmarks[ i++ ].endNode;
 
 						walker.evaluator = function( node ) {
-							return !!( node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getName() in guardElements &amp;&amp; !( node.getName() == ( enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) &amp;&amp; node.getParent().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getParent().getName() == 'blockquote' )
+							return !!( node.type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getName() in guardElements &amp;&amp; !( node.getName() == ( enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) &amp;&amp; node.getParent().type == CKEDITOR.NODE_ELEMENT &amp;&amp; node.getParent().getName() == &#39;blockquote&#39; )
 							// Element must be fully included in the range as well. (#6485).
 							&amp;&amp; node.getPosition( start ) &amp; CKEDITOR.POSITION_FOLLOWING &amp;&amp; ( ( node.getPosition( end ) &amp; CKEDITOR.POSITION_PRECEDING + CKEDITOR.POSITION_CONTAINS ) == CKEDITOR.POSITION_PRECEDING ) );
 						};
@@ -198,7 +198,7 @@
 						iterator = range.createIterator();
 						iterator.enlargeBr = enterMode != CKEDITOR.ENTER_BR;
 
-						while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) ) )
+						while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) ) )
 							switchDir( block, dir, editor, database );
 					}
 
@@ -214,16 +214,16 @@
 		};
 	}
 
-	CKEDITOR.plugins.add( 'bidi', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'bidiltr,bidirtl', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;bidi&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;bidiltr,bidirtl&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
 			if ( editor.blockless )
 				return;
 
 			// All buttons use the same code to register. So, to avoid
-			// duplications, let's use this tool function.
+			// duplications, let&#39;s use this tool function.
 			function addButtonCommand( buttonName, buttonLabel, commandName, commandDef, order ) {
 				editor.addCommand( commandName, new CKEDITOR.command( editor, commandDef ) );
 
@@ -231,19 +231,19 @@
 					editor.ui.addButton( buttonName, {
 						label: buttonLabel,
 						command: commandName,
-						toolbar: 'bidi,' + order
+						toolbar: &#39;bidi,&#39; + order
 					} );
 				}
 			}
 
 			var lang = editor.lang.bidi;
 
-			addButtonCommand( 'BidiLtr', lang.ltr, 'bidiltr', bidiCommand( 'ltr' ), 10 );
-			addButtonCommand( 'BidiRtl', lang.rtl, 'bidirtl', bidiCommand( 'rtl' ), 20 );
+			addButtonCommand( &#39;BidiLtr&#39;, lang.ltr, &#39;bidiltr&#39;, bidiCommand( &#39;ltr&#39; ), 10 );
+			addButtonCommand( &#39;BidiRtl&#39;, lang.rtl, &#39;bidirtl&#39;, bidiCommand( &#39;rtl&#39; ), 20 );
 
-			editor.on( 'contentDom', function() {
-				editor.document.on( 'dirChanged', function( evt ) {
-					editor.fire( 'dirChanged', {
+			editor.on( &#39;contentDom&#39;, function() {
+				editor.document.on( &#39;dirChanged&#39;, function( evt ) {
+					editor.fire( &#39;dirChanged&#39;, {
 						node: evt.data,
 						dir: evt.data.getDirection( 1 )
 					} );
@@ -251,11 +251,11 @@
 			} );
 
 			// Indicate that the current selection is in different direction than the UI.
-			editor.on( 'contentDirChanged', function( evt ) {
-				var func = ( editor.lang.dir != evt.data ? 'add' : 'remove' ) + 'Class';
+			editor.on( &#39;contentDirChanged&#39;, function( evt ) {
+				var func = ( editor.lang.dir != evt.data ? &#39;add&#39; : &#39;remove&#39; ) + &#39;Class&#39;;
 				var toolbar = editor.ui.space( editor.config.toolbarLocation );
 				if ( toolbar )
-					toolbar[ func ]( 'cke_mixed_dir_content' );
+					toolbar[ func ]( &#39;cke_mixed_dir_content&#39; );
 			} );
 		}
 	} );
@@ -281,11 +281,11 @@
 		return function( name, val ) {
 			if ( !this.isReadOnly() ) {
 				var orgDir;
-				if ( ( name == ( isAttribute || isRemoveAttribute ? 'dir' : 'direction' ) || name == 'style' &amp;&amp; ( isRemoveAttribute || dirStyleRegexp.test( val ) ) ) &amp;&amp; !isOffline( this ) ) {
+				if ( ( name == ( isAttribute || isRemoveAttribute ? &#39;dir&#39; : &#39;direction&#39; ) || name == &#39;style&#39; &amp;&amp; ( isRemoveAttribute || dirStyleRegexp.test( val ) ) ) &amp;&amp; !isOffline( this ) ) {
 					orgDir = this.getDirection( 1 );
 					var retval = org.apply( this, arguments );
 					if ( orgDir != this.getDirection( 1 ) ) {
-						this.getDocument().fire( 'dirChanged', this );
+						this.getDocument().fire( &#39;dirChanged&#39;, this );
 						return retval;
 					}
 				}
@@ -296,7 +296,7 @@
 	}
 
 	var elementProto = CKEDITOR.dom.element.prototype,
-		methods = [ 'setStyle', 'removeStyle', 'setAttribute', 'removeAttribute' ];
+		methods = [ &#39;setStyle&#39;, &#39;removeStyle&#39;, &#39;setAttribute&#39;, &#39;removeAttribute&#39; ];
 	for ( var i = 0; i &lt; methods.length; i++ )
 		elementProto[ methods[ i ] ] = CKEDITOR.tools.override( elementProto[ methods[ i ] ], dirChangeNotifier );
 } )();

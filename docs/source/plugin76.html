@@ -26,39 +26,39 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'sourcearea', {
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'source,source-rtl', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;sourcearea&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;source,source-rtl&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			// Source mode isn't available in inline mode yet.
+			// Source mode isn&#39;t available in inline mode yet.
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
 				return;
 
 			var sourcearea = CKEDITOR.plugins.sourcearea;
 
-			editor.addMode( 'source', function( callback ) {
-				var contentsSpace = editor.ui.space( 'contents' ),
-					textarea = contentsSpace.getDocument().createElement( 'textarea' );
+			editor.addMode( &#39;source&#39;, function( callback ) {
+				var contentsSpace = editor.ui.space( &#39;contents&#39; ),
+					textarea = contentsSpace.getDocument().createElement( &#39;textarea&#39; );
 
 				textarea.setStyles(
 					CKEDITOR.tools.extend( {
 						// IE7 has overflow the &lt;textarea&gt; from wrapping table cell.
-						width: CKEDITOR.env.ie7Compat ? '99%' : '100%',
-						height: '100%',
-						resize: 'none',
-						outline: 'none',
-						'text-align': 'left'
+						width: CKEDITOR.env.ie7Compat ? &#39;99%&#39; : &#39;100%&#39;,
+						height: &#39;100%&#39;,
+						resize: &#39;none&#39;,
+						outline: &#39;none&#39;,
+						&#39;text-align&#39;: &#39;left&#39;
 					},
-					CKEDITOR.tools.cssVendorPrefix( 'tab-size', editor.config.sourceAreaTabSize || 4 ) ) );
+					CKEDITOR.tools.cssVendorPrefix( &#39;tab-size&#39;, editor.config.sourceAreaTabSize || 4 ) ) );
 
 				// Make sure that source code is always displayed LTR,
 				// regardless of editor language (#10105).
-				textarea.setAttribute( 'dir', 'ltr' );
+				textarea.setAttribute( &#39;dir&#39;, &#39;ltr&#39; );
 
-				textarea.addClass( 'cke_source cke_reset cke_enable_context_menu' );
+				textarea.addClass( &#39;cke_source cke_reset cke_enable_context_menu&#39; );
 
-				editor.ui.space( 'contents' ).append( textarea );
+				editor.ui.space( &#39;contents&#39; ).append( textarea );
 
 				var editable = editor.editable( new sourceEditable( editor, textarea ) );
 
@@ -66,40 +66,40 @@
 				editable.setData( editor.getData( 1 ) );
 
 				// Having to make &lt;textarea&gt; fixed sized to conquer the following bugs:
-				// 1. The textarea height/width='100%' doesn't constraint to the 'td' in IE6/7.
+				// 1. The textarea height/width=&#39;100%&#39; doesn&#39;t constraint to the &#39;td&#39; in IE6/7.
 				// 2. Unexpected vertical-scrolling behavior happens whenever focus is moving out of editor
 				// if text content within it has overflowed. (#4762)
 				if ( CKEDITOR.env.ie ) {
-					editable.attachListener( editor, 'resize', onResize, editable );
-					editable.attachListener( CKEDITOR.document.getWindow(), 'resize', onResize, editable );
+					editable.attachListener( editor, &#39;resize&#39;, onResize, editable );
+					editable.attachListener( CKEDITOR.document.getWindow(), &#39;resize&#39;, onResize, editable );
 					CKEDITOR.tools.setTimeout( onResize, 0, editable );
 				}
 
-				editor.fire( 'ariaWidget', this );
+				editor.fire( &#39;ariaWidget&#39;, this );
 
 				callback();
 			} );
 
-			editor.addCommand( 'source', sourcearea.commands.source );
+			editor.addCommand( &#39;source&#39;, sourcearea.commands.source );
 
 			if ( editor.ui.addButton ) {
-				editor.ui.addButton( 'Source', {
+				editor.ui.addButton( &#39;Source&#39;, {
 					label: editor.lang.sourcearea.toolbar,
-					command: 'source',
-					toolbar: 'mode,10'
+					command: &#39;source&#39;,
+					toolbar: &#39;mode,10&#39;
 				} );
 			}
 
-			editor.on( 'mode', function() {
-				editor.getCommand( 'source' ).setState( editor.mode == 'source' ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+			editor.on( &#39;mode&#39;, function() {
+				editor.getCommand( &#39;source&#39; ).setState( editor.mode == &#39;source&#39; ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
 			} );
 
 			function onResize() {
 				// Holder rectange size is stretched by textarea,
 				// so hide it just for a moment.
 				this.hide();
-				this.setStyle( 'height', this.getParent().$.clientHeight + 'px' );
-				this.setStyle( 'width', this.getParent().$.clientWidth + 'px' );
+				this.setStyle( &#39;height&#39;, this.getParent().$.clientHeight + &#39;px&#39; );
+				this.setStyle( &#39;width&#39;, this.getParent().$.clientWidth + &#39;px&#39; );
 				// When we have proper holder size, show textarea again.
 				this.show();
 			}
@@ -111,7 +111,7 @@
 		proto: {
 			setData: function( data ) {
 				this.setValue( data );
-				this.editor.fire( 'dataReady' );
+				this.editor.fire( &#39;dataReady&#39; );
 			},
 
 			getData: function() {
@@ -125,7 +125,7 @@
 
 			// Read-only support for textarea.
 			setReadOnly: function( isReadOnly ) {
-				this[ ( isReadOnly ? 'set' : 'remove' ) + 'Attribute' ]( 'readOnly', 'readonly' );
+				this[ ( isReadOnly ? &#39;set&#39; : &#39;remove&#39; ) + &#39;Attribute&#39; ]( &#39;readOnly&#39;, &#39;readonly&#39; );
 			},
 
 			detach: function() {
@@ -144,10 +144,10 @@ CKEDITOR.plugins.sourcearea = {
 			editorFocus: false,
 			readOnly: 1,
 			exec: function( editor ) {
-				if ( editor.mode == 'wysiwyg' )
-					editor.fire( 'saveSnapshot' );
-				editor.getCommand( 'source' ).setState( CKEDITOR.TRISTATE_DISABLED );
-				editor.setMode( editor.mode == 'source' ? 'wysiwyg' : 'source' );
+				if ( editor.mode == &#39;wysiwyg&#39; )
+					editor.fire( &#39;saveSnapshot&#39; );
+				editor.getCommand( &#39;source&#39; ).setState( CKEDITOR.TRISTATE_DISABLED );
+				editor.setMode( editor.mode == &#39;source&#39; ? &#39;wysiwyg&#39; : &#39;source&#39; );
 			},
 
 			canUndo: false
@@ -159,7 +159,7 @@ CKEDITOR.plugins.sourcearea = {
 </span> * Controls CSS tab-size property of the sourcearea view.
  *
  * **Note:** Works only with {@link #dataIndentationChars}
- * set to `'\t'`. Please consider that not all browsers support CSS
+ * set to `&#39;\t&#39;`. Please consider that not all browsers support CSS
  * `tab-size` property yet.
  *
  *		// Set tab-size to 20 characters.

@@ -19,7 +19,7 @@
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
-CKEDITOR.dialog.add( 'radio', function( editor ) {
+CKEDITOR.dialog.add( &#39;radio&#39;, function( editor ) {
 	return {
 		title: editor.lang.forms.checkboxAndRadio.radioTitle,
 		minWidth: 350,
@@ -28,7 +28,7 @@ CKEDITOR.dialog.add( 'radio', function( editor ) {
 			delete this.radioButton;
 
 			var element = this.getParentEditor().getSelection().getSelectedElement();
-			if ( element &amp;&amp; element.getName() == 'input' &amp;&amp; element.getAttribute( 'type' ) == 'radio' ) {
+			if ( element &amp;&amp; element.getName() == &#39;input&#39; &amp;&amp; element.getAttribute( &#39;type&#39; ) == &#39;radio&#39; ) {
 				this.radioButton = element;
 				this.setupContent( element );
 			}
@@ -40,8 +40,8 @@ CKEDITOR.dialog.add( 'radio', function( editor ) {
 
 			if ( isInsertMode ) {
 				editor = this.getParentEditor();
-				element = editor.document.createElement( 'input' );
-				element.setAttribute( 'type', 'radio' );
+				element = editor.document.createElement( &#39;input&#39; );
+				element.setAttribute( &#39;type&#39;, &#39;radio&#39; );
 			}
 
 			if ( isInsertMode )
@@ -50,73 +50,73 @@ CKEDITOR.dialog.add( 'radio', function( editor ) {
 		},
 		contents: [
 			{
-			id: 'info',
+			id: &#39;info&#39;,
 			label: editor.lang.forms.checkboxAndRadio.radioTitle,
 			title: editor.lang.forms.checkboxAndRadio.radioTitle,
 			elements: [
 				{
-				id: 'name',
-				type: 'text',
+				id: &#39;name&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.common.name,
-				'default': '',
-				accessKey: 'N',
+				&#39;default&#39;: &#39;&#39;,
+				accessKey: &#39;N&#39;,
 				setup: function( element ) {
-					this.setValue( element.data( 'cke-saved-name' ) || element.getAttribute( 'name' ) || '' );
+					this.setValue( element.data( &#39;cke-saved-name&#39; ) || element.getAttribute( &#39;name&#39; ) || &#39;&#39; );
 				},
 				commit: function( data ) {
 					var element = data.element;
 
 					if ( this.getValue() )
-						element.data( 'cke-saved-name', this.getValue() );
+						element.data( &#39;cke-saved-name&#39;, this.getValue() );
 					else {
-						element.data( 'cke-saved-name', false );
-						element.removeAttribute( 'name' );
+						element.data( &#39;cke-saved-name&#39;, false );
+						element.removeAttribute( &#39;name&#39; );
 					}
 				}
 			},
 				{
-				id: 'value',
-				type: 'text',
+				id: &#39;value&#39;,
+				type: &#39;text&#39;,
 				label: editor.lang.forms.checkboxAndRadio.value,
-				'default': '',
-				accessKey: 'V',
+				&#39;default&#39;: &#39;&#39;,
+				accessKey: &#39;V&#39;,
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'value' ) || '' );
+					this.setValue( element.getAttribute( &#39;value&#39; ) || &#39;&#39; );
 				},
 				commit: function( data ) {
 					var element = data.element;
 
 					if ( this.getValue() )
-						element.setAttribute( 'value', this.getValue() );
+						element.setAttribute( &#39;value&#39;, this.getValue() );
 					else
-						element.removeAttribute( 'value' );
+						element.removeAttribute( &#39;value&#39; );
 				}
 			},
 				{
-				id: 'checked',
-				type: 'checkbox',
+				id: &#39;checked&#39;,
+				type: &#39;checkbox&#39;,
 				label: editor.lang.forms.checkboxAndRadio.selected,
-				'default': '',
-				accessKey: 'S',
+				&#39;default&#39;: &#39;&#39;,
+				accessKey: &#39;S&#39;,
 				value: &quot;checked&quot;,
 				setup: function( element ) {
-					this.setValue( element.getAttribute( 'checked' ) );
+					this.setValue( element.getAttribute( &#39;checked&#39; ) );
 				},
 				commit: function( data ) {
 					var element = data.element;
 
 					if ( !( CKEDITOR.env.ie || CKEDITOR.env.opera ) ) {
 						if ( this.getValue() )
-							element.setAttribute( 'checked', 'checked' );
+							element.setAttribute( &#39;checked&#39;, &#39;checked&#39; );
 						else
-							element.removeAttribute( 'checked' );
+							element.removeAttribute( &#39;checked&#39; );
 					} else {
-						var isElementChecked = element.getAttribute( 'checked' );
+						var isElementChecked = element.getAttribute( &#39;checked&#39; );
 						var isChecked = !!this.getValue();
 
 						if ( isElementChecked != isChecked ) {
-							var replace = CKEDITOR.dom.element.createFromHtml( '&lt;input type=&quot;radio&quot;' + ( isChecked ? ' checked=&quot;checked&quot;' : '' )
-								+ '&gt;&lt;/input&gt;', editor.document );
+							var replace = CKEDITOR.dom.element.createFromHtml( &#39;&lt;input type=&quot;radio&quot;&#39; + ( isChecked ? &#39; checked=&quot;checked&quot;&#39; : &#39;&#39; )
+								+ &#39;&gt;&lt;/input&gt;&#39;, editor.document );
 							element.copyAttributes( replace, { type: 1, checked: 1 } );
 							replace.replace( element );
 							editor.getSelection().selectElement( replace );

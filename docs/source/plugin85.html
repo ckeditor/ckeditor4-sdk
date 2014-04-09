@@ -21,20 +21,20 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( 'templates', {
-		requires: 'dialog',
-		lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'templates,templates-rtl', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;templates&#39;, {
+		requires: &#39;dialog&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;templates,templates-rtl&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			CKEDITOR.dialog.add( 'templates', CKEDITOR.getUrl( this.path + 'dialogs/templates.js' ) );
+			CKEDITOR.dialog.add( &#39;templates&#39;, CKEDITOR.getUrl( this.path + &#39;dialogs/templates.js&#39; ) );
 
-			editor.addCommand( 'templates', new CKEDITOR.dialogCommand( 'templates' ) );
+			editor.addCommand( &#39;templates&#39;, new CKEDITOR.dialogCommand( &#39;templates&#39; ) );
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( 'Templates', {
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Templates&#39;, {
 				label: editor.lang.templates.button,
-				command: 'templates',
-				toolbar: 'doctools,10'
+				command: &#39;templates&#39;,
+				toolbar: &#39;doctools,10&#39;
 			} );
 		}
 	} );
@@ -75,9 +75,9 @@
 </span> * The templates definition set to use. It accepts a list of names separated by
  * comma. It must match definitions loaded with the {@link #templates_files} setting.
  *
- *		config.templates = 'my_templates';
+ *		config.templates = &#39;my_templates&#39;;
  *
- * @cfg {String} [templates='default']
+ * @cfg {String} [templates=&#39;default&#39;]
  * @member CKEDITOR.config
  */
 
@@ -85,15 +85,15 @@
 </span> * The list of templates definition files to load.
  *
  *		config.templates_files = [
- *			'/editor_templates/site_default.js',
- *			'http://www.example.com/user_templates.js
+ *			&#39;/editor_templates/site_default.js&#39;,
+ *			&#39;http://www.example.com/user_templates.js
  *		];
  *
  * @cfg
  * @member CKEDITOR.config
  */
 CKEDITOR.config.templates_files = [
-	CKEDITOR.getUrl( 'plugins/templates/templates/default.js' )
+	CKEDITOR.getUrl( &#39;plugins/templates/templates/default.js&#39; )
 ];
 
 <span id='CKEDITOR-config-cfg-templates_replaceContent'>/**

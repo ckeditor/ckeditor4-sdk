@@ -20,35 +20,35 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'find', {
-	requires: 'dialog',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'find,find-rtl,replace', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;find&#39;, {
+	requires: &#39;dialog&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;find,find-rtl,replace&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		var findCommand = editor.addCommand( 'find', new CKEDITOR.dialogCommand( 'find' ) );
+		var findCommand = editor.addCommand( &#39;find&#39;, new CKEDITOR.dialogCommand( &#39;find&#39; ) );
 		findCommand.canUndo = false;
 		findCommand.readOnly = 1;
 
-		var replaceCommand = editor.addCommand( 'replace', new CKEDITOR.dialogCommand( 'replace' ) );
+		var replaceCommand = editor.addCommand( &#39;replace&#39;, new CKEDITOR.dialogCommand( &#39;replace&#39; ) );
 		replaceCommand.canUndo = false;
 
 		if ( editor.ui.addButton ) {
-			editor.ui.addButton( 'Find', {
+			editor.ui.addButton( &#39;Find&#39;, {
 				label: editor.lang.find.find,
-				command: 'find',
-				toolbar: 'find,10'
+				command: &#39;find&#39;,
+				toolbar: &#39;find,10&#39;
 			} );
 
-			editor.ui.addButton( 'Replace', {
+			editor.ui.addButton( &#39;Replace&#39;, {
 				label: editor.lang.find.replace,
-				command: 'replace',
-				toolbar: 'find,20'
+				command: &#39;replace&#39;,
+				toolbar: &#39;find,20&#39;
 			} );
 		}
 
-		CKEDITOR.dialog.add( 'find', this.path + 'dialogs/find.js' );
-		CKEDITOR.dialog.add( 'replace', this.path + 'dialogs/find.js' );
+		CKEDITOR.dialog.add( &#39;find&#39;, this.path + &#39;dialogs/find.js&#39; );
+		CKEDITOR.dialog.add( &#39;replace&#39;, this.path + &#39;dialogs/find.js&#39; );
 	}
 } );
 
@@ -57,15 +57,15 @@ CKEDITOR.plugins.add( 'find', {
  *
  *		// Highlight search results with blue on yellow.
  *		config.find_highlight = {
- *			element: 'span',
- *			styles: { 'background-color': '#ff0', color: '#00f' }
+ *			element: &#39;span&#39;,
+ *			styles: { &#39;background-color&#39;: &#39;#ff0&#39;, color: &#39;#00f&#39; }
  *		};
  *
  * @cfg
  * @member CKEDITOR.config
  */
 CKEDITOR.config.find_highlight = {
-	element: 'span', styles: { 'background-color': '#004', color: '#fff' } };
+	element: &#39;span&#39;, styles: { &#39;background-color&#39;: &#39;#004&#39;, color: &#39;#fff&#39; } };
 </pre>
 </body>
 </html>

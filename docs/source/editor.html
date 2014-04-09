@@ -53,18 +53,18 @@
 		if ( element !== undefined ) {
 			// Asserting element and mode not null.
 			if ( !( element instanceof CKEDITOR.dom.element ) )
-				throw new Error( 'Expect element of type CKEDITOR.dom.element.' );
+				throw new Error( &#39;Expect element of type CKEDITOR.dom.element.&#39; );
 			else if ( !mode )
-				throw new Error( 'One of the element modes must be specified.' );
+				throw new Error( &#39;One of the element modes must be specified.&#39; );
 
 			if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.quirks &amp;&amp; mode == CKEDITOR.ELEMENT_MODE_INLINE )
-				throw new Error( 'Inline element mode is not supported on IE quirks.' );
+				throw new Error( &#39;Inline element mode is not supported on IE quirks.&#39; );
 
 			if ( !isSupportedElement( element, mode ) )
-				throw new Error( 'The specified element mode is not supported on element: &quot;' + element.getName() + '&quot;.' );
+				throw new Error( &#39;The specified element mode is not supported on element: &quot;&#39; + element.getName() + &#39;&quot;.&#39; );
 
 <span id='CKEDITOR-editor-property-element'>			/**
-</span>			 * The original host page element upon which the editor is created, it's only
+</span>			 * The original host page element upon which the editor is created, it&#39;s only
 			 * supposed to be provided by the concrete editor creator and is not subjected to
 			 * be modified.
 			 *
@@ -106,7 +106,7 @@
 		 *
 		 * **Note:** It will be originated from the ID or name
 		 * attribute of the {@link #element}, otherwise a name pattern of
-		 * `'editor{n}'` will be used.
+		 * `&#39;editor{n}&#39;` will be used.
 		 *
 		 * @readonly
 		 * @property {String}
@@ -124,9 +124,9 @@
 <span id='CKEDITOR-editor-property-status'>		/**
 </span>		 * Indicates editor initialization status. The following statuses are available:
 		 *
-		 *	* **unloaded**: the initial state - editor's instance has been initialized,
+		 *	* **unloaded**: the initial state - editor&#39;s instance has been initialized,
 		 *	but its components (config, plugins, language files) are not loaded yet.
-		 *	* **loaded**: editor's components have been loaded - see {@link CKEDITOR.editor#loaded} event.
+		 *	* **loaded**: editor&#39;s components have been loaded - see {@link CKEDITOR.editor#loaded} event.
 		 *	* **ready**: editor is fully initialized and ready - see {@link CKEDITOR.editor#instanceReady} event.
 		 *	* **destroyed**: the editor has been destroyed - see {@link CKEDITOR.editor#method-destroy} method.
 		 *
@@ -134,7 +134,7 @@
 		 * @readonly
 		 * @property {String}
 		 */
-		this.status = 'unloaded';
+		this.status = &#39;unloaded&#39;;
 
 <span id='CKEDITOR-editor-property-config'>		/**
 </span>		 * The configurations for this editor instance. It inherits all
@@ -143,7 +143,7 @@
 		 * the page when creating the editor.
 		 *
 		 *		var editor = CKEDITOR.instances.editor1;
-		 *		alert( editor.config.skin ); // e.g. 'moono'
+		 *		alert( editor.config.skin ); // e.g. &#39;moono&#39;
 		 *
 		 * @readonly
 		 * @property {CKEDITOR.config}
@@ -177,21 +177,21 @@
 		this.keystrokeHandler = new CKEDITOR.keystrokeHandler( this );
 
 		// Make the editor update its command states on mode change.
-		this.on( 'readOnly', updateCommands );
-		this.on( 'selectionChange', function( evt ) {
+		this.on( &#39;readOnly&#39;, updateCommands );
+		this.on( &#39;selectionChange&#39;, function( evt ) {
 			updateCommandsContext( this, evt.data.path );
 		} );
-		this.on( 'activeFilterChange', function( evt ) {
+		this.on( &#39;activeFilterChange&#39;, function( evt ) {
 			updateCommandsContext( this, this.elementPath(), true );
 		} );
-		this.on( 'mode', updateCommands );
+		this.on( &#39;mode&#39;, updateCommands );
 
 		// Handle startup focus.
-		this.on( 'instanceReady', function( event ) {
+		this.on( &#39;instanceReady&#39;, function( event ) {
 			this.config.startupFocus &amp;&amp; this.focus();
 		} );
 
-		CKEDITOR.fire( 'instanceCreated', null, this );
+		CKEDITOR.fire( &#39;instanceCreated&#39;, null, this );
 
 		// Add this new editor to the CKEDITOR.instances collections.
 		CKEDITOR.add( this );
@@ -206,7 +206,7 @@
 
 	function genEditorName() {
 		do {
-			var name = 'editor' + ( ++nameCounter );
+			var name = &#39;editor&#39; + ( ++nameCounter );
 		}
 		while ( CKEDITOR.instances[ name ] )
 
@@ -216,7 +216,7 @@
 	// Asserting element DTD depending on mode.
 	function isSupportedElement( element, mode ) {
 		if ( mode == CKEDITOR.ELEMENT_MODE_INLINE )
-			return element.is( CKEDITOR.dtd.$editable ) || element.is( 'textarea' );
+			return element.is( CKEDITOR.dtd.$editable ) || element.is( &#39;textarea&#39; );
 		else if ( mode == CKEDITOR.ELEMENT_MODE_REPLACE )
 			return !element.is( CKEDITOR.dtd.$nonBodyContent );
 		return 1;
@@ -231,12 +231,12 @@
 	}
 
 	function updateCommand( editor, cmd ) {
-		cmd[ cmd.startDisabled ? 'disable' : editor.readOnly &amp;&amp; !cmd.readOnly ? 'disable' : cmd.modes[ editor.mode ] ? 'enable' : 'disable' ]();
+		cmd[ cmd.startDisabled ? &#39;disable&#39; : editor.readOnly &amp;&amp; !cmd.readOnly ? &#39;disable&#39; : cmd.modes[ editor.mode ] ? &#39;enable&#39; : &#39;disable&#39; ]();
 	}
 
 	function updateCommandsContext( editor, path, forceRefresh ) {
 		// Commands cannot be refreshed without a path. In edge cases
-		// it may happen that there's no selection when this function is executed.
+		// it may happen that there&#39;s no selection when this function is executed.
 		// For example when active filter is changed in #10877.
 		if ( !path )
 			return;
@@ -280,7 +280,7 @@
 			// If there is no other customConfig in the chain, fire the
 			// &quot;configLoaded&quot; event.
 			if ( CKEDITOR.getUrl( editor.config.customConfig ) == customConfig || !loadConfig( editor ) )
-				editor.fireOnce( 'customConfigLoaded' );
+				editor.fireOnce( &#39;customConfigLoaded&#39; );
 		} else {
 			// Load the custom configuration file.
 			// To resolve customConfig race conflicts, use scriptLoader#queue
@@ -304,7 +304,7 @@
 
 	function initConfig( editor, instanceConfig ) {
 		// Setup the lister for the &quot;customConfigLoaded&quot; event.
-		editor.on( 'customConfigLoaded', function() {
+		editor.on( &#39;customConfigLoaded&#39;, function() {
 			if ( instanceConfig ) {
 				// Register the events that may have been set at the instance
 				// configuration object.
@@ -330,7 +330,7 @@
 
 		// Load configs from the custom configuration files.
 		if ( !loadConfig( editor ) )
-			editor.fireOnce( 'customConfigLoaded' );
+			editor.fireOnce( &#39;customConfigLoaded&#39; );
 	}
 
 	// ##### END: Config Privates
@@ -350,13 +350,13 @@
 		editor.readOnly = !!(
 			config.readOnly || (
 				editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ?
-						editor.element.is( 'textarea' ) ?
-								editor.element.hasAttribute( 'disabled' )
+						editor.element.is( &#39;textarea&#39; ) ?
+								editor.element.hasAttribute( &#39;disabled&#39; )
 							:
 								editor.element.isReadOnly()
 					:
 						editor.elementMode == CKEDITOR.ELEMENT_MODE_REPLACE ?
-								editor.element.hasAttribute( 'disabled' )
+								editor.element.hasAttribute( &#39;disabled&#39; )
 							:
 								false
 			)
@@ -372,7 +372,7 @@
 		 * @property {Boolean}
 		 */
 		editor.blockless = editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ?
-			!( editor.element.is( 'textarea' ) || CKEDITOR.dtd[ editor.element.getName() ][ 'p' ] ) :
+			!( editor.element.is( &#39;textarea&#39; ) || CKEDITOR.dtd[ editor.element.getName() ][ &#39;p&#39; ] ) :
 			false;
 
 <span id='CKEDITOR-editor-property-tabIndex'>		/**
@@ -386,7 +386,7 @@
 		 * @readonly
 		 * @property {Number} [=0]
 		 */
-		editor.tabIndex = config.tabIndex || editor.element &amp;&amp; editor.element.getAttribute( 'tabindex' ) || 0;
+		editor.tabIndex = config.tabIndex || editor.element &amp;&amp; editor.element.getAttribute( &#39;tabindex&#39; ) || 0;
 
 		editor.activeEnterMode = editor.enterMode = validateEnterMode( editor, config.enterMode );
 		editor.activeShiftEnterMode = editor.shiftEnterMode = validateEnterMode( editor, config.shiftEnterMode );
@@ -397,7 +397,7 @@
 			CKEDITOR.skinName = config.skin;
 
 		// Fire the &quot;configLoaded&quot; event.
-		editor.fireOnce( 'configLoaded' );
+		editor.fireOnce( &#39;configLoaded&#39; );
 
 		initComponents( editor );
 	}
@@ -414,7 +414,7 @@
 	}
 
 	function loadSkin( editor ) {
-		CKEDITOR.skin.loadPart( 'editor', function() {
+		CKEDITOR.skin.loadPart( &#39;editor&#39;, function() {
 			loadLang( editor );
 		} );
 	}
@@ -427,7 +427,7 @@
 </span>			 * The code for the language resources that have been loaded
 			 * for the user interface elements of this editor instance.
 			 *
-			 *		alert( editor.langCode ); // e.g. 'en'
+			 *		alert( editor.langCode ); // e.g. &#39;en&#39;
 			 *
 			 * @readonly
 			 * @property {String}
@@ -437,12 +437,12 @@
 <span id='CKEDITOR-editor-property-lang'>			/**
 </span>			 * An object that contains all language strings used by the editor interface.
 			 *
-			 *		alert( editor.lang.basicstyles.bold ); // e.g. 'Negrito' (if the language is set to Portuguese)
+			 *		alert( editor.lang.basicstyles.bold ); // e.g. &#39;Negrito&#39; (if the language is set to Portuguese)
 			 *
 			 * @readonly
 			 * @property {Object} lang
 			 */
-			// As we'll be adding plugin specific entries that could come
+			// As we&#39;ll be adding plugin specific entries that could come
 			// from different language code files, we need a copy of lang,
 			// not a direct reference to it.
 			editor.lang = CKEDITOR.tools.prototypedCopy( lang );
@@ -458,18 +458,18 @@
 			 * @readonly
 			 * @property {String/Boolean}
 			 */
-			editor.title = typeof configTitle == 'string' || configTitle === false ? configTitle : [ editor.lang.editor, editor.name ].join( ', ' );
+			editor.title = typeof configTitle == &#39;string&#39; || configTitle === false ? configTitle : [ editor.lang.editor, editor.name ].join( &#39;, &#39; );
 
-			// We're not able to support RTL in Firefox 2 at this time.
-			if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &lt; 10900 &amp;&amp; editor.lang.dir == 'rtl' )
-				editor.lang.dir = 'ltr';
+			// We&#39;re not able to support RTL in Firefox 2 at this time.
+			if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &lt; 10900 &amp;&amp; editor.lang.dir == &#39;rtl&#39; )
+				editor.lang.dir = &#39;ltr&#39;;
 
 			if ( !editor.config.contentsLangDirection ) {
 				// Fallback to either the editable element direction or editor UI direction depending on creators.
 				editor.config.contentsLangDirection = editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ? editor.element.getDirection( 1 ) : editor.lang.dir;
 			}
 
-			editor.fire( 'langLoaded' );
+			editor.fire( &#39;langLoaded&#39; );
 
 			preloadStylesSet( editor );
 		} );
@@ -485,9 +485,9 @@
 		editor.getStylesSet( function( styles ) {
 			// Wait for editor#loaded, so plugins could add their listeners.
 			// But listen with high priority to fire editor#stylesSet before editor#uiReady and editor#setData.
-			editor.once( 'loaded', function() {
-				// Note: we can't use fireOnce because this event may canceled and fired again.
-				editor.fire( 'stylesSet', { styles: styles } );
+			editor.once( &#39;loaded&#39;, function() {
+				// Note: we can&#39;t use fireOnce because this event may canceled and fired again.
+				editor.fire( &#39;stylesSet&#39;, { styles: styles } );
 			}, null, null, 1 );
 
 			loadPlugins( editor );
@@ -502,22 +502,22 @@
 
 		if ( extraPlugins ) {
 			// Remove them first to avoid duplications.
-			var extraRegex = new RegExp( '(?:^|,)(?:' + extraPlugins.replace( /\s*,\s*/g, '|' ) + ')(?=,|$)', 'g' );
-			plugins = plugins.replace( extraRegex, '' );
+			var extraRegex = new RegExp( &#39;(?:^|,)(?:&#39; + extraPlugins.replace( /\s*,\s*/g, &#39;|&#39; ) + &#39;)(?=,|$)&#39;, &#39;g&#39; );
+			plugins = plugins.replace( extraRegex, &#39;&#39; );
 
-			plugins += ',' + extraPlugins;
+			plugins += &#39;,&#39; + extraPlugins;
 		}
 
 		if ( removePlugins ) {
-			var removeRegex = new RegExp( '(?:^|,)(?:' + removePlugins.replace( /\s*,\s*/g, '|' ) + ')(?=,|$)', 'g' );
-			plugins = plugins.replace( removeRegex, '' );
+			var removeRegex = new RegExp( &#39;(?:^|,)(?:&#39; + removePlugins.replace( /\s*,\s*/g, &#39;|&#39; ) + &#39;)(?=,|$)&#39;, &#39;g&#39; );
+			plugins = plugins.replace( removeRegex, &#39;&#39; );
 		}
 
 		// Load the Adobe AIR plugin conditionally.
-		CKEDITOR.env.air &amp;&amp; ( plugins += ',adobeair' );
+		CKEDITOR.env.air &amp;&amp; ( plugins += &#39;,adobeair&#39; );
 
 		// Load all plugins defined in the &quot;plugins&quot; setting.
-		CKEDITOR.plugins.load( plugins.split( ',' ), function( plugins ) {
+		CKEDITOR.plugins.load( plugins.split( &#39;,&#39; ), function( plugins ) {
 			// The list of plugins.
 			var pluginsArray = [];
 
@@ -532,7 +532,7 @@
 </span>			 * An object that contains references to all plugins used by this
 			 * editor instance.
 			 *
-			 *		alert( editor.plugins.dialog.path ); // e.g. 'http://example.com/ckeditor/plugins/dialog/'
+			 *		alert( editor.plugins.dialog.path ); // e.g. &#39;http://example.com/ckeditor/plugins/dialog/&#39;
 			 *
 			 *		// Check if a plugin is available.
 			 *		if ( editor.plugins.image ) {
@@ -547,7 +547,7 @@
 			// Loop through all plugins, to build the list of language
 			// files to get loaded.
 			//
-			// Check also whether any of loaded plugins doesn't require plugins
+			// Check also whether any of loaded plugins doesn&#39;t require plugins
 			// defined in config.removePlugins. Throw non-blocking error if this happens.
 			for ( var pluginName in plugins ) {
 				var plugin = plugins[ pluginName ],
@@ -556,23 +556,23 @@
 					requires = plugin.requires,
 					match, name;
 
-				// Transform it into a string, if it's not one.
+				// Transform it into a string, if it&#39;s not one.
 				if ( CKEDITOR.tools.isArray( requires ) )
-					requires = requires.join( ',' );
+					requires = requires.join( &#39;,&#39; );
 
 				if ( requires &amp;&amp; ( match = requires.match( removeRegex ) ) ) {
 					while ( ( name = match.pop() ) ) {
 						CKEDITOR.tools.setTimeout( function( name, pluginName ) {
-							throw new Error( 'Plugin &quot;' + name.replace( ',', '' ) + '&quot; cannot be removed from the plugins list, because it\'s required by &quot;' + pluginName + '&quot; plugin.' );
+							throw new Error( &#39;Plugin &quot;&#39; + name.replace( &#39;,&#39;, &#39;&#39; ) + &#39;&quot; cannot be removed from the plugins list, because it\&#39;s required by &quot;&#39; + pluginName + &#39;&quot; plugin.&#39; );
 						}, 0, null, [ name, pluginName ] );
 					}
 				}
 
 				// If the plugin has &quot;lang&quot;.
 				if ( pluginLangs &amp;&amp; !editor.lang[ pluginName ] ) {
-					// Trasnform the plugin langs into an array, if it's not one.
+					// Trasnform the plugin langs into an array, if it&#39;s not one.
 					if ( pluginLangs.split )
-						pluginLangs = pluginLangs.split( ',' );
+						pluginLangs = pluginLangs.split( &#39;,&#39; );
 
 					// Resolve the plugin language. If the current language
 					// is not available, get English or the first one.
@@ -581,12 +581,12 @@
 					else {
 						// The language code may have the locale information (zh-cn).
 						// Fall back to locale-less in that case (zh).
-						var langPart = editor.langCode.replace( /-.*/, '' );
+						var langPart = editor.langCode.replace( /-.*/, &#39;&#39; );
 						if ( langPart != editor.langCode &amp;&amp; CKEDITOR.tools.indexOf( pluginLangs, langPart ) &gt;= 0 )
 							lang = langPart;
 						// Try the only &quot;generic&quot; option we have: English.
-						else if ( CKEDITOR.tools.indexOf( pluginLangs, 'en' ) &gt;= 0 )
-							lang = 'en';
+						else if ( CKEDITOR.tools.indexOf( pluginLangs, &#39;en&#39; ) &gt;= 0 )
+							lang = &#39;en&#39;;
 						else
 							lang = pluginLangs[ 0 ];
 					}
@@ -594,7 +594,7 @@
 					if ( !plugin.langEntries || !plugin.langEntries[ lang ] ) {
 						// Put the language file URL into the list of files to
 						// get downloaded.
-						languageFiles.push( CKEDITOR.getUrl( plugin.path + 'lang/' + lang + '.js' ) );
+						languageFiles.push( CKEDITOR.getUrl( plugin.path + &#39;lang/&#39; + lang + &#39;.js&#39; ) );
 					} else {
 						editor.lang[ pluginName ] = plugin.langEntries[ lang ];
 						lang = null;
@@ -611,7 +611,7 @@
 			// Load all plugin specific language files in a row.
 			CKEDITOR.scriptLoader.load( languageFiles, function() {
 				// Initialize all plugins that have the &quot;beforeInit&quot; and &quot;init&quot; methods defined.
-				var methods = [ 'beforeInit', 'init', 'afterInit' ];
+				var methods = [ &#39;beforeInit&#39;, &#39;init&#39;, &#39;afterInit&#39; ];
 				for ( var m = 0; m &lt; methods.length; m++ ) {
 					for ( var i = 0; i &lt; pluginsArray.length; i++ ) {
 						var plugin = pluginsArray[ i ];
@@ -626,7 +626,7 @@
 					}
 				}
 
-				editor.fireOnce( 'pluginsLoaded' );
+				editor.fireOnce( &#39;pluginsLoaded&#39; );
 
 				// Setup the configured keystrokes.
 				config.keystrokes &amp;&amp; editor.setKeystroke( editor.config.keystrokes );
@@ -635,14 +635,14 @@
 				for ( i = 0; i &lt; editor.config.blockedKeystrokes.length; i++ )
 					editor.keystrokeHandler.blockedKeystrokes[ editor.config.blockedKeystrokes[ i ] ] = 1;
 
-				editor.status = 'loaded';
-				editor.fireOnce( 'loaded' );
-				CKEDITOR.fire( 'instanceLoaded', null, editor );
+				editor.status = &#39;loaded&#39;;
+				editor.fireOnce( &#39;loaded&#39; );
+				CKEDITOR.fire( &#39;instanceLoaded&#39;, null, editor );
 			} );
 		} );
 	}
 
-	// Send to data output back to editor's associated element.
+	// Send to data output back to editor&#39;s associated element.
 	function updateEditorElement() {
 		var element = this.element;
 
@@ -654,7 +654,7 @@
 			if ( this.config.htmlEncodeOutput )
 				data = CKEDITOR.tools.htmlEncode( data );
 
-			if ( element.is( 'textarea' ) )
+			if ( element.is( &#39;textarea&#39; ) )
 				element.setValue( data );
 			else
 				element.setHtml( data );
@@ -674,9 +674,9 @@
 </span>		 * Adds a command definition to the editor instance. Commands added with
 		 * this function can be executed later with the &lt;code&gt;{@link #execCommand}&lt;/code&gt; method.
 		 *
-		 * 		editorInstance.addCommand( 'sample', {
+		 * 		editorInstance.addCommand( &#39;sample&#39;, {
 		 * 			exec: function( editor ) {
-		 * 				alert( 'Executing a command for the editor name &quot;' + editor.name + '&quot;!' );
+		 * 				alert( &#39;Executing a command for the editor name &quot;&#39; + editor.name + &#39;&quot;!&#39; );
 		 * 			}
 		 * 		} );
 		 *
@@ -689,7 +689,7 @@
 
 			// Update command when mode is set.
 			// This guarantees that commands added before first editor#mode
-			// aren't immediately updated, but waits for editor#mode and that
+			// aren&#39;t immediately updated, but waits for editor#mode and that
 			// commands added later are immediately refreshed, even when added
 			// before instanceReady. #10103, #10249
 			if ( this.mode )
@@ -711,21 +711,21 @@
 				form = new CKEDITOR.dom.element( element.$.form );
 
 			// If are replacing a textarea, we must
-			if ( element.is( 'textarea' ) ) {
+			if ( element.is( &#39;textarea&#39; ) ) {
 				if ( form ) {
 					function onSubmit( evt ) {
 						editor.updateElement();
 
-						// #8031 If textarea had required attribute and editor is empty fire 'required' event and if
+						// #8031 If textarea had required attribute and editor is empty fire &#39;required&#39; event and if
 						// it was cancelled, prevent submitting the form.
-						if ( editor._.required &amp;&amp; !element.getValue() &amp;&amp; editor.fire( 'required' ) === false ) {
+						if ( editor._.required &amp;&amp; !element.getValue() &amp;&amp; editor.fire( &#39;required&#39; ) === false ) {
 							// When user press save button event (evt) is undefined (see save plugin).
-							// This method works because it throws error so originalSubmit won't be called.
-							// Also this error won't be shown because it will be caught in save plugin.
+							// This method works because it throws error so originalSubmit won&#39;t be called.
+							// Also this error won&#39;t be shown because it will be caught in save plugin.
 							evt.data.preventDefault();
 						}
 					}
-					form.on( 'submit', onSubmit );
+					form.on( &#39;submit&#39;, onSubmit );
 
 					function isFunction( f ) {
 						// For IE8 typeof fun == object so we cannot use it.
@@ -736,7 +736,7 @@
 					// If they exists they will overwrite form submit function (form.$.submit).
 					// If form.$.submit is overwritten we can not do anything with it.
 					if ( isFunction( form.$.submit ) ) {
-						// Setup the submit function because it doesn't fire the
+						// Setup the submit function because it doesn&#39;t fire the
 						// &quot;submit&quot; event.
 						form.$.submit = CKEDITOR.tools.override( form.$.submit, function( originalSubmit ) {
 							return function() {
@@ -752,9 +752,9 @@
 						} );
 					}
 
-					// Remove 'submit' events registered on form element before destroying.(#3988)
-					editor.on( 'destroy', function() {
-						form.removeListener( 'submit', onSubmit );
+					// Remove &#39;submit&#39; events registered on form element before destroying.(#3988)
+					editor.on( &#39;destroy&#39;, function() {
+						form.removeListener( &#39;submit&#39;, onSubmit );
 					} );
 				}
 			}
@@ -773,28 +773,28 @@
 		 * element with the instance contents.
 		 */
 		destroy: function( noUpdate ) {
-			this.fire( 'beforeDestroy' );
+			this.fire( &#39;beforeDestroy&#39; );
 
 			!noUpdate &amp;&amp; updateEditorElement.call( this );
 
 			this.editable( null );
 
-			this.status = 'destroyed';
+			this.status = &#39;destroyed&#39;;
 
-			this.fire( 'destroy' );
+			this.fire( &#39;destroy&#39; );
 
 			// Plug off all listeners to prevent any further events firing.
 			this.removeAllListeners();
 
 			CKEDITOR.remove( this );
-			CKEDITOR.fire( 'instanceDestroyed', null, this );
+			CKEDITOR.fire( &#39;instanceDestroyed&#39;, null, this );
 		},
 
 <span id='CKEDITOR-editor-method-elementPath'>		/**
 </span>		 * Returns an {@link CKEDITOR.dom.elementPath element path} for the selection in the editor.
 		 *
 		 * @param {CKEDITOR.dom.node} [startNode] From which the path should start,
-		 * if not specified default to editor selection's
+		 * if not specified default to editor selection&#39;s
 		 * start element yield by {@link CKEDITOR.dom.selection#getStartElement}.
 		 * @returns {CKEDITOR.dom.elementPath}
 		 */
@@ -824,7 +824,7 @@
 <span id='CKEDITOR-editor-method-execCommand'>		/**
 </span>		 * Executes a command associated with the editor.
 		 *
-		 *		editorInstance.execCommand( 'bold' );
+		 *		editorInstance.execCommand( &#39;bold&#39; );
 		 *
 		 * @param {String} commandName The indentifier name of the command.
 		 * @param {Object} [data] Data to be passed to the command.
@@ -842,16 +842,16 @@
 			};
 
 			if ( command &amp;&amp; command.state != CKEDITOR.TRISTATE_DISABLED ) {
-				if ( this.fire( 'beforeCommandExec', eventData ) !== false ) {
+				if ( this.fire( &#39;beforeCommandExec&#39;, eventData ) !== false ) {
 					eventData.returnValue = command.exec( eventData.commandData );
 
-					// Fire the 'afterCommandExec' immediately if command is synchronous.
-					if ( !command.async &amp;&amp; this.fire( 'afterCommandExec', eventData ) !== false )
+					// Fire the &#39;afterCommandExec&#39; immediately if command is synchronous.
+					if ( !command.async &amp;&amp; this.fire( &#39;afterCommandExec&#39;, eventData ) !== false )
 						return eventData.returnValue;
 				}
 			}
 
-			// throw 'Unknown command name &quot;' + commandName + '&quot;';
+			// throw &#39;Unknown command name &quot;&#39; + commandName + &#39;&quot;&#39;;
 			return false;
 		},
 
@@ -873,28 +873,28 @@
 </span>		 * Gets the editor data. The data will be in raw format. It is the same
 		 * data that is posted by the editor.
 		 *
-		 *		if ( CKEDITOR.instances.editor1.getData() == '' )
-		 *			alert( 'There is no data available' );
+		 *		if ( CKEDITOR.instances.editor1.getData() == &#39;&#39; )
+		 *			alert( &#39;There is no data available&#39; );
 		 *
 		 * @returns {String} The editor data.
 		 */
 		getData: function( noEvents ) {
-			!noEvents &amp;&amp; this.fire( 'beforeGetData' );
+			!noEvents &amp;&amp; this.fire( &#39;beforeGetData&#39; );
 
 			var eventData = this._.data;
 
-			if ( typeof eventData != 'string' ) {
+			if ( typeof eventData != &#39;string&#39; ) {
 				var element = this.element;
 				if ( element &amp;&amp; this.elementMode == CKEDITOR.ELEMENT_MODE_REPLACE )
-					eventData = element.is( 'textarea' ) ? element.getValue() : element.getHtml();
+					eventData = element.is( &#39;textarea&#39; ) ? element.getValue() : element.getHtml();
 				else
-					eventData = '';
+					eventData = &#39;&#39;;
 			}
 
 			eventData = { dataValue: eventData };
 
 			// Fire &quot;getData&quot; so data manipulation may happen.
-			!noEvents &amp;&amp; this.fire( 'getData', eventData );
+			!noEvents &amp;&amp; this.fire( &#39;getData&#39;, eventData );
 
 			return eventData.dataValue;
 		},
@@ -913,12 +913,12 @@
 		 * @see CKEDITOR.editor#getData
 		 */
 		getSnapshot: function() {
-			var data = this.fire( 'getSnapshot' );
+			var data = this.fire( &#39;getSnapshot&#39; );
 
-			if ( typeof data != 'string' ) {
+			if ( typeof data != &#39;string&#39; ) {
 				var element = this.element;
 				if ( element &amp;&amp; this.elementMode == CKEDITOR.ELEMENT_MODE_REPLACE )
-					data = element.is( 'textarea' ) ? element.getValue() : element.getHtml();
+					data = element.is( &#39;textarea&#39; ) ? element.getValue() : element.getHtml();
 			}
 
 			return data;
@@ -936,7 +936,7 @@
 		 * @see CKEDITOR.editor#setData
 		 */
 		loadSnapshot: function( snapshot ) {
-			this.fire( 'loadSnapshot', snapshot );
+			this.fire( &#39;loadSnapshot&#39;, snapshot );
 		},
 
 <span id='CKEDITOR-editor-method-setData'>		/**
@@ -945,9 +945,9 @@
 		 * Note that this method is asynchronous. The `callback` parameter must
 		 * be used if interaction with the editor is needed after setting the data.
 		 *
-		 *		CKEDITOR.instances.editor1.setData( '&lt;p&gt;This is the editor data.&lt;/p&gt;' );
+		 *		CKEDITOR.instances.editor1.setData( &#39;&lt;p&gt;This is the editor data.&lt;/p&gt;&#39; );
 		 *
-		 *		CKEDITOR.instances.editor1.setData( '&lt;p&gt;Some other editor data.&lt;/p&gt;', function() {
+		 *		CKEDITOR.instances.editor1.setData( &#39;&lt;p&gt;Some other editor data.&lt;/p&gt;&#39;, function() {
 		 *			this.checkDirty(); // true
 		 *		});
 		 *
@@ -957,7 +957,7 @@
 		 */
 		setData: function( data, callback, internal ) {
 			if ( callback ) {
-				this.on( 'dataReady', function( evt ) {
+				this.on( &#39;dataReady&#39;, function( evt ) {
 					evt.removeListener();
 					callback.call( evt.editor );
 				} );
@@ -965,11 +965,11 @@
 
 			// Fire &quot;setData&quot; so data manipulation may happen.
 			var eventData = { dataValue: data };
-			!internal &amp;&amp; this.fire( 'setData', eventData );
+			!internal &amp;&amp; this.fire( &#39;setData&#39;, eventData );
 
 			this._.data = eventData.dataValue;
 
-			!internal &amp;&amp; this.fire( 'afterSetData', eventData );
+			!internal &amp;&amp; this.fire( &#39;afterSetData&#39;, eventData );
 		},
 
 <span id='CKEDITOR-editor-method-setReadOnly'>		/**
@@ -991,14 +991,14 @@
 				this.readOnly = isReadOnly;
 
 				// Block or release BACKSPACE key according to current read-only
-				// state to prevent browser's history navigation (#9761).
+				// state to prevent browser&#39;s history navigation (#9761).
 				this.keystrokeHandler.blockedKeystrokes[ 8 ] = +isReadOnly;
 
 				this.editable().setReadOnly( isReadOnly );
 
 				// Fire the readOnly event so the editor features can update
 				// their state accordingly.
-				this.fire( 'readOnly' );
+				this.fire( &#39;readOnly&#39; );
 			}
 		},
 
@@ -1007,7 +1007,7 @@
 		 *
 		 * * `&quot;html&quot;` - content being inserted will completely override styles
 		 *    of selected position.
-		 * * `&quot;unfiltered_html&quot;` - like `&quot;html&quot;` but content isn't filtered with {@link CKEDITOR.filter}.
+		 * * `&quot;unfiltered_html&quot;` - like `&quot;html&quot;` but content isn&#39;t filtered with {@link CKEDITOR.filter}.
 		 * * `&quot;text&quot;` - content being inserted will inherit styles applied in
 		 *    selected position. This mode should be used when inserting &quot;htmlified&quot; plain text
 		 *    (HTML without inline styles and styling elements like
@@ -1015,13 +1015,13 @@
 		 *
 		 * Example:
 		 *
-		 *		CKEDITOR.instances.editor1.insertHtml( '&lt;p&gt;This is a new paragraph.&lt;/p&gt;' );
+		 *		CKEDITOR.instances.editor1.insertHtml( &#39;&lt;p&gt;This is a new paragraph.&lt;/p&gt;&#39; );
 		 *
 		 * @param {String} html HTML code to be inserted into the editor.
-		 * @param {String} [mode='html'] Mode in which HTML will be inserted.
+		 * @param {String} [mode=&#39;html&#39;] Mode in which HTML will be inserted.
 		 */
 		insertHtml: function( html, mode ) {
-			this.fire( 'insertHtml', { dataValue: html, mode: mode } );
+			this.fire( &#39;insertHtml&#39;, { dataValue: html, mode: mode } );
 		},
 
 <span id='CKEDITOR-editor-method-insertText'>		/**
@@ -1029,34 +1029,34 @@
 		 * editor in WYSIWYG mode. The styles of the selected element will be applied to the inserted text.
 		 * Spaces around the text will be leaving untouched.
 		 *
-		 *		CKEDITOR.instances.editor1.insertText( ' line1 \n\n line2' );
+		 *		CKEDITOR.instances.editor1.insertText( &#39; line1 \n\n line2&#39; );
 		 *
 		 * @since 3.5
 		 * @param {String} text Text to be inserted into the editor.
 		 */
 		insertText: function( text ) {
-			this.fire( 'insertText', text );
+			this.fire( &#39;insertText&#39;, text );
 		},
 
 <span id='CKEDITOR-editor-method-insertElement'>		/**
 </span>		 * Inserts an element into the currently selected position in the
 		 * editor in WYSIWYG mode.
 		 *
-		 *		var element = CKEDITOR.dom.element.createFromHtml( '&lt;img src=&quot;hello.png&quot; border=&quot;0&quot; title=&quot;Hello&quot; /&gt;' );
+		 *		var element = CKEDITOR.dom.element.createFromHtml( &#39;&lt;img src=&quot;hello.png&quot; border=&quot;0&quot; title=&quot;Hello&quot; /&gt;&#39; );
 		 *		CKEDITOR.instances.editor1.insertElement( element );
 		 *
 		 * @param {CKEDITOR.dom.element} element The element to be inserted
 		 * into the editor.
 		 */
 		insertElement: function( element ) {
-			this.fire( 'insertElement', element );
+			this.fire( &#39;insertElement&#39;, element );
 		},
 
 <span id='CKEDITOR-editor-method-focus'>		/**
 </span>		 * Moves the selection focus to the editing area space in the editor.
 		 */
 		focus: function() {
-			this.fire( 'beforeFocus' );
+			this.fire( &#39;beforeFocus&#39; );
 		},
 
 <span id='CKEDITOR-editor-method-checkDirty'>		/**
@@ -1071,14 +1071,14 @@
 		 *		}
 		 *
 		 *		if ( window.addEventListener )
-		 *			window.addEventListener( 'beforeunload', beforeUnload, false );
+		 *			window.addEventListener( &#39;beforeunload&#39;, beforeUnload, false );
 		 *		else
-		 *			window.attachEvent( 'onbeforeunload', beforeUnload );
+		 *			window.attachEvent( &#39;onbeforeunload&#39;, beforeUnload );
 		 *
 		 * @returns {Boolean} `true` if the contents contain changes.
 		 */
 		checkDirty: function() {
-			return this.status == 'ready' &amp;&amp; this._.previousValue !== this.getSnapshot();
+			return this.status == &#39;ready&#39; &amp;&amp; this._.previousValue !== this.getSnapshot();
 		},
 
 <span id='CKEDITOR-editor-method-resetDirty'>		/**
@@ -1103,7 +1103,7 @@
 		 * bound to `&lt;textarea&gt;` elements.
 		 *
 		 *		CKEDITOR.instances.editor1.updateElement();
-		 *		alert( document.getElementById( 'editor1' ).value ); // The current editor data.
+		 *		alert( document.getElementById( &#39;editor1&#39; ).value ); // The current editor data.
 		 *
 		 * @see CKEDITOR.editor#element
 		 */
@@ -1114,12 +1114,12 @@
 <span id='CKEDITOR-editor-method-setKeystroke'>		/**
 </span>		 * Assigns keystrokes associated to editor commands.
 		 *
-		 *		editor.setKeystroke( CKEDITOR.CTRL + 115, 'save' );	// Assigned CTRL+S to &quot;save&quot; command.
+		 *		editor.setKeystroke( CKEDITOR.CTRL + 115, &#39;save&#39; );	// Assigned CTRL+S to &quot;save&quot; command.
 		 *		editor.setKeystroke( CKEDITOR.CTRL + 115, false );	// Disabled CTRL+S keystroke assignment.
 		 *		editor.setKeystroke( [
 		 *			[ CKEDITOR.ALT + 122, false ],
-		 *			[ CKEDITOR.CTRL + 121, 'link' ],
-		 *			[ CKEDITOR.SHIFT + 120, 'bold' ]
+		 *			[ CKEDITOR.CTRL + 121, &#39;link&#39; ],
+		 *			[ CKEDITOR.SHIFT + 120, &#39;bold&#39; ]
 		 *		] );
 		 *
 		 * This method may be used in the following cases:
@@ -1177,7 +1177,7 @@
 		 *
 		 *		// Set active filter which allows only 4 elements.
 		 *		// Buttons like Bold, Italic will be disabled.
-		 *		var filter = new CKEDITOR.filter( 'p strong em br' );
+		 *		var filter = new CKEDITOR.filter( &#39;p strong em br&#39; );
 		 *		editor.setActiveFilter( filter );
 		 *
 		 * Setting new filter will also change the {@link #setActiveEnterMode active enter modes} to the first values
@@ -1192,7 +1192,7 @@
 
 			if ( this.activeFilter !== filter ) {
 				this.activeFilter = filter;
-				this.fire( 'activeFilterChange' );
+				this.fire( &#39;activeFilterChange&#39; );
 
 				// Reseted active filter to the main one - reset enter modes too.
 				if ( filter === this.filter )
@@ -1217,7 +1217,7 @@
 		 * * dynamic {@link #activeEnterMode} and {@link #activeShiftEnterMode} values.
 		 *
 		 * However, the dynamic enter modes can be changed during runtime by using this method, to reflect the selection context.
-		 * For example, if selection is moved to the {@link CKEDITOR.plugins.widget widget}'s nested editable which
+		 * For example, if selection is moved to the {@link CKEDITOR.plugins.widget widget}&#39;s nested editable which
 		 * is a {@link #blockless blockless one}, then the active enter modes should be changed to {@link CKEDITOR#ENTER_BR}
 		 * (in this case [Widget System](#!/guide/dev_widgets) takes care of that).
 		 *
@@ -1247,7 +1247,7 @@
 			if ( this.activeEnterMode != enterMode || this.activeShiftEnterMode != shiftEnterMode ) {
 				this.activeEnterMode = enterMode;
 				this.activeShiftEnterMode = shiftEnterMode;
-				this.fire( 'activeEnterModeChange' );
+				this.fire( &#39;activeEnterModeChange&#39; );
 			}
 		}
 	} );
@@ -1334,9 +1334,9 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * **Note:** Please do not confuse this property with {@link CKEDITOR.editor#name}
  * which identifies the instance in the {@link CKEDITOR#instances} literal.
  *
- *		// Sets the title to 'My WYSIWYG editor.'. The original title of the element (if it exists)
+ *		// Sets the title to &#39;My WYSIWYG editor.&#39;. The original title of the element (if it exists)
  *		// will be restored once the editor instance is destroyed.
- *		config.title = 'My WYSIWYG editor.';
+ *		config.title = &#39;My WYSIWYG editor.&#39;;
  *
  *		// Do not touch the title. If the element already has a title, it remains unchanged.
  *		// Also if no title attribute exists, nothing new will be added.
@@ -1350,15 +1350,15 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  */
 
 <span id='CKEDITOR-config-cfg-on'>/**
-</span> * Sets listeners on editor's events.
+</span> * Sets listeners on editor&#39;s events.
  *
  * **Note:** This property can only be set in the `config` object passed directly
  * to {@link CKEDITOR#replace}, {@link CKEDITOR#inline}, and other creators.
  *
- *		CKEDITOR.replace( 'editor1', {
+ *		CKEDITOR.replace( &#39;editor1&#39;, {
  *			on: {
  *				instanceReady: function() {
- *					alert( this.name ); // 'editor1'
+ *					alert( this.name ); // &#39;editor1&#39;
  *				},
  *
  *				key: function() {
@@ -1377,7 +1377,7 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * be modified.
  *
  *		var editor = CKEDITOR.instances.editor1;
- *		alert( editor.container.getName() ); // 'span'
+ *		alert( editor.container.getName() ); // &#39;span&#39;
  *
  * @readonly
  * @property {CKEDITOR.dom.element} container
@@ -1394,7 +1394,7 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * and may be invalidated when the {@link #contentDomUnload} event is fired
  * (classic editor only).
  *
- *		editor.on( 'contentDom', function() {
+ *		editor.on( &#39;contentDom&#39;, function() {
  *			console.log( editor.document );
  *		} );
  *
@@ -1432,8 +1432,8 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  *
  * By default it equals the {@link #filter} and it can be changed by the {@link #setActiveFilter} method.
  *
- *		editor.on( 'activeFilterChange', function() {
- *			if ( editor.activeFilter.check( 'cite' ) )
+ *		editor.on( &#39;activeFilterChange&#39;, function() {
+ *			if ( editor.activeFilter.check( &#39;cite&#39; ) )
  *				// Do something when &lt;cite&gt; was enabled - e.g. enable a button.
  *			else
  *				// Otherwise do something else.
@@ -1509,7 +1509,7 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  */
 
 <span id='CKEDITOR-event-instanceLoaded'>/**
-</span> * Fired when CKEDITOR instance's components (config, languages and plugins) are fully
+</span> * Fired when CKEDITOR instance&#39;s components (config, languages and plugins) are fully
  * loaded and initialized. However, the editor will be fully ready to for interaction
  * on {@link CKEDITOR#instanceReady}.
  *
@@ -1682,7 +1682,7 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  */
 
 <span id='CKEDITOR-editor-event-loaded'>/**
-</span> * Fired when editor's components (config, languages and plugins) are fully
+</span> * Fired when editor&#39;s components (config, languages and plugins) are fully
  * loaded and initialized. However, the editor will be fully ready to for interaction
  * on {@link #instanceReady}.
  *
@@ -1738,7 +1738,7 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
 <span id='CKEDITOR-editor-event-contentDom'>/**
 </span> * Fired when content of the editor (its DOM structure) is ready.
  * It is similar to native DOMContentLoaded event, but it concerns
- * editor's content. It is also a first event fired after
+ * editor&#39;s content. It is also a first event fired after
  * {@link CKEDITOR.editable} is initialized.
  *
  * This event is particularly important for classic (`iframe`-based)
@@ -1748,8 +1748,8 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * on editable one more time.
  *
  * On inline editor this event is fired only once - when editor
- * is initialized for the first time. That's because setting
- * editor's content doesn't cause editable destruction and creation.
+ * is initialized for the first time. That&#39;s because setting
+ * editor&#39;s content doesn&#39;t cause editable destruction and creation.
  *
  * {@link #contentDom} goes along with {@link #contentDomUnload} which
  * is fired before contents DOM structure is destroyed. This is the
@@ -1760,11 +1760,11 @@ CKEDITOR.ELEMENT_MODE_INLINE = 3;
  * **Note:** {@link CKEDITOR.editable#attachListener} is a convenient
  * way to attach listeners that will be detached on {@link #contentDomUnload}.
  *
- *		editor.on( 'contentDom', function() {
+ *		editor.on( &#39;contentDom&#39;, function() {
  *			var editable = editor.editable();
  *
- *			editable.attachListener( editable, 'click', function() {
- *				console.log( 'Editable has been clicked' );
+ *			editable.attachListener( editable, &#39;click&#39;, function() {
+ *				console.log( &#39;Editable has been clicked&#39; );
  *			});
  *		});
  *

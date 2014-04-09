@@ -20,16 +20,16 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'removeformat', {
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'removeformat', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;removeformat&#39;, {
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;removeformat&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		editor.addCommand( 'removeFormat', CKEDITOR.plugins.removeformat.commands.removeformat );
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'RemoveFormat', {
+		editor.addCommand( &#39;removeFormat&#39;, CKEDITOR.plugins.removeformat.commands.removeformat );
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;RemoveFormat&#39;, {
 			label: editor.lang.removeformat.toolbar,
-			command: 'removeFormat',
-			toolbar: 'cleanup,10'
+			command: &#39;removeFormat&#39;,
+			toolbar: &#39;cleanup,10&#39;
 		} );
 	}
 } );
@@ -38,9 +38,9 @@ CKEDITOR.plugins.removeformat = {
 	commands: {
 		removeformat: {
 			exec: function( editor ) {
-				var tagsRegex = editor._.removeFormatRegex || ( editor._.removeFormatRegex = new RegExp( '^(?:' + editor.config.removeFormatTags.replace( /,/g, '|' ) + ')$', 'i' ) );
+				var tagsRegex = editor._.removeFormatRegex || ( editor._.removeFormatRegex = new RegExp( &#39;^(?:&#39; + editor.config.removeFormatTags.replace( /,/g, &#39;|&#39; ) + &#39;)$&#39;, &#39;i&#39; ) );
 
-				var removeAttributes = editor._.removeAttributes || ( editor._.removeAttributes = editor.config.removeFormatAttributes.split( ',' ) );
+				var removeAttributes = editor._.removeAttributes || ( editor._.removeAttributes = editor.config.removeFormatAttributes.split( &#39;,&#39; ) );
 
 				var filter = CKEDITOR.plugins.removeformat.filter;
 				var ranges = editor.getSelection().getRanges( 1 ),
@@ -69,7 +69,7 @@ CKEDITOR.plugins.removeformat = {
 					//		&lt;b&gt;This is &lt;/b&gt;[&lt;b&gt;some text&lt;/b&gt; to show &lt;b&gt;the&lt;/b&gt;]&lt;b&gt; problem&lt;/b&gt;
 
 					var breakParent = function( node ) {
-							// Let's start checking the start boundary.
+							// Let&#39;s start checking the start boundary.
 							var path = editor.elementPath( node ),
 								pathElements = path.elements;
 
@@ -100,13 +100,13 @@ CKEDITOR.plugins.removeformat = {
 							var nextNode = currentNode.getNextSourceNode( false, CKEDITOR.NODE_ELEMENT );
 
 							// This node must not be a fake element.
-							if ( !( currentNode.getName() == 'img' &amp;&amp; currentNode.data( 'cke-realelement' ) ) &amp;&amp; filter( editor, currentNode ) ) {
+							if ( !( currentNode.getName() == &#39;img&#39; &amp;&amp; currentNode.data( &#39;cke-realelement&#39; ) ) &amp;&amp; filter( editor, currentNode ) ) {
 								// Remove elements nodes that match with this style rules.
 								if ( tagsRegex.test( currentNode.getName() ) )
 									currentNode.remove( 1 );
 								else {
 									currentNode.removeAttributes( removeAttributes );
-									editor.fire( 'removeFormatCleanup', currentNode );
+									editor.fire( &#39;removeFormatCleanup&#39;, currentNode );
 								}
 							}
 
@@ -129,7 +129,7 @@ CKEDITOR.plugins.removeformat = {
 	// @param {CKEDITOR.editor} editor
 	// @param {CKEDITOR.dom.element} element
 	filter: function( editor, element ) {
-		// If editor#addRemoveFotmatFilter hasn't been executed yet value is not initialized.
+		// If editor#addRemoveFotmatFilter hasn&#39;t been executed yet value is not initialized.
 		var filters = editor._.removeFormatFilters || [];
 		for ( var i = 0; i &lt; filters.length; i++ ) {
 			if ( filters[ i ]( element ) === false )
@@ -146,9 +146,9 @@ CKEDITOR.plugins.removeformat = {
  *
  * **Note:** Only available with the existence of `removeformat` plugin.
  *
- *		// Don't remove empty span.
+ *		// Don&#39;t remove empty span.
  *		editor.addRemoveFormatFilter( function( element ) {
- *			return !( element.is( 'span' ) &amp;&amp; CKEDITOR.tools.isEmpty( element.getAttributes() ) );
+ *			return !( element.is( &#39;span&#39; ) &amp;&amp; CKEDITOR.tools.isEmpty( element.getAttributes() ) );
  *		} );
  *
  * @since 3.3
@@ -169,7 +169,7 @@ CKEDITOR.editor.prototype.addRemoveFormatFilter = function( func ) {
  * @cfg
  * @member CKEDITOR.config
  */
-CKEDITOR.config.removeFormatTags = 'b,big,code,del,dfn,em,font,i,ins,kbd,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var';
+CKEDITOR.config.removeFormatTags = &#39;b,big,code,del,dfn,em,font,i,ins,kbd,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var&#39;;
 
 <span id='CKEDITOR-config-cfg-removeFormatAttributes'>/**
 </span> * A comma separated list of elements attributes to be removed when executing
@@ -178,7 +178,7 @@ CKEDITOR.config.removeFormatTags = 'b,big,code,del,dfn,em,font,i,ins,kbd,q,s,sam
  * @cfg
  * @member CKEDITOR.config
  */
-CKEDITOR.config.removeFormatAttributes = 'class,style,lang,width,height,align,hspace,valign';
+CKEDITOR.config.removeFormatAttributes = &#39;class,style,lang,width,height,align,hspace,valign&#39;;
 
 <span id='CKEDITOR-editor-event-removeFormatCleanup'>/**
 </span> * Fired after an element was cleaned by the removeFormat plugin.

@@ -45,7 +45,7 @@ CKEDITOR.dom.event.prototype = {
 <span id='CKEDITOR-dom-event-method-getKey'>	/**
 </span>	 * Gets the key code associated to the event.
 	 *
-	 *		alert( event.getKey() ); // '65' is 'a' has been pressed
+	 *		alert( event.getKey() ); // &#39;65&#39; is &#39;a&#39; has been pressed
 	 *
 	 * @returns {Number} The key code.
 	 */
@@ -58,9 +58,9 @@ CKEDITOR.dom.event.prototype = {
 	 * event. It is the sum with the current key code and the {@link CKEDITOR#CTRL},
 	 * {@link CKEDITOR#SHIFT} and {@link CKEDITOR#ALT} constants.
 	 *
-	 *		alert( event.getKeystroke() == 65 );									// 'a' key
-	 *		alert( event.getKeystroke() == CKEDITOR.CTRL + 65 );					// CTRL + 'a' key
-	 *		alert( event.getKeystroke() == CKEDITOR.CTRL + CKEDITOR.SHIFT + 65 );	// CTRL + SHIFT + 'a' key
+	 *		alert( event.getKeystroke() == 65 );									// &#39;a&#39; key
+	 *		alert( event.getKeystroke() == CKEDITOR.CTRL + 65 );					// CTRL + &#39;a&#39; key
+	 *		alert( event.getKeystroke() == CKEDITOR.CTRL + CKEDITOR.SHIFT + 65 );	// CTRL + SHIFT + &#39;a&#39; key
 	 *
 	 * @returns {Number} The number representing the keys combination.
 	 */
@@ -83,9 +83,9 @@ CKEDITOR.dom.event.prototype = {
 </span>	 * Prevents the original behavior of the event to happen. It can optionally
 	 * stop propagating the event in the event chain.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
-	 *		element.on( 'click', function( ev ) {
-	 *			// The DOM event object is passed by the 'data' property.
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
+	 *		element.on( &#39;click&#39;, function( ev ) {
+	 *			// The DOM event object is passed by the &#39;data&#39; property.
 	 *			var domEvent = ev.data;
 	 *			// Prevent the click to chave any effect in the element.
 	 *			domEvent.preventDefault();
@@ -119,12 +119,12 @@ CKEDITOR.dom.event.prototype = {
 <span id='CKEDITOR-dom-event-method-getTarget'>	/**
 </span>	 * Returns the DOM node where the event was targeted to.
 	 *
-	 *		var element = CKEDITOR.document.getById( 'myElement' );
-	 *		element.on( 'click', function( ev ) {
-	 *			// The DOM event object is passed by the 'data' property.
+	 *		var element = CKEDITOR.document.getById( &#39;myElement&#39; );
+	 *		element.on( &#39;click&#39;, function( ev ) {
+	 *			// The DOM event object is passed by the &#39;data&#39; property.
 	 *			var domEvent = ev.data;
 	 *			// Add a CSS class to the event target.
-	 *			domEvent.getTarget().addClass( 'clicked' );
+	 *			domEvent.getTarget().addClass( &#39;clicked&#39; );
 	 *		} );
 	 *
 	 * @returns {CKEDITOR.dom.node} The target DOM node.
@@ -136,7 +136,7 @@ CKEDITOR.dom.event.prototype = {
 
 <span id='CKEDITOR-dom-event-method-getPhase'>	/**
 </span>	 * Returns an integer value that indicates the current processing phase of an event.
-	 * For browsers that doesn't support event phase, {@link CKEDITOR#EVENT_PHASE_AT_TARGET} is always returned.
+	 * For browsers that doesn&#39;t support event phase, {@link CKEDITOR#EVENT_PHASE_AT_TARGET} is always returned.
 	 *
 	 * @returns {Number} One of {@link CKEDITOR#EVENT_PHASE_CAPTURING},
 	 * {@link CKEDITOR#EVENT_PHASE_AT_TARGET}, or {@link CKEDITOR#EVENT_PHASE_BUBBLING}.
@@ -149,7 +149,7 @@ CKEDITOR.dom.event.prototype = {
 </span>	 * Retrieves the coordinates of the mouse pointer relative to the top-left
 	 * corner of the document, in mouse related event.
 	 *
-	 *		element.on( 'mousemouse', function( ev ) {
+	 *		element.on( &#39;mousemouse&#39;, function( ev ) {
 	 *			var pageOffset = ev.data.getPageOffset();
 	 *			alert( pageOffset.x );			// page offset X
 	 *			alert( pageOffset.y );			// page offset Y

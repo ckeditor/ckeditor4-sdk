@@ -28,13 +28,13 @@
 ( function() {
 	var functions = [],
 		cssVendorPrefix =
-			CKEDITOR.env.gecko ? '-moz-' :
-			CKEDITOR.env.webkit ? '-webkit-' :
-			CKEDITOR.env.opera ? '-o-' :
-			CKEDITOR.env.ie ? '-ms-' :
-			'';
+			CKEDITOR.env.gecko ? &#39;-moz-&#39; :
+			CKEDITOR.env.webkit ? &#39;-webkit-&#39; :
+			CKEDITOR.env.opera ? &#39;-o-&#39; :
+			CKEDITOR.env.ie ? &#39;-ms-&#39; :
+			&#39;&#39;;
 
-	CKEDITOR.on( 'reset', function() {
+	CKEDITOR.on( &#39;reset&#39;, function() {
 		functions = [];
 	} );
 
@@ -48,10 +48,10 @@
 <span id='CKEDITOR-tools-method-arrayCompare'>		/**
 </span>		 * Compares the elements of two arrays.
 		 *
-		 *		var a = [ 1, 'a', 3 ];
-		 *		var b = [ 1, 3, 'a' ];
-		 *		var c = [ 1, 'a', 3 ];
-		 *		var d = [ 1, 'a', 3, 4 ];
+		 *		var a = [ 1, &#39;a&#39;, 3 ];
+		 *		var b = [ 1, 3, &#39;a&#39; ];
+		 *		var c = [ 1, &#39;a&#39;, 3 ];
+		 *		var d = [ 1, &#39;a&#39;, 3, 4 ];
 		 *
 		 *		alert( CKEDITOR.tools.arrayCompare( a, b ) );  // false
 		 *		alert( CKEDITOR.tools.arrayCompare( a, c ) );  // true
@@ -83,20 +83,20 @@
 		 * **Note**: Recursive references are not supported.
 		 *
 		 *		var obj = {
-		 *			name: 'John',
+		 *			name: &#39;John&#39;,
 		 *			cars: {
-		 *				Mercedes: { color: 'blue' },
-		 *				Porsche: { color: 'red' }
+		 *				Mercedes: { color: &#39;blue&#39; },
+		 *				Porsche: { color: &#39;red&#39; }
 		 *			}
 		 *		};
 		 *		var clone = CKEDITOR.tools.clone( obj );
-		 *		clone.name = 'Paul';
-		 *		clone.cars.Porsche.color = 'silver';
+		 *		clone.name = &#39;Paul&#39;;
+		 *		clone.cars.Porsche.color = &#39;silver&#39;;
 		 *
-		 *		alert( obj.name );					// 'John'
-		 *		alert( clone.name );				// 'Paul'
-		 *		alert( obj.cars.Porsche.color );	// 'red'
-		 *		alert( clone.cars.Porsche.color );	// 'silver'
+		 *		alert( obj.name );					// &#39;John&#39;
+		 *		alert( clone.name );				// &#39;Paul&#39;
+		 *		alert( obj.cars.Porsche.color );	// &#39;red&#39;
+		 *		alert( clone.cars.Porsche.color );	// &#39;silver&#39;
 		 *
 		 * @param {Object} object The object to be cloned.
 		 * @returns {Object} The object clone.
@@ -115,7 +115,7 @@
 			}
 
 			// &quot;Static&quot; types.
-			if ( obj === null || ( typeof( obj ) != 'object' ) || ( obj instanceof String ) || ( obj instanceof Number ) || ( obj instanceof Boolean ) || ( obj instanceof Date ) || ( obj instanceof RegExp ) )
+			if ( obj === null || ( typeof( obj ) != &#39;object&#39; ) || ( obj instanceof String ) || ( obj instanceof Number ) || ( obj instanceof Boolean ) || ( obj instanceof Date ) || ( obj instanceof RegExp ) )
 				return obj;
 
 			// Objects.
@@ -155,7 +155,7 @@
 		 *			prop3: true
 		 *		} );
 		 *
-		 *		// Alert 'prop1', 'prop2' and 'prop3'.
+		 *		// Alert &#39;prop1&#39;, &#39;prop2&#39; and &#39;prop3&#39;.
 		 *		for ( var p in myObject )
 		 *			alert( p );
 		 *
@@ -173,9 +173,9 @@
 			var argsLength = arguments.length,
 				overwrite, propertiesList;
 
-			if ( typeof( overwrite = arguments[ argsLength - 1 ] ) == 'boolean' )
+			if ( typeof( overwrite = arguments[ argsLength - 1 ] ) == &#39;boolean&#39; )
 				argsLength--;
-			else if ( typeof( overwrite = arguments[ argsLength - 2 ] ) == 'boolean' ) {
+			else if ( typeof( overwrite = arguments[ argsLength - 2 ] ) == &#39;boolean&#39; ) {
 				propertiesList = arguments[ argsLength - 1 ];
 				argsLength -= 2;
 			}
@@ -234,13 +234,13 @@
 </span>		 * Checks if an object is an Array.
 		 *
 		 *		alert( CKEDITOR.tools.isArray( [] ) );		// true
-		 *		alert( CKEDITOR.tools.isArray( 'Test' ) );	// false
+		 *		alert( CKEDITOR.tools.isArray( &#39;Test&#39; ) );	// false
 		 *
 		 * @param {Object} object The object to be checked.
 		 * @returns {Boolean} `true` if the object is an Array, otherwise `false`.
 		 */
 		isArray: function( object ) {
-			return Object.prototype.toString.call( object ) == '[object Array]';
+			return Object.prototype.toString.call( object ) == &#39;[object Array]&#39;;
 		},
 
 <span id='CKEDITOR-tools-method-isEmpty'>		/**
@@ -260,9 +260,9 @@
 <span id='CKEDITOR-tools-method-cssVendorPrefix'>		/**
 </span>		 * Generates an object or a string containing vendor-specific and vendor-free CSS properties.
 		 *
-		 *		CKEDITOR.tools.cssVendorPrefix( 'border-radius', '0', true );
-		 *		// On Firefox: '-moz-border-radius:0;border-radius:0'
-		 *		// On Chrome: '-webkit-border-radius:0;border-radius:0'
+		 *		CKEDITOR.tools.cssVendorPrefix( &#39;border-radius&#39;, &#39;0&#39;, true );
+		 *		// On Firefox: &#39;-moz-border-radius:0;border-radius:0&#39;
+		 *		// On Chrome: &#39;-webkit-border-radius:0;border-radius:0&#39;
 		 *
 		 * @param {String} property The CSS property name.
 		 * @param {String} value The CSS value.
@@ -271,7 +271,7 @@
 		 */
 		cssVendorPrefix: function( property, value, asString ) {
 			if ( asString )
-				return cssVendorPrefix + property + ':' + value + ';' + property + ':' + value;
+				return cssVendorPrefix + property + &#39;:&#39; + value + &#39;;&#39; + property + &#39;:&#39; + value;
 
 			var ret = {};
 			ret[ property ] = value;
@@ -283,20 +283,20 @@
 <span id='CKEDITOR-tools-method-cssStyleToDomStyle'>		/**
 </span>		 * Transforms a CSS property name to its relative DOM style name.
 		 *
-		 *		alert( CKEDITOR.tools.cssStyleToDomStyle( 'background-color' ) );	// 'backgroundColor'
-		 *		alert( CKEDITOR.tools.cssStyleToDomStyle( 'float' ) );				// 'cssFloat'
+		 *		alert( CKEDITOR.tools.cssStyleToDomStyle( &#39;background-color&#39; ) );	// &#39;backgroundColor&#39;
+		 *		alert( CKEDITOR.tools.cssStyleToDomStyle( &#39;float&#39; ) );				// &#39;cssFloat&#39;
 		 *
 		 * @method
 		 * @param {String} cssName The CSS property name.
 		 * @returns {String} The transformed name.
 		 */
 		cssStyleToDomStyle: ( function() {
-			var test = document.createElement( 'div' ).style;
+			var test = document.createElement( &#39;div&#39; ).style;
 
-			var cssFloat = ( typeof test.cssFloat != 'undefined' ) ? 'cssFloat' : ( typeof test.styleFloat != 'undefined' ) ? 'styleFloat' : 'float';
+			var cssFloat = ( typeof test.cssFloat != &#39;undefined&#39; ) ? &#39;cssFloat&#39; : ( typeof test.styleFloat != &#39;undefined&#39; ) ? &#39;styleFloat&#39; : &#39;float&#39;;
 
 			return function( cssName ) {
-				if ( cssName == 'float' )
+				if ( cssName == &#39;float&#39; )
 					return cssFloat;
 				else {
 					return cssName.replace( /-./g, function( match ) {
@@ -321,38 +321,38 @@
 				if ( ( item = css[ i ] ) ) {
 					// Is CSS style text ?
 					if ( /@import|[{}]/.test( item ) )
-						retval.push( '&lt;style&gt;' + item + '&lt;/style&gt;' );
+						retval.push( &#39;&lt;style&gt;&#39; + item + &#39;&lt;/style&gt;&#39; );
 					else
-						retval.push( '&lt;link type=&quot;text/css&quot; rel=stylesheet href=&quot;' + item + '&quot;&gt;' );
+						retval.push( &#39;&lt;link type=&quot;text/css&quot; rel=stylesheet href=&quot;&#39; + item + &#39;&quot;&gt;&#39; );
 				}
 			}
-			return retval.join( '' );
+			return retval.join( &#39;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-htmlEncode'>		/**
 </span>		 * Replaces special HTML characters in a string with their relative HTML
 		 * entity values.
 		 *
-		 *		alert( CKEDITOR.tools.htmlEncode( 'A &gt; B &amp; C &lt; D' ) ); // 'A &amp;gt; B &amp;amp; C &amp;lt; D'
+		 *		alert( CKEDITOR.tools.htmlEncode( &#39;A &gt; B &amp; C &lt; D&#39; ) ); // &#39;A &amp;gt; B &amp;amp; C &amp;lt; D&#39;
 		 *
 		 * @param {String} text The string to be encoded.
 		 * @returns {String} The encoded string.
 		 */
 		htmlEncode: function( text ) {
-			return String( text ).replace( /&amp;/g, '&amp;amp;' ).replace( /&gt;/g, '&amp;gt;' ).replace( /&lt;/g, '&amp;lt;' );
+			return String( text ).replace( /&amp;/g, &#39;&amp;amp;&#39; ).replace( /&gt;/g, &#39;&amp;gt;&#39; ).replace( /&lt;/g, &#39;&amp;lt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-htmlEncodeAttr'>		/**
 </span>		 * Replaces special HTML characters in HTMLElement attribute with their relative HTML entity values.
 		 *
-		 *		element.setAttribute( 'title', '&lt;a &quot; b &gt;' );
-		 *		alert( CKEDITOR.tools.htmlEncodeAttr( element.getAttribute( 'title' ) ); // '&amp;gt;a &amp;quot; b &amp;lt;'
+		 *		element.setAttribute( &#39;title&#39;, &#39;&lt;a &quot; b &gt;&#39; );
+		 *		alert( CKEDITOR.tools.htmlEncodeAttr( element.getAttribute( &#39;title&#39; ) ); // &#39;&amp;gt;a &amp;quot; b &amp;lt;&#39;
 		 *
 		 * @param {String} The attribute value to be encoded.
 		 * @returns {String} The encoded value.
 		 */
 		htmlEncodeAttr: function( text ) {
-			return text.replace( /&quot;/g, '&amp;quot;' ).replace( /&lt;/g, '&amp;lt;' ).replace( /&gt;/g, '&amp;gt;' );
+			return text.replace( /&quot;/g, &#39;&amp;quot;&#39; ).replace( /&lt;/g, &#39;&amp;lt;&#39; ).replace( /&gt;/g, &#39;&amp;gt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-htmlDecodeAttr'>		/**
@@ -360,13 +360,13 @@
 		 * {@link #htmlEncodeAttr htmlEncodeAttr} back to their plain character
 		 * representation.
 		 *
-		 *		alert( CKEDITOR.tools.htmlDecodeAttr( '&amp;gt;a &amp;quot; b &amp;lt;' ); // '&lt;a &quot; b &gt;'
+		 *		alert( CKEDITOR.tools.htmlDecodeAttr( &#39;&amp;gt;a &amp;quot; b &amp;lt;&#39; ); // &#39;&lt;a &quot; b &gt;&#39;
 		 *
 		 * @param {String} text The text to be decoded.
 		 * @returns {String} The decoded text.
 		 */
 		htmlDecodeAttr: function( text ) {
-			return text.replace( /&amp;quot;/g, '&quot;' ).replace( /&amp;lt;/g, '&lt;' ).replace( /&amp;gt;/g, '&gt;' );
+			return text.replace( /&amp;quot;/g, &#39;&quot;&#39; ).replace( /&amp;lt;/g, &#39;&lt;&#39; ).replace( /&amp;gt;/g, &#39;&gt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-getNextNumber'>		/**
@@ -390,13 +390,13 @@
 </span>		 * Gets a unique ID for CKEditor interface elements. It returns a
 		 * string with the &quot;cke_&quot; prefix and a consecutive number.
 		 *
-		 *		alert( CKEDITOR.tools.getNextId() ); // (e.g.) 'cke_1'
-		 *		alert( CKEDITOR.tools.getNextId() ); // 'cke_2'
+		 *		alert( CKEDITOR.tools.getNextId() ); // (e.g.) &#39;cke_1&#39;
+		 *		alert( CKEDITOR.tools.getNextId() ); // &#39;cke_2&#39;
 		 *
 		 * @returns {String} A unique ID.
 		 */
 		getNextId: function() {
-			return 'cke_' + this.getNextNumber();
+			return &#39;cke_&#39; + this.getNextNumber();
 		},
 
 <span id='CKEDITOR-tools-method-override'>		/**
@@ -404,13 +404,13 @@
 		 *
 		 *		var obj = {
 		 *			myFunction: function( name ) {
-		 *				alert( 'Name: ' + name );
+		 *				alert( &#39;Name: &#39; + name );
 		 *			}
 		 *		};
 		 *
 		 *		obj.myFunction = CKEDITOR.tools.override( obj.myFunction, function( myFunctionOriginal ) {
 		 *			return function( name ) {
-		 *				alert( 'Overriden name: ' + name );
+		 *				alert( &#39;Overriden name: &#39; + name );
 		 *				myFunctionOriginal.call( this, name );
 		 *			};
 		 *		} );
@@ -430,7 +430,7 @@
 </span>		 * Executes a function after specified delay.
 		 *
 		 *		CKEDITOR.tools.setTimeout( function() {
-		 *			alert( 'Executed after 2 seconds' );
+		 *			alert( &#39;Executed after 2 seconds&#39; );
 		 *		}, 2000 );
 		 *
 		 * @param {Function} func The function to be executed.
@@ -463,17 +463,17 @@
 </span>		 * Removes spaces from the start and the end of a string. The following
 		 * characters are removed: space, tab, line break, line feed.
 		 *
-		 *		alert( CKEDITOR.tools.trim( '  example ' ); // 'example'
+		 *		alert( CKEDITOR.tools.trim( &#39;  example &#39; ); // &#39;example&#39;
 		 *
 		 * @method
 		 * @param {String} str The text from which the spaces will be removed.
 		 * @returns {String} The modified string without the boundary spaces.
 		 */
 		trim: ( function() {
-			// We are not using \s because we don't want &quot;non-breaking spaces&quot; to be caught.
+			// We are not using \s because we don&#39;t want &quot;non-breaking spaces&quot; to be caught.
 			var trimRegex = /(?:^[ \t\n\r]+)|(?:[ \t\n\r]+$)/g;
 			return function( str ) {
-				return str.replace( trimRegex, '' );
+				return str.replace( trimRegex, &#39;&#39; );
 			};
 		} )(),
 
@@ -481,17 +481,17 @@
 </span>		 * Removes spaces from the start (left) of a string. The following
 		 * characters are removed: space, tab, line break, line feed.
 		 *
-		 *		alert( CKEDITOR.tools.ltrim( '  example ' ); // 'example '
+		 *		alert( CKEDITOR.tools.ltrim( &#39;  example &#39; ); // &#39;example &#39;
 		 *
 		 * @method
 		 * @param {String} str The text from which the spaces will be removed.
 		 * @returns {String} The modified string excluding the removed spaces.
 		 */
 		ltrim: ( function() {
-			// We are not using \s because we don't want &quot;non-breaking spaces&quot; to be caught.
+			// We are not using \s because we don&#39;t want &quot;non-breaking spaces&quot; to be caught.
 			var trimRegex = /^[ \t\n\r]+/g;
 			return function( str ) {
-				return str.replace( trimRegex, '' );
+				return str.replace( trimRegex, &#39;&#39; );
 			};
 		} )(),
 
@@ -499,25 +499,25 @@
 </span>		 * Removes spaces from the end (right) of a string. The following
 		 * characters are removed: space, tab, line break, line feed.
 		 *
-		 *		alert( CKEDITOR.tools.ltrim( '  example ' ); // '  example'
+		 *		alert( CKEDITOR.tools.ltrim( &#39;  example &#39; ); // &#39;  example&#39;
 		 *
 		 * @method
 		 * @param {String} str The text from which spaces will be removed.
 		 * @returns {String} The modified string excluding the removed spaces.
 		 */
 		rtrim: ( function() {
-			// We are not using \s because we don't want &quot;non-breaking spaces&quot; to be caught.
+			// We are not using \s because we don&#39;t want &quot;non-breaking spaces&quot; to be caught.
 			var trimRegex = /[ \t\n\r]+$/g;
 			return function( str ) {
-				return str.replace( trimRegex, '' );
+				return str.replace( trimRegex, &#39;&#39; );
 			};
 		} )(),
 
 <span id='CKEDITOR-tools-method-indexOf'>		/**
 </span>		 * Returns the index of an element in an array.
 		 *
-		 *		var letters = [ 'a', 'b', 0, 'c', false ];
-		 *		alert( CKEDITOR.tools.indexOf( letters, '0' ) );		// -1 because 0 !== '0'
+		 *		var letters = [ &#39;a&#39;, &#39;b&#39;, 0, &#39;c&#39;, false ];
+		 *		alert( CKEDITOR.tools.indexOf( letters, &#39;0&#39; ) );		// -1 because 0 !== &#39;0&#39;
 		 *		alert( CKEDITOR.tools.indexOf( letters, false ) );		// 4 because 0 !== false
 		 *
 		 * @param {Array} array The array to be searched.
@@ -528,7 +528,7 @@
 		 * the entry, or `-1` if not found.
 		 */
 		indexOf: function( array, value ) {
-			if ( typeof value == 'function' ) {
+			if ( typeof value == &#39;function&#39; ) {
 				for ( var i = 0, len = array.length; i &lt; len; i++ ) {
 					if ( value( array[ i ] ) )
 						return i;
@@ -548,12 +548,12 @@
 </span>		 * Returns the index of an element in an array.
 		 *
 		 *		var obj = { prop: true };
-		 *		var letters = [ 'a', 'b', 0, obj, false ];
+		 *		var letters = [ &#39;a&#39;, &#39;b&#39;, 0, obj, false ];
 		 *
-		 *		alert( CKEDITOR.tools.indexOf( letters, '0' ) ); // null
+		 *		alert( CKEDITOR.tools.indexOf( letters, &#39;0&#39; ) ); // null
 		 *		alert( CKEDITOR.tools.indexOf( letters, function( value ) {
-		 *			// Return true when passed value has property 'prop'.
-		 *			return value &amp;&amp; 'prop' in value;
+		 *			// Return true when passed value has property &#39;prop&#39;.
+		 *			return value &amp;&amp; &#39;prop&#39; in value;
 		 *		} ) );											// obj
 		 *
 		 * @param {Array} array The array to be searched.
@@ -571,14 +571,14 @@
 </span>		 * Creates a function that will always execute in the context of a
 		 * specified object.
 		 *
-		 *		var obj = { text: 'My Object' };
+		 *		var obj = { text: &#39;My Object&#39; };
 		 *
 		 *		function alertText() {
 		 *			alert( this.text );
 		 *		}
 		 *
 		 *		var newFunc = CKEDITOR.tools.bind( alertText, obj );
-		 *		newFunc(); // Alerts 'My Object'.
+		 *		newFunc(); // Alerts &#39;My Object&#39;.
 		 *
 		 * @param {Function} func The function to be executed.
 		 * @param {Object} obj The object to which the execution context will be bound.
@@ -626,7 +626,7 @@
 					for ( var privateName in privates ) {
 						var priv = privates[ privateName ];
 
-						_[ privateName ] = ( typeof priv == 'function' ) ? CKEDITOR.tools.bind( priv, this ) : priv;
+						_[ privateName ] = ( typeof priv == &#39;function&#39; ) ? CKEDITOR.tools.bind( priv, this ) : priv;
 					}
 
 					originalConstructor.apply( this, arguments );
@@ -662,9 +662,9 @@
 		 * make DOM attribute function calls to JavaScript-defined functions.
 		 *
 		 *		var ref = CKEDITOR.tools.addFunction( function() {
-		 *			alert( 'Hello!');
+		 *			alert( &#39;Hello!&#39;);
 		 *		} );
-		 *		CKEDITOR.tools.callFunction( ref ); // 'Hello!'
+		 *		CKEDITOR.tools.callFunction( ref ); // &#39;Hello!&#39;
 		 *
 		 * @param {Function} fn The function to be executed on call.
 		 * @param {Object} [scope] The object to have the context on `fn` execution.
@@ -691,9 +691,9 @@
 </span>		 * Executes a function based on the reference created with {@link #addFunction}.
 		 *
 		 *		var ref = CKEDITOR.tools.addFunction( function() {
-		 *			alert( 'Hello!');
+		 *			alert( &#39;Hello!&#39;);
 		 *		} );
-		 *		CKEDITOR.tools.callFunction( ref ); // 'Hello!'
+		 *		CKEDITOR.tools.callFunction( ref ); // &#39;Hello!&#39;
 		 *
 		 * @param {Number} ref The function reference created with {@link #addFunction}.
 		 * @param {Mixed} params Any number of parameters to be passed to the executed function.
@@ -708,13 +708,13 @@
 </span>		 * Appends the `px` length unit to the size value if it is missing.
 		 *
 		 *		var cssLength = CKEDITOR.tools.cssLength;
-		 *		cssLength( 42 );		// '42px'
-		 *		cssLength( '42' );		// '42px'
-		 *		cssLength( '42px' );	// '42px'
-		 *		cssLength( '42%' );		// '42%'
-		 *		cssLength( 'bold' );	// 'bold'
-		 *		cssLength( false );		// ''
-		 *		cssLength( NaN );		// ''
+		 *		cssLength( 42 );		// &#39;42px&#39;
+		 *		cssLength( &#39;42&#39; );		// &#39;42px&#39;
+		 *		cssLength( &#39;42px&#39; );	// &#39;42px&#39;
+		 *		cssLength( &#39;42%&#39; );		// &#39;42%&#39;
+		 *		cssLength( &#39;bold&#39; );	// &#39;bold&#39;
+		 *		cssLength( false );		// &#39;&#39;
+		 *		cssLength( NaN );		// &#39;&#39;
 		 *
 		 * @method
 		 * @param {Number/String/Boolean} length
@@ -724,12 +724,12 @@
 				lengthTrimmed;
 
 			return function( length ) {
-				lengthTrimmed = CKEDITOR.tools.trim( length + '' ) + 'px';
+				lengthTrimmed = CKEDITOR.tools.trim( length + &#39;&#39; ) + &#39;px&#39;;
 
 				if ( pixelRegex.test( lengthTrimmed ) )
 					return lengthTrimmed;
 				else
-					return length || '';
+					return length || &#39;&#39;;
 			};
 		} )(),
 
@@ -746,14 +746,14 @@
 
 			return function( cssLength ) {
 				if ( !calculator ) {
-					calculator = CKEDITOR.dom.element.createFromHtml( '&lt;div style=&quot;position:absolute;left:-9999px;' +
-						'top:-9999px;margin:0px;padding:0px;border:0px;&quot;' +
-						'&gt;&lt;/div&gt;', CKEDITOR.document );
+					calculator = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div style=&quot;position:absolute;left:-9999px;&#39; +
+						&#39;top:-9999px;margin:0px;padding:0px;border:0px;&quot;&#39; +
+						&#39;&gt;&lt;/div&gt;&#39;, CKEDITOR.document );
 					CKEDITOR.document.getBody().append( calculator );
 				}
 
 				if ( !( /%$/ ).test( cssLength ) ) {
-					calculator.setStyle( 'width', cssLength );
+					calculator.setStyle( &#39;width&#39;, cssLength );
 					return calculator.$.clientWidth;
 				}
 
@@ -794,14 +794,14 @@
 <span id='CKEDITOR-tools-method-genKey'>		/**
 </span>		 * Generates a combined key from a series of params.
 		 *
-		 *		var key = CKEDITOR.tools.genKey( 'key1', 'key2', 'key3' );
-		 *		alert( key ); // 'key1-key2-key3'.
+		 *		var key = CKEDITOR.tools.genKey( &#39;key1&#39;, &#39;key2&#39;, &#39;key3&#39; );
+		 *		alert( key ); // &#39;key1-key2-key3&#39;.
 		 *
 		 * @param {String} subKey One or more strings used as subkeys.
 		 * @returns {String}
 		 */
 		genKey: function() {
-			return Array.prototype.slice.call( arguments ).join( '-' );
+			return Array.prototype.slice.call( arguments ).join( &#39;-&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-defer'>		/**
@@ -837,11 +837,11 @@
 				parsedProps = CKEDITOR.tools.parseCssText( styleText, true, nativeNormalize );
 
 			for ( name in parsedProps )
-				props.push( name + ':' + parsedProps[ name ] );
+				props.push( name + &#39;:&#39; + parsedProps[ name ] );
 
 			props.sort();
 
-			return props.length ? ( props.join( ';' ) + ';' ) : '';
+			return props.length ? ( props.join( &#39;;&#39; ) + &#39;;&#39; ) : &#39;&#39;;
 		},
 
 <span id='CKEDITOR-tools-method-convertRgbToHex'>		/**
@@ -855,8 +855,8 @@
 				var color = [ red, green, blue ];
 				// Add padding zeros if the hex value is less than 0x10.
 				for ( var i = 0; i &lt; 3; i++ )
-					color[ i ] = ( '0' + parseInt( color[ i ], 10 ).toString( 16 ) ).slice( -2 );
-				return '#' + color.join( '' );
+					color[ i ] = ( &#39;0&#39; + parseInt( color[ i ], 10 ).toString( 16 ) ).slice( -2 );
+				return &#39;#&#39; + color.join( &#39;&#39; );
 			} );
 		},
 
@@ -875,22 +875,22 @@
 			if ( nativeNormalize ) {
 				// Injects the style in a temporary span object, so the browser parses it,
 				// retrieving its final format.
-				var temp = new CKEDITOR.dom.element( 'span' );
-				temp.setAttribute( 'style', styleText );
-				styleText = CKEDITOR.tools.convertRgbToHex( temp.getAttribute( 'style' ) || '' );
+				var temp = new CKEDITOR.dom.element( &#39;span&#39; );
+				temp.setAttribute( &#39;style&#39;, styleText );
+				styleText = CKEDITOR.tools.convertRgbToHex( temp.getAttribute( &#39;style&#39; ) || &#39;&#39; );
 			}
 
 			// IE will leave a single semicolon when failed to parse the style text. (#3891)
-			if ( !styleText || styleText == ';' )
+			if ( !styleText || styleText == &#39;;&#39; )
 				return retval;
 
-			styleText.replace( /&amp;quot;/g, '&quot;' ).replace( /\s*([^:;\s]+)\s*:\s*([^;]+)\s*(?=;|$)/g, function( match, name, value ) {
+			styleText.replace( /&amp;quot;/g, &#39;&quot;&#39; ).replace( /\s*([^:;\s]+)\s*:\s*([^;]+)\s*(?=;|$)/g, function( match, name, value ) {
 				if ( normalize ) {
 					name = name.toLowerCase();
 					// Normalize font-family property, ignore quotes and being case insensitive. (#7322)
 					// http://www.w3.org/TR/css3-fonts/#font-family-the-font-family-property
-					if ( name == 'font-family' )
-						value = value.toLowerCase().replace( /[&quot;']/g, '' ).replace( /\s*,\s*/g, ',' );
+					if ( name == &#39;font-family&#39; )
+						value = value.toLowerCase().replace( /[&quot;&#39;]/g, &#39;&#39; ).replace( /\s*,\s*/g, &#39;,&#39; );
 					value = CKEDITOR.tools.trim( value );
 				}
 
@@ -902,10 +902,10 @@
 <span id='CKEDITOR-tools-method-writeCssText'>		/**
 </span>		 * Serializes the `style name =&gt; value` hash to a style text.
 		 *
-		 *		var styleObj = CKEDITOR.tools.parseCssText( 'color: red; border: none' );
-		 *		console.log( styleObj.color ); // -&gt; 'red'
-		 *		CKEDITOR.tools.writeCssText( styleObj ); // -&gt; 'color:red; border:none'
-		 *		CKEDITOR.tools.writeCssText( styleObj, true ); // -&gt; 'border:none; color:red'
+		 *		var styleObj = CKEDITOR.tools.parseCssText( &#39;color: red; border: none&#39; );
+		 *		console.log( styleObj.color ); // -&gt; &#39;red&#39;
+		 *		CKEDITOR.tools.writeCssText( styleObj ); // -&gt; &#39;color:red; border:none&#39;
+		 *		CKEDITOR.tools.writeCssText( styleObj, true ); // -&gt; &#39;border:none; color:red&#39;
 		 *
 		 * @since 4.1
 		 * @param {Object} styles The object contaning style properties.
@@ -917,12 +917,12 @@
 				stylesArr = [];
 
 			for ( name in styles )
-				stylesArr.push( name + ':' + styles[ name ] );
+				stylesArr.push( name + &#39;:&#39; + styles[ name ] );
 
 			if ( sort )
 				stylesArr.sort();
 
-			return stylesArr.join( '; ' );
+			return stylesArr.join( &#39;; &#39; );
 		},
 
 <span id='CKEDITOR-tools-method-objectCompare'>		/**
@@ -961,14 +961,14 @@
 		},
 
 <span id='CKEDITOR-tools-method-objectKeys'>		/**
-</span>		 * Returns an array of passed object's keys.
+</span>		 * Returns an array of passed object&#39;s keys.
 		 *
 		 *		console.log( CKEDITOR.tools.objectKeys( { foo: 1, bar: false } );
-		 *		// -&gt; [ 'foo', 'bar' ]
+		 *		// -&gt; [ &#39;foo&#39;, &#39;bar&#39; ]
 		 *
 		 * @since 4.1
 		 * @param {Object} obj
-		 * @returns {Array} Object's keys.
+		 * @returns {Array} Object&#39;s keys.
 		 */
 		objectKeys: function( obj ) {
 			var keys = [];
@@ -982,7 +982,7 @@
 </span>		 * Converts an array to an object by rewriting array items
 		 * to object properties.
 		 *
-		 *		var arr = [ 'foo', 'bar', 'foo' ];
+		 *		var arr = [ &#39;foo&#39;, &#39;bar&#39;, &#39;foo&#39; ];
 		 *		console.log( CKEDITOR.tools.convertArrayToObject( arr ) );
 		 *		// -&gt; { foo: true, bar: true }
 		 *		console.log( CKEDITOR.tools.convertArrayToObject( arr, 1 ) );
@@ -1028,9 +1028,9 @@
 
 						// If it is not the first pass, strip one part of the
 						// name. E.g.  &quot;test.example.com&quot;  =&gt; &quot;example.com&quot;
-						domain.replace( /.+?(?:\.|$)/, '' ) :
+						domain.replace( /.+?(?:\.|$)/, &#39;&#39; ) :
 
-						// In the first pass, we'll handle the
+						// In the first pass, we&#39;ll handle the
 						// &quot;document.domain = document.domain&quot; case.
 						document.domain;
 
@@ -1050,31 +1050,31 @@
 		 * and triggers `output` not more often than once per `minInterval`.
 		 *
 		 *		var buffer = CKEDITOR.tools.eventsBuffer( 200, function() {
-		 *			console.log( 'foo!' );
+		 *			console.log( &#39;foo!&#39; );
 		 *		} );
 		 *
 		 *		buffer.input();
-		 *		// 'foo!' logged immediately.
+		 *		// &#39;foo!&#39; logged immediately.
 		 *		buffer.input();
 		 *		// Nothing logged.
 		 *		buffer.input();
 		 *		// Nothing logged.
-		 *		// ... after 200ms a single 'foo!' will be logged.
+		 *		// ... after 200ms a single &#39;foo!&#39; will be logged.
 		 *
 		 * Can be easily used with events:
 		 *
 		 *		var buffer = CKEDITOR.tools.eventsBuffer( 200, function() {
-		 *			console.log( 'foo!' );
+		 *			console.log( &#39;foo!&#39; );
 		 *		} );
 		 *
-		 *		editor.on( 'key', buffer.input );
+		 *		editor.on( &#39;key&#39;, buffer.input );
 		 *		// Note: There is no need to bind buffer as a context.
 		 *
 		 * @since 4.2.1
 		 * @param {Number} minInterval Minimum interval between `output` calls in milliseconds.
 		 * @param {Function} output Function that will be executed as `output`.
 		 * @returns {Object}
-		 * @returns {Function} return.input Buffer's input method.
+		 * @returns {Function} return.input Buffer&#39;s input method.
 		 * @returns {Function} return.reset Resets buffered events &amp;mdash; `output` will not be executed
 		 * until next `input` is triggered.
 		 */
@@ -1124,7 +1124,7 @@
 		 * @param {Boolean} [withAppend] Whether to append created elements to the `doc`.
 		 */
 		enableHtml5Elements: function( doc, withAppend ) {
-			var els = 'abbr,article,aside,audio,bdi,canvas,data,datalist,details,figcaption,figure,footer,header,hgroup,mark,meter,nav,output,progress,section,summary,time,video'.split( ',' ),
+			var els = &#39;abbr,article,aside,audio,bdi,canvas,data,datalist,details,figcaption,figure,footer,header,hgroup,mark,meter,nav,output,progress,section,summary,time,video&#39;.split( &#39;,&#39; ),
 				i = els.length,
 				el;
 

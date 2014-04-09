@@ -24,19 +24,19 @@
 </span> * @fileOverview AutoGrow plugin.
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
-	CKEDITOR.plugins.add( 'autogrow', {
+	CKEDITOR.plugins.add( &#39;autogrow&#39;, {
 		init: function( editor ) {
 			// This feature is available only for themed ui instance.
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
 				return;
 
-			editor.on( 'instanceReady', function() {
+			editor.on( &#39;instanceReady&#39;, function() {
 				// Simply set auto height with div wysiwyg.
 				if ( editor.editable().isInline() )
-					editor.ui.space( 'contents' ).setStyle( 'height', 'auto' );
+					editor.ui.space( &#39;contents&#39; ).setStyle( &#39;height&#39;, &#39;auto&#39; );
 				// For classic (`iframe`-based) wysiwyg we need to resize the editor.
 				else
 					initIframeAutogrow( editor );
@@ -55,7 +55,7 @@
 			configMaxHeight = editor.config.autoGrow_maxHeight || Infinity,
 			maxHeightIsUnlimited = !editor.config.autoGrow_maxHeight;
 
-		editor.addCommand( 'autogrow', {
+		editor.addCommand( &#39;autogrow&#39;, {
 			exec: resizeEditor,
 			modes: { wysiwyg: 1 },
 			readOnly: 1,
@@ -67,7 +67,7 @@
 		for ( var eventName in eventsList ) {
 			editor.on( eventName, function( evt ) {
 				// Some time is required for insertHtml, and it gives other events better performance as well.
-				if ( evt.editor.mode == 'wysiwyg' ) {
+				if ( evt.editor.mode == &#39;wysiwyg&#39; ) {
 					setTimeout( function() {
 						if ( isNotResizable() ) {
 							lastHeight = null;
@@ -78,7 +78,7 @@
 
 						// Second pass to make correction upon the first resize, e.g. scrollbar.
 						// If height is unlimited vertical scrollbar was removed in the first
-						// resizeEditor() call, so we don't need the second pass.
+						// resizeEditor() call, so we don&#39;t need the second pass.
 						if ( !maxHeightIsUnlimited )
 							resizeEditor();
 					}, 100 );
@@ -87,36 +87,36 @@
 		}
 
 		// Coordinate with the &quot;maximize&quot; plugin. (#9311)
-		editor.on( 'afterCommandExec', function( evt ) {
-			if ( evt.data.name == 'maximize' &amp;&amp; evt.editor.mode == 'wysiwyg' ) {
+		editor.on( &#39;afterCommandExec&#39;, function( evt ) {
+			if ( evt.data.name == &#39;maximize&#39; &amp;&amp; evt.editor.mode == &#39;wysiwyg&#39; ) {
 				if ( evt.data.command.state == CKEDITOR.TRISTATE_ON )
-					scrollable.removeStyle( 'overflow-y' );
+					scrollable.removeStyle( &#39;overflow-y&#39; );
 				else
 					resizeEditor();
 			}
 		} );
 
-		editor.on( 'contentDom', refreshCache );
+		editor.on( &#39;contentDom&#39;, refreshCache );
 
 		refreshCache();
-		editor.config.autoGrow_onStartup &amp;&amp; editor.execCommand( 'autogrow' );
+		editor.config.autoGrow_onStartup &amp;&amp; editor.execCommand( &#39;autogrow&#39; );
 
 		function refreshCache() {
 			doc = editor.document;
-			markerContainer = doc[ CKEDITOR.env.ie ? 'getBody' : 'getDocumentElement' ]();
+			markerContainer = doc[ CKEDITOR.env.ie ? &#39;getBody&#39; : &#39;getDocumentElement&#39; ]();
 
 			// Quirks mode overflows body, standards overflows document element.
 			scrollable = CKEDITOR.env.quirks ? doc.getBody() : doc.getDocumentElement();
 
 			marker = CKEDITOR.dom.element.createFromHtml(
-				'&lt;span style=&quot;margin:0;padding:0;border:0;clear:both;width:1px;height:1px;display:block;&quot;&gt;' +
-					( CKEDITOR.env.webkit ? '&amp;nbsp;' : '' ) +
-				'&lt;/span&gt;',
+				&#39;&lt;span style=&quot;margin:0;padding:0;border:0;clear:both;width:1px;height:1px;display:block;&quot;&gt;&#39; +
+					( CKEDITOR.env.webkit ? &#39;&amp;nbsp;&#39; : &#39;&#39; ) +
+				&#39;&lt;/span&gt;&#39;,
 				doc );
 		}
 
 		function isNotResizable() {
-			var maximizeCommand = editor.getCommand( 'maximize' );
+			var maximizeCommand = editor.getCommand( &#39;maximize&#39; );
 
 			return (
 				!editor.window ||
@@ -125,7 +125,7 @@
 			);
 		}
 
-		// Actual content height, figured out by appending check the last element's document position.
+		// Actual content height, figured out by appending check the last element&#39;s document position.
 		function contentHeight() {
 			// Append a temporary marker element.
 			markerContainer.append( marker );
@@ -136,10 +136,10 @@
 		}
 
 		function resizeEditor() {
-			// Hide scroll because we won't need it at all.
-			// Thanks to that we'll need only one resizeEditor() call per change.
+			// Hide scroll because we won&#39;t need it at all.
+			// Thanks to that we&#39;ll need only one resizeEditor() call per change.
 			if ( maxHeightIsUnlimited )
-				scrollable.setStyle( 'overflow-y', 'hidden' );
+				scrollable.setStyle( &#39;overflow-y&#39;, &#39;hidden&#39; );
 
 			var currentHeight = editor.window.getViewPaneSize().height,
 				newHeight = contentHeight();
@@ -152,16 +152,16 @@
 			// #10196 Do not resize editor if new height is equal
 			// to the one set by previous resizeEditor() call.
 			if ( newHeight != currentHeight &amp;&amp; lastHeight != newHeight ) {
-				newHeight = editor.fire( 'autoGrow', { currentHeight: currentHeight, newHeight: newHeight } ).newHeight;
-				editor.resize( editor.container.getStyle( 'width' ), newHeight, true );
+				newHeight = editor.fire( &#39;autoGrow&#39;, { currentHeight: currentHeight, newHeight: newHeight } ).newHeight;
+				editor.resize( editor.container.getStyle( &#39;width&#39; ), newHeight, true );
 				lastHeight = newHeight;
 			}
 
 			if ( !maxHeightIsUnlimited ) {
 				if ( newHeight &lt; configMaxHeight &amp;&amp; scrollable.$.scrollHeight &gt; scrollable.$.clientHeight )
-					scrollable.setStyle( 'overflow-y', 'hidden' );
+					scrollable.setStyle( &#39;overflow-y&#39;, &#39;hidden&#39; );
 				else
-					scrollable.removeStyle( 'overflow-y' );
+					scrollable.removeStyle( &#39;overflow-y&#39; );
 			}
 		}
 	}

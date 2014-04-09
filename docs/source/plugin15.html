@@ -21,15 +21,15 @@
  */
 
 CKEDITOR.plugins.colordialog = {
-	requires: 'dialog',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
+	requires: &#39;dialog&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		var cmd = new CKEDITOR.dialogCommand( 'colordialog' );
+		var cmd = new CKEDITOR.dialogCommand( &#39;colordialog&#39; );
 		cmd.editorFocus = false;
 
-		editor.addCommand( 'colordialog', cmd );
+		editor.addCommand( &#39;colordialog&#39;, cmd );
 
-		CKEDITOR.dialog.add( 'colordialog', this.path + 'dialogs/colordialog.js' );
+		CKEDITOR.dialog.add( &#39;colordialog&#39;, this.path + &#39;dialogs/colordialog.js&#39; );
 
 <span id='CKEDITOR-editor-method-getColorFromDialog'>		/**
 </span>		 * Open up color dialog and to receive the selected color.
@@ -42,25 +42,25 @@ CKEDITOR.plugins.colordialog = {
 		editor.getColorFromDialog = function( callback, scope ) {
 			var onClose = function( evt ) {
 				releaseHandlers( this );
-				var color = evt.name == 'ok' ? this.getValueOf( 'picker', 'selectedColor' ) : null;
+				var color = evt.name == &#39;ok&#39; ? this.getValueOf( &#39;picker&#39;, &#39;selectedColor&#39; ) : null;
 				callback.call( scope, color );
 			};
 			var releaseHandlers = function( dialog ) {
-				dialog.removeListener( 'ok', onClose );
-				dialog.removeListener( 'cancel', onClose );
+				dialog.removeListener( &#39;ok&#39;, onClose );
+				dialog.removeListener( &#39;cancel&#39;, onClose );
 			};
 			var bindToDialog = function( dialog ) {
-				dialog.on( 'ok', onClose );
-				dialog.on( 'cancel', onClose );
+				dialog.on( &#39;ok&#39;, onClose );
+				dialog.on( &#39;cancel&#39;, onClose );
 			};
 
-			editor.execCommand( 'colordialog' );
+			editor.execCommand( &#39;colordialog&#39; );
 
 			if ( editor._.storedDialogs &amp;&amp; editor._.storedDialogs.colordialog )
 				bindToDialog( editor._.storedDialogs.colordialog );
 			else {
-				CKEDITOR.on( 'dialogDefinition', function( e ) {
-					if ( e.data.name != 'colordialog' )
+				CKEDITOR.on( &#39;dialogDefinition&#39;, function( e ) {
+					if ( e.data.name != &#39;colordialog&#39; )
 						return;
 
 					var definition = e.data.definition;
@@ -71,7 +71,7 @@ CKEDITOR.plugins.colordialog = {
 							return function() {
 								bindToDialog( this );
 								definition.onLoad = orginal;
-								if ( typeof orginal == 'function' )
+								if ( typeof orginal == &#39;function&#39; )
 									orginal.call( this );
 							};
 						} );
@@ -83,7 +83,7 @@ CKEDITOR.plugins.colordialog = {
 	}
 };
 
-CKEDITOR.plugins.add( 'colordialog', CKEDITOR.plugins.colordialog );
+CKEDITOR.plugins.add( &#39;colordialog&#39;, CKEDITOR.plugins.colordialog );
 </pre>
 </body>
 </html>

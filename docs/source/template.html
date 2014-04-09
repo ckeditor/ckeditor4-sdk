@@ -28,8 +28,8 @@
 ( function() {
 	var cache = {},
 		rePlaceholder = /{([^}]+)}/g,
-		reQuote = /'/g,
-		reEscapableChars = /([\\'])/g,
+		reQuote = /&#39;/g,
+		reEscapableChars = /([\\&#39;])/g,
 		reNewLine = /\n/g,
 		reCarriageReturn = /\r/g;
 
@@ -37,8 +37,8 @@
 </span></span>	 * Lightweight template used to build the output string from variables.
 	 *
 	 *		// HTML template for presenting a label UI.
-	 *		var tpl = new CKEDITOR.template( '&lt;div class=&quot;{cls}&quot;&gt;{label}&lt;/div&gt;' );
-	 *		alert( tpl.output( { cls: 'cke-label', label: 'foo'} ) ); // '&lt;div class=&quot;cke-label&quot;&gt;foo&lt;/div&gt;'
+	 *		var tpl = new CKEDITOR.template( &#39;&lt;div class=&quot;{cls}&quot;&gt;{label}&lt;/div&gt;&#39; );
+	 *		alert( tpl.output( { cls: &#39;cke-label&#39;, label: &#39;foo&#39;} ) ); // &#39;&lt;div class=&quot;cke-label&quot;&gt;foo&lt;/div&gt;&#39;
 	 *
 	 * @class
 	 * @constructor Creates a template class instance.
@@ -47,26 +47,26 @@
 	CKEDITOR.template = function( source ) {
 		// Builds an optimized function body for the output() method, focused on performance.
 		// For example, if we have this &quot;source&quot;:
-		//	'&lt;div style=&quot;{style}&quot;&gt;{editorName}&lt;/div&gt;'
+		//	&#39;&lt;div style=&quot;{style}&quot;&gt;{editorName}&lt;/div&gt;&#39;
 		// ... the resulting function body will be (apart from the &quot;buffer&quot; handling):
-		//	return [ '&lt;div style=&quot;', data['style'] == undefined ? '{style}' : data['style'], '&quot;&gt;', data['editorName'] == undefined ? '{editorName}' : data['editorName'], '&lt;/div&gt;' ].join('');
+		//	return [ &#39;&lt;div style=&quot;&#39;, data[&#39;style&#39;] == undefined ? &#39;{style}&#39; : data[&#39;style&#39;], &#39;&quot;&gt;&#39;, data[&#39;editorName&#39;] == undefined ? &#39;{editorName}&#39; : data[&#39;editorName&#39;], &#39;&lt;/div&gt;&#39; ].join(&#39;&#39;);
 
 		// Try to read from the cache.
 		if ( cache[ source ] )
 			this.output = cache[ source ];
 		else {
 			var fn = source
-				// Escape chars like slash &quot;\&quot; or single quote &quot;'&quot;.
-				.replace( reEscapableChars, '\\$1' )
-				.replace( reNewLine, '\\n' )
-				.replace( reCarriageReturn, '\\r' )
+				// Escape chars like slash &quot;\&quot; or single quote &quot;&#39;&quot;.
+				.replace( reEscapableChars, &#39;\\$1&#39; )
+				.replace( reNewLine, &#39;\\n&#39; )
+				.replace( reCarriageReturn, &#39;\\r&#39; )
 				// Inject the template keys replacement.
 				.replace( rePlaceholder, function( m, key ) {
-					return &quot;',data['&quot; + key + &quot;']==undefined?'{&quot; + key + &quot;}':data['&quot; + key + &quot;'],'&quot;;
+					return &quot;&#39;,data[&#39;&quot; + key + &quot;&#39;]==undefined?&#39;{&quot; + key + &quot;}&#39;:data[&#39;&quot; + key + &quot;&#39;],&#39;&quot;;
 				} );
 
-			fn = &quot;return buffer?buffer.push('&quot; + fn + &quot;'):['&quot; + fn + &quot;'].join('');&quot;;
-			this.output = cache[ source ] = Function( 'data', 'buffer', fn );
+			fn = &quot;return buffer?buffer.push(&#39;&quot; + fn + &quot;&#39;):[&#39;&quot; + fn + &quot;&#39;].join(&#39;&#39;);&quot;;
+			this.output = cache[ source ] = Function( &#39;data&#39;, &#39;buffer&#39;, fn );
 		}
 	};
 } )();

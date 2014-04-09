@@ -22,7 +22,7 @@
 
 <span id='global-property-'>/**
 </span> * @fileOverview The &quot;show border&quot; plugin. The command display visible outline
- * border line around all table elements if table doesn't have a none-zero 'border' attribute specified.
+ * border line around all table elements if table doesn&#39;t have a none-zero &#39;border&#39; attribute specified.
  */
 
 ( function() {
@@ -38,67 +38,67 @@
 
 		refresh: function( editor ) {
 			if ( editor.document ) {
-				var funcName = ( this.state == CKEDITOR.TRISTATE_ON ) ? 'attachClass' : 'removeClass';
-				editor.editable()[ funcName ]( 'cke_show_borders' );
+				var funcName = ( this.state == CKEDITOR.TRISTATE_ON ) ? &#39;attachClass&#39; : &#39;removeClass&#39;;
+				editor.editable()[ funcName ]( &#39;cke_show_borders&#39; );
 			}
 		}
 	};
 
-	var showBorderClassName = 'cke_show_border';
+	var showBorderClassName = &#39;cke_show_border&#39;;
 
-	CKEDITOR.plugins.add( 'showborders', {
-		modes: { 'wysiwyg': 1 },
+	CKEDITOR.plugins.add( &#39;showborders&#39;, {
+		modes: { &#39;wysiwyg&#39;: 1 },
 
 		onLoad: function() {
 			var cssStyleText,
 				cssTemplate =
-			// TODO: For IE6, we don't have child selector support,
+			// TODO: For IE6, we don&#39;t have child selector support,
 			// where nested table cells could be incorrect.
 			( CKEDITOR.env.ie6Compat ? [
-				'.%1 table.%2,',
-					'.%1 table.%2 td, .%1 table.%2 th',
-					'{',
-					'border : #d3d3d3 1px dotted',
-					'}'
+				&#39;.%1 table.%2,&#39;,
+					&#39;.%1 table.%2 td, .%1 table.%2 th&#39;,
+					&#39;{&#39;,
+					&#39;border : #d3d3d3 1px dotted&#39;,
+					&#39;}&#39;
 				] : [
-				'.%1 table.%2,',
-				'.%1 table.%2 &gt; tr &gt; td, .%1 table.%2 &gt; tr &gt; th,',
-				'.%1 table.%2 &gt; tbody &gt; tr &gt; td, .%1 table.%2 &gt; tbody &gt; tr &gt; th,',
-				'.%1 table.%2 &gt; thead &gt; tr &gt; td, .%1 table.%2 &gt; thead &gt; tr &gt; th,',
-				'.%1 table.%2 &gt; tfoot &gt; tr &gt; td, .%1 table.%2 &gt; tfoot &gt; tr &gt; th',
-				'{',
-					'border : #d3d3d3 1px dotted',
-				'}'
-				] ).join( '' );
+				&#39;.%1 table.%2,&#39;,
+				&#39;.%1 table.%2 &gt; tr &gt; td, .%1 table.%2 &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; tbody &gt; tr &gt; td, .%1 table.%2 &gt; tbody &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; thead &gt; tr &gt; td, .%1 table.%2 &gt; thead &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; tfoot &gt; tr &gt; td, .%1 table.%2 &gt; tfoot &gt; tr &gt; th&#39;,
+				&#39;{&#39;,
+					&#39;border : #d3d3d3 1px dotted&#39;,
+				&#39;}&#39;
+				] ).join( &#39;&#39; );
 
-			cssStyleText = cssTemplate.replace( /%2/g, showBorderClassName ).replace( /%1/g, 'cke_show_borders ' );
+			cssStyleText = cssTemplate.replace( /%2/g, showBorderClassName ).replace( /%1/g, &#39;cke_show_borders &#39; );
 
 			CKEDITOR.addCss( cssStyleText );
 		},
 
 		init: function( editor ) {
 
-			var command = editor.addCommand( 'showborders', commandDefinition );
+			var command = editor.addCommand( &#39;showborders&#39;, commandDefinition );
 			command.canUndo = false;
 
 			if ( editor.config.startupShowBorders !== false )
 				command.setState( CKEDITOR.TRISTATE_ON );
 
 			// Refresh the command on setData.
-			editor.on( 'mode', function() {
+			editor.on( &#39;mode&#39;, function() {
 				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
 					command.refresh( editor );
 			}, null, null, 100 );
 
 			// Refresh the command on wysiwyg frame reloads.
-			editor.on( 'contentDom', function() {
+			editor.on( &#39;contentDom&#39;, function() {
 				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
 					command.refresh( editor );
 			} );
 
-			editor.on( 'removeFormatCleanup', function( evt ) {
+			editor.on( &#39;removeFormatCleanup&#39;, function( evt ) {
 				var element = evt.data;
-				if ( editor.getCommand( 'showborders' ).state == CKEDITOR.TRISTATE_ON &amp;&amp; element.is( 'table' ) &amp;&amp; ( !element.hasAttribute( 'border' ) || parseInt( element.getAttribute( 'border' ), 10 ) &lt;= 0 ) )
+				if ( editor.getCommand( &#39;showborders&#39; ).state == CKEDITOR.TRISTATE_ON &amp;&amp; element.is( &#39;table&#39; ) &amp;&amp; ( !element.hasAttribute( &#39;border&#39; ) || parseInt( element.getAttribute( &#39;border&#39; ), 10 ) &lt;= 0 ) )
 					element.addClass( showBorderClassName );
 			} );
 		},
@@ -111,13 +111,13 @@
 			if ( dataFilter ) {
 				dataFilter.addRules( {
 					elements: {
-						'table': function( element ) {
+						&#39;table&#39;: function( element ) {
 							var attributes = element.attributes,
-								cssClass = attributes[ 'class' ],
+								cssClass = attributes[ &#39;class&#39; ],
 								border = parseInt( attributes.border, 10 );
 
 							if ( ( !border || border &lt;= 0 ) &amp;&amp; ( !cssClass || cssClass.indexOf( showBorderClassName ) == -1 ) )
-								attributes[ 'class' ] = ( cssClass || '' ) + ' ' + showBorderClassName;
+								attributes[ &#39;class&#39; ] = ( cssClass || &#39;&#39; ) + &#39; &#39; + showBorderClassName;
 						}
 					}
 				} );
@@ -126,11 +126,11 @@
 			if ( htmlFilter ) {
 				htmlFilter.addRules( {
 					elements: {
-						'table': function( table ) {
+						&#39;table&#39;: function( table ) {
 							var attributes = table.attributes,
-								cssClass = attributes[ 'class' ];
+								cssClass = attributes[ &#39;class&#39; ];
 
-							cssClass &amp;&amp; ( attributes[ 'class' ] = cssClass.replace( showBorderClassName, '' ).replace( /\s{2}/, ' ' ).replace( /^\s+|\s+$/, '' ) );
+							cssClass &amp;&amp; ( attributes[ &#39;class&#39; ] = cssClass.replace( showBorderClassName, &#39;&#39; ).replace( /\s{2}/, &#39; &#39; ).replace( /^\s+|\s+$/, &#39;&#39; ) );
 						}
 					}
 				} );
@@ -139,31 +139,31 @@
 	} );
 
 	// Table dialog must be aware of it.
-	CKEDITOR.on( 'dialogDefinition', function( ev ) {
+	CKEDITOR.on( &#39;dialogDefinition&#39;, function( ev ) {
 		var dialogName = ev.data.name;
 
-		if ( dialogName == 'table' || dialogName == 'tableProperties' ) {
+		if ( dialogName == &#39;table&#39; || dialogName == &#39;tableProperties&#39; ) {
 			var dialogDefinition = ev.data.definition,
-				infoTab = dialogDefinition.getContents( 'info' ),
-				borderField = infoTab.get( 'txtBorder' ),
+				infoTab = dialogDefinition.getContents( &#39;info&#39; ),
+				borderField = infoTab.get( &#39;txtBorder&#39; ),
 				originalCommit = borderField.commit;
 
 			borderField.commit = CKEDITOR.tools.override( originalCommit, function( org ) {
 				return function( data, selectedTable ) {
 					org.apply( this, arguments );
 					var value = parseInt( this.getValue(), 10 );
-					selectedTable[ ( !value || value &lt;= 0 ) ? 'addClass' : 'removeClass' ]( showBorderClassName );
+					selectedTable[ ( !value || value &lt;= 0 ) ? &#39;addClass&#39; : &#39;removeClass&#39; ]( showBorderClassName );
 				};
 			} );
 
-			var advTab = dialogDefinition.getContents( 'advanced' ),
-				classField = advTab &amp;&amp; advTab.get( 'advCSSClasses' );
+			var advTab = dialogDefinition.getContents( &#39;advanced&#39; ),
+				classField = advTab &amp;&amp; advTab.get( &#39;advCSSClasses&#39; );
 
 			if ( classField ) {
 				classField.setup = CKEDITOR.tools.override( classField.setup, function( originalSetup ) {
 					return function() {
 						originalSetup.apply( this, arguments );
-						this.setValue( this.getValue().replace( /cke_show_border/, '' ) );
+						this.setValue( this.getValue().replace( /cke_show_border/, &#39;&#39; ) );
 					};
 				} );
 
@@ -171,8 +171,8 @@
 					return function( data, element ) {
 						originalCommit.apply( this, arguments );
 
-						if ( !parseInt( element.getAttribute( 'border' ), 10 ) )
-							element.addClass( 'cke_show_border' );
+						if ( !parseInt( element.getAttribute( &#39;border&#39; ), 10 ) )
+							element.addClass( &#39;cke_show_border&#39; );
 					};
 				} );
 			}

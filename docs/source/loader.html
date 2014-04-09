@@ -25,7 +25,7 @@
  *		load core scripts and their dependencies from _source.
  */
 
-if ( typeof CKEDITOR == 'undefined' )
+if ( typeof CKEDITOR == &#39;undefined&#39; )
 	CKEDITOR = {};
 
 if ( !CKEDITOR.loader ) {
@@ -38,59 +38,59 @@ if ( !CKEDITOR.loader ) {
 	CKEDITOR.loader = ( function() {
 		// Table of script names and their dependencies.
 		var scripts = {
-			'_bootstrap': [ 'config', 'creators/inline', 'creators/themedui', 'editable', 'ckeditor', 'plugins', 'scriptloader', 'style', 'tools', /* The following are entries that we want to force loading at the end to avoid dependence recursion */ 'dom/comment', 'dom/elementpath', 'dom/text', 'dom/rangelist', 'skin' ],
-			'ckeditor': [ 'ckeditor_basic', 'dom', 'dtd', 'dom/document', 'dom/element', 'dom/iterator', 'editor', 'event', 'htmldataprocessor', 'htmlparser', 'htmlparser/element', 'htmlparser/fragment', 'htmlparser/filter', 'htmlparser/basicwriter', 'template', 'tools' ],
-			'ckeditor_base': [],
-			'ckeditor_basic': [ 'editor_basic', 'env', 'event' ],
-			'command': [],
-			'config': [ 'ckeditor_base' ],
-			'dom': [],
-			'dom/comment': [ 'dom/node' ],
-			'dom/document': [ 'dom/node', 'dom/window' ],
-			'dom/documentfragment': [ 'dom/element' ],
-			'dom/element': [ 'dom', 'dom/document', 'dom/domobject', 'dom/node', 'dom/nodelist', 'tools' ],
-			'dom/elementpath': [ 'dom/element' ],
-			'dom/event': [],
-			'dom/iterator': [ 'dom/range' ],
-			'dom/node': [ 'dom/domobject', 'tools' ],
-			'dom/nodelist': [ 'dom/node' ],
-			'dom/domobject': [ 'dom/event' ],
-			'dom/range': [ 'dom/document', 'dom/documentfragment', 'dom/element', 'dom/walker' ],
-			'dom/rangelist': [ 'dom/range' ],
-			'dom/text': [ 'dom/node', 'dom/domobject' ],
-			'dom/walker': [ 'dom/node' ],
-			'dom/window': [ 'dom/domobject' ],
-			'dtd': [ 'tools' ],
-			'editable': [ 'editor', 'tools' ],
-			'editor': [ 'command', 'config', 'editor_basic', 'filter', 'focusmanager', 'keystrokehandler', 'lang', 'plugins', 'tools', 'ui' ],
-			'editor_basic': [ 'event' ],
-			'env': [],
-			'event': [],
-			'filter': [ 'dtd', 'tools' ],
-			'focusmanager': [],
-			'htmldataprocessor': [ 'htmlparser', 'htmlparser/basicwriter', 'htmlparser/fragment', 'htmlparser/filter' ],
-			'htmlparser': [],
-			'htmlparser/comment': [ 'htmlparser', 'htmlparser/node' ],
-			'htmlparser/element': [ 'htmlparser', 'htmlparser/fragment', 'htmlparser/node' ],
-			'htmlparser/fragment': [ 'htmlparser', 'htmlparser/comment', 'htmlparser/text', 'htmlparser/cdata' ],
-			'htmlparser/text': [ 'htmlparser', 'htmlparser/node' ],
-			'htmlparser/cdata': [ 'htmlparser', 'htmlparser/node' ],
-			'htmlparser/filter': [ 'htmlparser' ],
-			'htmlparser/basicwriter': [ 'htmlparser' ],
-			'htmlparser/node': [ 'htmlparser' ],
-			'keystrokehandler': [ 'event' ],
-			'lang': [],
-			'plugins': [ 'resourcemanager' ],
-			'resourcemanager': [ 'scriptloader', 'tools' ],
-			'scriptloader': [ 'dom/element', 'env' ],
-			'selection': [ 'dom/range', 'dom/walker' ],
-			'skin': [],
-			'style': [ 'selection' ],
-			'template': [],
-			'tools': [ 'env' ],
-			'ui': [],
-			'creators/themedui': [],
-			'creators/inline': []
+			&#39;_bootstrap&#39;: [ &#39;config&#39;, &#39;creators/inline&#39;, &#39;creators/themedui&#39;, &#39;editable&#39;, &#39;ckeditor&#39;, &#39;plugins&#39;, &#39;scriptloader&#39;, &#39;style&#39;, &#39;tools&#39;, /* The following are entries that we want to force loading at the end to avoid dependence recursion */ &#39;dom/comment&#39;, &#39;dom/elementpath&#39;, &#39;dom/text&#39;, &#39;dom/rangelist&#39;, &#39;skin&#39; ],
+			&#39;ckeditor&#39;: [ &#39;ckeditor_basic&#39;, &#39;dom&#39;, &#39;dtd&#39;, &#39;dom/document&#39;, &#39;dom/element&#39;, &#39;dom/iterator&#39;, &#39;editor&#39;, &#39;event&#39;, &#39;htmldataprocessor&#39;, &#39;htmlparser&#39;, &#39;htmlparser/element&#39;, &#39;htmlparser/fragment&#39;, &#39;htmlparser/filter&#39;, &#39;htmlparser/basicwriter&#39;, &#39;template&#39;, &#39;tools&#39; ],
+			&#39;ckeditor_base&#39;: [],
+			&#39;ckeditor_basic&#39;: [ &#39;editor_basic&#39;, &#39;env&#39;, &#39;event&#39; ],
+			&#39;command&#39;: [],
+			&#39;config&#39;: [ &#39;ckeditor_base&#39; ],
+			&#39;dom&#39;: [],
+			&#39;dom/comment&#39;: [ &#39;dom/node&#39; ],
+			&#39;dom/document&#39;: [ &#39;dom/node&#39;, &#39;dom/window&#39; ],
+			&#39;dom/documentfragment&#39;: [ &#39;dom/element&#39; ],
+			&#39;dom/element&#39;: [ &#39;dom&#39;, &#39;dom/document&#39;, &#39;dom/domobject&#39;, &#39;dom/node&#39;, &#39;dom/nodelist&#39;, &#39;tools&#39; ],
+			&#39;dom/elementpath&#39;: [ &#39;dom/element&#39; ],
+			&#39;dom/event&#39;: [],
+			&#39;dom/iterator&#39;: [ &#39;dom/range&#39; ],
+			&#39;dom/node&#39;: [ &#39;dom/domobject&#39;, &#39;tools&#39; ],
+			&#39;dom/nodelist&#39;: [ &#39;dom/node&#39; ],
+			&#39;dom/domobject&#39;: [ &#39;dom/event&#39; ],
+			&#39;dom/range&#39;: [ &#39;dom/document&#39;, &#39;dom/documentfragment&#39;, &#39;dom/element&#39;, &#39;dom/walker&#39; ],
+			&#39;dom/rangelist&#39;: [ &#39;dom/range&#39; ],
+			&#39;dom/text&#39;: [ &#39;dom/node&#39;, &#39;dom/domobject&#39; ],
+			&#39;dom/walker&#39;: [ &#39;dom/node&#39; ],
+			&#39;dom/window&#39;: [ &#39;dom/domobject&#39; ],
+			&#39;dtd&#39;: [ &#39;tools&#39; ],
+			&#39;editable&#39;: [ &#39;editor&#39;, &#39;tools&#39; ],
+			&#39;editor&#39;: [ &#39;command&#39;, &#39;config&#39;, &#39;editor_basic&#39;, &#39;filter&#39;, &#39;focusmanager&#39;, &#39;keystrokehandler&#39;, &#39;lang&#39;, &#39;plugins&#39;, &#39;tools&#39;, &#39;ui&#39; ],
+			&#39;editor_basic&#39;: [ &#39;event&#39; ],
+			&#39;env&#39;: [],
+			&#39;event&#39;: [],
+			&#39;filter&#39;: [ &#39;dtd&#39;, &#39;tools&#39; ],
+			&#39;focusmanager&#39;: [],
+			&#39;htmldataprocessor&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/basicwriter&#39;, &#39;htmlparser/fragment&#39;, &#39;htmlparser/filter&#39; ],
+			&#39;htmlparser&#39;: [],
+			&#39;htmlparser/comment&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/node&#39; ],
+			&#39;htmlparser/element&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/fragment&#39;, &#39;htmlparser/node&#39; ],
+			&#39;htmlparser/fragment&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/comment&#39;, &#39;htmlparser/text&#39;, &#39;htmlparser/cdata&#39; ],
+			&#39;htmlparser/text&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/node&#39; ],
+			&#39;htmlparser/cdata&#39;: [ &#39;htmlparser&#39;, &#39;htmlparser/node&#39; ],
+			&#39;htmlparser/filter&#39;: [ &#39;htmlparser&#39; ],
+			&#39;htmlparser/basicwriter&#39;: [ &#39;htmlparser&#39; ],
+			&#39;htmlparser/node&#39;: [ &#39;htmlparser&#39; ],
+			&#39;keystrokehandler&#39;: [ &#39;event&#39; ],
+			&#39;lang&#39;: [],
+			&#39;plugins&#39;: [ &#39;resourcemanager&#39; ],
+			&#39;resourcemanager&#39;: [ &#39;scriptloader&#39;, &#39;tools&#39; ],
+			&#39;scriptloader&#39;: [ &#39;dom/element&#39;, &#39;env&#39; ],
+			&#39;selection&#39;: [ &#39;dom/range&#39;, &#39;dom/walker&#39; ],
+			&#39;skin&#39;: [],
+			&#39;style&#39;: [ &#39;selection&#39; ],
+			&#39;template&#39;: [],
+			&#39;tools&#39;: [ &#39;env&#39; ],
+			&#39;ui&#39;: [],
+			&#39;creators/themedui&#39;: [],
+			&#39;creators/inline&#39;: []
 		};
 
 		var basePath = ( function() {
@@ -100,8 +100,8 @@ if ( !CKEDITOR.loader ) {
 				return CKEDITOR.basePath;
 
 			// Find out the editor directory path, based on its &lt;script&gt; tag.
-			var path = '';
-			var scripts = document.getElementsByTagName( 'script' );
+			var path = &#39;&#39;;
+			var scripts = document.getElementsByTagName( &#39;script&#39; );
 
 			for ( var i = 0; i &lt; scripts.length; i++ ) {
 				var match = scripts[ i ].src.match( /(^|.*?[\\\/])(?:_source\/)?core\/loader.js(?:\?.*)?$/i );
@@ -114,9 +114,9 @@ if ( !CKEDITOR.loader ) {
 
 			// In IE (only) the script.src string is the raw valued entered in the
 			// HTML. Other browsers return the full resolved URL instead.
-			if ( path.indexOf( '://' ) == -1 ) {
+			if ( path.indexOf( &#39;://&#39; ) == -1 ) {
 				// Absolute path.
-				if ( path.indexOf( '/' ) === 0 )
+				if ( path.indexOf( &#39;/&#39; ) === 0 )
 					path = location.href.match( /^.*?:\/\/[^\/]*/ )[ 0 ] + path;
 				// Relative path.
 				else
@@ -130,14 +130,14 @@ if ( !CKEDITOR.loader ) {
 		/*																				// %REMOVE_LINE%
 		 * The production implementation contains a fixed timestamp						// %REMOVE_LINE%
 		 * generated by the releaser													// %REMOVE_LINE%
-		var timestamp = '%TIMESTAMP%';
+		var timestamp = &#39;%TIMESTAMP%&#39;;
 		 */ // %REMOVE_LINE%
 
 		var getUrl = function( resource ) {
 				if ( CKEDITOR &amp;&amp; CKEDITOR.getUrl )
 					return CKEDITOR.getUrl( resource );
 
-				return basePath + resource + ( resource.indexOf( '?' ) &gt;= 0 ? '&amp;' : '?' ) + 't=' + timestamp;
+				return basePath + resource + ( resource.indexOf( &#39;?&#39; ) &gt;= 0 ? &#39;&amp;&#39; : &#39;?&#39; ) + &#39;t=&#39; + timestamp;
 			};
 
 		var pendingLoad = [];
@@ -166,10 +166,10 @@ if ( !CKEDITOR.loader ) {
 				if ( !scriptName )
 					return;
 
-				var scriptSrc = getUrl( 'core/' + scriptName + '.js' );
+				var scriptSrc = getUrl( &#39;core/&#39; + scriptName + &#39;.js&#39; );
 
-				var script = document.createElement( 'script' );
-				script.type = 'text/javascript';
+				var script = document.createElement( &#39;script&#39; );
+				script.type = &#39;text/javascript&#39;;
 				script.src = scriptSrc;
 
 				function onScriptLoaded() {
@@ -186,7 +186,7 @@ if ( !CKEDITOR.loader ) {
 				if ( typeof( script.onreadystatechange ) !== &quot;undefined&quot; ) {
 <span id='global-method-onreadystatechange'>					/** @ignore */
 </span>					script.onreadystatechange = function() {
-						if ( script.readyState == 'loaded' || script.readyState == 'complete' ) {
+						if ( script.readyState == &#39;loaded&#39; || script.readyState == &#39;complete&#39; ) {
 							script.onreadystatechange = null;
 							onScriptLoaded();
 						}
@@ -210,7 +210,7 @@ if ( !CKEDITOR.loader ) {
 			 * synchronous loading, which means that the code to be loaded will
 			 * not necessarily be available after this call.
 			 *
-			 *		CKEDITOR.loader.load( 'dom/element' );
+			 *		CKEDITOR.loader.load( &#39;dom/element&#39; );
 			 *
 			 * @param {String} scriptName
 			 * @param {Boolean} [defer=false]
@@ -218,30 +218,30 @@ if ( !CKEDITOR.loader ) {
 			 */
 			load: function( scriptName, defer ) {
 				// Check if the script has already been loaded.
-				if ( ( 's:' + scriptName ) in this.loadedScripts )
+				if ( ( &#39;s:&#39; + scriptName ) in this.loadedScripts )
 					return;
 
 				// Get the script dependencies list.
 				var dependencies = scripts[ scriptName ];
 				if ( !dependencies )
-					throw 'The script name&quot;' + scriptName + '&quot; is not defined.';
+					throw &#39;The script name&quot;&#39; + scriptName + &#39;&quot; is not defined.&#39;;
 
 				// Mark the script as loaded, even before really loading it, to
 				// avoid cross references recursion.
-				// Prepend script name with 's:' to avoid conflict with Array's methods.
-				this.loadedScripts[ 's:' + scriptName ] = true;
+				// Prepend script name with &#39;s:&#39; to avoid conflict with Array&#39;s methods.
+				this.loadedScripts[ &#39;s:&#39; + scriptName ] = true;
 
 				// Load all dependencies first.
 				for ( var i = 0; i &lt; dependencies.length; i++ )
 					this.load( dependencies[ i ], true );
 
-				var scriptSrc = getUrl( 'core/' + scriptName + '.js' );
+				var scriptSrc = getUrl( &#39;core/&#39; + scriptName + &#39;.js&#39; );
 
 				// Append the &lt;script&gt; element to the DOM.
-				// If the page is fully loaded, we can't use document.write
-				// but if the script is run while the body is loading then it's safe to use it
-				// Unfortunately, Firefox &lt;3.6 doesn't support document.readyState, so it won't get this improvement
-				if ( document.body &amp;&amp; ( !document.readyState || document.readyState == 'complete' ) ) {
+				// If the page is fully loaded, we can&#39;t use document.write
+				// but if the script is run while the body is loading then it&#39;s safe to use it
+				// Unfortunately, Firefox &lt;3.6 doesn&#39;t support document.readyState, so it won&#39;t get this improvement
+				if ( document.body &amp;&amp; ( !document.readyState || document.readyState == &#39;complete&#39; ) ) {
 					pendingLoad.push( scriptName );
 
 					if ( !defer )
@@ -250,7 +250,7 @@ if ( !CKEDITOR.loader ) {
 					// Append this script to the list of loaded scripts.
 					this.loadedScripts.push( scriptName );
 
-					document.write( '&lt;script src=&quot;' + scriptSrc + '&quot; type=&quot;text/javascript&quot;&gt;&lt;\/script&gt;' );
+					document.write( &#39;&lt;script src=&quot;&#39; + scriptSrc + &#39;&quot; type=&quot;text/javascript&quot;&gt;&lt;\/script&gt;&#39; );
 				}
 			}
 		};

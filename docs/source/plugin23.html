@@ -20,33 +20,33 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'docprops', {
-	requires: 'wysiwygarea,dialog,colordialog',
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'docprops,docprops-rtl', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;docprops&#39;, {
+	requires: &#39;wysiwygarea,dialog,colordialog&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;docprops,docprops-rtl&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		var cmd = new CKEDITOR.dialogCommand( 'docProps' );
+		var cmd = new CKEDITOR.dialogCommand( &#39;docProps&#39; );
 		// Only applicable on full page mode.
 		cmd.modes = { wysiwyg: editor.config.fullPage };
 		cmd.allowedContent = {
 			body: {
-				styles: '*',
-				attributes: 'dir'
+				styles: &#39;*&#39;,
+				attributes: &#39;dir&#39;
 			},
 			html: {
-				attributes: 'lang,xml:lang'
+				attributes: &#39;lang,xml:lang&#39;
 			}
 		};
-		cmd.requiredContent = 'body';
+		cmd.requiredContent = &#39;body&#39;;
 
-		editor.addCommand( 'docProps', cmd );
-		CKEDITOR.dialog.add( 'docProps', this.path + 'dialogs/docprops.js' );
+		editor.addCommand( &#39;docProps&#39;, cmd );
+		CKEDITOR.dialog.add( &#39;docProps&#39;, this.path + &#39;dialogs/docprops.js&#39; );
 
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'DocProps', {
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;DocProps&#39;, {
 			label: editor.lang.docprops.label,
-			command: 'docProps',
-			toolbar: 'document,30'
+			command: &#39;docProps&#39;,
+			toolbar: &#39;document,30&#39;
 		} );
 	}
 } );

@@ -25,21 +25,21 @@
  */
 
 // Register a plugin named &quot;newpage&quot;.
-CKEDITOR.plugins.add( 'newpage', {
-	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
-	icons: 'newpage,newpage-rtl', // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;newpage&#39;, {
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;newpage,newpage-rtl&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		editor.addCommand( 'newpage', { modes: { wysiwyg: 1, source: 1 },
+		editor.addCommand( &#39;newpage&#39;, { modes: { wysiwyg: 1, source: 1 },
 
 			exec: function( editor ) {
 				var command = this;
-				editor.setData( editor.config.newpage_html || '', function() {
+				editor.setData( editor.config.newpage_html || &#39;&#39;, function() {
 					editor.focus();
 					// Save the undo snapshot after all document changes are affected. (#4889)
 					setTimeout( function() {
-						editor.fire( 'afterCommandExec', {
-							name: 'newpage',
+						editor.fire( &#39;afterCommandExec&#39;, {
+							name: &#39;newpage&#39;,
 							command: command
 						} );
 						editor.selectionChange();
@@ -50,10 +50,10 @@ CKEDITOR.plugins.add( 'newpage', {
 			async: true
 		} );
 
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( 'NewPage', {
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;NewPage&#39;, {
 			label: editor.lang.newpage.toolbar,
-			command: 'newpage',
-			toolbar: 'document,20'
+			command: &#39;newpage&#39;,
+			toolbar: &#39;document,20&#39;
 		} );
 	}
 } );
@@ -61,9 +61,9 @@ CKEDITOR.plugins.add( 'newpage', {
 <span id='CKEDITOR-config-cfg-newpage_html'>/**
 </span> * The HTML to load in the editor when the &quot;new page&quot; command is executed.
  *
- *		config.newpage_html = '&lt;p&gt;Type your text here.&lt;/p&gt;';
+ *		config.newpage_html = &#39;&lt;p&gt;Type your text here.&lt;/p&gt;&#39;;
  *
- * @cfg {String} [newpage_html='']
+ * @cfg {String} [newpage_html=&#39;&#39;]
  * @member CKEDITOR.config
  */
 </pre>

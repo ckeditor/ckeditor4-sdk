@@ -35,7 +35,7 @@ delete CKEDITOR.loadFullCore;
  * in this object correspond to instance names, and their values contain the
  * {@link CKEDITOR.editor} object representing them.
  *
- *		alert( CKEDITOR.instances.editor1.name ); // 'editor1'
+ *		alert( CKEDITOR.instances.editor1.name ); // &#39;editor1&#39;
  *
  * @property {Object}
  */
@@ -44,7 +44,7 @@ CKEDITOR.instances = {};
 <span id='CKEDITOR-property-document'>/**
 </span> * The document of the window storing the CKEDITOR object.
  *
- *		alert( CKEDITOR.document.getBody().getName() ); // 'body'
+ *		alert( CKEDITOR.document.getBody().getName() ); // &#39;body&#39;
  *
  * @property {CKEDITOR.dom.document}
  */
@@ -59,21 +59,21 @@ CKEDITOR.document = new CKEDITOR.dom.document( document );
 CKEDITOR.add = function( editor ) {
 	CKEDITOR.instances[ editor.name ] = editor;
 
-	editor.on( 'focus', function() {
+	editor.on( &#39;focus&#39;, function() {
 		if ( CKEDITOR.currentInstance != editor ) {
 			CKEDITOR.currentInstance = editor;
-			CKEDITOR.fire( 'currentInstance' );
+			CKEDITOR.fire( &#39;currentInstance&#39; );
 		}
 	} );
 
-	editor.on( 'blur', function() {
+	editor.on( &#39;blur&#39;, function() {
 		if ( CKEDITOR.currentInstance == editor ) {
 			CKEDITOR.currentInstance = null;
-			CKEDITOR.fire( 'currentInstance' );
+			CKEDITOR.fire( &#39;currentInstance&#39; );
 		}
 	} );
 
-	CKEDITOR.fire( 'instance', null, editor );
+	CKEDITOR.fire( &#39;instance&#39;, null, editor );
 };
 
 <span id='CKEDITOR-method-remove'>/**
@@ -106,7 +106,7 @@ CKEDITOR.remove = function( editor ) {
 
 		// Make it possible to customize the template through event.
 		var params = { name: name, source: source };
-		CKEDITOR.fire( 'template', params );
+		CKEDITOR.fire( &#39;template&#39;, params );
 
 		return ( tpls[ name ] = new CKEDITOR.template( params.source ) );
 	};
@@ -133,7 +133,7 @@ CKEDITOR.remove = function( editor ) {
 	 * **Note:** This function should be called before the creation of editor instances.
 	 *
 	 *		// Add styles for all headings inside editable contents.
-	 *		CKEDITOR.addCss( '.cke_editable h1,.cke_editable h2,.cke_editable h3 { border-bottom: 1px dotted red }' );
+	 *		CKEDITOR.addCss( &#39;.cke_editable h1,.cke_editable h2,.cke_editable h3 { border-bottom: 1px dotted red }&#39; );
 	 *
 	 * @param {String} css The style rules to be appended.
 	 * @see CKEDITOR.config#contentsCss
@@ -148,19 +148,19 @@ CKEDITOR.remove = function( editor ) {
 	 * @returns {String} A string containing CSS rules.
 	 */
 	CKEDITOR.getCss = function() {
-		return styles.join( '\n' );
+		return styles.join( &#39;\n&#39; );
 	};
 } )();
 
 // Perform global clean up to free as much memory as possible
 // when there are no instances left
-CKEDITOR.on( 'instanceDestroyed', function() {
+CKEDITOR.on( &#39;instanceDestroyed&#39;, function() {
 	if ( CKEDITOR.tools.isEmpty( this.instances ) )
-		CKEDITOR.fire( 'reset' );
+		CKEDITOR.fire( &#39;reset&#39; );
 } );
 
 // Load the bootstrap script.
-CKEDITOR.loader.load( '_bootstrap' ); // %REMOVE_LINE%
+CKEDITOR.loader.load( &#39;_bootstrap&#39; ); // %REMOVE_LINE%
 
 // Tri-state constants.
 <span id='CKEDITOR-property-TRISTATE_ON'>/**
@@ -194,7 +194,7 @@ CKEDITOR.TRISTATE_DISABLED = 0;
  *			if ( CKEDITOR.currentInstance )
  *				alert( CKEDITOR.currentInstance.name );
  *			else
- *				alert( 'Please focus an editor first.' );
+ *				alert( &#39;Please focus an editor first.&#39; );
  *		}
  *
  * @property {CKEDITOR.editor} currentInstance
@@ -206,7 +206,7 @@ CKEDITOR.TRISTATE_DISABLED = 0;
  * happen when setting the focus on different editor instances in the page.
  *
  *		var editor; // A variable to store a reference to the current editor.
- *		CKEDITOR.on( 'currentInstance', function() {
+ *		CKEDITOR.on( &#39;currentInstance&#39;, function() {
  *			editor = CKEDITOR.currentInstance;
  *		} );
  *

@@ -26,7 +26,7 @@
  *		the root ckeditor_basic.js file.
  */
 
-if ( CKEDITOR.status == 'unloaded' ) {
+if ( CKEDITOR.status == &#39;unloaded&#39; ) {
 	( function() {
 		CKEDITOR.event.implementOn( CKEDITOR );
 
@@ -43,7 +43,7 @@ if ( CKEDITOR.status == 'unloaded' ) {
 		 */
 		CKEDITOR.loadFullCore = function() {
 			// If the basic code is not ready, just mark it to be loaded.
-			if ( CKEDITOR.status != 'basic_ready' ) {
+			if ( CKEDITOR.status != &#39;basic_ready&#39; ) {
 				CKEDITOR.loadFullCore._load = 1;
 				return;
 			}
@@ -52,12 +52,12 @@ if ( CKEDITOR.status == 'unloaded' ) {
 			delete CKEDITOR.loadFullCore;
 
 			// Append the script to the head.
-			var script = document.createElement( 'script' );
-			script.type = 'text/javascript';
-			script.src = CKEDITOR.basePath + 'ckeditor.js';
-			script.src = CKEDITOR.basePath + 'ckeditor_source.js'; // %REMOVE_LINE%
+			var script = document.createElement( &#39;script&#39; );
+			script.type = &#39;text/javascript&#39;;
+			script.src = CKEDITOR.basePath + &#39;ckeditor.js&#39;;
+			script.src = CKEDITOR.basePath + &#39;ckeditor_source.js&#39;; // %REMOVE_LINE%
 
-			document.getElementsByTagName( 'head' )[ 0 ].appendChild( script );
+			document.getElementsByTagName( &#39;head&#39; )[ 0 ].appendChild( script );
 		};
 
 <span id='CKEDITOR-property-loadFullCoreTimeout'>		/**
@@ -91,7 +91,7 @@ if ( CKEDITOR.status == 'unloaded' ) {
 					if ( !loadFullCore )
 						return;
 
-					CKEDITOR.status = 'basic_ready';
+					CKEDITOR.status = &#39;basic_ready&#39;;
 
 					if ( loadFullCore &amp;&amp; loadFullCore._load )
 						loadFullCore();
@@ -106,7 +106,7 @@ if ( CKEDITOR.status == 'unloaded' ) {
 			CKEDITOR.domReady( onload );
 		} )();
 
-		CKEDITOR.status = 'basic_loaded';
+		CKEDITOR.status = &#39;basic_loaded&#39;;
 	} )();
 }
 </pre>

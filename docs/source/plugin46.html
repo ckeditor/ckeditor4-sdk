@@ -24,21 +24,21 @@
 </span> * @fileOverview [Language](http://ckeditor.com/addon/language) plugin.
  */
 
-'use strict';
+&#39;use strict&#39;;
 
 ( function() {
 
-	var allowedContent = 'span[!lang,!dir]',
-		requiredContent = 'span[lang,dir]';
+	var allowedContent = &#39;span[!lang,!dir]&#39;,
+		requiredContent = &#39;span[lang,dir]&#39;;
 
-	CKEDITOR.plugins.add( 'language', {
-		requires: 'menubutton',
-		lang: 'ar,ca,cs,cy,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ru,sl,sv,uk,zh,zh-cn', // %REMOVE_LINE_CORE%
-		icons: 'language', // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;language&#39;, {
+		requires: &#39;menubutton&#39;,
+		lang: &#39;ar,ca,cs,cy,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ru,sl,sv,uk,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;language&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
 
 		init: function( editor ) {
-			var languagesConfigStrings = ( editor.config.language_list || [ 'ar:Arabic:rtl', 'fr:French', 'es:Spanish' ] ),
+			var languagesConfigStrings = ( editor.config.language_list || [ &#39;ar:Arabic:rtl&#39;, &#39;fr:French&#39;, &#39;es:Spanish&#39; ] ),
 				plugin = this,
 				lang = editor.lang.language,
 				items = {},
@@ -48,15 +48,15 @@
 				i;
 
 			// Registers command.
-			editor.addCommand( 'language', {
+			editor.addCommand( &#39;language&#39;, {
 				allowedContent: allowedContent,
 				requiredContent: requiredContent,
 				contextSensitive: true,
 				exec: function( editor, languageId ) {
-					var item = items[ 'language_' + languageId ];
+					var item = items[ &#39;language_&#39; + languageId ];
 
 					if ( item )
-						editor[ item.style.checkActive( editor.elementPath() ) ? 'removeStyle' : 'applyStyle' ]( item.style );
+						editor[ item.style.checkActive( editor.elementPath() ) ? &#39;removeStyle&#39; : &#39;applyStyle&#39; ]( item.style );
 				},
 				refresh: function( editor, path ) {
 					this.setState( plugin.getCurrentLangElement( editor ) ?
@@ -66,29 +66,29 @@
 
 			// Parse languagesConfigStrings, and create items entry for each lang.
 			for ( i = 0; i &lt; languagesConfigStrings.length; i++ ) {
-				parts = languagesConfigStrings[ i ].split( ':' );
+				parts = languagesConfigStrings[ i ].split( &#39;:&#39; );
 				curLanguageId = parts[ 0 ];
-				languageButtonId = 'language_' + curLanguageId;
+				languageButtonId = &#39;language_&#39; + curLanguageId;
 
 				items[ languageButtonId ] = {
 					label: parts[ 1 ],
 					langId: curLanguageId,
-					group: 'language',
+					group: &#39;language&#39;,
 					order: i,
 					// Tells if this language is left-to-right oriented (default: true).
-					ltr: ( '' + parts[ 2 ] ).toLowerCase() != 'rtl',
+					ltr: ( &#39;&#39; + parts[ 2 ] ).toLowerCase() != &#39;rtl&#39;,
 					onClick: function() {
-						editor.execCommand( 'language', this.langId );
+						editor.execCommand( &#39;language&#39;, this.langId );
 					},
-					role: 'menuitemcheckbox'
+					role: &#39;menuitemcheckbox&#39;
 				};
 
 				// Init style property.
 				items[ languageButtonId ].style = new CKEDITOR.style( {
-					element: 'span',
+					element: &#39;span&#39;,
 					attributes: {
 						lang: curLanguageId,
-						dir: items[ languageButtonId ].ltr ? 'ltr' : 'rtl'
+						dir: items[ languageButtonId ].ltr ? &#39;ltr&#39; : &#39;rtl&#39;
 					}
 				} );
 			}
@@ -96,31 +96,31 @@
 			// Remove language indicator button.
 			items.language_remove = {
 				label: lang.remove,
-				group: 'language_remove',
+				group: &#39;language_remove&#39;,
 				state: CKEDITOR.TRISTATE_DISABLED,
 				order: items.length,
 				onClick: function() {
 					var currentLanguagedElement = plugin.getCurrentLangElement( editor );
 
 					if ( currentLanguagedElement )
-						editor.execCommand( 'language', currentLanguagedElement.getAttribute( 'lang' ) );
+						editor.execCommand( &#39;language&#39;, currentLanguagedElement.getAttribute( &#39;lang&#39; ) );
 				}
 			};
 
 			// Initialize groups for menu.
-			editor.addMenuGroup( 'language', 1 );
-			editor.addMenuGroup( 'language_remove' ); // Group order is skipped intentionally, it will be placed at the end.
+			editor.addMenuGroup( &#39;language&#39;, 1 );
+			editor.addMenuGroup( &#39;language_remove&#39; ); // Group order is skipped intentionally, it will be placed at the end.
 			editor.addMenuItems( items );
 
-			editor.ui.add( 'Language', CKEDITOR.UI_MENUBUTTON, {
+			editor.ui.add( &#39;Language&#39;, CKEDITOR.UI_MENUBUTTON, {
 				label: lang.button,
 				// MenuButtons do not (yet) has toFeature method, so we cannot do this:
-				// toFeature: function( editor ) { return editor.getCommand( 'language' ); }
-				// Set feature's properties directly on button.
+				// toFeature: function( editor ) { return editor.getCommand( &#39;language&#39; ); }
+				// Set feature&#39;s properties directly on button.
 				allowedContent: allowedContent,
 				requiredContent: requiredContent,
-				toolbar: 'bidi,30',
-				command: 'language',
+				toolbar: &#39;bidi,30&#39;,
+				command: &#39;language&#39;,
 				onMenu: function() {
 					var activeItems = {},
 						currentLanguagedElement = plugin.getCurrentLangElement( editor );
@@ -131,7 +131,7 @@
 					activeItems.language_remove = currentLanguagedElement ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED;
 
 					if ( currentLanguagedElement )
-						activeItems[ 'language_' + currentLanguagedElement.getAttribute( 'lang' ) ] = CKEDITOR.TRISTATE_ON;
+						activeItems[ &#39;language_&#39; + currentLanguagedElement.getAttribute( &#39;lang&#39; ) ] = CKEDITOR.TRISTATE_ON;
 
 					return activeItems;
 				}
@@ -151,7 +151,7 @@
 				for ( var i = 0; i &lt; activePath.length; i++ ) {
 					pathMember = activePath[ i ];
 
-					if ( !ret &amp;&amp; pathMember.getName() == 'span' &amp;&amp; pathMember.hasAttribute( 'dir' ) &amp;&amp; pathMember.hasAttribute( 'lang' ) )
+					if ( !ret &amp;&amp; pathMember.getName() == &#39;span&#39; &amp;&amp; pathMember.hasAttribute( &#39;dir&#39; ) &amp;&amp; pathMember.hasAttribute( &#39;lang&#39; ) )
 						ret = pathMember;
 				}
 			}
@@ -176,9 +176,9 @@
  * * _textDirection_: (optional) One of the following values: `rtl` or `ltr`,
  * 	indicating the reading direction of the language. Defaults to `ltr`.
  *
- *		config.language_list = [ 'he:Hebrew:rtl', 'pt:Portuguese', 'de:German' ];
+ *		config.language_list = [ &#39;he:Hebrew:rtl&#39;, &#39;pt:Portuguese&#39;, &#39;de:German&#39; ];
  *
- * @cfg {Array} [language_list = [ 'ar:Arabic:rtl', 'fr:French', 'es:Spanish' ]]
+ * @cfg {Array} [language_list = [ &#39;ar:Arabic:rtl&#39;, &#39;fr:French&#39;, &#39;es:Spanish&#39; ]]
  * @member CKEDITOR.config
  */</pre>
 </body>
