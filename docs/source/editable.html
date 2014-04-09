@@ -45,6 +45,21 @@
 
 			this.editor = editor;
 
+<span id='CKEDITOR-editable-property-status'>			/**
+</span>			 * Indicates editable initialization status. The following statuses are available:
+			 *
+			 *	* **unloaded**: the initial state; editable&#39;s instance has been created but
+			 *	is not fully loaded (in particular has no data),
+			 *	* **ready**: editable is fully initialized; `ready` status is set after
+			 *	first {@link CKEDITOR.editor#method-setData} has been called.
+			 *	* **detached**: the editable has been detached.
+			 *
+			 * @since 4.3.3
+			 * @readonly
+			 * @property {String}
+			 */
+			this.status = &#39;unloaded&#39;;
+
 <span id='CKEDITOR-editable-property-hasFocus'>			/**
 </span>			 * Indicate whether the editable element has gained focus.
 			 *
@@ -404,8 +419,7 @@
 				// Set up the correct selection.
 				selection.selectRanges( [ range ] );
 
-				// Do not scroll after inserting, because Opera may fail on certain element (e.g. iframe/iframe.html).
-				afterInsert( this, CKEDITOR.env.opera );
+				afterInsert( this );
 			},
 
 <span id='CKEDITOR-editable-method-setData'>			/**
@@ -416,6 +430,11 @@
 					data = this.editor.dataProcessor.toHtml( data );
 
 				this.setHtml( data );
+
+				// Editable is ready after first setData.
+				if ( this.status == &#39;unloaded&#39; )
+					this.status = &#39;ready&#39;;
+
 				this.editor.fire( &#39;dataReady&#39; );
 			},
 
@@ -446,6 +465,8 @@
 			detach: function() {
 				// Cleanup the element.
 				this.removeClass( &#39;cke_editable&#39; );
+
+				this.status = &#39;detached&#39;;
 
 				// Save the editor reference which will be lost after
 				// calling detach from super class.
@@ -551,16 +572,6 @@
 
 				// Update focus states.
 				this.on( &#39;blur&#39;, function( evt ) {
-					// Opera might raise undesired blur event on editable, check if it&#39;s
-					// really blurred, otherwise cancel the event. (#9459)
-					if ( CKEDITOR.env.opera ) {
-						var active = CKEDITOR.document.getActive();
-						if ( active.equals( this.isInline() ? this : this.getWindow().getFrame() ) ) {
-							evt.cancel();
-							return;
-						}
-					}
-
 					this.hasFocus = false;
 				}, null, null, -1 );
 
@@ -756,10 +767,13 @@
 				CKEDITOR.env.ie &amp;&amp; this.attachListener( this, &#39;click&#39;, blockInputClick );
 
 				// Gecko/Webkit need some help when selecting control type elements. (#3448)
-				if ( !( CKEDITOR.env.ie || CKEDITOR.env.opera ) ) {
+				if ( !CKEDITOR.env.ie ) {
 					this.attachListener( this, &#39;mousedown&#39;, function( ev ) {
 						var control = ev.data.getTarget();
-						if ( control.is( &#39;img&#39;, &#39;hr&#39;, &#39;input&#39;, &#39;textarea&#39;, &#39;select&#39; ) ) {
+						// #11727. Note: htmlDP assures that input/textarea/select have contenteditable=false
+						// attributes. However, they also have data-cke-editable attribute, so isReadOnly() returns false,
+						// and therefore those elements are correctly selected by this code.
+						if ( control.is( &#39;img&#39;, &#39;hr&#39;, &#39;input&#39;, &#39;textarea&#39;, &#39;select&#39; ) &amp;&amp; !control.isReadOnly() ) {
 							editor.getSelection().selectElement( control );
 
 							// Prevent focus from stealing from the editable. (#9515)
@@ -1846,11 +1860,11 @@
 		editable.editor.fire( &#39;saveSnapshot&#39; );
 	}
 
-	function afterInsert( editable, noScroll ) {
+	function afterInsert( editable ) {
 		var editor = editable.editor;
 
 		// Scroll using selection, not ranges, to affect native pastes.
-		!noScroll &amp;&amp; editor.getSelection().scrollIntoView();
+		editor.getSelection().scrollIntoView();
 
 		// Save snaps after the whole execution completed.
 		// This&#39;s a workaround for make DOM modification&#39;s happened after

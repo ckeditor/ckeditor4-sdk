@@ -460,10 +460,6 @@
 			 */
 			editor.title = typeof configTitle == &#39;string&#39; || configTitle === false ? configTitle : [ editor.lang.editor, editor.name ].join( &#39;, &#39; );
 
-			// We&#39;re not able to support RTL in Firefox 2 at this time.
-			if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &lt; 10900 &amp;&amp; editor.lang.dir == &#39;rtl&#39; )
-				editor.lang.dir = &#39;ltr&#39;;
-
 			if ( !editor.config.contentsLangDirection ) {
 				// Fallback to either the editable element direction or editor UI direction depending on creators.
 				editor.config.contentsLangDirection = editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ? editor.element.getDirection( 1 ) : editor.lang.dir;
@@ -956,10 +952,15 @@
 		 * @param {Boolean} internal Whether to suppress any event firing when copying data internally inside the editor.
 		 */
 		setData: function( data, callback, internal ) {
-			if ( callback ) {
-				this.on( &#39;dataReady&#39;, function( evt ) {
-					evt.removeListener();
-					callback.call( evt.editor );
+			!internal &amp;&amp; this.fire( &#39;saveSnapshot&#39; );
+
+			if ( callback || !internal ) {
+				this.once( &#39;dataReady&#39;, function( evt ) {
+					if ( !internal )
+						this.fire( &#39;saveSnapshot&#39; );
+
+					if ( callback )
+						callback.call( evt.editor );
 				} );
 			}
 

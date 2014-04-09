@@ -21,230 +21,379 @@
  */
 
 ( function() {
-	function addCombo( editor, comboName, styleType, lang, entries, defaultLabel, styleDefinition, order ) {
-		var config = editor.config,
-			style = new CKEDITOR.style( styleDefinition );
+	var floatSpaceTpl = CKEDITOR.addTemplate( &#39;floatcontainer&#39;, &#39;&lt;div&#39; +
+			&#39; id=&quot;cke_{name}&quot;&#39; +
+			&#39; class=&quot;cke {id} cke_reset_all cke_chrome cke_editor_{name} cke_float cke_{langDir} &#39; + CKEDITOR.env.cssClass + &#39;&quot;&#39; +
+			&#39; dir=&quot;{langDir}&quot;&#39; +
+			&#39; title=&quot;&#39; + ( CKEDITOR.env.gecko ? &#39; &#39; : &#39;&#39; ) + &#39;&quot;&#39; +
+			&#39; lang=&quot;{langCode}&quot;&#39; +
+			&#39; role=&quot;application&quot;&#39; +
+			&#39; style=&quot;{style}&quot;&#39; +
+			&#39; aria-labelledby=&quot;cke_{name}_arialbl&quot;&#39; +
+			&#39;&gt;&#39; +
+				&#39;&lt;span id=&quot;cke_{name}_arialbl&quot; class=&quot;cke_voice_label&quot;&gt;{voiceLabel}&lt;/span&gt;&#39; +
+				&#39;&lt;div class=&quot;cke_inner&quot;&gt;&#39; +
+					&#39;&lt;div id=&quot;{topId}&quot; class=&quot;cke_top&quot; role=&quot;presentation&quot;&gt;{content}&lt;/div&gt;&#39; +
+				&#39;&lt;/div&gt;&#39; +
+			&#39;&lt;/div&gt;&#39; ),
+		win = CKEDITOR.document.getWindow(),
+		pixelate = CKEDITOR.tools.cssLength;
 
-		// Gets the list of fonts from the settings.
-		var names = entries.split( &#39;;&#39; ),
-			values = [];
-
-		// Create style objects for all fonts.
-		var styles = {};
-		for ( var i = 0; i &lt; names.length; i++ ) {
-			var parts = names[ i ];
-
-			if ( parts ) {
-				parts = parts.split( &#39;/&#39; );
-
-				var vars = {},
-					name = names[ i ] = parts[ 0 ];
-
-				vars[ styleType ] = values[ i ] = parts[ 1 ] || name;
-
-				styles[ name ] = new CKEDITOR.style( styleDefinition, vars );
-				styles[ name ]._.definition.name = name;
-			} else
-				names.splice( i--, 1 );
+	CKEDITOR.plugins.add( &#39;floatingspace&#39;, {
+		init: function( editor ) {
+			// Add listener with lower priority than that in themedui creator.
+			// Thereby floatingspace will be created only if themedui wasn&#39;t used.
+			editor.on( &#39;loaded&#39;, function() {
+				attach( this );
+			}, null, null, 20 );
 		}
+	} );
 
-		editor.ui.addRichCombo( comboName, {
-			label: lang.label,
-			title: lang.panelTitle,
-			toolbar: &#39;styles,&#39; + order,
-			allowedContent: style,
-			requiredContent: style,
+	function scrollOffset( side ) {
+		var pageOffset = side == &#39;left&#39; ? &#39;pageXOffset&#39; : &#39;pageYOffset&#39;,
+			docScrollOffset = side == &#39;left&#39; ? &#39;scrollLeft&#39; : &#39;scrollTop&#39;;
 
-			panel: {
-				css: [ CKEDITOR.skin.getPath( &#39;editor&#39; ) ].concat( config.contentsCss ),
-				multiSelect: false,
-				attributes: { &#39;aria-label&#39;: lang.panelTitle }
-			},
+		return ( pageOffset in win.$ ) ?
+				win.$[ pageOffset ]
+			:
+				CKEDITOR.document.$.documentElement[ docScrollOffset ];
+	}
 
-			init: function() {
-				this.startGroup( lang.panelTitle );
+	function attach( editor ) {
+		var config = editor.config,
 
-				for ( var i = 0; i &lt; names.length; i++ ) {
-					var name = names[ i ];
+			// Get the HTML for the predefined spaces.
+			topHtml = editor.fire( &#39;uiSpace&#39;, { space: &#39;top&#39;, html: &#39;&#39; } ).html,
 
-					// Add the tag entry to the panel list.
-					this.add( name, styles[ name ].buildPreview(), name );
+			// Re-positioning of the space.
+			layout = ( function() {
+				// Mode indicates the vertical aligning mode.
+				var mode, editable,
+					spaceRect, editorRect, viewRect, spaceHeight, pageScrollX,
+
+					// Allow minor adjustments of the float space from custom configs.
+					dockedOffsetX = config.floatSpaceDockedOffsetX || 0,
+					dockedOffsetY = config.floatSpaceDockedOffsetY || 0,
+					pinnedOffsetX = config.floatSpacePinnedOffsetX || 0,
+					pinnedOffsetY = config.floatSpacePinnedOffsetY || 0;
+
+				// Update the float space position.
+				function updatePos( pos, prop, val ) {
+					floatSpace.setStyle( prop, pixelate( val ) );
+					floatSpace.setStyle( &#39;position&#39;, pos );
 				}
-			},
 
-			onClick: function( value ) {
-				editor.focus();
-				editor.fire( &#39;saveSnapshot&#39; );
+				// Change the current mode and update float space position accordingly.
+				function changeMode( newMode ) {
+					var editorPos = editable.getDocumentPosition();
 
-				var style = styles[ value ];
+					switch ( newMode ) {
+						case &#39;top&#39;:
+							updatePos( &#39;absolute&#39;, &#39;top&#39;, editorPos.y - spaceHeight - dockedOffsetY );
+							break;
+						case &#39;pin&#39;:
+							updatePos( &#39;fixed&#39;, &#39;top&#39;, pinnedOffsetY );
+							break;
+						case &#39;bottom&#39;:
+							updatePos( &#39;absolute&#39;, &#39;top&#39;, editorPos.y + ( editorRect.height || editorRect.bottom - editorRect.top ) + dockedOffsetY );
+							break;
+					}
 
-				editor[ this.getValue() == value ? &#39;removeStyle&#39; : &#39;applyStyle&#39; ]( style );
-				editor.fire( &#39;saveSnapshot&#39; );
-			},
+					mode = newMode;
+				}
 
-			onRender: function() {
-				editor.on( &#39;selectionChange&#39;, function( ev ) {
-					var currentValue = this.getValue();
+				return function( evt ) {
+					// #10112 Do not fail on editable-less editor.
+					if ( !( editable = editor.editable() ) )
+						return;
 
-					var elementPath = ev.data.path,
-						elements = elementPath.elements;
+					// Show up the space on focus gain.
+					evt &amp;&amp; evt.name == &#39;focus&#39; &amp;&amp; floatSpace.show();
 
-					// For each element into the elements path.
-					for ( var i = 0, element; i &lt; elements.length; i++ ) {
-						element = elements[ i ];
+					// Reset the horizontal position for below measurement.
+					floatSpace.removeStyle( &#39;left&#39; );
+					floatSpace.removeStyle( &#39;right&#39; );
 
-						// Check if the element is removable by any of
-						// the styles.
-						for ( var value in styles ) {
-							if ( styles[ value ].checkElementMatch( element, true ) ) {
-								if ( value != currentValue )
-									this.setValue( value );
-								return;
-							}
+					// Compute the screen position from the TextRectangle object would
+					// be very simple, even though the &quot;width&quot;/&quot;height&quot; property is not
+					// available for all, it&#39;s safe to figure that out from the rest.
+
+					// http://help.dottoro.com/ljgupwlp.php
+					spaceRect = floatSpace.getClientRect();
+					editorRect = editable.getClientRect();
+					viewRect = win.getViewPaneSize();
+					spaceHeight = spaceRect.height;
+					pageScrollX = scrollOffset( &#39;left&#39; );
+
+					// We initialize it as pin mode.
+					if ( !mode ) {
+						mode = &#39;pin&#39;;
+						changeMode( &#39;pin&#39; );
+						// Call for a refresh to the actual layout.
+						layout( evt );
+						return;
+					}
+
+					// +------------------------ Viewport -+ \
+					// |                                   |  |-&gt; floatSpaceDockedOffsetY
+					// | ................................. | /
+					// |                                   |
+					// |   +------ Space -+                |
+					// |   |              |                |
+					// |   +--------------+                |
+					// |   +------------------ Editor -+   |
+					// |   |                           |   |
+					//
+					if ( spaceHeight + dockedOffsetY &lt;= editorRect.top )
+						changeMode( &#39;top&#39; );
+
+					//     +- - - - - - - - -  Editor -+
+					//     |                           |
+					// +------------------------ Viewport -+ \
+					// |   |                           |   |  |-&gt; floatSpacePinnedOffsetY
+					// | ................................. | /
+					// |   +------ Space -+            |   |
+					// |   |              |            |   |
+					// |   +--------------+            |   |
+					// |   |                           |   |
+					// |   +---------------------------+   |
+					// +-----------------------------------+
+					//
+					else if ( spaceHeight + dockedOffsetY &gt; viewRect.height - editorRect.bottom )
+						changeMode( &#39;pin&#39; );
+
+					//     +- - - - - - - - -  Editor -+
+					//     |                           |
+					// +------------------------ Viewport -+ \
+					// |   |                           |   |  |-&gt; floatSpacePinnedOffsetY
+					// | ................................. | /
+					// |   |                           |   |
+					// |   |                           |   |
+					// |   +---------------------------+   |
+					// |   +------ Space -+                |
+					// |   |              |                |
+					// |   +--------------+                |
+					//
+					else
+						changeMode( &#39;bottom&#39; );
+
+					var mid = viewRect.width / 2,
+						alignSide =
+								( editorRect.left &gt; 0 &amp;&amp; editorRect.right &lt; viewRect.width &amp;&amp; editorRect.width &gt; spaceRect.width ) ?
+										( editor.config.contentsLangDirection == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; )
+									:
+										( mid - editorRect.left &gt; editorRect.right - mid ? &#39;left&#39; : &#39;right&#39; ),
+						offset;
+
+					// (#9769) If viewport width is less than space width,
+					// make sure space never cross the left boundary of the viewport.
+					// In other words: top-left corner of the space is always visible.
+					if ( spaceRect.width &gt; viewRect.width ) {
+						alignSide = &#39;left&#39;;
+						offset = 0;
+					}
+					else {
+						if ( alignSide == &#39;left&#39; ) {
+							// If the space rect fits into viewport, align it
+							// to the left edge of editor:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |   +------------- Space -+         |
+							// |   |                     |         |
+							// |   +---------------------+         |
+							// |   +------------------ Editor -+   |
+							// |   |                           |   |
+							//
+							if ( editorRect.left &gt; 0 )
+								offset = editorRect.left;
+
+							// If the left part of the editor is cut off by the left
+							// edge of the viewport, stick the space to the viewport:
+							//
+							//       +------------------------ Viewport -+
+							//       |                                   |
+							//       +---------------- Space -+          |
+							//       |                        |          |
+							//       +------------------------+          |
+							//  +----|------------- Editor -+            |
+							//  |    |                      |            |
+							//
+							else
+								offset = 0;
+						}
+						else {
+							// If the space rect fits into viewport, align it
+							// to the right edge of editor:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |         +------------- Space -+   |
+							// |         |                     |   |
+							// |         +---------------------+   |
+							// |   +------------------ Editor -+   |
+							// |   |                           |   |
+							//
+							if ( editorRect.right &lt; viewRect.width )
+								offset = viewRect.width - editorRect.right;
+
+							// If the right part of the editor is cut off by the right
+							// edge of the viewport, stick the space to the viewport:
+							//
+							// +------------------------ Viewport -+
+							// |                                   |
+							// |             +------------- Space -+
+							// |             |                     |
+							// |             +---------------------+
+							// |                 +-----------------|- Editor -+
+							// |                 |                 |          |
+							//
+							else
+								offset = 0;
+						}
+
+						// (#9769) Finally, stick the space to the opposite side of
+						// the viewport when it&#39;s cut off horizontally on the left/right
+						// side like below.
+						//
+						// This trick reveals cut off space in some edge cases and
+						// hence it improves accessibility.
+						//
+						// +------------------------ Viewport -+
+						// |                                   |
+						// |              +--------------------|-- Space -+
+						// |              |                    |          |
+						// |              +--------------------|----------+
+						// |              +------- Editor -+   |
+						// |              |                |   |
+						//
+						//				becomes:
+						//
+						// +------------------------ Viewport -+
+						// |                                   |
+						// |   +----------------------- Space -+
+						// |   |                               |
+						// |   +-------------------------------+
+						// |              +------- Editor -+   |
+						// |              |                |   |
+						//
+						if ( offset + spaceRect.width &gt; viewRect.width ) {
+							alignSide = alignSide == &#39;left&#39; ? &#39;right&#39; : &#39;left&#39;;
+							offset = 0;
 						}
 					}
 
-					// If no styles match, just empty it.
-					this.setValue( &#39;&#39;, defaultLabel );
-				}, this );
-			},
+					// Pin mode is fixed, so don&#39;t include scroll-x.
+					// (#9903) For mode is &quot;top&quot; or &quot;bottom&quot;, add opposite scroll-x for right-aligned space.
+					var scroll = mode == &#39;pin&#39; ?
+							0
+						:
+							alignSide == &#39;left&#39; ? pageScrollX : -pageScrollX;
 
-			refresh: function() {
-				if ( !editor.activeFilter.check( style ) )
-					this.setState( CKEDITOR.TRISTATE_DISABLED );
-			}
-		} );
-	}
+					floatSpace.setStyle( alignSide, pixelate( ( mode == &#39;pin&#39; ? pinnedOffsetX : dockedOffsetX ) + offset + scroll ) );
+				};
+			} )();
 
-	CKEDITOR.plugins.add( &#39;font&#39;, {
-		requires: &#39;richcombo&#39;,
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		init: function( editor ) {
-			var config = editor.config;
+		if ( topHtml ) {
+			var floatSpace = CKEDITOR.document.getBody().append( CKEDITOR.dom.element.createFromHtml( floatSpaceTpl.output( {
+					content: topHtml,
+					id: editor.id,
+					langDir: editor.lang.dir,
+					langCode: editor.langCode,
+					name: editor.name,
+					style: &#39;display:none;z-index:&#39; + ( config.baseFloatZIndex - 1 ),
+					topId: editor.ui.spaceId( &#39;top&#39; ),
+					voiceLabel: editor.lang.editorPanel + &#39;, &#39; + editor.name
+				} ) ) ),
 
-			addCombo( editor, &#39;Font&#39;, &#39;family&#39;, editor.lang.font, config.font_names, config.font_defaultLabel, config.font_style, 30 );
-			addCombo( editor, &#39;FontSize&#39;, &#39;size&#39;, editor.lang.font.fontSize, config.fontSize_sizes, config.fontSize_defaultLabel, config.fontSize_style, 40 );
+				// Use event buffers to reduce CPU load when tons of events are fired.
+				changeBuffer = CKEDITOR.tools.eventsBuffer( 500, layout ),
+				uiBuffer = CKEDITOR.tools.eventsBuffer( 100, layout );
+
+			// There&#39;s no need for the floatSpace to be selectable.
+			floatSpace.unselectable();
+
+			// Prevent clicking on non-buttons area of the space from blurring editor.
+			floatSpace.on( &#39;mousedown&#39;, function( evt ) {
+				evt = evt.data;
+				if ( !evt.getTarget().hasAscendant( &#39;a&#39;, 1 ) )
+					evt.preventDefault();
+			} );
+
+			editor.on( &#39;focus&#39;, function( evt ) {
+				layout( evt );
+				editor.on( &#39;change&#39;, changeBuffer.input );
+				win.on( &#39;scroll&#39;, uiBuffer.input );
+				win.on( &#39;resize&#39;, uiBuffer.input );
+			} );
+
+			editor.on( &#39;blur&#39;, function() {
+				floatSpace.hide();
+				editor.removeListener( &#39;change&#39;, changeBuffer.input );
+				win.removeListener( &#39;scroll&#39;, uiBuffer.input );
+				win.removeListener( &#39;resize&#39;, uiBuffer.input );
+			} );
+
+			editor.on( &#39;destroy&#39;, function() {
+				win.removeListener( &#39;scroll&#39;, uiBuffer.input );
+				win.removeListener( &#39;resize&#39;, uiBuffer.input );
+				floatSpace.clearCustomData();
+				floatSpace.remove();
+			} );
+
+			// Handle initial focus.
+			if ( editor.focusManager.hasFocus )
+				floatSpace.show();
+
+			// Register this UI space to the focus manager.
+			editor.focusManager.add( floatSpace, 1 );
 		}
-	} );
+	}
 } )();
 
-<span id='CKEDITOR-config-cfg-font_names'>/**
-</span> * The list of fonts names to be displayed in the Font combo in the toolbar.
- * Entries are separated by semi-colons (`&#39;;&#39;`), while it&#39;s possible to have more
- * than one font for each entry, in the HTML way (separated by comma).
+<span id='CKEDITOR-config-cfg-floatSpaceDockedOffsetX'>/**
+</span> * Along with {@link #floatSpaceDockedOffsetY} it defines the
+ * amount of offset (in pixels) between float space and the editable left/right
+ * boundaries when space element is docked at either side of the editable.
  *
- * A display name may be optionally defined by prefixing the entries with the
- * name and the slash character. For example, `&#39;Arial/Arial, Helvetica, sans-serif&#39;`
- * will be displayed as `&#39;Arial&#39;` in the list, but will be outputted as
- * `&#39;Arial, Helvetica, sans-serif&#39;`.
+ *		config.floatSpaceDockedOffsetX = 10;
  *
- *		config.font_names =
- *			&#39;Arial/Arial, Helvetica, sans-serif;&#39; +
- *			&#39;Times New Roman/Times New Roman, Times, serif;&#39; +
- *			&#39;Verdana&#39;;
- *
- *		config.font_names = &#39;Arial;Times New Roman;Verdana&#39;;
- *
- * @cfg {String} [font_names=see source]
+ * @cfg {Number} [floatSpaceDockedOffsetX=0]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.font_names = &#39;Arial/Arial, Helvetica, sans-serif;&#39; +
-	&#39;Comic Sans MS/Comic Sans MS, cursive;&#39; +
-	&#39;Courier New/Courier New, Courier, monospace;&#39; +
-	&#39;Georgia/Georgia, serif;&#39; +
-	&#39;Lucida Sans Unicode/Lucida Sans Unicode, Lucida Grande, sans-serif;&#39; +
-	&#39;Tahoma/Tahoma, Geneva, sans-serif;&#39; +
-	&#39;Times New Roman/Times New Roman, Times, serif;&#39; +
-	&#39;Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;&#39; +
-	&#39;Verdana/Verdana, Geneva, sans-serif&#39;;
 
-<span id='CKEDITOR-config-cfg-font_defaultLabel'>/**
-</span> * The text to be displayed in the Font combo is none of the available values
- * matches the current cursor position or text selection.
+<span id='CKEDITOR-config-cfg-floatSpaceDockedOffsetY'>/**
+</span> * Along with {@link #floatSpaceDockedOffsetX} it defines the
+ * amount of offset (in pixels) between float space and the editable top/bottom
+ * boundaries when space element is docked at either side of the editable.
  *
- *		// If the default site font is Arial, we may making it more explicit to the end user.
- *		config.font_defaultLabel = &#39;Arial&#39;;
+ *		config.floatSpaceDockedOffsetY = 10;
  *
- * @cfg {String} [font_defaultLabel=&#39;&#39;]
+ * @cfg {Number} [floatSpaceDockedOffsetY=0]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.font_defaultLabel = &#39;&#39;;
 
-<span id='CKEDITOR-config-cfg-font_style'>/**
-</span> * The style definition to be used to apply the font in the text.
+<span id='CKEDITOR-config-cfg-floatSpacePinnedOffsetX'>/**
+</span> * Along with {@link #floatSpacePinnedOffsetY} it defines the
+ * amount of offset (in pixels) between float space and the view port boundaries
+ * when space element is pinned.
  *
- *		// This is actually the default value for it.
- *		config.font_style = {
- *			element:		&#39;span&#39;,
- *			styles:			{ &#39;font-family&#39;: &#39;#(family)&#39; },
- *			overrides:		[ { element: &#39;font&#39;, attributes: { &#39;face&#39;: null } } ]
- *     };
+ *		config.floatSpacePinnedOffsetX = 20;
  *
- * @cfg {Object} [font_style=see example]
+ * @cfg {Number} [floatSpacePinnedOffsetX=0]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.font_style = {
-	element: &#39;span&#39;,
-	styles: { &#39;font-family&#39;: &#39;#(family)&#39; },
-	overrides: [ {
-		element: &#39;font&#39;, attributes: { &#39;face&#39;: null }
-	} ]
-};
 
-<span id='CKEDITOR-config-cfg-fontSize_sizes'>/**
-</span> * The list of fonts size to be displayed in the Font Size combo in the
- * toolbar. Entries are separated by semi-colons (`&#39;;&#39;`).
+<span id='CKEDITOR-config-cfg-floatSpacePinnedOffsetY'>/**
+</span> * Along with {@link #floatSpacePinnedOffsetX} it defines the
+ * amount of offset (in pixels) between float space and the view port boundaries
+ * when space element is pinned.
  *
- * Any kind of &quot;CSS like&quot; size can be used, like `&#39;12px&#39;`, `&#39;2.3em&#39;`, `&#39;130%&#39;`,
- * `&#39;larger&#39;` or `&#39;x-small&#39;`.
+ *		config.floatSpacePinnedOffsetY = 20;
  *
- * A display name may be optionally defined by prefixing the entries with the
- * name and the slash character. For example, `&#39;Bigger Font/14px&#39;` will be
- * displayed as `&#39;Bigger Font&#39;` in the list, but will be outputted as `&#39;14px&#39;`.
- *
- *		config.fontSize_sizes = &#39;16/16px;24/24px;48/48px;&#39;;
- *
- *		config.fontSize_sizes = &#39;12px;2.3em;130%;larger;x-small&#39;;
- *
- *		config.fontSize_sizes = &#39;12 Pixels/12px;Big/2.3em;30 Percent More/130%;Bigger/larger;Very Small/x-small&#39;;
- *
- * @cfg {String} [fontSize_sizes=see source]
+ * @cfg {Number} [floatSpacePinnedOffsetY=0]
  * @member CKEDITOR.config
  */
-CKEDITOR.config.fontSize_sizes = &#39;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px&#39;;
-
-<span id='CKEDITOR-config-cfg-fontSize_defaultLabel'>/**
-</span> * The text to be displayed in the Font Size combo is none of the available
- * values matches the current cursor position or text selection.
- *
- *		// If the default site font size is 12px, we may making it more explicit to the end user.
- *		config.fontSize_defaultLabel = &#39;12px&#39;;
- *
- * @cfg {String} [fontSize_defaultLabel=&#39;&#39;]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.fontSize_defaultLabel = &#39;&#39;;
-
-<span id='CKEDITOR-config-cfg-fontSize_style'>/**
-</span> * The style definition to be used to apply the font size in the text.
- *
- *		// This is actually the default value for it.
- *		config.fontSize_style = {
- *			element:		&#39;span&#39;,
- *			styles:			{ &#39;font-size&#39;: &#39;#(size)&#39; },
- *			overrides:		[ { element :&#39;font&#39;, attributes: { &#39;size&#39;: null } } ]
- *		};
- *
- * @cfg {Object} [fontSize_style=see example]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.fontSize_style = {
-	element: &#39;span&#39;,
-	styles: { &#39;font-size&#39;: &#39;#(size)&#39; },
-	overrides: [ {
-		element: &#39;font&#39;, attributes: { &#39;size&#39;: null }
-	} ]
-};
 </pre>
 </body>
 </html>

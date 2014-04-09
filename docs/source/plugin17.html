@@ -15,164 +15,75 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+  <pre class="prettyprint lang-js"><span id='global-property-colordialog'>/**
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;devtools&#39;, {
-	lang: &#39;ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,gu,he,hr,hu,id,it,ja,km,ko,ku,lt,lv,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-
+CKEDITOR.plugins.colordialog = {
+	requires: &#39;dialog&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		editor._.showDialogDefinitionTooltips = 1;
-	},
-	onLoad: function() {
-		CKEDITOR.document.appendStyleText( CKEDITOR.config.devtools_styles || &#39;#cke_tooltip { padding: 5px; border: 2px solid #333; background: #ffffff }&#39; +
-			&#39;#cke_tooltip h2 { font-size: 1.1em; border-bottom: 1px solid; margin: 0; padding: 1px; }&#39; +
-			&#39;#cke_tooltip ul { padding: 0pt; list-style-type: none; }&#39; );
-	}
-} );
+		var cmd = new CKEDITOR.dialogCommand( &#39;colordialog&#39; );
+		cmd.editorFocus = false;
 
-( function() {
-	function defaultCallback( editor, dialog, element, tabName ) {
-		var lang = editor.lang.devtools,
-			link = &#39;&lt;a href=&quot;http://docs.ckeditor.com/#!/api/CKEDITOR.dialog.definition.&#39; +
-			( element ? ( element.type == &#39;text&#39; ? &#39;textInput&#39; : element.type ) : &#39;content&#39; ) +
-			&#39;&quot; target=&quot;_blank&quot;&gt;&#39; + ( element ? element.type : &#39;content&#39; ) + &#39;&lt;/a&gt;&#39;,
-			str = &#39;&lt;h2&gt;&#39; + lang.title + &#39;&lt;/h2&gt;&#39; +
-			&#39;&lt;ul&gt;&#39; +
-			&#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.dialogName + &#39;&lt;/strong&gt; : &#39; + dialog.getName() + &#39;&lt;/li&gt;&#39; +
-			&#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.tabName + &#39;&lt;/strong&gt; : &#39; + tabName + &#39;&lt;/li&gt;&#39;;
+		editor.addCommand( &#39;colordialog&#39;, cmd );
 
-		if ( element )
-			str += &#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.elementId + &#39;&lt;/strong&gt; : &#39; + element.id + &#39;&lt;/li&gt;&#39;;
+		CKEDITOR.dialog.add( &#39;colordialog&#39;, this.path + &#39;dialogs/colordialog.js&#39; );
 
-		str += &#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.elementType + &#39;&lt;/strong&gt; : &#39; + link + &#39;&lt;/li&gt;&#39;;
+<span id='CKEDITOR-editor-method-getColorFromDialog'>		/**
+</span>		 * Open up color dialog and to receive the selected color.
+		 *
+		 * @param {Function} callback The callback when color dialog is closed
+		 * @param {String} callback.color The color value received if selected on the dialog.
+		 * @param [scope] The scope in which the callback will be bound.
+		 * @member CKEDITOR.editor
+		 */
+		editor.getColorFromDialog = function( callback, scope ) {
+			var onClose = function( evt ) {
+				releaseHandlers( this );
+				var color = evt.name == &#39;ok&#39; ? this.getValueOf( &#39;picker&#39;, &#39;selectedColor&#39; ) : null;
+				callback.call( scope, color );
+			};
+			var releaseHandlers = function( dialog ) {
+				dialog.removeListener( &#39;ok&#39;, onClose );
+				dialog.removeListener( &#39;cancel&#39;, onClose );
+			};
+			var bindToDialog = function( dialog ) {
+				dialog.on( &#39;ok&#39;, onClose );
+				dialog.on( &#39;cancel&#39;, onClose );
+			};
 
-		return str + &#39;&lt;/ul&gt;&#39;;
-	}
+			editor.execCommand( &#39;colordialog&#39; );
 
-	function showTooltip( callback, el, editor, dialog, obj, tabName ) {
-		var pos = el.getDocumentPosition(),
-			styles = { &#39;z-index&#39;: CKEDITOR.dialog._.currentZIndex + 10, top: ( pos.y + el.getSize( &#39;height&#39; ) ) + &#39;px&#39; };
-
-		tooltip.setHtml( callback( editor, dialog, obj, tabName ) );
-		tooltip.show();
-
-		// Translate coordinate for RTL.
-		if ( editor.lang.dir == &#39;rtl&#39; ) {
-			var viewPaneSize = CKEDITOR.document.getWindow().getViewPaneSize();
-			styles.right = ( viewPaneSize.width - pos.x - el.getSize( &#39;width&#39; ) ) + &#39;px&#39;;
-		} else
-			styles.left = pos.x + &#39;px&#39;;
-
-		tooltip.setStyles( styles );
-	}
-
-	var tooltip;
-	CKEDITOR.on( &#39;reset&#39;, function() {
-		tooltip &amp;&amp; tooltip.remove();
-		tooltip = null;
-	} );
-
-	CKEDITOR.on( &#39;dialogDefinition&#39;, function( evt ) {
-		var editor = evt.editor;
-		if ( editor._.showDialogDefinitionTooltips ) {
-			if ( !tooltip ) {
-				tooltip = CKEDITOR.dom.element.createFromHtml( &#39;&lt;div id=&quot;cke_tooltip&quot; tabindex=&quot;-1&quot; style=&quot;position: absolute&quot;&gt;&lt;/div&gt;&#39;, CKEDITOR.document );
-				tooltip.hide();
-				tooltip.on( &#39;mouseover&#39;, function() {
-					this.show();
-				} );
-				tooltip.on( &#39;mouseout&#39;, function() {
-					this.hide();
-				} );
-				tooltip.appendTo( CKEDITOR.document.getBody() );
-			}
-
-			var dialog = evt.data.definition.dialog,
-				callback = editor.config.devtools_textCallback || defaultCallback;
-
-			dialog.on( &#39;load&#39;, function() {
-				var tabs = dialog.parts.tabs.getChildren(),
-					tab;
-				for ( var i = 0, len = tabs.count(); i &lt; len; i++ ) {
-					tab = tabs.getItem( i );
-					tab.on( &#39;mouseover&#39;, function() {
-						var id = this.$.id;
-						showTooltip( callback, this, editor, dialog, null, id.substring( 4, id.lastIndexOf( &#39;_&#39; ) ) );
-					} );
-					tab.on( &#39;mouseout&#39;, function() {
-						tooltip.hide();
-					} );
-				}
-
-				dialog.foreach( function( obj ) {
-					if ( obj.type in { hbox: 1, vbox: 1 } )
+			if ( editor._.storedDialogs &amp;&amp; editor._.storedDialogs.colordialog )
+				bindToDialog( editor._.storedDialogs.colordialog );
+			else {
+				CKEDITOR.on( &#39;dialogDefinition&#39;, function( e ) {
+					if ( e.data.name != &#39;colordialog&#39; )
 						return;
 
-					var el = obj.getElement();
-					if ( el ) {
-						el.on( &#39;mouseover&#39;, function() {
-							showTooltip( callback, this, editor, dialog, obj, dialog._.currentTabId );
+					var definition = e.data.definition;
+
+					e.removeListener();
+					definition.onLoad = CKEDITOR.tools.override( definition.onLoad,
+						function( orginal ) {
+							return function() {
+								bindToDialog( this );
+								definition.onLoad = orginal;
+								if ( typeof orginal == &#39;function&#39; )
+									orginal.call( this );
+							};
 						} );
-						el.on( &#39;mouseout&#39;, function() {
-							tooltip.hide();
-						} );
-					}
 				} );
-			} );
-		}
-	} );
-} )();
+			}
+		};
 
-<span id='CKEDITOR-config-cfg-devtools_textCallback'>/**
-</span> * A function that returns the text to be displayed inside the Developer Tools
- * tooltip when hovering over a dialog UI element.
- *
- *		// This is actually the default value.
- *		// Show dialog window name, tab ID, and element ID.
- *		config.devtools_textCallback = function( editor, dialog, element, tabName ) {
- *			var lang = editor.lang.devtools,
- *				link = &#39;&lt;a href=&quot;http://docs.ckeditor.com/#!/api/CKEDITOR.dialog.definition.&#39; +
- *					( element ? ( element.type == &#39;text&#39; ? &#39;textInput&#39; : element.type ) : &#39;content&#39; ) +
- *					&#39;.html&quot; target=&quot;_blank&quot;&gt;&#39; + ( element ? element.type : &#39;content&#39; ) + &#39;&lt;/a&gt;&#39;,
- *				str =
- *					&#39;&lt;h2&gt;&#39; + lang.title + &#39;&lt;/h2&gt;&#39; +
- *					&#39;&lt;ul&gt;&#39; +
- *						&#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.dialogName + &#39;&lt;/strong&gt; : &#39; + dialog.getName() + &#39;&lt;/li&gt;&#39; +
- *						&#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.tabName + &#39;&lt;/strong&gt; : &#39; + tabName + &#39;&lt;/li&gt;&#39;;
- *
- *			if ( element )
- *				str += &#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.elementId + &#39;&lt;/strong&gt; : &#39; + element.id + &#39;&lt;/li&gt;&#39;;
- *
- *			str += &#39;&lt;li&gt;&lt;strong&gt;&#39; + lang.elementType + &#39;&lt;/strong&gt; : &#39; + link + &#39;&lt;/li&gt;&#39;;
- *
- *			return str + &#39;&lt;/ul&gt;&#39;;
- *		};
- *
- * @since 3.6
- * @cfg {Function} [devtools_textCallback=see example]
- * @member CKEDITOR.config
- * @param {CKEDITOR.editor} editor
- * @param dialog
- * @param element
- * @param tabName
- */
 
-<span id='CKEDITOR-config-cfg-devtools_styles'>/**
-</span> * A setting that stores CSS rules to be injected into the page with styles to be applied to the tooltip element.
- *
- *		// This is actually the default value.
- *		CKEDITOR.config.devtools_styles =
- *			&#39;#cke_tooltip { padding: 5px; border: 2px solid #333; background: #ffffff }&#39; +
- *			&#39;#cke_tooltip h2 { font-size: 1.1em; border-bottom: 1px solid; margin: 0; padding: 1px; }&#39; +
- *			&#39;#cke_tooltip ul { padding: 0pt; list-style-type: none; }&#39;;
- *
- * @since 3.6
- * @cfg {String} [devtools_styles=see example]
- * @member CKEDITOR.config
- */
+	}
+};
+
+CKEDITOR.plugins.add( &#39;colordialog&#39;, CKEDITOR.plugins.colordialog );
 </pre>
 </body>
 </html>

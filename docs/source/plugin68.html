@@ -20,170 +20,44 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;resize&#39;, {
+<span id='global-property-'>/**
+</span> * @fileOverview Print Plugin
+ */
+
+CKEDITOR.plugins.add( &#39;print&#39;, {
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;print,&#39;, // %REMOVE_LINE_CORE%
+	hidpi: true, // %REMOVE_LINE_CORE%
 	init: function( editor ) {
-		var config = editor.config;
-		var spaceId = editor.ui.spaceId( &#39;resizer&#39; );
+		// Print plugin isn&#39;t available in inline mode yet.
+		if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
+			return;
 
-		// Resize in the same direction of chrome,
-		// which is identical to dir of editor element. (#6614)
-		var resizeDir = editor.element ? editor.element.getDirection( 1 ) : &#39;ltr&#39;;
+		var pluginName = &#39;print&#39;;
 
-		!config.resize_dir &amp;&amp; ( config.resize_dir = &#39;vertical&#39; );
-		( config.resize_maxWidth == undefined ) &amp;&amp; ( config.resize_maxWidth = 3000 );
-		( config.resize_maxHeight == undefined ) &amp;&amp; ( config.resize_maxHeight = 3000 );
-		( config.resize_minWidth == undefined ) &amp;&amp; ( config.resize_minWidth = 750 );
-		( config.resize_minHeight == undefined ) &amp;&amp; ( config.resize_minHeight = 250 );
+		// Register the command.
+		var command = editor.addCommand( pluginName, CKEDITOR.plugins.print );
 
-		if ( config.resize_enabled !== false ) {
-			var container = null,
-				origin, startSize,
-				resizeHorizontal = ( config.resize_dir == &#39;both&#39; || config.resize_dir == &#39;horizontal&#39; ) &amp;&amp; ( config.resize_minWidth != config.resize_maxWidth ),
-				resizeVertical = ( config.resize_dir == &#39;both&#39; || config.resize_dir == &#39;vertical&#39; ) &amp;&amp; ( config.resize_minHeight != config.resize_maxHeight );
-
-			function dragHandler( evt ) {
-				var dx = evt.data.$.screenX - origin.x,
-					dy = evt.data.$.screenY - origin.y,
-					width = startSize.width,
-					height = startSize.height,
-					internalWidth = width + dx * ( resizeDir == &#39;rtl&#39; ? -1 : 1 ),
-					internalHeight = height + dy;
-
-				if ( resizeHorizontal )
-					width = Math.max( config.resize_minWidth, Math.min( internalWidth, config.resize_maxWidth ) );
-
-				if ( resizeVertical )
-					height = Math.max( config.resize_minHeight, Math.min( internalHeight, config.resize_maxHeight ) );
-
-				// DO NOT impose fixed size with single direction resize. (#6308)
-				editor.resize( resizeHorizontal ? width : null, height );
-			}
-
-			function dragEndHandler( evt ) {
-				CKEDITOR.document.removeListener( &#39;mousemove&#39;, dragHandler );
-				CKEDITOR.document.removeListener( &#39;mouseup&#39;, dragEndHandler );
-
-				if ( editor.document ) {
-					editor.document.removeListener( &#39;mousemove&#39;, dragHandler );
-					editor.document.removeListener( &#39;mouseup&#39;, dragEndHandler );
-				}
-			}
-
-			var mouseDownFn = CKEDITOR.tools.addFunction( function( $event ) {
-				if ( !container )
-					container = editor.getResizable();
-
-				startSize = { width: container.$.offsetWidth || 0, height: container.$.offsetHeight || 0 };
-				origin = { x: $event.screenX, y: $event.screenY };
-
-				config.resize_minWidth &gt; startSize.width &amp;&amp; ( config.resize_minWidth = startSize.width );
-				config.resize_minHeight &gt; startSize.height &amp;&amp; ( config.resize_minHeight = startSize.height );
-
-				CKEDITOR.document.on( &#39;mousemove&#39;, dragHandler );
-				CKEDITOR.document.on( &#39;mouseup&#39;, dragEndHandler );
-
-				if ( editor.document ) {
-					editor.document.on( &#39;mousemove&#39;, dragHandler );
-					editor.document.on( &#39;mouseup&#39;, dragEndHandler );
-				}
-
-				$event.preventDefault &amp;&amp; $event.preventDefault();
-			} );
-
-			editor.on( &#39;destroy&#39;, function() {
-				CKEDITOR.tools.removeFunction( mouseDownFn );
-			} );
-
-			editor.on( &#39;uiSpace&#39;, function( event ) {
-				if ( event.data.space == &#39;bottom&#39; ) {
-					var direction = &#39;&#39;;
-					if ( resizeHorizontal &amp;&amp; !resizeVertical )
-						direction = &#39; cke_resizer_horizontal&#39;;
-					if ( !resizeHorizontal &amp;&amp; resizeVertical )
-						direction = &#39; cke_resizer_vertical&#39;;
-
-					var resizerHtml =
-						&#39;&lt;span&#39; +
-						&#39; id=&quot;&#39; + spaceId + &#39;&quot;&#39; +
-						&#39; class=&quot;cke_resizer&#39; + direction + &#39; cke_resizer_&#39; + resizeDir + &#39;&quot;&#39; +
-						&#39; title=&quot;&#39; + CKEDITOR.tools.htmlEncode( editor.lang.common.resize ) + &#39;&quot;&#39; +
-						&#39; onmousedown=&quot;CKEDITOR.tools.callFunction(&#39; + mouseDownFn + &#39;, event)&quot;&#39; +
-						&#39;&gt;&#39; +
-						// BLACK LOWER RIGHT TRIANGLE (ltr)
-						// BLACK LOWER LEFT TRIANGLE (rtl)
-						( resizeDir == &#39;ltr&#39; ? &#39;\u25E2&#39; : &#39;\u25E3&#39; ) +
-						&#39;&lt;/span&gt;&#39;;
-
-					// Always sticks the corner of botttom space.
-					resizeDir == &#39;ltr&#39; &amp;&amp; direction == &#39;ltr&#39; ? event.data.html += resizerHtml : event.data.html = resizerHtml + event.data.html;
-				}
-			}, editor, null, 100 );
-
-			// Toggle the visibility of the resizer when an editor is being maximized or minimized.
-			editor.on( &#39;maximize&#39;, function( event ) {
-				editor.ui.space( &#39;resizer&#39; )[ event.data == CKEDITOR.TRISTATE_ON ? &#39;hide&#39; : &#39;show&#39; ]();
-			} );
-		}
+		// Register the toolbar button.
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Print&#39;, {
+			label: editor.lang.print.toolbar,
+			command: pluginName,
+			toolbar: &#39;document,50&#39;
+		} );
 	}
 } );
 
-<span id='CKEDITOR-config-cfg-resize_minWidth'>/**
-</span> * The minimum editor width, in pixels, when resizing the editor interface by using the resize handle.
- * Note: It falls back to editor&#39;s actual width if it is smaller than the default value.
- *
- *		config.resize_minWidth = 500;
- *
- * @cfg {Number} [resize_minWidth=750]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_minHeight'>/**
-</span> * The minimum editor height, in pixels, when resizing the editor interface by using the resize handle.
- * Note: It falls back to editor&#39;s actual height if it is smaller than the default value.
- *
- *		config.resize_minHeight = 600;
- *
- * @cfg {Number} [resize_minHeight=250]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_maxWidth'>/**
-</span> * The maximum editor width, in pixels, when resizing the editor interface by using the resize handle.
- *
- *		config.resize_maxWidth = 750;
- *
- * @cfg {Number} [resize_maxWidth=3000]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_maxHeight'>/**
-</span> * The maximum editor height, in pixels, when resizing the editor interface by using the resize handle.
- *
- *		config.resize_maxHeight = 600;
- *
- * @cfg {Number} [resize_maxHeight=3000]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_enabled'>/**
-</span> * Whether to enable the resizing feature. If this feature is disabled, the resize handle will not be visible.
- *
- *		config.resize_enabled = false;
- *
- * @cfg {Boolean} [resize_enabled=true]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-resize_dir'>/**
-</span> * The dimensions for which the editor resizing is enabled. Possible values
- * are `both`, `vertical`, and `horizontal`.
- *
- *		config.resize_dir = &#39;both&#39;;
- *
- * @since 3.3
- * @cfg {String} [resize_dir=&#39;vertical&#39;]
- * @member CKEDITOR.config
- */
+CKEDITOR.plugins.print = {
+	exec: function( editor ) {
+		if ( CKEDITOR.env.gecko )
+			editor.window.$.print();
+		else
+			editor.document.$.execCommand( &quot;Print&quot; );
+	},
+	canUndo: false,
+	readOnly: 1,
+	modes: { wysiwyg: 1 }
+};
 </pre>
 </body>
 </html>

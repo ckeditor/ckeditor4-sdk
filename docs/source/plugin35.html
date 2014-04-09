@@ -20,300 +20,231 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview Forms Plugin
- */
+( function() {
+	function addCombo( editor, comboName, styleType, lang, entries, defaultLabel, styleDefinition, order ) {
+		var config = editor.config,
+			style = new CKEDITOR.style( styleDefinition );
 
-CKEDITOR.plugins.add( &#39;forms&#39;, {
-	requires: &#39;dialog,fakeobjects&#39;,
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;button,checkbox,form,hiddenfield,imagebutton,radio,select,select-rtl,textarea,textarea-rtl,textfield&#39;, // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	onLoad: function() {
-		CKEDITOR.addCss( &#39;.cke_editable form&#39; +
-			&#39;{&#39; +
-				&#39;border: 1px dotted #FF0000;&#39; +
-				&#39;padding: 2px;&#39; +
-			&#39;}\n&#39; );
+		// Gets the list of fonts from the settings.
+		var names = entries.split( &#39;;&#39; ),
+			values = [];
 
-		CKEDITOR.addCss( &#39;img.cke_hidden&#39; +
-			&#39;{&#39; +
-				&#39;background-image: url(&#39; + CKEDITOR.getUrl( this.path + &#39;images/hiddenfield.gif&#39; ) + &#39;);&#39; +
-				&#39;background-position: center center;&#39; +
-				&#39;background-repeat: no-repeat;&#39; +
-				&#39;border: 1px solid #a9a9a9;&#39; +
-				&#39;width: 16px !important;&#39; +
-				&#39;height: 16px !important;&#39; +
-			&#39;}&#39; );
+		// Create style objects for all fonts.
+		var styles = {};
+		for ( var i = 0; i &lt; names.length; i++ ) {
+			var parts = names[ i ];
 
-	},
-	init: function( editor ) {
-		var lang = editor.lang,
-			order = 0,
-			textfieldTypes = { email: 1, password: 1, search: 1, tel: 1, text: 1, url: 1 },
-			allowedContent = {
-				checkbox: &#39;input[type,name,checked]&#39;,
-				radio: &#39;input[type,name,checked]&#39;,
-				textfield: &#39;input[type,name,value,size,maxlength]&#39;,
-				textarea: &#39;textarea[cols,rows,name]&#39;,
-				select: &#39;select[name,size,multiple]; option[value,selected]&#39;,
-				button: &#39;input[type,name,value]&#39;,
-				form: &#39;form[action,name,id,enctype,target,method]&#39;,
-				hiddenfield: &#39;input[type,name,value]&#39;,
-				imagebutton: &#39;input[type,alt,src]{width,height,border,border-width,border-style,margin,float}&#39;
-			},
-			requiredContent = {
-				checkbox: &#39;input&#39;,
-				radio: &#39;input&#39;,
-				textfield: &#39;input&#39;,
-				textarea: &#39;textarea&#39;,
-				select: &#39;select&#39;,
-				button: &#39;input&#39;,
-				form: &#39;form&#39;,
-				hiddenfield: &#39;input&#39;,
-				imagebutton: &#39;input&#39;
-			};
+			if ( parts ) {
+				parts = parts.split( &#39;/&#39; );
 
-		// All buttons use the same code to register. So, to avoid
-		// duplications, let&#39;s use this tool function.
-		var addButtonCommand = function( buttonName, commandName, dialogFile ) {
-				var def = {
-					allowedContent: allowedContent[ commandName ],
-					requiredContent: requiredContent[ commandName ]
-				};
-				commandName == &#39;form&#39; &amp;&amp; ( def.context = &#39;form&#39; );
+				var vars = {},
+					name = names[ i ] = parts[ 0 ];
 
-				editor.addCommand( commandName, new CKEDITOR.dialogCommand( commandName, def ) );
+				vars[ styleType ] = values[ i ] = parts[ 1 ] || name;
 
-				editor.ui.addButton &amp;&amp; editor.ui.addButton( buttonName, {
-					label: lang.common[ buttonName.charAt( 0 ).toLowerCase() + buttonName.slice( 1 ) ],
-					command: commandName,
-					toolbar: &#39;forms,&#39; + ( order += 10 )
-				} );
-				CKEDITOR.dialog.add( commandName, dialogFile );
-			};
-
-		var dialogPath = this.path + &#39;dialogs/&#39;;
-		!editor.blockless &amp;&amp; addButtonCommand( &#39;Form&#39;, &#39;form&#39;, dialogPath + &#39;form.js&#39; );
-		addButtonCommand( &#39;Checkbox&#39;, &#39;checkbox&#39;, dialogPath + &#39;checkbox.js&#39; );
-		addButtonCommand( &#39;Radio&#39;, &#39;radio&#39;, dialogPath + &#39;radio.js&#39; );
-		addButtonCommand( &#39;TextField&#39;, &#39;textfield&#39;, dialogPath + &#39;textfield.js&#39; );
-		addButtonCommand( &#39;Textarea&#39;, &#39;textarea&#39;, dialogPath + &#39;textarea.js&#39; );
-		addButtonCommand( &#39;Select&#39;, &#39;select&#39;, dialogPath + &#39;select.js&#39; );
-		addButtonCommand( &#39;Button&#39;, &#39;button&#39;, dialogPath + &#39;button.js&#39; );
-
-		var imagePlugin = editor.plugins.image;
-
-		// Since Image plugin is disabled when Image2 is to be loaded,
-		// ImageButton also got to be off (#11222).
-		if ( imagePlugin &amp;&amp; !editor.plugins.image2 )
-			addButtonCommand( &#39;ImageButton&#39;, &#39;imagebutton&#39;, CKEDITOR.plugins.getPath( &#39;image&#39; ) + &#39;dialogs/image.js&#39; );
-
-		addButtonCommand( &#39;HiddenField&#39;, &#39;hiddenfield&#39;, dialogPath + &#39;hiddenfield.js&#39; );
-
-		// If the &quot;menu&quot; plugin is loaded, register the menu items.
-		if ( editor.addMenuItems ) {
-			var items = {
-				checkbox: {
-					label: lang.forms.checkboxAndRadio.checkboxTitle,
-					command: &#39;checkbox&#39;,
-					group: &#39;checkbox&#39;
-				},
-
-				radio: {
-					label: lang.forms.checkboxAndRadio.radioTitle,
-					command: &#39;radio&#39;,
-					group: &#39;radio&#39;
-				},
-
-				textfield: {
-					label: lang.forms.textfield.title,
-					command: &#39;textfield&#39;,
-					group: &#39;textfield&#39;
-				},
-
-				hiddenfield: {
-					label: lang.forms.hidden.title,
-					command: &#39;hiddenfield&#39;,
-					group: &#39;hiddenfield&#39;
-				},
-
-				button: {
-					label: lang.forms.button.title,
-					command: &#39;button&#39;,
-					group: &#39;button&#39;
-				},
-
-				select: {
-					label: lang.forms.select.title,
-					command: &#39;select&#39;,
-					group: &#39;select&#39;
-				},
-
-				textarea: {
-					label: lang.forms.textarea.title,
-					command: &#39;textarea&#39;,
-					group: &#39;textarea&#39;
-				}
-			};
-
-			if ( imagePlugin ) {
-				items.imagebutton = {
-					label: lang.image.titleButton,
-					command: &#39;imagebutton&#39;,
-					group: &#39;imagebutton&#39;
-				};
-			}
-
-			!editor.blockless &amp;&amp; ( items.form = {
-				label: lang.forms.form.menu,
-				command: &#39;form&#39;,
-				group: &#39;form&#39;
-			} );
-
-			editor.addMenuItems( items );
-
+				styles[ name ] = new CKEDITOR.style( styleDefinition, vars );
+				styles[ name ]._.definition.name = name;
+			} else
+				names.splice( i--, 1 );
 		}
 
-		// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
-		if ( editor.contextMenu ) {
-			!editor.blockless &amp;&amp; editor.contextMenu.addListener( function( element, selection, path ) {
-				var form = path.contains( &#39;form&#39;, 1 );
-				if ( form &amp;&amp; !form.isReadOnly() )
-					return { form: CKEDITOR.TRISTATE_OFF };
-			} );
+		editor.ui.addRichCombo( comboName, {
+			label: lang.label,
+			title: lang.panelTitle,
+			toolbar: &#39;styles,&#39; + order,
+			allowedContent: style,
+			requiredContent: style,
 
-			editor.contextMenu.addListener( function( element ) {
-				if ( element &amp;&amp; !element.isReadOnly() ) {
-					var name = element.getName();
+			panel: {
+				css: [ CKEDITOR.skin.getPath( &#39;editor&#39; ) ].concat( config.contentsCss ),
+				multiSelect: false,
+				attributes: { &#39;aria-label&#39;: lang.panelTitle }
+			},
 
-					if ( name == &#39;select&#39; )
-						return { select: CKEDITOR.TRISTATE_OFF };
+			init: function() {
+				this.startGroup( lang.panelTitle );
 
-					if ( name == &#39;textarea&#39; )
-						return { textarea: CKEDITOR.TRISTATE_OFF };
+				for ( var i = 0; i &lt; names.length; i++ ) {
+					var name = names[ i ];
 
-					if ( name == &#39;input&#39; ) {
-						var type = element.getAttribute( &#39;type&#39; ) || &#39;text&#39;;
-						switch ( type ) {
-							case &#39;button&#39;:
-							case &#39;submit&#39;:
-							case &#39;reset&#39;:
-								return { button: CKEDITOR.TRISTATE_OFF };
+					// Add the tag entry to the panel list.
+					this.add( name, styles[ name ].buildPreview(), name );
+				}
+			},
 
-							case &#39;checkbox&#39;:
-								return { checkbox: CKEDITOR.TRISTATE_OFF };
+			onClick: function( value ) {
+				editor.focus();
+				editor.fire( &#39;saveSnapshot&#39; );
 
-							case &#39;radio&#39;:
-								return { radio: CKEDITOR.TRISTATE_OFF };
+				var style = styles[ value ];
 
-							case &#39;image&#39;:
-								return imagePlugin ? { imagebutton: CKEDITOR.TRISTATE_OFF } : null;
+				editor[ this.getValue() == value ? &#39;removeStyle&#39; : &#39;applyStyle&#39; ]( style );
+				editor.fire( &#39;saveSnapshot&#39; );
+			},
+
+			onRender: function() {
+				editor.on( &#39;selectionChange&#39;, function( ev ) {
+					var currentValue = this.getValue();
+
+					var elementPath = ev.data.path,
+						elements = elementPath.elements;
+
+					// For each element into the elements path.
+					for ( var i = 0, element; i &lt; elements.length; i++ ) {
+						element = elements[ i ];
+
+						// Check if the element is removable by any of
+						// the styles.
+						for ( var value in styles ) {
+							if ( styles[ value ].checkElementMatch( element, true, editor ) ) {
+								if ( value != currentValue )
+									this.setValue( value );
+								return;
+							}
 						}
-
-						if ( textfieldTypes[ type ] )
-							return { textfield: CKEDITOR.TRISTATE_OFF };
 					}
 
-					if ( name == &#39;img&#39; &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;hiddenfield&#39; )
-						return { hiddenfield: CKEDITOR.TRISTATE_OFF };
-				}
-			} );
-		}
+					// If no styles match, just empty it.
+					this.setValue( &#39;&#39;, defaultLabel );
+				}, this );
+			},
 
-		editor.on( &#39;doubleclick&#39;, function( evt ) {
-			var element = evt.data.element;
-
-			if ( !editor.blockless &amp;&amp; element.is( &#39;form&#39; ) )
-				evt.data.dialog = &#39;form&#39;;
-			else if ( element.is( &#39;select&#39; ) )
-				evt.data.dialog = &#39;select&#39;;
-			else if ( element.is( &#39;textarea&#39; ) )
-				evt.data.dialog = &#39;textarea&#39;;
-			else if ( element.is( &#39;img&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;hiddenfield&#39; )
-				evt.data.dialog = &#39;hiddenfield&#39;;
-			else if ( element.is( &#39;input&#39; ) ) {
-				var type = element.getAttribute( &#39;type&#39; ) || &#39;text&#39;;
-				switch ( type ) {
-					case &#39;button&#39;:
-					case &#39;submit&#39;:
-					case &#39;reset&#39;:
-						evt.data.dialog = &#39;button&#39;;
-						break;
-					case &#39;checkbox&#39;:
-						evt.data.dialog = &#39;checkbox&#39;;
-						break;
-					case &#39;radio&#39;:
-						evt.data.dialog = &#39;radio&#39;;
-						break;
-					case &#39;image&#39;:
-						evt.data.dialog = &#39;imagebutton&#39;;
-						break;
-				}
-				if ( textfieldTypes[ type ] )
-					evt.data.dialog = &#39;textfield&#39;;
+			refresh: function() {
+				if ( !editor.activeFilter.check( style ) )
+					this.setState( CKEDITOR.TRISTATE_DISABLED );
 			}
 		} );
-	},
-
-	afterInit: function( editor ) {
-		var dataProcessor = editor.dataProcessor,
-			htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter,
-			dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter;
-
-		// Cleanup certain IE form elements default values.
-		// Note: Inputs are marked with contenteditable=false flags, so filters for them
-		// need to be applied to non-editable content as well.
-		if ( CKEDITOR.env.ie ) {
-			htmlFilter &amp;&amp; htmlFilter.addRules( {
-				elements: {
-					input: function( input ) {
-						var attrs = input.attributes,
-							type = attrs.type;
-						// Old IEs don&#39;t provide type for Text inputs #5522
-						if ( !type )
-							attrs.type = &#39;text&#39;;
-						if ( type == &#39;checkbox&#39; || type == &#39;radio&#39; )
-							attrs.value == &#39;on&#39; &amp;&amp; delete attrs.value;
-					}
-				}
-			}, { applyToAll: true } );
-		}
-
-		if ( dataFilter ) {
-			dataFilter.addRules( {
-				elements: {
-					input: function( element ) {
-						if ( element.attributes.type == &#39;hidden&#39; )
-							return editor.createFakeParserElement( element, &#39;cke_hidden&#39;, &#39;hiddenfield&#39; );
-					}
-				}
-			}, { applyToAll: true } );
-		}
 	}
-} );
 
-if ( CKEDITOR.env.ie ) {
-	CKEDITOR.dom.element.prototype.hasAttribute = CKEDITOR.tools.override( CKEDITOR.dom.element.prototype.hasAttribute, function( original ) {
-		return function( name ) {
-			var $attr = this.$.attributes.getNamedItem( name );
+	CKEDITOR.plugins.add( &#39;font&#39;, {
+		requires: &#39;richcombo&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			var config = editor.config;
 
-			if ( this.getName() == &#39;input&#39; ) {
-				switch ( name ) {
-					case &#39;class&#39;:
-						return this.$.className.length &gt; 0;
-					case &#39;checked&#39;:
-						return !!this.$.checked;
-					case &#39;value&#39;:
-						var type = this.getAttribute( &#39;type&#39; );
-						return type == &#39;checkbox&#39; || type == &#39;radio&#39; ? this.$.value != &#39;on&#39; : this.$.value;
-				}
-			}
-
-			return original.apply( this, arguments );
-		};
+			addCombo( editor, &#39;Font&#39;, &#39;family&#39;, editor.lang.font, config.font_names, config.font_defaultLabel, config.font_style, 30 );
+			addCombo( editor, &#39;FontSize&#39;, &#39;size&#39;, editor.lang.font.fontSize, config.fontSize_sizes, config.fontSize_defaultLabel, config.fontSize_style, 40 );
+		}
 	} );
-}
+} )();
+
+<span id='CKEDITOR-config-cfg-font_names'>/**
+</span> * The list of fonts names to be displayed in the Font combo in the toolbar.
+ * Entries are separated by semi-colons (`&#39;;&#39;`), while it&#39;s possible to have more
+ * than one font for each entry, in the HTML way (separated by comma).
+ *
+ * A display name may be optionally defined by prefixing the entries with the
+ * name and the slash character. For example, `&#39;Arial/Arial, Helvetica, sans-serif&#39;`
+ * will be displayed as `&#39;Arial&#39;` in the list, but will be outputted as
+ * `&#39;Arial, Helvetica, sans-serif&#39;`.
+ *
+ *		config.font_names =
+ *			&#39;Arial/Arial, Helvetica, sans-serif;&#39; +
+ *			&#39;Times New Roman/Times New Roman, Times, serif;&#39; +
+ *			&#39;Verdana&#39;;
+ *
+ *		config.font_names = &#39;Arial;Times New Roman;Verdana&#39;;
+ *
+ * @cfg {String} [font_names=see source]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.font_names = &#39;Arial/Arial, Helvetica, sans-serif;&#39; +
+	&#39;Comic Sans MS/Comic Sans MS, cursive;&#39; +
+	&#39;Courier New/Courier New, Courier, monospace;&#39; +
+	&#39;Georgia/Georgia, serif;&#39; +
+	&#39;Lucida Sans Unicode/Lucida Sans Unicode, Lucida Grande, sans-serif;&#39; +
+	&#39;Tahoma/Tahoma, Geneva, sans-serif;&#39; +
+	&#39;Times New Roman/Times New Roman, Times, serif;&#39; +
+	&#39;Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;&#39; +
+	&#39;Verdana/Verdana, Geneva, sans-serif&#39;;
+
+<span id='CKEDITOR-config-cfg-font_defaultLabel'>/**
+</span> * The text to be displayed in the Font combo is none of the available values
+ * matches the current cursor position or text selection.
+ *
+ *		// If the default site font is Arial, we may making it more explicit to the end user.
+ *		config.font_defaultLabel = &#39;Arial&#39;;
+ *
+ * @cfg {String} [font_defaultLabel=&#39;&#39;]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.font_defaultLabel = &#39;&#39;;
+
+<span id='CKEDITOR-config-cfg-font_style'>/**
+</span> * The style definition to be used to apply the font in the text.
+ *
+ *		// This is actually the default value for it.
+ *		config.font_style = {
+ *			element:		&#39;span&#39;,
+ *			styles:			{ &#39;font-family&#39;: &#39;#(family)&#39; },
+ *			overrides:		[ { element: &#39;font&#39;, attributes: { &#39;face&#39;: null } } ]
+ *     };
+ *
+ * @cfg {Object} [font_style=see example]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.font_style = {
+	element: &#39;span&#39;,
+	styles: { &#39;font-family&#39;: &#39;#(family)&#39; },
+	overrides: [ {
+		element: &#39;font&#39;, attributes: { &#39;face&#39;: null }
+	} ]
+};
+
+<span id='CKEDITOR-config-cfg-fontSize_sizes'>/**
+</span> * The list of fonts size to be displayed in the Font Size combo in the
+ * toolbar. Entries are separated by semi-colons (`&#39;;&#39;`).
+ *
+ * Any kind of &quot;CSS like&quot; size can be used, like `&#39;12px&#39;`, `&#39;2.3em&#39;`, `&#39;130%&#39;`,
+ * `&#39;larger&#39;` or `&#39;x-small&#39;`.
+ *
+ * A display name may be optionally defined by prefixing the entries with the
+ * name and the slash character. For example, `&#39;Bigger Font/14px&#39;` will be
+ * displayed as `&#39;Bigger Font&#39;` in the list, but will be outputted as `&#39;14px&#39;`.
+ *
+ *		config.fontSize_sizes = &#39;16/16px;24/24px;48/48px;&#39;;
+ *
+ *		config.fontSize_sizes = &#39;12px;2.3em;130%;larger;x-small&#39;;
+ *
+ *		config.fontSize_sizes = &#39;12 Pixels/12px;Big/2.3em;30 Percent More/130%;Bigger/larger;Very Small/x-small&#39;;
+ *
+ * @cfg {String} [fontSize_sizes=see source]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_sizes = &#39;8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px&#39;;
+
+<span id='CKEDITOR-config-cfg-fontSize_defaultLabel'>/**
+</span> * The text to be displayed in the Font Size combo is none of the available
+ * values matches the current cursor position or text selection.
+ *
+ *		// If the default site font size is 12px, we may making it more explicit to the end user.
+ *		config.fontSize_defaultLabel = &#39;12px&#39;;
+ *
+ * @cfg {String} [fontSize_defaultLabel=&#39;&#39;]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_defaultLabel = &#39;&#39;;
+
+<span id='CKEDITOR-config-cfg-fontSize_style'>/**
+</span> * The style definition to be used to apply the font size in the text.
+ *
+ *		// This is actually the default value for it.
+ *		config.fontSize_style = {
+ *			element:		&#39;span&#39;,
+ *			styles:			{ &#39;font-size&#39;: &#39;#(size)&#39; },
+ *			overrides:		[ { element :&#39;font&#39;, attributes: { &#39;size&#39;: null } } ]
+ *		};
+ *
+ * @cfg {Object} [fontSize_style=see example]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.fontSize_style = {
+	element: &#39;span&#39;,
+	styles: { &#39;font-size&#39;: &#39;#(size)&#39; },
+	overrides: [ {
+		element: &#39;font&#39;, attributes: { &#39;size&#39;: null }
+	} ]
+};
 </pre>
 </body>
 </html>

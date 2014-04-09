@@ -20,158 +20,103 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-use strict'>/**
-</span> * @fileOverview Horizontal Page Break
- */
+CKEDITOR.plugins.add( &#39;menubutton&#39;, {
+	requires: &#39;button,menu&#39;,
+	onLoad: function() {
+		var clickFn = function( editor ) {
+				var _ = this._,
+					menu = _.menu;
 
-&#39;use strict&#39;;
+				// Do nothing if this button is disabled.
+				if ( _.state === CKEDITOR.TRISTATE_DISABLED )
+					return;
 
-( function() {
-	// Register a plugin named &quot;pagebreak&quot;.
-	CKEDITOR.plugins.add( &#39;pagebreak&#39;, {
-		requires: &#39;fakeobjects&#39;,
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;pagebreak,pagebreak-rtl&#39;, // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
-		onLoad: function() {
-			var cssStyles = (
-					&#39;background:url(&#39; + CKEDITOR.getUrl( this.path + &#39;images/pagebreak.gif&#39; ) + &#39;) no-repeat center center;&#39; +
-					&#39;clear:both;&#39; +
-					&#39;width:100%;&#39; +
-					&#39;border-top:#999 1px dotted;&#39; +
-					&#39;border-bottom:#999 1px dotted;&#39; +
-					&#39;padding:0;&#39; +
-					&#39;height:5px;&#39; +
-					&#39;cursor:default;&#39;
-				).replace( /;/g, &#39; !important;&#39; ); // Increase specificity to override other styles, e.g. block outline.
+				if ( _.on &amp;&amp; menu ) {
+					menu.hide();
+					return;
+				}
 
-			// Add the style that renders our placeholder.
-			CKEDITOR.addCss( &#39;div.cke_pagebreak{&#39; + cssStyles + &#39;}&#39; );
-		},
+				_.previousState = _.state;
 
-		init: function( editor ) {
-			if ( editor.blockless )
-				return;
-
-			// Register the command.
-			editor.addCommand( &#39;pagebreak&#39;, CKEDITOR.plugins.pagebreakCmd );
-
-			// Register the toolbar button.
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;PageBreak&#39;, {
-				label: editor.lang.pagebreak.toolbar,
-				command: &#39;pagebreak&#39;,
-				toolbar: &#39;insert,70&#39;
-			} );
-
-			// Opera and webkit based browsers needs help to select the page-break.
-			( CKEDITOR.env.opera || CKEDITOR.env.webkit ) &amp;&amp; editor.on( &#39;contentDom&#39;, function() {
-				editor.document.on( &#39;click&#39;, function( evt ) {
-					var target = evt.data.getTarget();
-					if ( target.is( &#39;div&#39; ) &amp;&amp; target.hasClass( &#39;cke_pagebreak&#39; ) )
-						editor.getSelection().selectElement( target );
-				} );
-			} );
-		},
-
-		afterInit: function( editor ) {
-			// Register a filter to displaying placeholders after mode change.
-			var dataProcessor = editor.dataProcessor,
-				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter,
-				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter,
-				styleRegex = /page-break-after\s*:\s*always/i,
-				childStyleRegex = /display\s*:\s*none/i;
-
-			function upcastPageBreak( element ) {
-				CKEDITOR.tools.extend( element.attributes, attributesSet( editor.lang.pagebreak.alt ), true );
-
-				element.children.length = 0;
-			}
-
-			if ( htmlFilter ) {
-				htmlFilter.addRules( {
-					attributes: {
-						&#39;class&#39;: function( value, element ) {
-							var className = value.replace( &#39;cke_pagebreak&#39;, &#39;&#39; );
-							if ( className != value ) {
-								var span = CKEDITOR.htmlParser.fragment.fromHtml( &#39;&lt;span style=&quot;display: none;&quot;&gt;&amp;nbsp;&lt;/span&gt;&#39; ).children[ 0 ];
-								element.children.length = 0;
-								element.add( span );
-								var attrs = element.attributes;
-								delete attrs[ &#39;aria-label&#39; ];
-								delete attrs.contenteditable;
-								delete attrs.title;
-							}
-							return className;
+				// Check if we already have a menu for it, otherwise just create it.
+				if ( !menu ) {
+					menu = _.menu = new CKEDITOR.menu( editor, {
+						panel: {
+							className: &#39;cke_menu_panel&#39;,
+							attributes: { &#39;aria-label&#39;: editor.lang.common.options }
 						}
-					}
-				}, { applyToAll: true, priority: 5 } );
-			}
+					} );
 
-			if ( dataFilter ) {
-				dataFilter.addRules( {
-					elements: {
-						div: function( element ) {
-							// The &quot;internal form&quot; of a pagebreak is pasted from clipboard.
-							// ACF may have distorted the HTML because &quot;internal form&quot; is
-							// different than &quot;data form&quot;. Make sure that element remains valid
-							// by re-upcasting it (#11133).
-							if ( element.attributes[ &#39;data-cke-pagebreak&#39; ] )
-								upcastPageBreak( element );
+					menu.onHide = CKEDITOR.tools.bind( function() {
+						var modes = this.command ? editor.getCommand( this.command ).modes : this.modes;
+						this.setState( !modes || modes[ editor.mode ] ? _.previousState : CKEDITOR.TRISTATE_DISABLED );
+						_.on = 0;
+					}, this );
 
-							// Check for &quot;data form&quot; of the pagebreak. If both element and
-							// descendants match, convert them to internal form.
-							else if ( styleRegex.test( element.attributes.style ) ) {
-								var child = element.children[ 0 ];
+					// Initialize the menu items at this point.
+					if ( this.onMenu )
+						menu.addListener( this.onMenu );
+				}
 
-								if ( child &amp;&amp; child.name == &#39;span&#39; &amp;&amp; childStyleRegex.test( child.attributes.style ) )
-									upcastPageBreak( element );
-							}
-						}
-					}
-				} );
-			}
-		}
-	} );
+				this.setState( CKEDITOR.TRISTATE_ON );
+				_.on = 1;
 
-	// TODO Much probably there&#39;s no need to expose this object as public object.
-	CKEDITOR.plugins.pagebreakCmd = {
-		exec: function( editor ) {
-			// Create read-only element that represents a print break.
-			var pagebreak = editor.document.createElement( &#39;div&#39;, {
-				attributes: attributesSet( editor.lang.pagebreak.alt )
-			} );
+				// This timeout is needed to give time for the panel get focus
+				// when JAWS is running. (#9842)
+				setTimeout( function() {
+					menu.show( CKEDITOR.document.getById( _.id ), 4 );
+				}, 0 );
+			};
 
-			editor.insertElement( pagebreak );
-		},
-		context: &#39;div&#39;,
-		allowedContent: {
-			div: {
-				styles: &#39;!page-break-after&#39;
+<span id='CKEDITOR-ui-menuButton'>		/**
+</span>		 * @class
+		 * @extends CKEDITOR.ui.button
+		 * @todo
+		 */
+		CKEDITOR.ui.menuButton = CKEDITOR.tools.createClass( {
+			base: CKEDITOR.ui.button,
+
+<span id='CKEDITOR-ui-menuButton-method-constructor'>			/**
+</span>			 * Creates a menuButton class instance.
+			 *
+			 * @constructor
+			 * @param Object definition
+			 * @todo
+			 */
+			$: function( definition ) {
+				// We don&#39;t want the panel definition in this object.
+				var panelDefinition = definition.panel;
+				delete definition.panel;
+
+				this.base( definition );
+
+				this.hasArrow = true;
+
+				this.click = clickFn;
 			},
-			span: {
-				match: function( element ) {
-					var parent = element.parent;
-					return parent &amp;&amp; parent.name == &#39;div&#39; &amp;&amp; parent.styles[ &#39;page-break-after&#39; ];
-				},
-				styles: &#39;display&#39;
-			}
-		},
-		requiredContent: &#39;div{page-break-after}&#39;
-	};
 
-	// Returns an object representing all the attributes
-	// of the &quot;internal form&quot; of the pagebreak element.
-	function attributesSet( label ) {
-		return {
-			&#39;aria-label&#39;: label,
-			&#39;class&#39;: &#39;cke_pagebreak&#39;,
-			contenteditable: &#39;false&#39;,
-			&#39;data-cke-display-name&#39;: &#39;pagebreak&#39;,
-			&#39;data-cke-pagebreak&#39;: 1,
-			style: &#39;page-break-after: always&#39;,
-			title: label
-		};
+			statics: {
+				handler: {
+					create: function( definition ) {
+						return new CKEDITOR.ui.menuButton( definition );
+					}
+				}
+			}
+		} );
+	},
+	beforeInit: function( editor ) {
+		editor.ui.addHandler( CKEDITOR.UI_MENUBUTTON, CKEDITOR.ui.menuButton.handler );
 	}
-} )();</pre>
+} );
+
+<span id='CKEDITOR-property-UI_MENUBUTTON'>/**
+</span> * Button UI element.
+ *
+ * @readonly
+ * @property {String} [=&#39;menubutton&#39;]
+ * @member CKEDITOR
+ */
+CKEDITOR.UI_MENUBUTTON = &#39;menubutton&#39;;
+</pre>
 </body>
 </html>

@@ -20,502 +20,240 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview The &quot;filebrowser&quot; plugin that adds support for file uploads and
- *               browsing.
- *
- * When a file is uploaded or selected inside the file browser, its URL is
- * inserted automatically into a field defined in the &lt;code&gt;filebrowser&lt;/code&gt;
- * attribute. In order to specify a field that should be updated, pass the tab ID and
- * the element ID, separated with a colon.&lt;br /&gt;&lt;br /&gt;
- *
- * &lt;strong&gt;Example 1: (Browse)&lt;/strong&gt;
- *
- * &lt;pre&gt;
- * {
- * 	type : &#39;button&#39;,
- * 	id : &#39;browse&#39;,
- * 	filebrowser : &#39;tabId:elementId&#39;,
- * 	label : editor.lang.common.browseServer
- * }
- * &lt;/pre&gt;
- *
- * If you set the &lt;code&gt;filebrowser&lt;/code&gt; attribute for an element other than
- * the &lt;code&gt;fileButton&lt;/code&gt;, the &lt;code&gt;Browse&lt;/code&gt; action will be triggered.&lt;br /&gt;&lt;br /&gt;
- *
- * &lt;strong&gt;Example 2: (Quick Upload)&lt;/strong&gt;
- *
- * &lt;pre&gt;
- * {
- * 	type : &#39;fileButton&#39;,
- * 	id : &#39;uploadButton&#39;,
- * 	filebrowser : &#39;tabId:elementId&#39;,
- * 	label : editor.lang.common.uploadSubmit,
- * 	&#39;for&#39; : [ &#39;upload&#39;, &#39;upload&#39; ]
- * }
- * &lt;/pre&gt;
- *
- * If you set the &lt;code&gt;filebrowser&lt;/code&gt; attribute for a &lt;code&gt;fileButton&lt;/code&gt;
- * element, the &lt;code&gt;QuickUpload&lt;/code&gt; action will be executed.&lt;br /&gt;&lt;br /&gt;
- *
- * The filebrowser plugin also supports more advanced configuration performed through
- * a JavaScript object.
- *
- * The following settings are supported:
- *
- * &lt;ul&gt;
- * &lt;li&gt;&lt;code&gt;action&lt;/code&gt; &amp;ndash; &lt;code&gt;Browse&lt;/code&gt; or &lt;code&gt;QuickUpload&lt;/code&gt;.&lt;/li&gt;
- * &lt;li&gt;&lt;code&gt;target&lt;/code&gt; &amp;ndash; the field to update in the &lt;code&gt;&lt;em&gt;tabId:elementId&lt;/em&gt;&lt;/code&gt; format.&lt;/li&gt;
- * &lt;li&gt;&lt;code&gt;params&lt;/code&gt; &amp;ndash; additional arguments to be passed to the server connector (optional).&lt;/li&gt;
- * &lt;li&gt;&lt;code&gt;onSelect&lt;/code&gt; &amp;ndash; a function to execute when the file is selected/uploaded (optional).&lt;/li&gt;
- * &lt;li&gt;&lt;code&gt;url&lt;/code&gt; &amp;ndash; the URL to be called (optional).&lt;/li&gt;
- * &lt;/ul&gt;
- *
- * &lt;strong&gt;Example 3: (Quick Upload)&lt;/strong&gt;
- *
- * &lt;pre&gt;
- * {
- * 	type : &#39;fileButton&#39;,
- * 	label : editor.lang.common.uploadSubmit,
- * 	id : &#39;buttonId&#39;,
- * 	filebrowser :
- * 	{
- * 		action : &#39;QuickUpload&#39;, // required
- * 		target : &#39;tab1:elementId&#39;, // required
- * 		params : // optional
- * 		{
- * 			type : &#39;Files&#39;,
- * 			currentFolder : &#39;/folder/&#39;
- * 		},
- * 		onSelect : function( fileUrl, errorMessage ) // optional
- * 		{
- * 			// Do not call the built-in selectFuntion.
- * 			// return false;
- * 		}
- * 	},
- * 	&#39;for&#39; : [ &#39;tab1&#39;, &#39;myFile&#39; ]
- * }
- * &lt;/pre&gt;
- *
- * Suppose you have a file element with an ID of &lt;code&gt;myFile&lt;/code&gt;, a text
- * field with an ID of &lt;code&gt;elementId&lt;/code&gt; and a &lt;code&gt;fileButton&lt;/code&gt;.
- * If the &lt;code&gt;filebowser.url&lt;/code&gt; attribute is not specified explicitly,
- * the form action will be set to &lt;code&gt;filebrowser[&lt;em&gt;DialogWindowName&lt;/em&gt;]UploadUrl&lt;/code&gt;
- * or, if not specified, to &lt;code&gt;filebrowserUploadUrl&lt;/code&gt;. Additional parameters
- * from the &lt;code&gt;params&lt;/code&gt; object will be added to the query string. It is
- * possible to create your own &lt;code&gt;uploadHandler&lt;/code&gt; and cancel the built-in
- * &lt;code&gt;updateTargetElement&lt;/code&gt; command.&lt;br /&gt;&lt;br /&gt;
- *
- * &lt;strong&gt;Example 4: (Browse)&lt;/strong&gt;
- *
- * &lt;pre&gt;
- * {
- * 	type : &#39;button&#39;,
- * 	id : &#39;buttonId&#39;,
- * 	label : editor.lang.common.browseServer,
- * 	filebrowser :
- * 	{
- * 		action : &#39;Browse&#39;,
- * 		url : &#39;/ckfinder/ckfinder.html&amp;amp;type=Images&#39;,
- * 		target : &#39;tab1:elementId&#39;
- * 	}
- * }
- * &lt;/pre&gt;
- *
- * In this example, when the button is pressed, the file browser will be opened in a
- * popup window. If you do not specify the &lt;code&gt;filebrowser.url&lt;/code&gt; attribute,
- * &lt;code&gt;filebrowser[&lt;em&gt;DialogName&lt;/em&gt;]BrowseUrl&lt;/code&gt; or
- * &lt;code&gt;filebrowserBrowseUrl&lt;/code&gt; will be used. After selecting a file in the file
- * browser, an element with an ID of &lt;code&gt;elementId&lt;/code&gt; will be updated. Just
- * like in the third example, a custom &lt;code&gt;onSelect&lt;/code&gt; function may be defined.
- */
-
 ( function() {
-	// Adds (additional) arguments to given url.
-	//
-	// @param {String}
-	//            url The url.
-	// @param {Object}
-	//            params Additional parameters.
-	function addQueryString( url, params ) {
-		var queryString = [];
+	// Base HTML entities.
+	var htmlbase = &#39;nbsp,gt,lt,amp&#39;;
 
-		if ( !params )
-			return url;
-		else {
-			for ( var i in params )
-				queryString.push( i + &quot;=&quot; + encodeURIComponent( params[ i ] ) );
-		}
+	var entities =
+	// Latin-1 Entities
+	&#39;quot,iexcl,cent,pound,curren,yen,brvbar,sect,uml,copy,ordf,laquo,&#39; +
+		&#39;not,shy,reg,macr,deg,plusmn,sup2,sup3,acute,micro,para,middot,&#39; +
+		&#39;cedil,sup1,ordm,raquo,frac14,frac12,frac34,iquest,times,divide,&#39; +
 
-		return url + ( ( url.indexOf( &quot;?&quot; ) != -1 ) ? &quot;&amp;&quot; : &quot;?&quot; ) + queryString.join( &quot;&amp;&quot; );
-	}
+		// Symbols
+		&#39;fnof,bull,hellip,prime,Prime,oline,frasl,weierp,image,real,trade,&#39; +
+		&#39;alefsym,larr,uarr,rarr,darr,harr,crarr,lArr,uArr,rArr,dArr,hArr,&#39; +
+		&#39;forall,part,exist,empty,nabla,isin,notin,ni,prod,sum,minus,lowast,&#39; +
+		&#39;radic,prop,infin,ang,and,or,cap,cup,int,there4,sim,cong,asymp,ne,&#39; +
+		&#39;equiv,le,ge,sub,sup,nsub,sube,supe,oplus,otimes,perp,sdot,lceil,&#39; +
+		&#39;rceil,lfloor,rfloor,lang,rang,loz,spades,clubs,hearts,diams,&#39; +
 
-	// Make a string&#39;s first character uppercase.
-	//
-	// @param {String}
-	//            str String.
-	function ucFirst( str ) {
-		str += &#39;&#39;;
-		var f = str.charAt( 0 ).toUpperCase();
-		return f + str.substr( 1 );
-	}
+		// Other Special Characters
+		&#39;circ,tilde,ensp,emsp,thinsp,zwnj,zwj,lrm,rlm,ndash,mdash,lsquo,&#39; +
+		&#39;rsquo,sbquo,ldquo,rdquo,bdquo,dagger,Dagger,permil,lsaquo,rsaquo,&#39; +
+		&#39;euro&#39;;
 
-	// The onlick function assigned to the &#39;Browse Server&#39; button. Opens the
-	// file browser and updates target field when file is selected.
-	//
-	// @param {CKEDITOR.event}
-	//            evt The event object.
-	function browseServer( evt ) {
-		var dialog = this.getDialog();
-		var editor = dialog.getParentEditor();
+	// Latin Letters Entities
+	var latin = &#39;Agrave,Aacute,Acirc,Atilde,Auml,Aring,AElig,Ccedil,Egrave,Eacute,&#39; +
+		&#39;Ecirc,Euml,Igrave,Iacute,Icirc,Iuml,ETH,Ntilde,Ograve,Oacute,Ocirc,&#39; +
+		&#39;Otilde,Ouml,Oslash,Ugrave,Uacute,Ucirc,Uuml,Yacute,THORN,szlig,&#39; +
+		&#39;agrave,aacute,acirc,atilde,auml,aring,aelig,ccedil,egrave,eacute,&#39; +
+		&#39;ecirc,euml,igrave,iacute,icirc,iuml,eth,ntilde,ograve,oacute,ocirc,&#39; +
+		&#39;otilde,ouml,oslash,ugrave,uacute,ucirc,uuml,yacute,thorn,yuml,&#39; +
+		&#39;OElig,oelig,Scaron,scaron,Yuml&#39;;
 
-		editor._.filebrowserSe = this;
+	// Greek Letters Entities.
+	var greek = &#39;Alpha,Beta,Gamma,Delta,Epsilon,Zeta,Eta,Theta,Iota,Kappa,Lambda,Mu,&#39; +
+		&#39;Nu,Xi,Omicron,Pi,Rho,Sigma,Tau,Upsilon,Phi,Chi,Psi,Omega,alpha,&#39; +
+		&#39;beta,gamma,delta,epsilon,zeta,eta,theta,iota,kappa,lambda,mu,nu,xi,&#39; +
+		&#39;omicron,pi,rho,sigmaf,sigma,tau,upsilon,phi,chi,psi,omega,thetasym,&#39; +
+		&#39;upsih,piv&#39;;
 
-		var width = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowWidth&#39; ] || editor.config.filebrowserWindowWidth || &#39;80%&#39;;
-		var height = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowHeight&#39; ] || editor.config.filebrowserWindowHeight || &#39;70%&#39;;
+	// Create a mapping table between one character and its entity form from a list of entity names.
+	// @param reverse {Boolean} Whether to create a reverse map from the entity string form to an actual character.
+	function buildTable( entities, reverse ) {
+		var table = {},
+			regex = [];
 
-		var params = this.filebrowser.params || {};
-		params.CKEditor = editor.name;
-		params.CKEditorFuncNum = editor._.filebrowserFn;
-		if ( !params.langCode )
-			params.langCode = editor.langCode;
+		// Entities that the browsers DOM don&#39;t transform to the final char
+		// automatically.
+		var specialTable = {
+			nbsp: &#39;\u00A0&#39;, // IE | FF
+			shy: &#39;\u00AD&#39;, // IE
+			gt: &#39;\u003E&#39;, // IE | FF |   --   | Opera
+			lt: &#39;\u003C&#39;, // IE | FF | Safari | Opera
+			amp: &#39;\u0026&#39;, // ALL
+			apos: &#39;\u0027&#39;, // IE
+			quot: &#39;\u0022&#39; // IE
+		};
 
-		var url = addQueryString( this.filebrowser.url, params );
-		// TODO: V4: Remove backward compatibility (#8163).
-		editor.popup( url, width, height, editor.config.filebrowserWindowFeatures || editor.config.fileBrowserWindowFeatures );
-	}
+		entities = entities.replace( /\b(nbsp|shy|gt|lt|amp|apos|quot)(?:,|$)/g, function( match, entity ) {
+			var org = reverse ? &#39;&amp;&#39; + entity + &#39;;&#39; : specialTable[ entity ],
+				result = reverse ? specialTable[ entity ] : &#39;&amp;&#39; + entity + &#39;;&#39;;
 
-	// The onlick function assigned to the &#39;Upload&#39; button. Makes the final
-	// decision whether form is really submitted and updates target field when
-	// file is uploaded.
-	//
-	// @param {CKEDITOR.event}
-	//            evt The event object.
-	function uploadFile( evt ) {
-		var dialog = this.getDialog();
-		var editor = dialog.getParentEditor();
+			table[ org ] = result;
+			regex.push( org );
+			return &#39;&#39;;
+		} );
 
-		editor._.filebrowserSe = this;
+		if ( !reverse &amp;&amp; entities ) {
+			// Transforms the entities string into an array.
+			entities = entities.split( &#39;,&#39; );
 
-		// If user didn&#39;t select the file, stop the upload.
-		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getInputElement().$.value )
-			return false;
+			// Put all entities inside a DOM element, transforming them to their
+			// final chars.
+			var div = document.createElement( &#39;div&#39; ),
+				chars;
+			div.innerHTML = &#39;&amp;&#39; + entities.join( &#39;;&amp;&#39; ) + &#39;;&#39;;
+			chars = div.innerHTML;
+			div = null;
 
-		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getAction() )
-			return false;
-
-		return true;
-	}
-
-	// Setups the file element.
-	//
-	// @param {CKEDITOR.ui.dialog.file}
-	//            fileInput The file element used during file upload.
-	// @param {Object}
-	//            filebrowser Object containing filebrowser settings assigned to
-	//            the fileButton associated with this file element.
-	function setupFileElement( editor, fileInput, filebrowser ) {
-		var params = filebrowser.params || {};
-		params.CKEditor = editor.name;
-		params.CKEditorFuncNum = editor._.filebrowserFn;
-		if ( !params.langCode )
-			params.langCode = editor.langCode;
-
-		fileInput.action = addQueryString( filebrowser.url, params );
-		fileInput.filebrowser = filebrowser;
-	}
-
-	// Traverse through the content definition and attach filebrowser to
-	// elements with &#39;filebrowser&#39; attribute.
-	//
-	// @param String
-	//            dialogName Dialog name.
-	// @param {CKEDITOR.dialog.definitionObject}
-	//            definition Dialog definition.
-	// @param {Array}
-	//            elements Array of {@link CKEDITOR.dialog.definition.content}
-	//            objects.
-	function attachFileBrowser( editor, dialogName, definition, elements ) {
-		if ( !elements || !elements.length )
-			return;
-
-		var element, fileInput;
-
-		for ( var i = elements.length; i--; ) {
-			element = elements[ i ];
-
-			if ( element.type == &#39;hbox&#39; || element.type == &#39;vbox&#39; || element.type == &#39;fieldset&#39; )
-				attachFileBrowser( editor, dialogName, definition, element.children );
-
-			if ( !element.filebrowser )
-				continue;
-
-			if ( typeof element.filebrowser == &#39;string&#39; ) {
-				var fb = {
-					action: ( element.type == &#39;fileButton&#39; ) ? &#39;QuickUpload&#39; : &#39;Browse&#39;,
-					target: element.filebrowser
-				};
-				element.filebrowser = fb;
-			}
-
-			if ( element.filebrowser.action == &#39;Browse&#39; ) {
-				var url = element.filebrowser.url;
-				if ( url === undefined ) {
-					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;BrowseUrl&#39; ];
-					if ( url === undefined )
-						url = editor.config.filebrowserBrowseUrl;
-				}
-
-				if ( url ) {
-					element.onClick = browseServer;
-					element.filebrowser.url = url;
-					element.hidden = false;
-				}
-			} else if ( element.filebrowser.action == &#39;QuickUpload&#39; &amp;&amp; element[ &#39;for&#39; ] ) {
-				url = element.filebrowser.url;
-				if ( url === undefined ) {
-					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;UploadUrl&#39; ];
-					if ( url === undefined )
-						url = editor.config.filebrowserUploadUrl;
-				}
-
-				if ( url ) {
-					var onClick = element.onClick;
-					element.onClick = function( evt ) {
-						// &quot;element&quot; here means the definition object, so we need to find the correct
-						// button to scope the event call
-						var sender = evt.sender;
-						if ( onClick &amp;&amp; onClick.call( sender, evt ) === false )
-							return false;
-
-						return uploadFile.call( sender, evt );
-					};
-
-					element.filebrowser.url = url;
-					element.hidden = false;
-					setupFileElement( editor, definition.getContents( element[ &#39;for&#39; ][ 0 ] ).get( element[ &#39;for&#39; ][ 1 ] ), element.filebrowser );
-				}
+			// Add all chars to the table.
+			for ( var i = 0; i &lt; chars.length; i++ ) {
+				var charAt = chars.charAt( i );
+				table[ charAt ] = &#39;&amp;&#39; + entities[ i ] + &#39;;&#39;;
+				regex.push( charAt );
 			}
 		}
+
+		table.regex = regex.join( reverse ? &#39;|&#39; : &#39;&#39; );
+
+		return table;
 	}
 
-	// Updates the target element with the url of uploaded/selected file.
-	//
-	// @param {String}
-	//            url The url of a file.
-	function updateTargetElement( url, sourceElement ) {
-		var dialog = sourceElement.getDialog();
-		var targetElement = sourceElement.filebrowser.target || null;
+	CKEDITOR.plugins.add( &#39;entities&#39;, {
+		afterInit: function( editor ) {
+			var config = editor.config;
 
-		// If there is a reference to targetElement, update it.
-		if ( targetElement ) {
-			var target = targetElement.split( &#39;:&#39; );
-			var element = dialog.getContentElement( target[ 0 ], target[ 1 ] );
-			if ( element ) {
-				element.setValue( url );
-				dialog.selectPage( target[ 0 ] );
-			}
-		}
-	}
+			var dataProcessor = editor.dataProcessor,
+				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter;
 
-	// Returns true if filebrowser is configured in one of the elements.
-	//
-	// @param {CKEDITOR.dialog.definitionObject}
-	//            definition Dialog definition.
-	// @param String
-	//            tabId The tab id where element(s) can be found.
-	// @param String
-	//            elementId The element id (or ids, separated with a semicolon) to check.
-	function isConfigured( definition, tabId, elementId ) {
-		if ( elementId.indexOf( &quot;;&quot; ) !== -1 ) {
-			var ids = elementId.split( &quot;;&quot; );
-			for ( var i = 0; i &lt; ids.length; i++ ) {
-				if ( isConfigured( definition, tabId, ids[ i ] ) )
-					return true;
-			}
-			return false;
-		}
+			if ( htmlFilter ) {
+				// Mandatory HTML base entities.
+				var selectedEntities = [];
 
-		var elementFileBrowser = definition.getContents( tabId ).get( elementId ).filebrowser;
-		return ( elementFileBrowser &amp;&amp; elementFileBrowser.url );
-	}
+				if ( config.basicEntities !== false )
+					selectedEntities.push( htmlbase );
 
-	function setUrl( fileUrl, data ) {
-		var dialog = this._.filebrowserSe.getDialog(),
-			targetInput = this._.filebrowserSe[ &#39;for&#39; ],
-			onSelect = this._.filebrowserSe.filebrowser.onSelect;
+				if ( config.entities ) {
+					if ( selectedEntities.length )
+						selectedEntities.push( entities );
 
-		if ( targetInput )
-			dialog.getContentElement( targetInput[ 0 ], targetInput[ 1 ] ).reset();
+					if ( config.entities_latin )
+						selectedEntities.push( latin );
 
-		if ( typeof data == &#39;function&#39; &amp;&amp; data.call( this._.filebrowserSe ) === false )
-			return;
+					if ( config.entities_greek )
+						selectedEntities.push( greek );
 
-		if ( onSelect &amp;&amp; onSelect.call( this._.filebrowserSe, fileUrl, data ) === false )
-			return;
+					if ( config.entities_additional )
+						selectedEntities.push( config.entities_additional );
+				}
 
-		// The &quot;data&quot; argument may be used to pass the error message to the editor.
-		if ( typeof data == &#39;string&#39; &amp;&amp; data )
-			alert( data );
+				var entitiesTable = buildTable( selectedEntities.join( &#39;,&#39; ) );
 
-		if ( fileUrl )
-			updateTargetElement( fileUrl, this._.filebrowserSe );
-	}
+				// Create the Regex used to find entities in the text, leave it matches nothing if entities are empty.
+				var entitiesRegex = entitiesTable.regex ? &#39;[&#39; + entitiesTable.regex + &#39;]&#39; : &#39;a^&#39;;
+				delete entitiesTable.regex;
 
-	CKEDITOR.plugins.add( &#39;filebrowser&#39;, {
-		requires: &#39;popup&#39;,
-		init: function( editor, pluginPath ) {
-			editor._.filebrowserFn = CKEDITOR.tools.addFunction( setUrl, editor );
-			editor.on( &#39;destroy&#39;, function() {
-				CKEDITOR.tools.removeFunction( this._.filebrowserFn );
-			} );
-		}
-	} );
+				if ( config.entities &amp;&amp; config.entities_processNumerical )
+					entitiesRegex = &#39;[^ -~]|&#39; + entitiesRegex;
 
-	CKEDITOR.on( &#39;dialogDefinition&#39;, function( evt ) {
-		// We require filebrowser plugin to be loaded.
-		if ( !evt.editor.plugins.filebrowser )
-			return;
+				entitiesRegex = new RegExp( entitiesRegex, &#39;g&#39; );
 
-		var definition = evt.data.definition,
-			element;
-		// Associate filebrowser to elements with &#39;filebrowser&#39; attribute.
-		for ( var i = 0; i &lt; definition.contents.length; ++i ) {
-			if ( ( element = definition.contents[ i ] ) ) {
-				attachFileBrowser( evt.editor, evt.data.name, definition, element.elements );
-				if ( element.hidden &amp;&amp; element.filebrowser )
-					element.hidden = !isConfigured( definition, element[ &#39;id&#39; ], element.filebrowser );
+				function getEntity( character ) {
+					return config.entities_processNumerical == &#39;force&#39; || !entitiesTable[ character ] ? &#39;&amp;#&#39; + character.charCodeAt( 0 ) + &#39;;&#39;
+						: entitiesTable[ character ];
+				}
 
+				// Decode entities that the browsers has transformed
+				// at first place.
+				var baseEntitiesTable = buildTable( [ htmlbase, &#39;shy&#39; ].join( &#39;,&#39; ), true ),
+					baseEntitiesRegex = new RegExp( baseEntitiesTable.regex, &#39;g&#39; );
+
+				function getChar( character ) {
+					return baseEntitiesTable[ character ];
+				}
+
+				htmlFilter.addRules( {
+					text: function( text ) {
+						return text.replace( baseEntitiesRegex, getChar ).replace( entitiesRegex, getEntity );
+					}
+				}, {
+					applyToAll: true,
+					excludeNestedEditable: true
+				} );
 			}
 		}
 	} );
-
 } )();
 
-<span id='CKEDITOR-config-cfg-filebrowserBrowseUrl'>/**
-</span> * The location of an external file browser that should be launched when the **Browse Server**
- * button is pressed. If configured, the **Browse Server** button will appear in the
- * **Link**, **Image**, and **Flash** dialog windows.
+<span id='CKEDITOR-config-cfg-basicEntities'>/**
+</span> * Whether to escape basic HTML entities in the document, including:
  *
- * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
+ * * `nbsp`
+ * * `gt`
+ * * `lt`
+ * * `amp`
  *
- *		config.filebrowserBrowseUrl = &#39;/browser/browse.php&#39;;
+ * **Note:** It should not be subject to change unless when outputting a non-HTML data format like BBCode.
  *
- * @since 3.0
- * @cfg {String} [filebrowserBrowseUrl=&#39;&#39; (empty string = disabled)]
+ *		config.basicEntities = false;
+ *
+ * @cfg {Boolean} [basicEntities=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.basicEntities = true;
+
+<span id='CKEDITOR-config-cfg-entities'>/**
+</span> * Whether to use HTML entities in the output.
+ *
+ *		config.entities = false;
+ *
+ * @cfg {Boolean} [entities=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities = true;
+
+<span id='CKEDITOR-config-cfg-entities_latin'>/**
+</span> * Whether to convert some Latin characters (Latin alphabet No. 1, ISO 8859-1)
+ * to HTML entities. The list of entities can be found in the
+ * [W3C HTML 4.01 Specification, section 24.2.1](http://www.w3.org/TR/html4/sgml/entities.html#h-24.2.1).
+ *
+ *		config.entities_latin = false;
+ *
+ * @cfg {Boolean} [entities_latin=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities_latin = true;
+
+<span id='CKEDITOR-config-cfg-entities_greek'>/**
+</span> * Whether to convert some symbols, mathematical symbols, and Greek letters to
+ * HTML entities. This may be more relevant for users typing text written in Greek.
+ * The list of entities can be found in the
+ * [W3C HTML 4.01 Specification, section 24.3.1(http://www.w3.org/TR/html4/sgml/entities.html#h-24.3.1).
+ *
+ *		config.entities_greek = false;
+ *
+ * @cfg {Boolean} [entities_greek=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.entities_greek = true;
+
+<span id='CKEDITOR-config-cfg-entities_processNumerical'>/**
+</span> * Whether to convert all remaining characters not included in the ASCII
+ * character table to their relative decimal numeric representation of HTML entity.
+ * When set to `force`, it will convert all entities into this format.
+ *
+ * For example the phrase `&#39;This is Chinese: 汉语.&#39;` is output
+ * as `&#39;This is Chinese: &amp;#27721;&amp;#35821;.&#39;`
+ *
+ *		config.entities_processNumerical = true;
+ *		config.entities_processNumerical = &#39;force&#39;; // Converts from &#39;&amp;nbsp;&#39; into &#39;&amp;#160;&#39;;
+ *
+ * @cfg {Boolean/String} [entities_processNumerical=false]
  * @member CKEDITOR.config
  */
 
-<span id='CKEDITOR-config-cfg-filebrowserUploadUrl'>/**
-</span> * The location of the script that handles file uploads.
- * If set, the **Upload** tab will appear in the **Link**, **Image**,
- * and **Flash** dialog windows.
+<span id='CKEDITOR-config-cfg-entities_additional'>/**
+</span> * A comma separated list of  additional entities to be used. Entity names
+ * or numbers must be used in a form that excludes the `&#39;&amp;amp;&#39;` prefix and the `&#39;;&#39;` ending.
  *
- * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
+ *		config.entities_additional = &#39;#1049&#39;; // Adds Cyrillic capital letter Short I (Й).
  *
- *		config.filebrowserUploadUrl = &#39;/uploader/upload.php&#39;;
- *
- * @since 3.0
- * @cfg {String} [filebrowserUploadUrl=&#39;&#39; (empty string = disabled)]
+ * @cfg {String} [entities_additional=&#39;#39&#39; (The single quote (&#39;) character)]
  * @member CKEDITOR.config
  */
-
-<span id='CKEDITOR-config-cfg-filebrowserImageBrowseUrl'>/**
-</span> * The location of an external file browser that should be launched when the **Browse Server**
- * button is pressed in the **Image** dialog window.
- *
- * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
- *
- *		config.filebrowserImageBrowseUrl = &#39;/browser/browse.php?type=Images&#39;;
- *
- * @since 3.0
- * @cfg {String} [filebrowserImageBrowseUrl=&#39;&#39; (empty string = disabled)]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserFlashBrowseUrl'>/**
-</span> * The location of an external file browser that should be launched when the **Browse Server**
- * button is pressed in the **Flash** dialog window.
- *
- * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
- *
- *		config.filebrowserFlashBrowseUrl = &#39;/browser/browse.php?type=Flash&#39;;
- *
- * @since 3.0
- * @cfg {String} [filebrowserFlashBrowseUrl=&#39;&#39; (empty string = disabled)]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserImageUploadUrl'>/**
-</span> * The location of the script that handles file uploads in the **Image** dialog window.
- *
- * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
- *
- *		config.filebrowserImageUploadUrl = &#39;/uploader/upload.php?type=Images&#39;;
- *
- * @since 3.0
- * @cfg {String} [filebrowserImageUploadUrl=&#39;&#39; (empty string = disabled)]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserFlashUploadUrl'>/**
-</span> * The location of the script that handles file uploads in the **Flash** dialog window.
- *
- * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
- *
- *		config.filebrowserFlashUploadUrl = &#39;/uploader/upload.php?type=Flash&#39;;
- *
- * @since 3.0
- * @cfg {String} filebrowserFlashUploadUrl=&#39;&#39; (empty string = disabled)]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserImageBrowseLinkUrl'>/**
-</span> * The location of an external file browser that should be launched when the **Browse Server**
- * button is pressed in the **Link** tab of the **Image** dialog window.
- *
- * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
- *
- *		config.filebrowserImageBrowseLinkUrl = &#39;/browser/browse.php&#39;;
- *
- * @since 3.2
- * @cfg {String} [filebrowserImageBrowseLinkUrl=&#39;&#39; (empty string = disabled)]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserWindowFeatures'>/**
-</span> * The features to use in the file browser popup window.
- *
- *		config.filebrowserWindowFeatures = &#39;resizable=yes,scrollbars=no&#39;;
- *
- * @since 3.4.1
- * @cfg {String} [filebrowserWindowFeatures=&#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39;]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserWindowWidth'>/**
-</span> * The width of the file browser popup window. It can be a number denoting a value in
- * pixels or a percent string.
- *
- *		config.filebrowserWindowWidth = 750;
- *
- *		config.filebrowserWindowWidth = &#39;50%&#39;;
- *
- * @cfg {Number/String} [filebrowserWindowWidth=&#39;80%&#39;]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-filebrowserWindowHeight'>/**
-</span> * The height of the file browser popup window. It can be a number denoting a value in
- * pixels or a percent string.
- *
- *		config.filebrowserWindowHeight = 580;
- *
- *		config.filebrowserWindowHeight = &#39;50%&#39;;
- *
- * @cfg {Number/String} [filebrowserWindowHeight=&#39;70%&#39;]
- * @member CKEDITOR.config
- */
+CKEDITOR.config.entities_additional = &#39;#39&#39;;
 </pre>
 </body>
 </html>

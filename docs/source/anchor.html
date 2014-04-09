@@ -29,8 +29,10 @@ CKEDITOR.dialog.add( &#39;anchor&#39;, function( editor ) {
 			this.setValueOf( &#39;info&#39;, &#39;txtName&#39;, attributeValue || &#39;&#39; );
 		};
 
-	function createFakeAnchor( editor, anchor ) {
-		return editor.createFakeElement( anchor, &#39;cke_anchor&#39;, &#39;anchor&#39; );
+	function createFakeAnchor( editor, attributes ) {
+		return editor.createFakeElement( editor.document.createElement( &#39;a&#39;, {
+			attributes: attributes
+		} ), &#39;cke_anchor&#39;, &#39;anchor&#39; );
 	}
 
 	return {
@@ -47,8 +49,12 @@ CKEDITOR.dialog.add( &#39;anchor&#39;, function( editor ) {
 
 			if ( this._.selectedElement ) {
 				if ( this._.selectedElement.data( &#39;cke-realelement&#39; ) ) {
-					var newFake = createFakeAnchor( editor, editor.document.createElement( &#39;a&#39;, { attributes: attributes } ) );
+					var newFake = createFakeAnchor( editor, attributes );
 					newFake.replace( this._.selectedElement );
+
+					// Selecting fake element for IE. (#11377)
+					if ( CKEDITOR.env.ie )
+						editor.getSelection().selectElement( newFake );
 				} else
 					this._.selectedElement.setAttributes( attributes );
 			} else {
@@ -57,20 +63,7 @@ CKEDITOR.dialog.add( &#39;anchor&#39;, function( editor ) {
 
 				// Empty anchor
 				if ( range.collapsed ) {
-					if ( CKEDITOR.plugins.link.synAnchorSelector )
-						attributes[ &#39;class&#39; ] = &#39;cke_anchor_empty&#39;;
-
-					if ( CKEDITOR.plugins.link.emptyAnchorFix ) {
-						attributes[ &#39;contenteditable&#39; ] = &#39;false&#39;;
-						attributes[ &#39;data-cke-editable&#39; ] = 1;
-					}
-
-					var anchor = editor.document.createElement( &#39;a&#39;, { attributes: attributes } );
-
-					// Transform the anchor into a fake element for browsers that need it.
-					if ( CKEDITOR.plugins.link.fakeAnchor )
-						anchor = createFakeAnchor( editor, anchor );
-
+					var anchor = createFakeAnchor( editor, attributes );
 					range.insertNode( anchor );
 				} else {
 					if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 )
@@ -89,24 +82,19 @@ CKEDITOR.dialog.add( &#39;anchor&#39;, function( editor ) {
 		},
 
 		onShow: function() {
-			var selection = editor.getSelection(),
-				fullySelected = selection.getSelectedElement(),
-				partialSelected;
+			var sel = editor.getSelection(),
+				fullySelected = sel.getSelectedElement(),
+				fakeSelected = fullySelected &amp;&amp; fullySelected.data( &#39;cke-realelement&#39; ),
+				linkElement = fakeSelected ?
+					CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, fullySelected ) :
+					CKEDITOR.plugins.link.getSelectedLink( editor );
 
-			// Detect the anchor under selection.
-			if ( fullySelected ) {
-				if ( CKEDITOR.plugins.link.fakeAnchor ) {
-					var realElement = CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, fullySelected );
-					realElement &amp;&amp; loadElements.call( this, realElement );
+			if ( linkElement ) {
+				loadElements.call( this, linkElement );
+				!fakeSelected &amp;&amp; sel.selectElement( linkElement );
+
+				if ( fullySelected )
 					this._.selectedElement = fullySelected;
-				} else if ( fullySelected.is( &#39;a&#39; ) &amp;&amp; fullySelected.hasAttribute( &#39;name&#39; ) )
-					loadElements.call( this, fullySelected );
-			} else {
-				partialSelected = CKEDITOR.plugins.link.getSelectedLink( editor );
-				if ( partialSelected ) {
-					loadElements.call( this, partialSelected );
-					selection.selectElement( partialSelected );
-				}
 			}
 
 			this.getContentElement( &#39;info&#39;, &#39;txtName&#39; ).focus();

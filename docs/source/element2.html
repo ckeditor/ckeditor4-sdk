@@ -456,6 +456,21 @@ CKEDITOR.htmlParser.cssStyle = function() {
 			return clone;
 		},
 
+<span id='CKEDITOR-htmlParser-element-method-addClass'>		/**
+</span>		 * Adds class name to classes list.
+		 *
+		 * @since 4.4
+		 * @param {String} className The class name to be added.
+		 */
+		addClass: function( className ) {
+			if ( this.hasClass( className ) )
+				return;
+
+			var c = this.attributes[ &#39;class&#39; ] || &#39;&#39;;
+
+			this.attributes[ &#39;class&#39; ] = c + ( c ? &#39; &#39; : &#39;&#39; ) + className;
+		},
+
 <span id='CKEDITOR-htmlParser-element-method-removeClass'>		/**
 </span>		 * Removes class name from classes list.
 		 *

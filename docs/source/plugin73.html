@@ -21,153 +21,58 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview The &quot;showblocks&quot; plugin. Enable it will make all block level
- *               elements being decorated with a border and the element name
- *               displayed on the left-right corner.
+</span> * @fileOverview The &quot;selectall&quot; plugin provides an editor command that
+ *               allows selecting the entire content of editable area.
+ *               This plugin also enables a toolbar button for the feature.
  */
 
 ( function() {
-	&#39;use strict&#39;;
-
-	var commandDefinition = {
-		readOnly: 1,
-		preserveState: true,
-		editorFocus: false,
-
-		exec: function( editor ) {
-			this.toggleState();
-			this.refresh( editor );
-		},
-
-		refresh: function( editor ) {
-			if ( editor.document ) {
-				// Show blocks turns inactive after editor loses focus when in inline.
-				var showBlocks = this.state == CKEDITOR.TRISTATE_ON &amp;&amp;
-				   ( editor.elementMode != CKEDITOR.ELEMENT_MODE_INLINE ||
-					   editor.focusManager.hasFocus );
-
-				var funcName = showBlocks ? &#39;attachClass&#39; : &#39;removeClass&#39;;
-				editor.editable()[ funcName ]( &#39;cke_show_blocks&#39; );
-			}
-		}
-	};
-
-	CKEDITOR.plugins.add( &#39;showblocks&#39;, {
+	CKEDITOR.plugins.add( &#39;selectall&#39;, {
 		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;showblocks,showblocks-rtl&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;selectall&#39;, // %REMOVE_LINE_CORE%
 		hidpi: true, // %REMOVE_LINE_CORE%
-		onLoad: function() {
-			var tags = [ &#39;p&#39;, &#39;div&#39;, &#39;pre&#39;, &#39;address&#39;, &#39;blockquote&#39;, &#39;h1&#39;, &#39;h2&#39;, &#39;h3&#39;, &#39;h4&#39;, &#39;h5&#39;, &#39;h6&#39; ],
-				cssStd, cssImg, cssLtr, cssRtl,
-				path = CKEDITOR.getUrl( this.path ),
-				// #10884 don&#39;t apply showblocks styles to non-editable elements and chosen ones.
-				// IE8 does not support :not() pseudoclass, so we need to reset showblocks rather
-				// than &#39;prevent&#39; its application. We do that by additional rules.
-				supportsNotPseudoclass = !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 ),
-				notDisabled = supportsNotPseudoclass ? &#39;:not([contenteditable=false]):not(.cke_show_blocks_off)&#39; : &#39;&#39;,
-				tag, trailing;
-
-			cssStd = cssImg = cssLtr = cssRtl = &#39;&#39;;
-
-			while ( ( tag = tags.pop() ) ) {
-				trailing = tags.length ? &#39;,&#39; : &#39;&#39;;
-
-				cssStd += &#39;.cke_show_blocks &#39; + tag + notDisabled + trailing;
-				cssLtr += &#39;.cke_show_blocks.cke_contents_ltr &#39; + tag + notDisabled + trailing;
-				cssRtl += &#39;.cke_show_blocks.cke_contents_rtl &#39; + tag + notDisabled + trailing;
-				cssImg += &#39;.cke_show_blocks &#39; + tag + notDisabled + &#39;{&#39; +
-					&#39;background-image:url(&#39; + path + &#39;images/block_&#39; + tag + &#39;.png)&#39; +
-				&#39;}&#39;;
-			}
-
-			// .cke_show_blocks p { ... }
-			cssStd += &#39;{&#39; +
-				&#39;background-repeat:no-repeat;&#39; +
-				&#39;border:1px dotted gray;&#39; +
-				&#39;padding-top:8px&#39; +
-			&#39;}&#39;;
-
-			// .cke_show_blocks.cke_contents_ltr p { ... }
-			cssLtr += &#39;{&#39; +
-				&#39;background-position:top left;&#39; +
-				&#39;padding-left:8px&#39; +
-			&#39;}&#39;;
-
-			// .cke_show_blocks.cke_contents_rtl p { ... }
-			cssRtl += &#39;{&#39; +
-				&#39;background-position:top right;&#39; +
-				&#39;padding-right:8px&#39; +
-			&#39;}&#39;;
-
-			CKEDITOR.addCss( cssStd.concat( cssImg, cssLtr, cssRtl ) );
-
-			// [IE8] Reset showblocks styles for non-editables and chosen elements, because
-			// it could not be done using :not() pseudoclass (#10884).
-			if ( !supportsNotPseudoclass ) {
-				CKEDITOR.addCss(
-					&#39;.cke_show_blocks [contenteditable=false],.cke_show_blocks .cke_show_blocks_off{&#39; +
-						&#39;border:none;&#39; +
-						&#39;padding-top:0;&#39; +
-						&#39;background-image:none&#39; +
-					&#39;}&#39; +
-					&#39;.cke_show_blocks.cke_contents_rtl [contenteditable=false],.cke_show_blocks.cke_contents_rtl .cke_show_blocks_off{&#39; +
-						&#39;padding-right:0&#39; +
-					&#39;}&#39; +
-					&#39;.cke_show_blocks.cke_contents_ltr [contenteditable=false],.cke_show_blocks.cke_contents_ltr .cke_show_blocks_off{&#39; +
-						&#39;padding-left:0&#39; +
-					&#39;}&#39;
-				);
-			}
-		},
 		init: function( editor ) {
-			if ( editor.blockless )
-				return;
+			editor.addCommand( &#39;selectAll&#39;, { modes: { wysiwyg: 1, source: 1 },
+				exec: function( editor ) {
+					var editable = editor.editable();
 
-			var command = editor.addCommand( &#39;showblocks&#39;, commandDefinition );
-			command.canUndo = false;
+					if ( editable.is( &#39;textarea&#39; ) ) {
+						var textarea = editable.$;
 
-			if ( editor.config.startupOutlineBlocks )
-				command.setState( CKEDITOR.TRISTATE_ON );
+						if ( CKEDITOR.env.ie )
+							textarea.createTextRange().execCommand( &#39;SelectAll&#39; );
+						else {
+							textarea.selectionStart = 0;
+							textarea.selectionEnd = textarea.value.length;
+						}
 
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;ShowBlocks&#39;, {
-				label: editor.lang.showblocks.toolbar,
-				command: &#39;showblocks&#39;,
-				toolbar: &#39;tools,20&#39;
+						textarea.focus();
+					} else {
+						if ( editable.is( &#39;body&#39; ) )
+							editor.document.$.execCommand( &#39;SelectAll&#39;, false, null );
+						else {
+							var range = editor.createRange();
+							range.selectNodeContents( editable );
+							range.select();
+						}
+
+						// Force triggering selectionChange (#7008)
+						editor.forceNextSelectionCheck();
+						editor.selectionChange();
+					}
+
+				},
+				canUndo: false
 			} );
 
-			// Refresh the command on setData.
-			editor.on( &#39;mode&#39;, function() {
-				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
-					command.refresh( editor );
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;SelectAll&#39;, {
+				label: editor.lang.selectall.toolbar,
+				command: &#39;selectAll&#39;,
+				toolbar: &#39;selection,10&#39;
 			} );
-
-			// Refresh the command on focus/blur in inline.
-			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE ) {
-				editor.on( &#39;focus&#39;, onFocusBlur );
-				editor.on( &#39;blur&#39;, onFocusBlur );
-			}
-
-			// Refresh the command on setData.
-			editor.on( &#39;contentDom&#39;, function() {
-				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
-					command.refresh( editor );
-			} );
-
-			function onFocusBlur() {
-				command.refresh( editor );
-			}
 		}
 	} );
 } )();
-
-<span id='CKEDITOR-config-cfg-startupOutlineBlocks'>/**
-</span> * Whether to automaticaly enable the show block&quot; command when the editor loads.
- *
- *		config.startupOutlineBlocks = true;
- *
- * @cfg {Boolean} [startupOutlineBlocks=false]
- * @member CKEDITOR.config
- */
 </pre>
 </body>
 </html>

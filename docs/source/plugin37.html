@@ -20,360 +20,300 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;htmlwriter&#39;, {
-	init: function( editor ) {
-		var writer = new CKEDITOR.htmlWriter();
-
-		writer.forceSimpleAmpersand = editor.config.forceSimpleAmpersand;
-		writer.indentationChars = editor.config.dataIndentationChars || &#39;\t&#39;;
-
-		// Overwrite default basicWriter initialized in hmtlDataProcessor constructor.
-		editor.dataProcessor.writer = writer;
-	}
-} );
-
-<span id='CKEDITOR-htmlWriter'>/**
-</span> * Class used to write HTML data.
- *
- *		var writer = new CKEDITOR.htmlWriter();
- *		writer.openTag( &#39;p&#39; );
- *		writer.attribute( &#39;class&#39;, &#39;MyClass&#39; );
- *		writer.openTagClose( &#39;p&#39; );
- *		writer.text( &#39;Hello&#39; );
- *		writer.closeTag( &#39;p&#39; );
- *		alert( writer.getHtml() ); // &#39;&lt;p class=&quot;MyClass&quot;&gt;Hello&lt;/p&gt;&#39;
- *
- * @class
- * @extends CKEDITOR.htmlParser.basicWriter
+<span id='global-property-'>/**
+</span> * @fileOverview Forms Plugin
  */
-CKEDITOR.htmlWriter = CKEDITOR.tools.createClass( {
-	base: CKEDITOR.htmlParser.basicWriter,
 
-<span id='CKEDITOR-htmlWriter-method-constructor'>	/**
-</span>	 * Creates a htmlWriter class instance.
-	 *
-	 * @constructor
-	 */
-	$: function() {
-		// Call the base contructor.
-		this.base();
+CKEDITOR.plugins.add( &#39;forms&#39;, {
+	requires: &#39;dialog,fakeobjects&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;button,checkbox,form,hiddenfield,imagebutton,radio,select,select-rtl,textarea,textarea-rtl,textfield&#39;, // %REMOVE_LINE_CORE%
+	hidpi: true, // %REMOVE_LINE_CORE%
+	onLoad: function() {
+		CKEDITOR.addCss( &#39;.cke_editable form&#39; +
+			&#39;{&#39; +
+				&#39;border: 1px dotted #FF0000;&#39; +
+				&#39;padding: 2px;&#39; +
+			&#39;}\n&#39; );
 
-<span id='CKEDITOR-htmlWriter-property-indentationChars'>		/**
-</span>		 * The characters to be used for each identation step.
-		 *
-		 *		// Use tab for indentation.
-		 *		editorInstance.dataProcessor.writer.indentationChars = &#39;\t&#39;;
-		 */
-		this.indentationChars = &#39;\t&#39;;
+		CKEDITOR.addCss( &#39;img.cke_hidden&#39; +
+			&#39;{&#39; +
+				&#39;background-image: url(&#39; + CKEDITOR.getUrl( this.path + &#39;images/hiddenfield.gif&#39; ) + &#39;);&#39; +
+				&#39;background-position: center center;&#39; +
+				&#39;background-repeat: no-repeat;&#39; +
+				&#39;border: 1px solid #a9a9a9;&#39; +
+				&#39;width: 16px !important;&#39; +
+				&#39;height: 16px !important;&#39; +
+			&#39;}&#39; );
 
-<span id='CKEDITOR-htmlWriter-property-selfClosingEnd'>		/**
-</span>		 * The characters to be used to close &quot;self-closing&quot; elements, like `&lt;br&gt;` or `&lt;img&gt;`.
-		 *
-		 *		// Use HTML4 notation for self-closing elements.
-		 *		editorInstance.dataProcessor.writer.selfClosingEnd = &#39;&gt;&#39;;
-		 */
-		this.selfClosingEnd = &#39; /&gt;&#39;;
+	},
+	init: function( editor ) {
+		var lang = editor.lang,
+			order = 0,
+			textfieldTypes = { email: 1, password: 1, search: 1, tel: 1, text: 1, url: 1 },
+			allowedContent = {
+				checkbox: &#39;input[type,name,checked]&#39;,
+				radio: &#39;input[type,name,checked]&#39;,
+				textfield: &#39;input[type,name,value,size,maxlength]&#39;,
+				textarea: &#39;textarea[cols,rows,name]&#39;,
+				select: &#39;select[name,size,multiple]; option[value,selected]&#39;,
+				button: &#39;input[type,name,value]&#39;,
+				form: &#39;form[action,name,id,enctype,target,method]&#39;,
+				hiddenfield: &#39;input[type,name,value]&#39;,
+				imagebutton: &#39;input[type,alt,src]{width,height,border,border-width,border-style,margin,float}&#39;
+			},
+			requiredContent = {
+				checkbox: &#39;input&#39;,
+				radio: &#39;input&#39;,
+				textfield: &#39;input&#39;,
+				textarea: &#39;textarea&#39;,
+				select: &#39;select&#39;,
+				button: &#39;input&#39;,
+				form: &#39;form&#39;,
+				hiddenfield: &#39;input&#39;,
+				imagebutton: &#39;input&#39;
+			};
 
-<span id='CKEDITOR-htmlWriter-property-lineBreakChars'>		/**
-</span>		 * The characters to be used for line breaks.
-		 *
-		 *		// Use CRLF for line breaks.
-		 *		editorInstance.dataProcessor.writer.lineBreakChars = &#39;\r\n&#39;;
-		 */
-		this.lineBreakChars = &#39;\n&#39;;
+		// All buttons use the same code to register. So, to avoid
+		// duplications, let&#39;s use this tool function.
+		var addButtonCommand = function( buttonName, commandName, dialogFile ) {
+				var def = {
+					allowedContent: allowedContent[ commandName ],
+					requiredContent: requiredContent[ commandName ]
+				};
+				commandName == &#39;form&#39; &amp;&amp; ( def.context = &#39;form&#39; );
 
-		this.sortAttributes = 1;
+				editor.addCommand( commandName, new CKEDITOR.dialogCommand( commandName, def ) );
 
-		this._.indent = 0;
-		this._.indentation = &#39;&#39;;
-		// Indicate preformatted block context status. (#5789)
-		this._.inPre = 0;
-		this._.rules = {};
+				editor.ui.addButton &amp;&amp; editor.ui.addButton( buttonName, {
+					label: lang.common[ buttonName.charAt( 0 ).toLowerCase() + buttonName.slice( 1 ) ],
+					command: commandName,
+					toolbar: &#39;forms,&#39; + ( order += 10 )
+				} );
+				CKEDITOR.dialog.add( commandName, dialogFile );
+			};
 
-		var dtd = CKEDITOR.dtd;
+		var dialogPath = this.path + &#39;dialogs/&#39;;
+		!editor.blockless &amp;&amp; addButtonCommand( &#39;Form&#39;, &#39;form&#39;, dialogPath + &#39;form.js&#39; );
+		addButtonCommand( &#39;Checkbox&#39;, &#39;checkbox&#39;, dialogPath + &#39;checkbox.js&#39; );
+		addButtonCommand( &#39;Radio&#39;, &#39;radio&#39;, dialogPath + &#39;radio.js&#39; );
+		addButtonCommand( &#39;TextField&#39;, &#39;textfield&#39;, dialogPath + &#39;textfield.js&#39; );
+		addButtonCommand( &#39;Textarea&#39;, &#39;textarea&#39;, dialogPath + &#39;textarea.js&#39; );
+		addButtonCommand( &#39;Select&#39;, &#39;select&#39;, dialogPath + &#39;select.js&#39; );
+		addButtonCommand( &#39;Button&#39;, &#39;button&#39;, dialogPath + &#39;button.js&#39; );
 
-		for ( var e in CKEDITOR.tools.extend( {}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent ) ) {
-			this.setRules( e, {
-				indent: !dtd[ e ][ &#39;#&#39; ],
-				breakBeforeOpen: 1,
-				breakBeforeClose: !dtd[ e ][ &#39;#&#39; ],
-				breakAfterClose: 1,
-				needsSpace: ( e in dtd.$block ) &amp;&amp; !( e in { li: 1, dt: 1, dd: 1 } )
+		var imagePlugin = editor.plugins.image;
+
+		// Since Image plugin is disabled when Image2 is to be loaded,
+		// ImageButton also got to be off (#11222).
+		if ( imagePlugin &amp;&amp; !editor.plugins.image2 )
+			addButtonCommand( &#39;ImageButton&#39;, &#39;imagebutton&#39;, CKEDITOR.plugins.getPath( &#39;image&#39; ) + &#39;dialogs/image.js&#39; );
+
+		addButtonCommand( &#39;HiddenField&#39;, &#39;hiddenfield&#39;, dialogPath + &#39;hiddenfield.js&#39; );
+
+		// If the &quot;menu&quot; plugin is loaded, register the menu items.
+		if ( editor.addMenuItems ) {
+			var items = {
+				checkbox: {
+					label: lang.forms.checkboxAndRadio.checkboxTitle,
+					command: &#39;checkbox&#39;,
+					group: &#39;checkbox&#39;
+				},
+
+				radio: {
+					label: lang.forms.checkboxAndRadio.radioTitle,
+					command: &#39;radio&#39;,
+					group: &#39;radio&#39;
+				},
+
+				textfield: {
+					label: lang.forms.textfield.title,
+					command: &#39;textfield&#39;,
+					group: &#39;textfield&#39;
+				},
+
+				hiddenfield: {
+					label: lang.forms.hidden.title,
+					command: &#39;hiddenfield&#39;,
+					group: &#39;hiddenfield&#39;
+				},
+
+				button: {
+					label: lang.forms.button.title,
+					command: &#39;button&#39;,
+					group: &#39;button&#39;
+				},
+
+				select: {
+					label: lang.forms.select.title,
+					command: &#39;select&#39;,
+					group: &#39;select&#39;
+				},
+
+				textarea: {
+					label: lang.forms.textarea.title,
+					command: &#39;textarea&#39;,
+					group: &#39;textarea&#39;
+				}
+			};
+
+			if ( imagePlugin ) {
+				items.imagebutton = {
+					label: lang.image.titleButton,
+					command: &#39;imagebutton&#39;,
+					group: &#39;imagebutton&#39;
+				};
+			}
+
+			!editor.blockless &amp;&amp; ( items.form = {
+				label: lang.forms.form.menu,
+				command: &#39;form&#39;,
+				group: &#39;form&#39;
+			} );
+
+			editor.addMenuItems( items );
+
+		}
+
+		// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
+		if ( editor.contextMenu ) {
+			!editor.blockless &amp;&amp; editor.contextMenu.addListener( function( element, selection, path ) {
+				var form = path.contains( &#39;form&#39;, 1 );
+				if ( form &amp;&amp; !form.isReadOnly() )
+					return { form: CKEDITOR.TRISTATE_OFF };
+			} );
+
+			editor.contextMenu.addListener( function( element ) {
+				if ( element &amp;&amp; !element.isReadOnly() ) {
+					var name = element.getName();
+
+					if ( name == &#39;select&#39; )
+						return { select: CKEDITOR.TRISTATE_OFF };
+
+					if ( name == &#39;textarea&#39; )
+						return { textarea: CKEDITOR.TRISTATE_OFF };
+
+					if ( name == &#39;input&#39; ) {
+						var type = element.getAttribute( &#39;type&#39; ) || &#39;text&#39;;
+						switch ( type ) {
+							case &#39;button&#39;:
+							case &#39;submit&#39;:
+							case &#39;reset&#39;:
+								return { button: CKEDITOR.TRISTATE_OFF };
+
+							case &#39;checkbox&#39;:
+								return { checkbox: CKEDITOR.TRISTATE_OFF };
+
+							case &#39;radio&#39;:
+								return { radio: CKEDITOR.TRISTATE_OFF };
+
+							case &#39;image&#39;:
+								return imagePlugin ? { imagebutton: CKEDITOR.TRISTATE_OFF } : null;
+						}
+
+						if ( textfieldTypes[ type ] )
+							return { textfield: CKEDITOR.TRISTATE_OFF };
+					}
+
+					if ( name == &#39;img&#39; &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;hiddenfield&#39; )
+						return { hiddenfield: CKEDITOR.TRISTATE_OFF };
+				}
 			} );
 		}
 
-		this.setRules( &#39;br&#39;, { breakAfterOpen: 1 } );
+		editor.on( &#39;doubleclick&#39;, function( evt ) {
+			var element = evt.data.element;
 
-		this.setRules( &#39;title&#39;, {
-			indent: 0,
-			breakAfterOpen: 0
-		} );
-
-		this.setRules( &#39;style&#39;, {
-			indent: 0,
-			breakBeforeClose: 1
-		} );
-
-		this.setRules( &#39;pre&#39;, {
-			breakAfterOpen: 1, // Keep line break after the opening tag
-			indent: 0 // Disable indentation on &lt;pre&gt;.
+			if ( !editor.blockless &amp;&amp; element.is( &#39;form&#39; ) )
+				evt.data.dialog = &#39;form&#39;;
+			else if ( element.is( &#39;select&#39; ) )
+				evt.data.dialog = &#39;select&#39;;
+			else if ( element.is( &#39;textarea&#39; ) )
+				evt.data.dialog = &#39;textarea&#39;;
+			else if ( element.is( &#39;img&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;hiddenfield&#39; )
+				evt.data.dialog = &#39;hiddenfield&#39;;
+			else if ( element.is( &#39;input&#39; ) ) {
+				var type = element.getAttribute( &#39;type&#39; ) || &#39;text&#39;;
+				switch ( type ) {
+					case &#39;button&#39;:
+					case &#39;submit&#39;:
+					case &#39;reset&#39;:
+						evt.data.dialog = &#39;button&#39;;
+						break;
+					case &#39;checkbox&#39;:
+						evt.data.dialog = &#39;checkbox&#39;;
+						break;
+					case &#39;radio&#39;:
+						evt.data.dialog = &#39;radio&#39;;
+						break;
+					case &#39;image&#39;:
+						evt.data.dialog = &#39;imagebutton&#39;;
+						break;
+				}
+				if ( textfieldTypes[ type ] )
+					evt.data.dialog = &#39;textfield&#39;;
+			}
 		} );
 	},
 
-	proto: {
-<span id='CKEDITOR-htmlWriter-method-openTag'>		/**
-</span>		 * Writes the tag opening part for a opener tag.
-		 *
-		 *		// Writes &#39;&lt;p&#39;.
-		 *		writer.openTag( &#39;p&#39;, { class : &#39;MyClass&#39;, id : &#39;MyId&#39; } );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 * @param {Object} attributes The attributes defined for this tag. The
-		 * attributes could be used to inspect the tag.
-		 */
-		openTag: function( tagName, attributes ) {
-			var rules = this._.rules[ tagName ];
+	afterInit: function( editor ) {
+		var dataProcessor = editor.dataProcessor,
+			htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter,
+			dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter;
 
-			if ( this._.afterCloser &amp;&amp; rules &amp;&amp; rules.needsSpace &amp;&amp; this._.needsSpace )
-				this._.output.push( &#39;\n&#39; );
+		// Cleanup certain IE form elements default values.
+		// Note: Inputs are marked with contenteditable=false flags, so filters for them
+		// need to be applied to non-editable content as well.
+		if ( CKEDITOR.env.ie ) {
+			htmlFilter &amp;&amp; htmlFilter.addRules( {
+				elements: {
+					input: function( input ) {
+						var attrs = input.attributes,
+							type = attrs.type;
+						// Old IEs don&#39;t provide type for Text inputs #5522
+						if ( !type )
+							attrs.type = &#39;text&#39;;
+						if ( type == &#39;checkbox&#39; || type == &#39;radio&#39; )
+							attrs.value == &#39;on&#39; &amp;&amp; delete attrs.value;
+					}
+				}
+			}, { applyToAll: true } );
+		}
 
-			if ( this._.indent )
-				this.indentation();
-			// Do not break if indenting.
-			else if ( rules &amp;&amp; rules.breakBeforeOpen ) {
-				this.lineBreak();
-				this.indentation();
-			}
-
-			this._.output.push( &#39;&lt;&#39;, tagName );
-
-			this._.afterCloser = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-openTagClose'>		/**
-</span>		 * Writes the tag closing part for a opener tag.
-		 *
-		 *		// Writes &#39;&gt;&#39;.
-		 *		writer.openTagClose( &#39;p&#39;, false );
-		 *
-		 *		// Writes &#39; /&gt;&#39;.
-		 *		writer.openTagClose( &#39;br&#39;, true );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 * @param {Boolean} isSelfClose Indicates that this is a self-closing tag,
-		 * like `&lt;br&gt;` or `&lt;img&gt;`.
-		 */
-		openTagClose: function( tagName, isSelfClose ) {
-			var rules = this._.rules[ tagName ];
-
-			if ( isSelfClose ) {
-				this._.output.push( this.selfClosingEnd );
-
-				if ( rules &amp;&amp; rules.breakAfterClose )
-					this._.needsSpace = rules.needsSpace;
-			} else {
-				this._.output.push( &#39;&gt;&#39; );
-
-				if ( rules &amp;&amp; rules.indent )
-					this._.indentation += this.indentationChars;
-			}
-
-			if ( rules &amp;&amp; rules.breakAfterOpen )
-				this.lineBreak();
-			tagName == &#39;pre&#39; &amp;&amp; ( this._.inPre = 1 );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-attribute'>		/**
-</span>		 * Writes an attribute. This function should be called after opening the
-		 * tag with {@link #openTagClose}.
-		 *
-		 *		// Writes &#39; class=&quot;MyClass&quot;&#39;.
-		 *		writer.attribute( &#39;class&#39;, &#39;MyClass&#39; );
-		 *
-		 * @param {String} attName The attribute name.
-		 * @param {String} attValue The attribute value.
-		 */
-		attribute: function( attName, attValue ) {
-
-			if ( typeof attValue == &#39;string&#39; ) {
-				this.forceSimpleAmpersand &amp;&amp; ( attValue = attValue.replace( /&amp;amp;/g, &#39;&amp;&#39; ) );
-				// Browsers don&#39;t always escape special character in attribute values. (#4683, #4719).
-				attValue = CKEDITOR.tools.htmlEncodeAttr( attValue );
-			}
-
-			this._.output.push( &#39; &#39;, attName, &#39;=&quot;&#39;, attValue, &#39;&quot;&#39; );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-closeTag'>		/**
-</span>		 * Writes a closer tag.
-		 *
-		 *		// Writes &#39;&lt;/p&gt;&#39;.
-		 *		writer.closeTag( &#39;p&#39; );
-		 *
-		 * @param {String} tagName The element name for this tag.
-		 */
-		closeTag: function( tagName ) {
-			var rules = this._.rules[ tagName ];
-
-			if ( rules &amp;&amp; rules.indent )
-				this._.indentation = this._.indentation.substr( this.indentationChars.length );
-
-			if ( this._.indent )
-				this.indentation();
-			// Do not break if indenting.
-			else if ( rules &amp;&amp; rules.breakBeforeClose ) {
-				this.lineBreak();
-				this.indentation();
-			}
-
-			this._.output.push( &#39;&lt;/&#39;, tagName, &#39;&gt;&#39; );
-			tagName == &#39;pre&#39; &amp;&amp; ( this._.inPre = 0 );
-
-			if ( rules &amp;&amp; rules.breakAfterClose ) {
-				this.lineBreak();
-				this._.needsSpace = rules.needsSpace;
-			}
-
-			this._.afterCloser = 1;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-text'>		/**
-</span>		 * Writes text.
-		 *
-		 *		// Writes &#39;Hello Word&#39;.
-		 *		writer.text( &#39;Hello Word&#39; );
-		 *
-		 * @param {String} text The text value
-		 */
-		text: function( text ) {
-			if ( this._.indent ) {
-				this.indentation();
-				!this._.inPre &amp;&amp; ( text = CKEDITOR.tools.ltrim( text ) );
-			}
-
-			this._.output.push( text );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-comment'>		/**
-</span>		 * Writes a comment.
-		 *
-		 *		// Writes &quot;&lt;!-- My comment --&gt;&quot;.
-		 *		writer.comment( &#39; My comment &#39; );
-		 *
-		 * @param {String} comment The comment text.
-		 */
-		comment: function( comment ) {
-			if ( this._.indent )
-				this.indentation();
-
-			this._.output.push( &#39;&lt;!--&#39;, comment, &#39;--&gt;&#39; );
-		},
-
-<span id='CKEDITOR-htmlWriter-method-lineBreak'>		/**
-</span>		 * Writes a line break. It uses the {@link #lineBreakChars} property for it.
-		 *
-		 *		// Writes &#39;\n&#39; (e.g.).
-		 *		writer.lineBreak();
-		 */
-		lineBreak: function() {
-			if ( !this._.inPre &amp;&amp; this._.output.length &gt; 0 )
-				this._.output.push( this.lineBreakChars );
-			this._.indent = 1;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-indentation'>		/**
-</span>		 * Writes the current indentation chars. It uses the {@link #indentationChars}
-		 * property, repeating it for the current indentation steps.
-		 *
-		 *		// Writes &#39;\t&#39; (e.g.).
-		 *		writer.indentation();
-		 */
-		indentation: function() {
-			if ( !this._.inPre &amp;&amp; this._.indentation )
-				this._.output.push( this._.indentation );
-			this._.indent = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-reset'>		/**
-</span>		 * Empties the current output buffer. It also brings back the default
-		 * values of the writer flags.
-		 *
-		 *		writer.reset();
-		 */
-		reset: function() {
-			this._.output = [];
-			this._.indent = 0;
-			this._.indentation = &#39;&#39;;
-			this._.afterCloser = 0;
-			this._.inPre = 0;
-		},
-
-<span id='CKEDITOR-htmlWriter-method-setRules'>		/**
-</span>		 * Sets formatting rules for a give element. The possible rules are:
-		 *
-		 * * `indent`: indent the element contents.
-		 * * `breakBeforeOpen`: break line before the opener tag for this element.
-		 * * `breakAfterOpen`: break line after the opener tag for this element.
-		 * * `breakBeforeClose`: break line before the closer tag for this element.
-		 * * `breakAfterClose`: break line after the closer tag for this element.
-		 *
-		 * All rules default to `false`. Each call to the function overrides
-		 * already present rules, leaving the undefined untouched.
-		 *
-		 * By default, all elements available in the {@link CKEDITOR.dtd#$block},
-		 * {@link CKEDITOR.dtd#$listItem} and {@link CKEDITOR.dtd#$tableContent}
-		 * lists have all the above rules set to `true`. Additionaly, the `&lt;br&gt;`
-		 * element has the `breakAfterOpen` set to `true`.
-		 *
-		 *		// Break line before and after &quot;img&quot; tags.
-		 *		writer.setRules( &#39;img&#39;, {
-		 *			breakBeforeOpen: true
-		 *			breakAfterOpen: true
-		 *		} );
-		 *
-		 *		// Reset the rules for the &quot;h1&quot; tag.
-		 *		writer.setRules( &#39;h1&#39;, {} );
-		 *
-		 * @param {String} tagName The element name to which set the rules.
-		 * @param {Object} rules An object containing the element rules.
-		 */
-		setRules: function( tagName, rules ) {
-			var currentRules = this._.rules[ tagName ];
-
-			if ( currentRules )
-				CKEDITOR.tools.extend( currentRules, rules, true );
-			else
-				this._.rules[ tagName ] = rules;
+		if ( dataFilter ) {
+			dataFilter.addRules( {
+				elements: {
+					input: function( element ) {
+						if ( element.attributes.type == &#39;hidden&#39; )
+							return editor.createFakeParserElement( element, &#39;cke_hidden&#39;, &#39;hiddenfield&#39; );
+					}
+				}
+			}, { applyToAll: true } );
 		}
 	}
 } );
 
-<span id='CKEDITOR-config-cfg-forceSimpleAmpersand'>/**
-</span> * Whether to force using `&#39;&amp;&#39;` instead of `&#39;&amp;amp;&#39;` in elements attributes
- * values, it&#39;s not recommended to change this setting for compliance with the
- * W3C XHTML 1.0 standards ([C.12, XHTML 1.0](http://www.w3.org/TR/xhtml1/#C_12)).
- *
- *		// Use `&#39;&amp;&#39;` instead of `&#39;&amp;amp;&#39;`
- *		CKEDITOR.config.forceSimpleAmpersand = true;
- *
- * @cfg {Boolean} [forceSimpleAmpersand=false]
- * @member CKEDITOR.config
- */
+if ( CKEDITOR.env.ie ) {
+	CKEDITOR.dom.element.prototype.hasAttribute = CKEDITOR.tools.override( CKEDITOR.dom.element.prototype.hasAttribute, function( original ) {
+		return function( name ) {
+			var $attr = this.$.attributes.getNamedItem( name );
 
-<span id='CKEDITOR-config-cfg-dataIndentationChars'>/**
-</span> * The characters to be used for indenting the HTML produced by the editor.
- * Using characters different than `&#39; &#39;` (space) and `&#39;\t&#39;` (tab) is definitely
- * a bad idea as it&#39;ll mess the code.
- *
- *		// No indentation.
- *		CKEDITOR.config.dataIndentationChars = &#39;&#39;;
- *
- *		// Use two spaces for indentation.
- *		CKEDITOR.config.dataIndentationChars = &#39;  &#39;;
- *
- * @cfg {String} [dataIndentationChars=&#39;\t&#39;]
- * @member CKEDITOR.config
- */
+			if ( this.getName() == &#39;input&#39; ) {
+				switch ( name ) {
+					case &#39;class&#39;:
+						return this.$.className.length &gt; 0;
+					case &#39;checked&#39;:
+						return !!this.$.checked;
+					case &#39;value&#39;:
+						var type = this.getAttribute( &#39;type&#39; );
+						return type == &#39;checkbox&#39; || type == &#39;radio&#39; ? this.$.value != &#39;on&#39; : this.$.value;
+				}
+			}
+
+			return original.apply( this, arguments );
+		};
+	} );
+}
 </pre>
 </body>
 </html>

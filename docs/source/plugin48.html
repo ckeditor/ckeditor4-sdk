@@ -20,423 +20,166 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;link&#39;, {
-	requires: &#39;dialog,fakeobjects&#39;,
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;anchor,anchor-rtl,link,unlink&#39;, // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	onLoad: function() {
-		// Add the CSS styles for anchor placeholders.
-		var iconPath = CKEDITOR.getUrl( this.path + &#39;images&#39; + ( CKEDITOR.env.hidpi ? &#39;/hidpi&#39; : &#39;&#39; ) + &#39;/anchor.png&#39; ),
-			baseStyle = &#39;background:url(&#39; + iconPath + &#39;) no-repeat %1 center;border:1px dotted #00f;background-size:16px;&#39;;
-
-		var template = &#39;.%2 a.cke_anchor,&#39; +
-			&#39;.%2 a.cke_anchor_empty&#39; +
-			&#39;,.cke_editable.%2 a[name]&#39; +
-			&#39;,.cke_editable.%2 a[data-cke-saved-name]&#39; +
-			&#39;{&#39; +
-				baseStyle +
-				&#39;padding-%1:18px;&#39; +
-				// Show the arrow cursor for the anchor image (FF at least).
-				&#39;cursor:auto;&#39; +
-			&#39;}&#39; +
-			( CKEDITOR.plugins.link.synAnchorSelector ? ( &#39;a.cke_anchor_empty&#39; +
-			&#39;{&#39; +
-				// Make empty anchor selectable on IE.
-				&#39;display:inline-block;&#39; +
-				// IE11 doesn&#39;t display empty inline-block elements.
-				( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &gt; 10 ? &#39;min-height:16px;vertical-align:middle&#39; : &#39;&#39; ) +
-			&#39;}&#39;
-			) : &#39;&#39; ) +
-			&#39;.%2 img.cke_anchor&#39; +
-			&#39;{&#39; +
-				baseStyle +
-				&#39;width:16px;&#39; +
-				&#39;min-height:15px;&#39; +
-				// The default line-height on IE.
-				&#39;height:1.15em;&#39; +
-				// Opera works better with &quot;middle&quot; (even if not perfect)
-				&#39;vertical-align:&#39; + ( CKEDITOR.env.opera ? &#39;middle&#39; : &#39;text-bottom&#39; ) + &#39;;&#39; +
-			&#39;}&#39;;
-
-		// Styles with contents direction awareness.
-		function cssWithDir( dir ) {
-			return template.replace( /%1/g, dir == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; ).replace( /%2/g, &#39;cke_contents_&#39; + dir );
-		}
-
-		CKEDITOR.addCss( cssWithDir( &#39;ltr&#39; ) + cssWithDir( &#39;rtl&#39; ) );
-	},
-
-	init: function( editor ) {
-		var allowed = &#39;a[!href]&#39;,
-			required = &#39;a[href]&#39;;
-
-		if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;link&#39;, &#39;advanced&#39; ) )
-			allowed = allowed.replace( &#39;]&#39;, &#39;,accesskey,charset,dir,id,lang,name,rel,tabindex,title,type]{*}(*)&#39; );
-		if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;link&#39;, &#39;target&#39; ) )
-			allowed = allowed.replace( &#39;]&#39;, &#39;,target,onclick]&#39; );
-
-		// Add the link and unlink buttons.
-		editor.addCommand( &#39;link&#39;, new CKEDITOR.dialogCommand( &#39;link&#39;, {
-			allowedContent: allowed,
-			requiredContent: required
-		} ) );
-		editor.addCommand( &#39;anchor&#39;, new CKEDITOR.dialogCommand( &#39;anchor&#39;, {
-			allowedContent: &#39;a[!name,id]&#39;,
-			requiredContent: &#39;a[name]&#39;
-		} ) );
-		editor.addCommand( &#39;unlink&#39;, new CKEDITOR.unlinkCommand() );
-		editor.addCommand( &#39;removeAnchor&#39;, new CKEDITOR.removeAnchorCommand() );
-
-		editor.setKeystroke( CKEDITOR.CTRL + 76 /*L*/, &#39;link&#39; );
-
-		if ( editor.ui.addButton ) {
-			editor.ui.addButton( &#39;Link&#39;, {
-				label: editor.lang.link.toolbar,
-				command: &#39;link&#39;,
-				toolbar: &#39;links,10&#39;
-			} );
-			editor.ui.addButton( &#39;Unlink&#39;, {
-				label: editor.lang.link.unlink,
-				command: &#39;unlink&#39;,
-				toolbar: &#39;links,20&#39;
-			} );
-			editor.ui.addButton( &#39;Anchor&#39;, {
-				label: editor.lang.link.anchor.toolbar,
-				command: &#39;anchor&#39;,
-				toolbar: &#39;links,30&#39;
-			} );
-		}
-
-		CKEDITOR.dialog.add( &#39;link&#39;, this.path + &#39;dialogs/link.js&#39; );
-		CKEDITOR.dialog.add( &#39;anchor&#39;, this.path + &#39;dialogs/anchor.js&#39; );
-
-		editor.on( &#39;doubleclick&#39;, function( evt ) {
-			var element = CKEDITOR.plugins.link.getSelectedLink( editor ) || evt.data.element;
-
-			if ( !element.isReadOnly() ) {
-				if ( element.is( &#39;a&#39; ) ) {
-					evt.data.dialog = ( element.getAttribute( &#39;name&#39; ) &amp;&amp; ( !element.getAttribute( &#39;href&#39; ) || !element.getChildCount() ) ) ? &#39;anchor&#39; : &#39;link&#39;;
-					editor.getSelection().selectElement( element );
-				} else if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) )
-					evt.data.dialog = &#39;anchor&#39;;
-			}
-		} );
-
-		// If the &quot;menu&quot; plugin is loaded, register the menu items.
-		if ( editor.addMenuItems ) {
-			editor.addMenuItems( {
-				anchor: {
-					label: editor.lang.link.anchor.menu,
-					command: &#39;anchor&#39;,
-					group: &#39;anchor&#39;,
-					order: 1
-				},
-
-				removeAnchor: {
-					label: editor.lang.link.anchor.remove,
-					command: &#39;removeAnchor&#39;,
-					group: &#39;anchor&#39;,
-					order: 5
-				},
-
-				link: {
-					label: editor.lang.link.menu,
-					command: &#39;link&#39;,
-					group: &#39;link&#39;,
-					order: 1
-				},
-
-				unlink: {
-					label: editor.lang.link.unlink,
-					command: &#39;unlink&#39;,
-					group: &#39;link&#39;,
-					order: 5
-				}
-			} );
-		}
-
-		// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
-		if ( editor.contextMenu ) {
-			editor.contextMenu.addListener( function( element, selection ) {
-				if ( !element || element.isReadOnly() )
-					return null;
-
-				var anchor = CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element );
-
-				if ( !anchor &amp;&amp; !( anchor = CKEDITOR.plugins.link.getSelectedLink( editor ) ) )
-					return null;
-
-				var menu = {};
-
-				if ( anchor.getAttribute( &#39;href&#39; ) &amp;&amp; anchor.getChildCount() )
-					menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
-
-				if ( anchor &amp;&amp; anchor.hasAttribute( &#39;name&#39; ) )
-					menu.anchor = menu.removeAnchor = CKEDITOR.TRISTATE_OFF;
-
-				return menu;
-			} );
-		}
-	},
-
-	afterInit: function( editor ) {
-		// Register a filter to displaying placeholders after mode change.
-
-		var dataProcessor = editor.dataProcessor,
-			dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter,
-			htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter,
-			pathFilters = editor._.elementsPath &amp;&amp; editor._.elementsPath.filters;
-
-		if ( dataFilter ) {
-			dataFilter.addRules( {
-				elements: {
-					a: function( element ) {
-						var attributes = element.attributes;
-						if ( !attributes.name )
-							return null;
-
-						var isEmpty = !element.children.length;
-
-						if ( CKEDITOR.plugins.link.synAnchorSelector ) {
-							// IE needs a specific class name to be applied
-							// to the anchors, for appropriate styling.
-							var ieClass = isEmpty ? &#39;cke_anchor_empty&#39; : &#39;cke_anchor&#39;;
-							var cls = attributes[ &#39;class&#39; ];
-							if ( attributes.name &amp;&amp; ( !cls || cls.indexOf( ieClass ) &lt; 0 ) )
-								attributes[ &#39;class&#39; ] = ( cls || &#39;&#39; ) + &#39; &#39; + ieClass;
-
-							if ( isEmpty &amp;&amp; CKEDITOR.plugins.link.emptyAnchorFix ) {
-								attributes.contenteditable = &#39;false&#39;;
-								attributes[ &#39;data-cke-editable&#39; ] = 1;
-							}
-						} else if ( CKEDITOR.plugins.link.fakeAnchor &amp;&amp; isEmpty )
-							return editor.createFakeParserElement( element, &#39;cke_anchor&#39;, &#39;anchor&#39; );
-
-						return null;
-					}
-				}
-			} );
-		}
-
-		if ( CKEDITOR.plugins.link.emptyAnchorFix &amp;&amp; htmlFilter ) {
-			htmlFilter.addRules( {
-				elements: {
-					a: function( element ) {
-						delete element.attributes.contenteditable;
-					}
-				}
-			} );
-		}
-
-		if ( pathFilters ) {
-			pathFilters.push( function( element, name ) {
-				if ( name == &#39;a&#39; ) {
-					if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) || ( element.getAttribute( &#39;name&#39; ) &amp;&amp; ( !element.getAttribute( &#39;href&#39; ) || !element.getChildCount() ) ) )
-						return &#39;anchor&#39;;
-
-				}
-			} );
-		}
-	}
-} );
-
-<span id='CKEDITOR-plugins-link'>/**
-</span> * Set of Link plugin helpers.
- *
- * @class
- * @singleton
+<span id='global-property-use strict'>/**
+</span> * @fileOverview [Language](http://ckeditor.com/addon/language) plugin.
  */
-CKEDITOR.plugins.link = {
-<span id='CKEDITOR-plugins-link-method-getSelectedLink'>	/**
-</span>	 * Get the surrounding link element of the current selection.
-	 *
-	 *		CKEDITOR.plugins.link.getSelectedLink( editor );
-	 *
-	 *		// The following selections will all return the link element.
-	 *
-	 *		&lt;a href=&quot;#&quot;&gt;li^nk&lt;/a&gt;
-	 *		&lt;a href=&quot;#&quot;&gt;[link]&lt;/a&gt;
-	 *		text[&lt;a href=&quot;#&quot;&gt;link]&lt;/a&gt;
-	 *		&lt;a href=&quot;#&quot;&gt;li[nk&lt;/a&gt;]
-	 *		[&lt;b&gt;&lt;a href=&quot;#&quot;&gt;li]nk&lt;/a&gt;&lt;/b&gt;]
-	 *		[&lt;a href=&quot;#&quot;&gt;&lt;b&gt;li]nk&lt;/b&gt;&lt;/a&gt;
-	 *
-	 * @since 3.2.1
-	 * @param {CKEDITOR.editor} editor
-	 */
-	getSelectedLink: function( editor ) {
-		var selection = editor.getSelection();
-		var selectedElement = selection.getSelectedElement();
-		if ( selectedElement &amp;&amp; selectedElement.is( &#39;a&#39; ) )
-			return selectedElement;
 
-		var range = selection.getRanges()[ 0 ];
+&#39;use strict&#39;;
 
-		if ( range ) {
-			range.shrink( CKEDITOR.SHRINK_TEXT );
-			return editor.elementPath( range.getCommonAncestor() ).contains( &#39;a&#39;, 1 );
-		}
-		return null;
-	},
+( function() {
 
-<span id='CKEDITOR-plugins-link-method-getEditorAnchors'>	/**
-</span>	 * Collects anchors available in the editor (i.e. used by the Link plugin).
-	 * Note that the scope of search is different for inline (the &quot;global&quot; document) and
-	 * classic (`iframe`-based) editors (the &quot;inner&quot; document).
-	 *
-	 * @since 4.3.3
-	 * @param {CKEDITOR.editor} editor
-	 * @returns {CKEDITOR.dom.element[]} An array of anchor elements.
-	 */
-	getEditorAnchors: function( editor ) {
-		var editable = editor.editable(),
+	var allowedContent = &#39;span[!lang,!dir]&#39;,
+		requiredContent = &#39;span[lang,dir]&#39;;
 
-			// The scope of search for anchors is the entire document for inline editors
-			// and editor&#39;s editable for classic editor/divarea (#11359).
-			scope = ( editable.isInline() &amp;&amp; !editor.plugins.divarea ) ? editor.document : editable,
+	CKEDITOR.plugins.add( &#39;language&#39;, {
+		requires: &#39;menubutton&#39;,
+		lang: &#39;ar,ca,cs,cy,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ru,sl,sv,uk,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;language&#39;, // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
 
-			links = scope.getElementsByTag( &#39;a&#39; ),
-			anchors = [],
-			i = 0,
-			item;
+		init: function( editor ) {
+			var languagesConfigStrings = ( editor.config.language_list || [ &#39;ar:Arabic:rtl&#39;, &#39;fr:French&#39;, &#39;es:Spanish&#39; ] ),
+				plugin = this,
+				lang = editor.lang.language,
+				items = {},
+				parts,
+				curLanguageId, // 2-letter language identifier.
+				languageButtonId, // Will store button namespaced identifier, like &quot;language_en&quot;.
+				i;
 
-		// Retrieve all anchors within the scope.
-		while ( ( item = links.getItem( i++ ) ) ) {
-			if ( item.data( &#39;cke-saved-name&#39; ) || item.hasAttribute( &#39;name&#39; ) ) {
-				anchors.push( {
-					name: item.data( &#39;cke-saved-name&#39; ) || item.getAttribute( &#39;name&#39; ),
-					id: item.getAttribute( &#39;id&#39; )
+			// Registers command.
+			editor.addCommand( &#39;language&#39;, {
+				allowedContent: allowedContent,
+				requiredContent: requiredContent,
+				contextSensitive: true,
+				exec: function( editor, languageId ) {
+					var item = items[ &#39;language_&#39; + languageId ];
+
+					if ( item )
+						editor[ item.style.checkActive( editor.elementPath(), editor ) ? &#39;removeStyle&#39; : &#39;applyStyle&#39; ]( item.style );
+				},
+				refresh: function( editor, path ) {
+					this.setState( plugin.getCurrentLangElement( editor ) ?
+						CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+				}
+			} );
+
+			// Parse languagesConfigStrings, and create items entry for each lang.
+			for ( i = 0; i &lt; languagesConfigStrings.length; i++ ) {
+				parts = languagesConfigStrings[ i ].split( &#39;:&#39; );
+				curLanguageId = parts[ 0 ];
+				languageButtonId = &#39;language_&#39; + curLanguageId;
+
+				items[ languageButtonId ] = {
+					label: parts[ 1 ],
+					langId: curLanguageId,
+					group: &#39;language&#39;,
+					order: i,
+					// Tells if this language is left-to-right oriented (default: true).
+					ltr: ( &#39;&#39; + parts[ 2 ] ).toLowerCase() != &#39;rtl&#39;,
+					onClick: function() {
+						editor.execCommand( &#39;language&#39;, this.langId );
+					},
+					role: &#39;menuitemcheckbox&#39;
+				};
+
+				// Init style property.
+				items[ languageButtonId ].style = new CKEDITOR.style( {
+					element: &#39;span&#39;,
+					attributes: {
+						lang: curLanguageId,
+						dir: items[ languageButtonId ].ltr ? &#39;ltr&#39; : &#39;rtl&#39;
+					}
 				} );
 			}
-		}
 
-		// Retrieve all &quot;fake anchors&quot; within the scope.
-		if ( this.fakeAnchor ) {
-			var imgs = scope.getElementsByTag( &#39;img&#39; );
+			// Remove language indicator button.
+			items.language_remove = {
+				label: lang.remove,
+				group: &#39;language_remove&#39;,
+				state: CKEDITOR.TRISTATE_DISABLED,
+				order: items.length,
+				onClick: function() {
+					var currentLanguagedElement = plugin.getCurrentLangElement( editor );
 
-			i = 0;
+					if ( currentLanguagedElement )
+						editor.execCommand( &#39;language&#39;, currentLanguagedElement.getAttribute( &#39;lang&#39; ) );
+				}
+			};
 
-			while ( ( item = imgs.getItem( i++ ) ) ) {
-				if ( ( item = this.tryRestoreFakeAnchor( editor, item ) ) ) {
-					anchors.push( {
-						name: item.getAttribute( &#39;name&#39; ),
-						id: item.getAttribute( &#39;id&#39; )
-					} );
+			// Initialize groups for menu.
+			editor.addMenuGroup( &#39;language&#39;, 1 );
+			editor.addMenuGroup( &#39;language_remove&#39; ); // Group order is skipped intentionally, it will be placed at the end.
+			editor.addMenuItems( items );
+
+			editor.ui.add( &#39;Language&#39;, CKEDITOR.UI_MENUBUTTON, {
+				label: lang.button,
+				// MenuButtons do not (yet) has toFeature method, so we cannot do this:
+				// toFeature: function( editor ) { return editor.getCommand( &#39;language&#39; ); }
+				// Set feature&#39;s properties directly on button.
+				allowedContent: allowedContent,
+				requiredContent: requiredContent,
+				toolbar: &#39;bidi,30&#39;,
+				command: &#39;language&#39;,
+				onMenu: function() {
+					var activeItems = {},
+						currentLanguagedElement = plugin.getCurrentLangElement( editor );
+
+					for ( var prop in items )
+						activeItems[ prop ] = CKEDITOR.TRISTATE_OFF;
+
+					activeItems.language_remove = currentLanguagedElement ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED;
+
+					if ( currentLanguagedElement )
+						activeItems[ &#39;language_&#39; + currentLanguagedElement.getAttribute( &#39;lang&#39; ) ] = CKEDITOR.TRISTATE_ON;
+
+					return activeItems;
+				}
+			} );
+		},
+
+		// Gets the first language element for the current editor selection.
+		// @param {CKEDITOR.editor} editor
+		// @returns {CKEDITOR.dom.element} The language element, if any.
+		getCurrentLangElement: function( editor ) {
+			var elementPath = editor.elementPath(),
+				activePath = elementPath &amp;&amp; elementPath.elements,
+				pathMember, ret;
+
+			// IE8: upon initialization if there is no path elementPath() returns null.
+			if ( elementPath ) {
+				for ( var i = 0; i &lt; activePath.length; i++ ) {
+					pathMember = activePath[ i ];
+
+					if ( !ret &amp;&amp; pathMember.getName() == &#39;span&#39; &amp;&amp; pathMember.hasAttribute( &#39;dir&#39; ) &amp;&amp; pathMember.hasAttribute( &#39;lang&#39; ) )
+						ret = pathMember;
 				}
 			}
+
+			return ret;
 		}
+	} );
+} )();
 
-		return anchors;
-	},
-
-<span id='CKEDITOR-plugins-link-property-fakeAnchor'>	/**
-</span>	 * Opera and WebKit do not make it possible to select empty anchors. Fake
-	 * elements must be used for them.
-	 *
-	 * @readonly
-	 * @property {Boolean}
-	 */
-	fakeAnchor: CKEDITOR.env.opera || CKEDITOR.env.webkit,
-
-<span id='CKEDITOR-plugins-link-property-synAnchorSelector'>	/**
-</span>	 * For browsers that do not support CSS3 `a[name]:empty()`. Note that IE9 is included because of #7783.
-	 *
-	 * @readonly
-	 * @property {Boolean}
-	 */
-	synAnchorSelector: CKEDITOR.env.ie,
-
-<span id='CKEDITOR-plugins-link-property-emptyAnchorFix'>	/**
-</span>	 * For browsers that have editing issues with an empty anchor.
-	 *
-	 * @readonly
-	 * @property {Boolean}
-	 */
-	emptyAnchorFix: CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 8,
-
-<span id='CKEDITOR-plugins-link-method-tryRestoreFakeAnchor'>	/**
-</span>	 * Returns an element representing a real anchor restored from a fake anchor.
-	 * 
-	 * @param {CKEDITOR.editor} editor
-	 * @param {CKEDITOR.dom.element} element
-	 * @returns {CKEDITOR.dom.element} Restored anchor element or nothing if the 
-	 * passed element was not a fake anchor.
-	 */
-	tryRestoreFakeAnchor: function( editor, element ) {
-		if ( element &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;anchor&#39; ) {
-			var link = editor.restoreRealElement( element );
-			if ( link.data( &#39;cke-saved-name&#39; ) )
-				return link;
-		}
-	}
-};
-
-// TODO Much probably there&#39;s no need to expose these as public objects.
-
-CKEDITOR.unlinkCommand = function() {};
-CKEDITOR.unlinkCommand.prototype = {
-	exec: function( editor ) {
-		var style = new CKEDITOR.style( { element: &#39;a&#39;, type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 } );
-		editor.removeStyle( style );
-	},
-
-	refresh: function( editor, path ) {
-		// Despite our initial hope, document.queryCommandEnabled() does not work
-		// for this in Firefox. So we must detect the state by element paths.
-
-		var element = path.lastElement &amp;&amp; path.lastElement.getAscendant( &#39;a&#39;, true );
-
-		if ( element &amp;&amp; element.getName() == &#39;a&#39; &amp;&amp; element.getAttribute( &#39;href&#39; ) &amp;&amp; element.getChildCount() )
-			this.setState( CKEDITOR.TRISTATE_OFF );
-		else
-			this.setState( CKEDITOR.TRISTATE_DISABLED );
-	},
-
-	contextSensitive: 1,
-	startDisabled: 1,
-	requiredContent: &#39;a[href]&#39;
-};
-
-CKEDITOR.removeAnchorCommand = function() {};
-CKEDITOR.removeAnchorCommand.prototype = {
-	exec: function( editor ) {
-		var sel = editor.getSelection(),
-			bms = sel.createBookmarks(),
-			anchor;
-		if ( sel &amp;&amp; ( anchor = sel.getSelectedElement() ) &amp;&amp; ( CKEDITOR.plugins.link.fakeAnchor &amp;&amp; !anchor.getChildCount() ? CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, anchor ) : anchor.is( &#39;a&#39; ) ) )
-			anchor.remove( 1 );
-		else {
-			if ( ( anchor = CKEDITOR.plugins.link.getSelectedLink( editor ) ) ) {
-				if ( anchor.hasAttribute( &#39;href&#39; ) ) {
-					anchor.removeAttributes( { name: 1, &#39;data-cke-saved-name&#39;: 1 } );
-					anchor.removeClass( &#39;cke_anchor&#39; );
-				} else
-					anchor.remove( 1 );
-			}
-		}
-		sel.selectBookmarks( bms );
-	},
-	requiredContent: &#39;a[name]&#39;
-};
-
-CKEDITOR.tools.extend( CKEDITOR.config, {
-<span id='CKEDITOR-config-cfg-linkShowAdvancedTab'>	/**
-</span>	 * Whether to show the Advanced tab in the Link dialog window.
-	 *
-	 * @cfg {Boolean} [linkShowAdvancedTab=true]
-	 * @member CKEDITOR.config
-	 */
-	linkShowAdvancedTab: true,
-
-<span id='CKEDITOR-config-cfg-linkShowTargetTab'>	/**
-</span>	 * Whether to show the Target tab in the Link dialog window.
-	 *
-	 * @cfg {Boolean} [linkShowTargetTab=true]
-	 * @member CKEDITOR.config
-	 */
-	linkShowTargetTab: true
-} );
-</pre>
+<span id='CKEDITOR-config-cfg-language_list'>/**
+</span> * Specifies the list of languages available in the
+ * [Language](http://ckeditor.com/addon/language) plugin. Each entry
+ * should be a string in the following format:
+ *
+ *		&lt;languageCode&gt;:&lt;languageLabel&gt;[:&lt;textDirection&gt;]
+ *
+ * * _languageCode_: The language code used for the `lang` attribute in ISO 639 format.
+ * 	Language codes can be found [here](http://www.loc.gov/standards/iso639-2/php/English_list.php).
+ * 	You can use both 2-letter ISO-639-1 codes and 3-letter ISO-639-2 codes, though
+ * 	for consistency it is recommended to stick to ISO-639-1 2-letter codes.
+ * * _languageLabel_: The label to show for this language in the list.
+ * * _textDirection_: (optional) One of the following values: `rtl` or `ltr`,
+ * 	indicating the reading direction of the language. Defaults to `ltr`.
+ *
+ *		config.language_list = [ &#39;he:Hebrew:rtl&#39;, &#39;pt:Portuguese&#39;, &#39;de:German&#39; ];
+ *
+ * @cfg {Array} [language_list = [ &#39;ar:Arabic:rtl&#39;, &#39;fr:French&#39;, &#39;es:Spanish&#39; ]]
+ * @member CKEDITOR.config
+ */</pre>
 </body>
 </html>

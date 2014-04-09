@@ -20,546 +20,460 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;menu&#39;, {
-	requires: &#39;floatpanel&#39;,
+<span id='global-property-use strict'>/**
+</span> * @fileOverview [Mathematical Formulas](http://ckeditor.com/addon/mathjax) plugin.
+ */
 
-	beforeInit: function( editor ) {
-		var groups = editor.config.menu_groups.split( &#39;,&#39; ),
-			groupsOrder = editor._.menuGroups = {},
-			menuItems = editor._.menuItems = {};
-
-		for ( var i = 0; i &lt; groups.length; i++ )
-			groupsOrder[ groups[ i ] ] = i + 1;
-
-<span id='CKEDITOR-editor-method-addMenuGroup'>		/**
-</span>		 * Registers an item group to the editor context menu in order to make it
-		 * possible to associate it with menu items later.
-		 *
-		 * @param {String} name Specify a group name.
-		 * @param {Number} [order=100] Define the display sequence of this group
-		 * inside the menu. A smaller value gets displayed first.
-		 * @member CKEDITOR.editor
-		 */
-		editor.addMenuGroup = function( name, order ) {
-			groupsOrder[ name ] = order || 100;
-		};
-
-<span id='CKEDITOR-editor-method-addMenuItem'>		/**
-</span>		 * Adds an item from the specified definition to the editor context menu.
-		 *
-		 * @method
-		 * @param {String} name The menu item name.
-		 * @param {Object} definition The menu item definition.
-		 * @member CKEDITOR.editor
-		 */
-		editor.addMenuItem = function( name, definition ) {
-			if ( groupsOrder[ definition.group ] )
-				menuItems[ name ] = new CKEDITOR.menuItem( this, name, definition );
-		};
-
-<span id='CKEDITOR-editor-method-addMenuItems'>		/**
-</span>		 * Adds one or more items from the specified definition array to the editor context menu.
-		 *
-		 * @method
-		 * @param {Array} definitions List of definitions for each menu item as if {@link #addMenuItem} is called.
-		 * @member CKEDITOR.editor
-		 */
-		editor.addMenuItems = function( definitions ) {
-			for ( var itemName in definitions ) {
-				this.addMenuItem( itemName, definitions[ itemName ] );
-			}
-		};
-
-<span id='CKEDITOR-editor-method-getMenuItem'>		/**
-</span>		 * Retrieves a particular menu item definition from the editor context menu.
-		 *
-		 * @method
-		 * @param {String} name The name of the desired menu item.
-		 * @returns {Object}
-		 * @member CKEDITOR.editor
-		 */
-		editor.getMenuItem = function( name ) {
-			return menuItems[ name ];
-		};
-
-<span id='CKEDITOR-editor-method-removeMenuItem'>		/**
-</span>		 * Removes a particular menu item added before from the editor context menu.
-		 *
-		 * @since 3.6.1
-		 * @method
-		 * @param {String} name The name of the desired menu item.
-		 * @member CKEDITOR.editor
-		 */
-		editor.removeMenuItem = function( name ) {
-			delete menuItems[ name ];
-		};
-	}
-} );
+&#39;use strict&#39;;
 
 ( function() {
-	var menuItemSource = &#39;&lt;span class=&quot;cke_menuitem&quot;&gt;&#39; +
-		&#39;&lt;a id=&quot;{id}&quot;&#39; +
-		&#39; class=&quot;cke_menubutton cke_menubutton__{name} cke_menubutton_{state} {cls}&quot; href=&quot;{href}&quot;&#39; +
-		&#39; title=&quot;{title}&quot;&#39; +
-		&#39; tabindex=&quot;-1&quot;&#39; +
-		&#39;_cke_focus=1&#39; +
-		&#39; hidefocus=&quot;true&quot;&#39; +
-		&#39; role=&quot;{role}&quot;&#39; +
-		&#39; aria-haspopup=&quot;{hasPopup}&quot;&#39; +
-		&#39; aria-disabled=&quot;{disabled}&quot;&#39; +
-		&#39; {ariaChecked}&#39;;
 
-	// Some browsers don&#39;t cancel key events in the keydown but in the
-	// keypress.
-	// TODO: Check if really needed for Gecko+Mac.
-	if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
-		menuItemSource += &#39; onkeypress=&quot;return false;&quot;&#39;;
+	var cdn = &#39;http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML&#39;;
 
-	// With Firefox, we need to force the button to redraw, otherwise it
-	// will remain in the focus state.
-	if ( CKEDITOR.env.gecko )
-		menuItemSource += &#39; onblur=&quot;this.style.cssText = this.style.cssText;&quot;&#39;;
+	CKEDITOR.plugins.add( &#39;mathjax&#39;, {
+		lang: &#39;ar,ca,cs,cy,de,el,en,en-gb,es,fa,fi,fr,gl,hr,hu,ja,km,nb,nl,no,pl,pt,pt-br,ro,ru,sl,sv,uk,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		requires: &#39;widget,dialog&#39;,
+		icons: &#39;mathjax&#39;,
+		hidpi: true, // %REMOVE_LINE_CORE%
 
-	// #188
-	menuItemSource += &#39; onmouseover=&quot;CKEDITOR.tools.callFunction({hoverFn},{index});&quot;&#39; +
-			&#39; onmouseout=&quot;CKEDITOR.tools.callFunction({moveOutFn},{index});&quot; &#39; +
-			( CKEDITOR.env.ie ? &#39;onclick=&quot;return false;&quot; onmouseup&#39; : &#39;onclick&#39; ) +
-				&#39;=&quot;CKEDITOR.tools.callFunction({clickFn},{index}); return false;&quot;&#39; +
-			&#39;&gt;&#39;;
+		init: function( editor ) {
+			var cls = editor.config.mathJaxClass || &#39;math-tex&#39;;
 
-	menuItemSource +=
-				&#39;&lt;span class=&quot;cke_menubutton_inner&quot;&gt;&#39; +
-					&#39;&lt;span class=&quot;cke_menubutton_icon&quot;&gt;&#39; +
-						&#39;&lt;span class=&quot;cke_button_icon cke_button__{iconName}_icon&quot; style=&quot;{iconStyle}&quot;&gt;&lt;/span&gt;&#39; +
-					&#39;&lt;/span&gt;&#39; +
-					&#39;&lt;span class=&quot;cke_menubutton_label&quot;&gt;&#39; +
-						&#39;{label}&#39; +
-					&#39;&lt;/span&gt;&#39; +
-					&#39;{arrowHtml}&#39; +
-				&#39;&lt;/span&gt;&#39; +
-			&#39;&lt;/a&gt;&lt;/span&gt;&#39;;
+			editor.widgets.add( &#39;mathjax&#39;, {
+				inline: true,
+				dialog: &#39;mathjax&#39;,
+				button: editor.lang.mathjax.button,
+				mask: true,
+				allowedContent: &#39;span(!&#39; + cls + &#39;)&#39;,
+				// Allow style classes only on spans having mathjax class.
+				styleToAllowedContentRules: function( style ) {
+					var classes = style.getClassesArray();
+					if ( !classes )
+						return null;
+					classes.push( &#39;!&#39; + cls );
 
-	var menuArrowSource = &#39;&lt;span class=&quot;cke_menuarrow&quot;&gt;&#39; +
-				&#39;&lt;span&gt;{label}&lt;/span&gt;&#39; +
-			&#39;&lt;/span&gt;&#39;;
+					return &#39;span(&#39; + classes.join( &#39;,&#39; ) + &#39;)&#39;;
+				},
+				pathName: editor.lang.mathjax.pathName,
 
-	var menuItemTpl = CKEDITOR.addTemplate( &#39;menuItem&#39;, menuItemSource ),
-		menuArrowTpl = CKEDITOR.addTemplate( &#39;menuArrow&#39;, menuArrowSource );
+				template: &#39;&lt;span class=&quot;&#39; + cls + &#39;&quot; style=&quot;display:inline-block&quot; data-cke-survive=1&gt;&lt;/span&gt;&#39;,
 
-<span id='CKEDITOR-menu'>	/**
-</span>	 * @class
-	 * @todo
-	 */
-	CKEDITOR.menu = CKEDITOR.tools.createClass( {
-<span id='CKEDITOR-menu-method-constructor'>		/**
-</span>		 * @constructor
-		 */
-		$: function( editor, definition ) {
-			definition = this._.definition = definition || {};
-			this.id = CKEDITOR.tools.getNextId();
+				parts: {
+					span: &#39;span&#39;
+				},
 
-			this.editor = editor;
-			this.items = [];
-			this._.listeners = [];
+				defaults: {
+					math: &#39;\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)&#39;
+				},
 
-			this._.level = definition.level || 1;
+				init: function() {
+					var iframe = this.parts.span.getChild( 0 );
 
-			var panelDefinition = CKEDITOR.tools.extend( {}, definition.panel, {
-				css: [ CKEDITOR.skin.getPath( &#39;editor&#39; ) ],
-				level: this._.level - 1,
-				block: {}
-			} );
-
-			var attrs = panelDefinition.block.attributes = ( panelDefinition.attributes || {} );
-			// Provide default role of &#39;menu&#39;.
-			!attrs.role &amp;&amp; ( attrs.role = &#39;menu&#39; );
-			this._.panelDefinition = panelDefinition;
-		},
-
-		_: {
-			onShow: function() {
-				var selection = this.editor.getSelection(),
-					start = selection &amp;&amp; selection.getStartElement(),
-					path = this.editor.elementPath(),
-					listeners = this._.listeners;
-
-				this.removeAll();
-				// Call all listeners, filling the list of items to be displayed.
-				for ( var i = 0; i &lt; listeners.length; i++ ) {
-					var listenerItems = listeners[ i ]( start, selection, path );
-
-					if ( listenerItems ) {
-						for ( var itemName in listenerItems ) {
-							var item = this.editor.getMenuItem( itemName );
-
-							if ( item &amp;&amp; ( !item.command || this.editor.getCommand( item.command ).state ) ) {
-								item.state = listenerItems[ itemName ];
-								this.add( item );
-							}
-						}
+					// Check if span contains iframe and create it otherwise.
+					if ( !iframe || iframe.type != CKEDITOR.NODE_ELEMENT || !iframe.is( &#39;iframe&#39; ) ) {
+						iframe = new CKEDITOR.dom.element( &#39;iframe&#39; );
+						iframe.setAttributes( {
+							style: &#39;border:0;width:0;height:0&#39;,
+							scrolling: &#39;no&#39;,
+							frameborder: 0,
+							allowTransparency: true,
+							src: CKEDITOR.plugins.mathjax.fixSrc
+						} );
+						this.parts.span.append( iframe );
 					}
-				}
-			},
 
-			onClick: function( item ) {
-				this.hide();
+					// Wait for ready because on some browsers iFrame will not
+					// have document element until it is put into document.
+					// This is a problem when you crate widget using dialog.
+					this.once( &#39;ready&#39;, function() {
+						// Src attribute must be recreated to fix custom domain error after undo
+						// (see iFrame.removeAttribute( &#39;src&#39; ) in frameWrapper.load).
+						if ( CKEDITOR.env.ie )
+							iframe.setAttribute( &#39;src&#39;, CKEDITOR.plugins.mathjax.fixSrc );
 
-				if ( item.onClick )
-					item.onClick();
-				else if ( item.command )
-					this.editor.execCommand( item.command );
-			},
+						this.frameWrapper = new CKEDITOR.plugins.mathjax.frameWrapper( iframe, editor );
+						this.frameWrapper.setValue( this.data.math );
+					} );
+				},
 
-			onEscape: function( keystroke ) {
-				var parent = this.parent;
-				// 1. If it&#39;s sub-menu, close it, with focus restored on this.
-				// 2. In case of a top-menu, close it, with focus returned to page.
-				if ( parent )
-					parent._.panel.hideChild( 1 );
-				else if ( keystroke == 27 )
-					this.hide( 1 );
+				data: function() {
+					if ( this.frameWrapper )
+						this.frameWrapper.setValue( this.data.math );
+				},
 
-				return false;
-			},
-
-			onHide: function() {
-				this.onHide &amp;&amp; this.onHide();
-			},
-
-			showSubMenu: function( index ) {
-				var menu = this._.subMenu,
-					item = this.items[ index ],
-					subItemDefs = item.getItems &amp;&amp; item.getItems();
-
-				// If this item has no subitems, we just hide the submenu, if
-				// available, and return back.
-				if ( !subItemDefs ) {
-					// Hide sub menu with focus returned.
-					this._.panel.hideChild( 1 );
-					return;
-				}
-
-				// Create the submenu, if not available, or clean the existing
-				// one.
-				if ( menu )
-					menu.removeAll();
-				else {
-					menu = this._.subMenu = new CKEDITOR.menu( this.editor, CKEDITOR.tools.extend( {}, this._.definition, { level: this._.level + 1 }, true ) );
-					menu.parent = this;
-					menu._.onClick = CKEDITOR.tools.bind( this._.onClick, this );
-				}
-
-				// Add all submenu items to the menu.
-				for ( var subItemName in subItemDefs ) {
-					var subItem = this.editor.getMenuItem( subItemName );
-					if ( subItem ) {
-						subItem.state = subItemDefs[ subItemName ];
-						menu.add( subItem );
-					}
-				}
-
-				// Get the element representing the current item.
-				var element = this._.panel.getBlock( this.id ).element.getDocument().getById( this.id + String( index ) );
-
-				// Show the submenu.
-				// This timeout is needed to give time for the sub-menu get
-				// focus when JAWS is running. (#9844)
-				setTimeout( function() {
-					menu.show( element, 2 );
-				}, 0 );
-			}
-		},
-
-		proto: {
-<span id='CKEDITOR-menu-method-add'>			/**
-</span>			 * Adds an item.
-			 *
-			 * @param item
-			 */
-			add: function( item ) {
-				// Later we may sort the items, but Array#sort is not stable in
-				// some browsers, here we&#39;re forcing the original sequence with
-				// &#39;order&#39; attribute if it hasn&#39;t been assigned. (#3868)
-				if ( !item.order )
-					item.order = this.items.length;
-
-				this.items.push( item );
-			},
-
-<span id='CKEDITOR-menu-method-removeAll'>			/**
-</span>			 * Removes all items.
-			 */
-			removeAll: function() {
-				this.items = [];
-			},
-
-<span id='CKEDITOR-menu-method-show'>			/**
-</span>			 * Shows the menu in given location.
-			 *
-			 * @param {CKEDITOR.dom.element} offsetParent
-			 * @param {Number} [corner]
-			 * @param {Number} [offsetX]
-			 * @param {Number} [offsetY]
-			 */
-			show: function( offsetParent, corner, offsetX, offsetY ) {
-				// Not for sub menu.
-				if ( !this.parent ) {
-					this._.onShow();
-					// Don&#39;t menu with zero items.
-					if ( !this.items.length )
+				upcast: function( el, data ) {
+					if ( !( el.name == &#39;span&#39; &amp;&amp; el.hasClass( cls ) ) )
 						return;
+
+					if ( el.children.length &gt; 1 || el.children[ 0 ].type != CKEDITOR.NODE_TEXT )
+						return;
+
+					data.math = el.children[ 0 ].value;
+
+					// Add style display:inline-block to have proper height of widget wrapper and mask.
+					var attrs = el.attributes;
+
+					if ( attrs.style )
+						attrs.style += &#39;;display:inline-block&#39;;
+					else
+						attrs.style = &#39;display:inline-block&#39;;
+
+					// Add attribute to prevent deleting empty span in data processing.
+					attrs[ &#39;data-cke-survive&#39; ] = 1;
+
+					el.children[ 0 ].remove();
+
+					return el;
+				},
+
+				downcast: function( el ) {
+					el.children[ 0 ].replaceWith( new CKEDITOR.htmlParser.text( this.data.math ) );
+
+					// Remove style display:inline-block.
+					var attrs = el.attributes;
+					attrs.style = attrs.style.replace( /display:\s?inline-block;?\s?/, &#39;&#39; );
+					if ( attrs.style === &#39;&#39; )
+						delete attrs.style;
+
+					return el;
 				}
-
-				corner = corner || ( this.editor.lang.dir == &#39;rtl&#39; ? 2 : 1 );
-
-				var items = this.items,
-					editor = this.editor,
-					panel = this._.panel,
-					element = this._.element;
-
-				// Create the floating panel for this menu.
-				if ( !panel ) {
-					panel = this._.panel = new CKEDITOR.ui.floatPanel( this.editor, CKEDITOR.document.getBody(), this._.panelDefinition, this._.level );
-
-					panel.onEscape = CKEDITOR.tools.bind( function( keystroke ) {
-						if ( this._.onEscape( keystroke ) === false )
-							return false;
-					}, this );
-
-					panel.onShow = function() {
-						// Menu need CSS resets, compensate class name.
-						var holder = panel._.panel.getHolderElement();
-						holder.getParent().addClass( &#39;cke cke_reset_all&#39; );
-					};
-
-					panel.onHide = CKEDITOR.tools.bind( function() {
-						this._.onHide &amp;&amp; this._.onHide();
-					}, this );
-
-					// Create an autosize block inside the panel.
-					var block = panel.addBlock( this.id, this._.panelDefinition.block );
-					block.autoSize = true;
-
-					var keys = block.keys;
-					keys[ 40 ] = &#39;next&#39;; // ARROW-DOWN
-					keys[ 9 ] = &#39;next&#39;; // TAB
-					keys[ 38 ] = &#39;prev&#39;; // ARROW-UP
-					keys[ CKEDITOR.SHIFT + 9 ] = &#39;prev&#39;; // SHIFT + TAB
-					keys[ ( editor.lang.dir == &#39;rtl&#39; ? 37 : 39 ) ] = CKEDITOR.env.ie ? &#39;mouseup&#39; : &#39;click&#39;; // ARROW-RIGHT/ARROW-LEFT(rtl)
-					keys[ 32 ] = CKEDITOR.env.ie ? &#39;mouseup&#39; : &#39;click&#39;; // SPACE
-					CKEDITOR.env.ie &amp;&amp; ( keys[ 13 ] = &#39;mouseup&#39; ); // Manage ENTER, since onclick is blocked in IE (#8041).
-
-					element = this._.element = block.element;
-
-					var elementDoc = element.getDocument();
-					elementDoc.getBody().setStyle( &#39;overflow&#39;, &#39;hidden&#39; );
-					elementDoc.getElementsByTag( &#39;html&#39; ).getItem( 0 ).setStyle( &#39;overflow&#39;, &#39;hidden&#39; );
-
-					this._.itemOverFn = CKEDITOR.tools.addFunction( function( index ) {
-						clearTimeout( this._.showSubTimeout );
-						this._.showSubTimeout = CKEDITOR.tools.setTimeout( this._.showSubMenu, editor.config.menu_subMenuDelay || 400, this, [ index ] );
-					}, this );
-
-					this._.itemOutFn = CKEDITOR.tools.addFunction( function( index ) {
-						clearTimeout( this._.showSubTimeout );
-					}, this );
-
-					this._.itemClickFn = CKEDITOR.tools.addFunction( function( index ) {
-						var item = this.items[ index ];
-
-						if ( item.state == CKEDITOR.TRISTATE_DISABLED ) {
-							this.hide( 1 );
-							return;
-						}
-
-						if ( item.getItems )
-							this._.showSubMenu( index );
-						else
-							this._.onClick( item );
-					}, this );
-				}
-
-				// Put the items in the right order.
-				sortItems( items );
-
-				// Apply the editor mixed direction status to menu.
-				var path = editor.elementPath(),
-					mixedDirCls = ( path &amp;&amp; path.direction() != editor.lang.dir ) ? &#39; cke_mixed_dir_content&#39; : &#39;&#39;;
-
-				// Build the HTML that composes the menu and its items.
-				var output = [ &#39;&lt;div class=&quot;cke_menu&#39; + mixedDirCls + &#39;&quot; role=&quot;presentation&quot;&gt;&#39; ];
-
-				var length = items.length,
-					lastGroup = length &amp;&amp; items[ 0 ].group;
-
-				for ( var i = 0; i &lt; length; i++ ) {
-					var item = items[ i ];
-					if ( lastGroup != item.group ) {
-						output.push( &#39;&lt;div class=&quot;cke_menuseparator&quot; role=&quot;separator&quot;&gt;&lt;/div&gt;&#39; );
-						lastGroup = item.group;
-					}
-
-					item.render( this, i, output );
-				}
-
-				output.push( &#39;&lt;/div&gt;&#39; );
-
-				// Inject the HTML inside the panel.
-				element.setHtml( output.join( &#39;&#39; ) );
-
-				CKEDITOR.ui.fire( &#39;ready&#39;, this );
-
-				// Show the panel.
-				if ( this.parent )
-					this.parent._.panel.showAsChild( panel, this.id, offsetParent, corner, offsetX, offsetY );
-				else
-					panel.showBlock( this.id, offsetParent, corner, offsetX, offsetY );
-
-				editor.fire( &#39;menuShow&#39;, [ panel ] );
-			},
-
-<span id='CKEDITOR-menu-method-addListener'>			/**
-</span>			 * Adds a callback executed on opening the menu. Items
-			 * returned by that callback are added to the menu.
-			 *
-			 * @param {Function} listenerFn
-			 * @param {CKEDITOR.dom.element} listenerFn.startElement The selection start anchor element.
-			 * @param {CKEDITOR.dom.selection} listenerFn.selection The current selection.
-			 * @param {CKEDITOR.dom.elementPath} listenerFn.path The current elements path.
-			 * @param listenerFn.return Object (`commandName` =&gt; `state`) of items that should be added to the menu.
-			 */
-			addListener: function( listenerFn ) {
-				this._.listeners.push( listenerFn );
-			},
-
-<span id='CKEDITOR-menu-method-hide'>			/**
-</span>			 * Hides the menu.
-			 *
-			 * @param {Boolean} [returnFocus]
-			 */
-			hide: function( returnFocus ) {
-				this._.onHide &amp;&amp; this._.onHide();
-				this._.panel &amp;&amp; this._.panel.hide( returnFocus );
-			}
-		}
-	} );
-
-	function sortItems( items ) {
-		items.sort( function( itemA, itemB ) {
-			if ( itemA.group &lt; itemB.group )
-				return -1;
-			else if ( itemA.group &gt; itemB.group )
-				return 1;
-
-			return itemA.order &lt; itemB.order ? -1 : itemA.order &gt; itemB.order ? 1 : 0;
-		} );
-	}
-
-<span id='CKEDITOR-menuItem'>	/**
-</span>	 * @class
-	 * @todo
-	 */
-	CKEDITOR.menuItem = CKEDITOR.tools.createClass( {
-		$: function( editor, name, definition ) {
-			CKEDITOR.tools.extend( this, definition,
-			// Defaults
-			{
-				order: 0,
-				className: &#39;cke_menubutton__&#39; + name
 			} );
 
-			// Transform the group name into its order number.
-			this.group = editor._.menuGroups[ this.group ];
+			// Add dialog.
+			CKEDITOR.dialog.add( &#39;mathjax&#39;, this.path + &#39;dialogs/mathjax.js&#39; );
 
-			this.editor = editor;
-			this.name = name;
-		},
+			// Add MathJax script to page preview.
+			editor.on( &#39;contentPreview&#39;, function( evt ) {
+				evt.data.dataValue = evt.data.dataValue.replace( /&lt;\/head&gt;/,
+					&#39;&lt;script src=&quot;&#39; + ( editor.config.mathJaxLib ? CKEDITOR.getUrl( editor.config.mathJaxLib ) : cdn ) + &#39;&quot;&gt;&lt;\/script&gt;&lt;\/head&gt;&#39; );
+			} );
 
-		proto: {
-			render: function( menu, index, output ) {
-				var id = menu.id + String( index ),
-					state = ( typeof this.state == &#39;undefined&#39; ) ? CKEDITOR.TRISTATE_OFF : this.state,
-					ariaChecked = &#39;&#39;;
-
-				var stateName = state == CKEDITOR.TRISTATE_ON ? &#39;on&#39; : state == CKEDITOR.TRISTATE_DISABLED ? &#39;disabled&#39; : &#39;off&#39;;
-
-				if ( this.role in { menuitemcheckbox: 1, menuitemradio: 1 } )
-					ariaChecked = &#39; aria-checked=&quot;&#39; + ( state == CKEDITOR.TRISTATE_ON ? &#39;true&#39; : &#39;false&#39; ) + &#39;&quot;&#39;;
-
-				var hasSubMenu = this.getItems;
-				// ltr: BLACK LEFT-POINTING POINTER
-				// rtl: BLACK RIGHT-POINTING POINTER
-				var arrowLabel = &#39;&amp;#&#39; + ( this.editor.lang.dir == &#39;rtl&#39; ? &#39;9668&#39; : &#39;9658&#39; ) + &#39;;&#39;;
-
-				var iconName = this.name;
-				if ( this.icon &amp;&amp; !( /\./ ).test( this.icon ) )
-					iconName = this.icon;
-
-				var params = {
-					id: id,
-					name: this.name,
-					iconName: iconName,
-					label: this.label,
-					cls: this.className || &#39;&#39;,
-					state: stateName,
-					hasPopup: hasSubMenu ? &#39;true&#39; : &#39;false&#39;,
-					disabled: state == CKEDITOR.TRISTATE_DISABLED,
-					title: this.label,
-					href: &#39;javascript:void(\&#39;&#39; + ( this.label || &#39;&#39; ).replace( &quot;&#39;&quot; + &#39;&#39; ) + &#39;\&#39;)&#39;,
-					hoverFn: menu._.itemOverFn,
-					moveOutFn: menu._.itemOutFn,
-					clickFn: menu._.itemClickFn,
-					index: index,
-					iconStyle: CKEDITOR.skin.getIconStyle( iconName, ( this.editor.lang.dir == &#39;rtl&#39; ), iconName == this.icon ? null : this.icon, this.iconOffset ),
-					arrowHtml: hasSubMenu ? menuArrowTpl.output( { label : arrowLabel } ) : &#39;&#39;,
-					role: this.role ? this.role : &#39;menuitem&#39;,
-					ariaChecked: ariaChecked
-				};
-
-				menuItemTpl.output( params, output );
-			}
+			editor.on( &#39;paste&#39;, function( evt ) {
+				// Firefox does remove iFrame elements from pasted content so this event do the same on other browsers.
+				// Also iFrame in paste content is reason of &quot;Unspecified error&quot; in IE9 (#10857).
+				var regex = new RegExp( &#39;&lt;span[^&gt;]*?&#39; + cls + &#39;.*?&lt;\/span&gt;&#39;, &#39;ig&#39; );
+				evt.data.dataValue = evt.data.dataValue.replace( regex, function( match ) {
+					return  match.replace( /(&lt;iframe.*?\/iframe&gt;)/i, &#39;&#39; );
+				} );
+			} );
 		}
 	} );
 
+<span id='CKEDITOR-plugins-mathjax'>	/**
+</span>	 * @private
+	 * @singleton
+	 * @class CKEDITOR.plugins.mathjax
+	 */
+	CKEDITOR.plugins.mathjax = {};
+
+<span id='CKEDITOR-plugins-mathjax-property-fixSrc'>	/**
+</span>	 * A variable to fix problems with `iframe`. This variable is global
+	 * because it is used in both the widget and the dialog window.
+	 *
+	 * @private
+	 * @property {String} fixSrc
+	 */
+	CKEDITOR.plugins.mathjax.fixSrc =
+		// In Firefox src must exist and be different than about:blank to emit load event.
+		CKEDITOR.env.gecko ? &#39;javascript:true&#39; :
+		// Support for custom document.domain in IE.
+		CKEDITOR.env.ie ? &#39;javascript:&#39; +
+						&#39;void((function(){&#39; + encodeURIComponent(
+							&#39;document.open();&#39; +
+							&#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; +
+							&#39;document.close();&#39;
+						) + &#39;})())&#39; :
+		// In Chrome src must be undefined to emit load event.
+						&#39;javascript:void(0)&#39;;
+
+<span id='CKEDITOR-plugins-mathjax-property-loadingIcon'>	/**
+</span>	 * Loading indicator image generated by http://preloaders.net.
+	 *
+	 * @private
+	 * @property {String} loadingIcon
+	 */
+	CKEDITOR.plugins.mathjax.loadingIcon = CKEDITOR.plugins.get( &#39;mathjax&#39; ).path + &#39;images/loader.gif&#39;;
+
+<span id='CKEDITOR-plugins-mathjax-method-copyStyles'>	/**
+</span>	 * Computes predefined styles and copies them to another element.
+	 *
+	 * @private
+	 * @param {CKEDITOR.dom.element} from Copy source.
+	 * @param {CKEDITOR.dom.element} to Copy target.
+	 */
+	CKEDITOR.plugins.mathjax.copyStyles = function( from, to ) {
+		var stylesToCopy = [ &#39;color&#39;, &#39;font-family&#39;, &#39;font-style&#39;, &#39;font-weight&#39;, &#39;font-variant&#39;, &#39;font-size&#39; ];
+
+		for ( var i = 0; i &lt; stylesToCopy.length; i++ ) {
+			var key = stylesToCopy[ i ],
+				val = from.getComputedStyle( key );
+			if ( val )
+				to.setStyle( key, val );
+		}
+	};
+
+<span id='CKEDITOR-plugins-mathjax-method-trim'>	/**
+</span>	 * Trims MathJax value from &#39;\(1+1=2\)&#39; to &#39;1+1=2&#39;.
+	 *
+	 * @private
+	 * @param {String} value String to trim.
+	 * @returns {String} Trimed string.
+	 */
+	CKEDITOR.plugins.mathjax.trim = function( value ) {
+		var begin = value.indexOf( &#39;\\(&#39; ) + 2,
+			end = value.lastIndexOf( &#39;\\)&#39; );
+
+		return value.substring( begin, end );
+	};
+
+<span id='CKEDITOR-plugins-mathjax-frameWrapper-method-constructor'><span id='CKEDITOR-plugins-mathjax-frameWrapper'>	/**
+</span></span>	 * FrameWrapper is responsible for communication between the MathJax library
+	 * and the `iframe` element that is used for rendering mathematical formulas
+	 * inside the editor.
+	 * It lets you create visual mathematics by using the
+	 * {@link CKEDITOR.plugins.mathjax.frameWrapper#setValue setValue} method.
+	 *
+	 * @private
+	 * @class CKEDITOR.plugins.mathjax.frameWrapper
+	 * @constructor Creates a class instance.
+	 * @param {CKEDITOR.dom.element} iFrame The `iframe` element to be wrapped.
+	 * @param {CKEDITOR.editor} editor The editor instance.
+	 */
+	if ( !( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version == 8 ) ) {
+		CKEDITOR.plugins.mathjax.frameWrapper = function( iFrame, editor ) {
+
+			var buffer, preview, value, newValue,
+				doc = iFrame.getFrameDocument(),
+
+				// Is MathJax loaded and ready to work.
+				isInit = false,
+
+				// Is MathJax parsing Tex.
+				isRunning = false,
+
+				// Function called when MathJax is loaded.
+				loadedHandler = CKEDITOR.tools.addFunction( function() {
+					preview = doc.getById( &#39;preview&#39; );
+					buffer = doc.getById( &#39;buffer&#39; );
+					isInit = true;
+
+					if ( newValue )
+						update();
+
+					// Private! For test usage only.
+					CKEDITOR.fire( &#39;mathJaxLoaded&#39;, iFrame );
+				} ),
+
+				// Function called when MathJax finish his job.
+				updateDoneHandler = CKEDITOR.tools.addFunction( function() {
+					CKEDITOR.plugins.mathjax.copyStyles( iFrame, preview );
+
+					preview.setHtml( buffer.getHtml() );
+
+					editor.fire( &#39;lockSnapshot&#39; );
+
+					iFrame.setStyles( {
+						height: 0,
+						width: 0
+					} );
+
+					// Set iFrame dimensions.
+					var height = Math.max( doc.$.body.offsetHeight, doc.$.documentElement.offsetHeight ),
+						width = Math.max( preview.$.offsetWidth, doc.$.body.scrollWidth );
+
+					iFrame.setStyles( {
+						height: height + &#39;px&#39;,
+						width: width + &#39;px&#39;
+					} );
+
+					editor.fire( &#39;unlockSnapshot&#39; );
+
+					// Private! For test usage only.
+					CKEDITOR.fire( &#39;mathJaxUpdateDone&#39;, iFrame );
+
+					// If value changed in the meantime update it again.
+					if ( value != newValue )
+						update();
+					else
+						isRunning = false;
+				} );
+
+			iFrame.on( &#39;load&#39;, load );
+
+			load();
+
+			function load() {
+				doc = iFrame.getFrameDocument();
+
+				if ( doc.getById( &#39;preview&#39; ) )
+					return;
+
+				// Because of IE9 bug in a src attribute can not be javascript
+				// when you undo (#10930). If you have iFrame with javascript in src
+				// and call insertBefore on such element then IE9 will see crash.
+				if ( CKEDITOR.env.ie )
+					iFrame.removeAttribute( &#39;src&#39; );
+
+				doc.write( &#39;&lt;!DOCTYPE html&gt;&#39; +
+							&#39;&lt;html&gt;&#39; +
+							&#39;&lt;head&gt;&#39; +
+								&#39;&lt;meta charset=&quot;utf-8&quot;&gt;&#39; +
+								&#39;&lt;script type=&quot;text/x-mathjax-config&quot;&gt;&#39; +
+
+									// MathJax configuration, disable messages.
+									&#39;MathJax.Hub.Config( {&#39; +
+										&#39;showMathMenu: false,&#39; +
+										&#39;messageStyle: &quot;none&quot;&#39; +
+									&#39;} );&#39; +
+
+									// Get main CKEDITOR form parent.
+									&#39;function getCKE() {&#39; +
+										&#39;if ( typeof window.parent.CKEDITOR == \&#39;object\&#39; ) {&#39; +
+											&#39;return window.parent.CKEDITOR;&#39; +
+										&#39;} else {&#39; +
+											&#39;return window.parent.parent.CKEDITOR;&#39; +
+										&#39;}&#39; +
+									&#39;}&#39; +
+
+									// Run MathJax.Hub with its actual parser and call callback function after that.
+									// Because MathJax.Hub is asynchronous create MathJax.Hub.Queue to wait with callback.
+									&#39;function update() {&#39; +
+										&#39;MathJax.Hub.Queue(&#39; +
+											&#39;[ \&#39;Typeset\&#39;, MathJax.Hub, this.buffer ],&#39; +
+											&#39;function() {&#39; +
+												&#39;getCKE().tools.callFunction( &#39; + updateDoneHandler + &#39; );&#39; +
+											&#39;}&#39; +
+										&#39;);&#39; +
+									&#39;}&#39; +
+
+									// Run MathJax for the first time, when the script is loaded.
+									// Callback function will be called then it&#39;s done.
+									&#39;MathJax.Hub.Queue( function() {&#39; +
+										&#39;getCKE().tools.callFunction(&#39; + loadedHandler + &#39;);&#39; +
+									&#39;} );&#39; +
+								&#39;&lt;/script&gt;&#39; +
+
+								// Load MathJax lib.
+								&#39;&lt;script src=&quot;&#39; + ( editor.config.mathJaxLib || cdn ) + &#39;&quot;&gt;&lt;/script&gt;&#39; +
+							&#39;&lt;/head&gt;&#39; +
+							&#39;&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;&#39; +
+								&#39;&lt;span id=&quot;preview&quot;&gt;&lt;/span&gt;&#39; +
+
+								// Render everything here and after that copy it to the preview.
+								&#39;&lt;span id=&quot;buffer&quot; style=&quot;display:none&quot;&gt;&lt;/span&gt;&#39; +
+							&#39;&lt;/body&gt;&#39; +
+							&#39;&lt;/html&gt;&#39; );
+			}
+
+			// Run MathJax parsing Tex.
+			function update() {
+				isRunning = true;
+
+				value = newValue;
+
+				editor.fire( &#39;lockSnapshot&#39; );
+
+				buffer.setHtml( value );
+
+				// Set loading indicator.
+				preview.setHtml( &#39;&lt;img src=&#39; + CKEDITOR.plugins.mathjax.loadingIcon + &#39; alt=&#39; + editor.lang.mathjax.loading + &#39;&gt;&#39; );
+
+				iFrame.setStyles( {
+					height: &#39;16px&#39;,
+					width: &#39;16px&#39;,
+					display: &#39;inline&#39;,
+					&#39;vertical-align&#39;: &#39;middle&#39;
+				} );
+
+				editor.fire( &#39;unlockSnapshot&#39; );
+
+				// Run MathJax.
+				doc.getWindow().$.update( value );
+			}
+
+			return {
+<span id='CKEDITOR-plugins-mathjax-frameWrapper-method-setValue'>				/**
+</span>				 * Sets the TeX value to be displayed in the `iframe` element inside
+				 * the editor. This function will activate the MathJax
+				 * library which interprets TeX expressions and converts them into
+				 * their representation that is displayed in the editor.
+				 *
+				 * @param {String} value TeX string.
+				 */
+				setValue: function( value ) {
+					newValue = value;
+
+					if ( isInit &amp;&amp; !isRunning )
+						update();
+				}
+			};
+		};
+	} else {
+		// In IE8 MathJax does not work stable so instead of using standard
+		// frame wrapper it is replaced by placeholder to show pure TeX in iframe.
+		CKEDITOR.plugins.mathjax.frameWrapper = function( iFrame, editor ) {
+			iFrame.getFrameDocument().write( &#39;&lt;!DOCTYPE html&gt;&#39; +
+				&#39;&lt;html&gt;&#39; +
+				&#39;&lt;head&gt;&#39; +
+					&#39;&lt;meta charset=&quot;utf-8&quot;&gt;&#39; +
+				&#39;&lt;/head&gt;&#39; +
+				&#39;&lt;body style=&quot;padding:0;margin:0;background:transparent;overflow:hidden&quot;&gt;&#39; +
+					&#39;&lt;span style=&quot;white-space:nowrap;&quot; id=&quot;tex&quot;&gt;&lt;/span&gt;&#39; +
+				&#39;&lt;/body&gt;&#39; +
+				&#39;&lt;/html&gt;&#39; );
+
+			return {
+				setValue: function( value ) {
+					var doc = iFrame.getFrameDocument(),
+						tex = doc.getById( &#39;tex&#39; );
+
+					tex.setHtml( CKEDITOR.plugins.mathjax.trim( value ) );
+
+					CKEDITOR.plugins.mathjax.copyStyles( iFrame, tex );
+
+					editor.fire( &#39;lockSnapshot&#39; );
+
+					iFrame.setStyles( {
+						width: Math.min( 250, tex.$.offsetWidth ) + &#39;px&#39;,
+						height: doc.$.body.offsetHeight + &#39;px&#39;,
+						display: &#39;inline&#39;,
+						&#39;vertical-align&#39;: &#39;middle&#39;
+					} );
+
+					editor.fire( &#39;unlockSnapshot&#39; );
+				}
+			};
+		};
+	}
 } )();
 
-
-<span id='CKEDITOR-config-cfg-menu_subMenuDelay'>/**
-</span> * The amount of time, in milliseconds, the editor waits before displaying submenu
- * options when moving the mouse over options that contain submenus, like the
- * &quot;Cell Properties&quot; entry for tables.
+<span id='CKEDITOR-config-cfg-mathJaxLib'>/**
+</span> * Sets the path to the MathJax library. It can be both a local
+ * resource and a location different than the default CDN.
  *
- *		// Remove the submenu delay.
- *		config.menu_subMenuDelay = 0;
+ * Please note that this must be a full or absolute path.
  *
- * @cfg {Number} [menu_subMenuDelay=400]
+ *		config.mathJaxLib = &#39;http:\/\/example.com\/libs\/MathJax.js&#39;;
+ *
+ * @cfg {String} [mathJaxLib=&#39;http:\/\/cdn.mathjax.org\/mathjax\/2.2-latest\/MathJax.js?config=TeX-AMS_HTML&#39;]
  * @member CKEDITOR.config
  */
 
-<span id='CKEDITOR-editor-event-menuShow'>/**
-</span> * Fired when a menu is shown.
+<span id='CKEDITOR-config-cfg-mathJaxClass'>/**
+</span> * Sets the default class for `span` elements that will be
+ * converted into [Mathematical Formulas](http://ckeditor.com/addon/mathjax)
+ * widgets.
  *
- * @event menuShow
- * @member CKEDITOR.editor
- * @param {CKEDITOR.editor} editor This editor instance.
- * @param {CKEDITOR.ui.panel[]} data
- */
-
-<span id='CKEDITOR-config-cfg-menu_groups'>/**
-</span> * A comma separated list of items group names to be displayed in the context
- * menu. The order of items will reflect the order specified in this list if
- * no priority was defined in the groups.
+ * If you set it to the following:
  *
- *		config.menu_groups = &#39;clipboard,table,anchor,link,image&#39;;
+ *		config.mathJaxClass = &#39;my-math&#39;;
  *
- * @cfg {String} [menu_groups=see source]
+ * The code below will be recognized as a Mathematical Formulas widget.
+ *
+ *		&lt;span class=&quot;my-math&quot;&gt;\( \sqrt{4} = 2 \)&lt;/span&gt;
+ *
+ * @cfg {String} [mathJaxClass=&#39;math-tex&#39;]
  * @member CKEDITOR.config
- */
-CKEDITOR.config.menu_groups = &#39;clipboard,&#39; +
-	&#39;form,&#39; +
-	&#39;tablecell,tablecellproperties,tablerow,tablecolumn,table,&#39; +
-	&#39;anchor,link,image,flash,&#39; +
-	&#39;checkbox,radio,textfield,hiddenfield,imagebutton,button,select,textarea,div&#39;;
-</pre>
+ */</pre>
 </body>
 </html>

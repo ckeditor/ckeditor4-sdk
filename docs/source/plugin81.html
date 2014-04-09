@@ -21,301 +21,189 @@
  */
 
 ( function() {
-	var meta = {
-		editorFocus: false,
-		modes: { wysiwyg: 1, source: 1 }
-	};
+	&#39;use strict&#39;;
 
-	var blurCommand = {
-		exec: function( editor ) {
-			editor.container.focusNext( true, editor.tabIndex );
-		}
-	};
+	CKEDITOR.plugins.add( &#39;stylescombo&#39;, {
+		requires: &#39;richcombo&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
 
-	var blurBackCommand = {
-		exec: function( editor ) {
-			editor.container.focusPrevious( true, editor.tabIndex );
-		}
-	};
+		init: function( editor ) {
+			var config = editor.config,
+				lang = editor.lang.stylescombo,
+				styles = {},
+				stylesList = [],
+				combo,
+				allowedContent = [];
 
-	function selectNextCellCommand( backward ) {
-		return {
-			editorFocus: false,
-			canUndo: false,
-			modes: { wysiwyg: 1 },
-			exec: function( editor ) {
-				if ( editor.editable().hasFocus ) {
-					var sel = editor.getSelection(),
-						path = new CKEDITOR.dom.elementPath( sel.getCommonAncestor(), sel.root ),
-						cell;
+			editor.on( &#39;stylesSet&#39;, function( evt ) {
+				var stylesDefinitions = evt.data.styles;
 
-					if ( ( cell = path.contains( { td: 1, th: 1 }, 1 ) ) ) {
-						var resultRange = editor.createRange(),
-							next = CKEDITOR.tools.tryThese( function() {
-								var row = cell.getParent(),
-									next = row.$.cells[ cell.$.cellIndex + ( backward ? -1 : 1 ) ];
+				if ( !stylesDefinitions )
+					return;
 
-								// Invalid any empty value.
-								next.parentNode.parentNode;
-								return next;
-							}, function() {
-								var row = cell.getParent(),
-									table = row.getAscendant( &#39;table&#39; ),
-									nextRow = table.$.rows[ row.$.rowIndex + ( backward ? -1 : 1 ) ];
+				var style, styleName, styleType;
 
-								return nextRow.cells[ backward ? nextRow.cells.length - 1 : 0 ];
-							} );
+				// Put all styles into an Array.
+				for ( var i = 0, count = stylesDefinitions.length; i &lt; count; i++ ) {
+					var styleDefinition = stylesDefinitions[ i ];
 
-						// Clone one more row at the end of table and select the first newly established cell.
-						if ( !( next || backward ) ) {
-							var table = cell.getAscendant( &#39;table&#39; ).$,
-								cells = cell.getParent().$.cells;
+					if ( editor.blockless &amp;&amp; ( styleDefinition.element in CKEDITOR.dtd.$block ) )
+						continue;
 
-							var newRow = new CKEDITOR.dom.element( table.insertRow( -1 ), editor.document );
+					styleName = styleDefinition.name;
+					style = new CKEDITOR.style( styleDefinition );
 
-							for ( var i = 0, count = cells.length; i &lt; count; i++ ) {
-								var newCell = newRow.append( new CKEDITOR.dom.element( cells[ i ], editor.document ).clone( false, false ) );
-								newCell.appendBogus();
-							}
+					if ( !editor.filter.customConfig || editor.filter.check( style ) ) {
+						style._name = styleName;
+						style._.enterMode = config.enterMode;
+						// Get the type (which will be used to assign style to one of 3 groups) from assignedTo if it&#39;s defined.
+						style._.type = styleType = style.assignedTo || style.type;
 
-							resultRange.moveToElementEditStart( newRow );
-						} else if ( next ) {
-							next = new CKEDITOR.dom.element( next );
-							resultRange.moveToElementEditStart( next );
-							// Avoid selecting empty block makes the cursor blind.
-							if ( !( resultRange.checkStartOfBlock() &amp;&amp; resultRange.checkEndOfBlock() ) )
-								resultRange.selectNodeContents( next );
-						} else
-							return true;
+						// Weight is used to sort styles (#9029).
+						style._.weight = i + ( styleType == CKEDITOR.STYLE_OBJECT ? 1 : styleType == CKEDITOR.STYLE_BLOCK ? 2 : 3 ) * 1000;
 
-						resultRange.select( true );
-						return true;
+						styles[ styleName ] = style;
+						stylesList.push( style );
+						allowedContent.push( style );
 					}
 				}
 
-				return false;
-			}
-		};
-	}
+				// Sorts the Array, so the styles get grouped by type in proper order (#9029).
+				stylesList.sort( function( styleA, styleB ) { return styleA._.weight - styleB._.weight; } );
+			} );
 
-	CKEDITOR.plugins.add( &#39;tab&#39;, {
-		init: function( editor ) {
-			var tabTools = editor.config.enableTabKeyTools !== false,
-				tabSpaces = editor.config.tabSpaces || 0,
-				tabText = &#39;&#39;;
+			editor.ui.addRichCombo( &#39;Styles&#39;, {
+				label: lang.label,
+				title: lang.panelTitle,
+				toolbar: &#39;styles,10&#39;,
+				allowedContent: allowedContent,
 
-			while ( tabSpaces-- )
-				tabText += &#39;\xa0&#39;;
+				panel: {
+					css: [ CKEDITOR.skin.getPath( &#39;editor&#39; ) ].concat( config.contentsCss ),
+					multiSelect: true,
+					attributes: { &#39;aria-label&#39;: lang.panelTitle }
+				},
 
-			if ( tabText ) {
-				editor.on( &#39;key&#39;, function( ev ) {
-					if ( ev.data.keyCode == 9 ) // TAB
-					{
-						editor.insertHtml( tabText );
-						ev.cancel();
+				init: function() {
+					var style, styleName, lastType, type, i, count;
+
+					// Loop over the Array, adding all items to the
+					// combo.
+					for ( i = 0, count = stylesList.length; i &lt; count; i++ ) {
+						style = stylesList[ i ];
+						styleName = style._name;
+						type = style._.type;
+
+						if ( type != lastType ) {
+							this.startGroup( lang[ &#39;panelTitle&#39; + String( type ) ] );
+							lastType = type;
+						}
+
+						this.add( styleName, style.type == CKEDITOR.STYLE_OBJECT ? styleName : style.buildPreview(), styleName );
 					}
-				} );
-			}
 
-			if ( tabTools ) {
-				editor.on( &#39;key&#39;, function( ev ) {
-					if ( ev.data.keyCode == 9 &amp;&amp; editor.execCommand( &#39;selectNextCell&#39; ) || // TAB
-					ev.data.keyCode == ( CKEDITOR.SHIFT + 9 ) &amp;&amp; editor.execCommand( &#39;selectPreviousCell&#39; ) ) // SHIFT+TAB
-					ev.cancel();
-				} );
-			}
+					this.commit();
+				},
 
-			editor.addCommand( &#39;blur&#39;, CKEDITOR.tools.extend( blurCommand, meta ) );
-			editor.addCommand( &#39;blurBack&#39;, CKEDITOR.tools.extend( blurBackCommand, meta ) );
-			editor.addCommand( &#39;selectNextCell&#39;, selectNextCellCommand() );
-			editor.addCommand( &#39;selectPreviousCell&#39;, selectNextCellCommand( true ) );
+				onClick: function( value ) {
+					editor.focus();
+					editor.fire( &#39;saveSnapshot&#39; );
+
+					var style = styles[ value ],
+						elementPath = editor.elementPath();
+
+					editor[ style.checkActive( elementPath, editor ) ? &#39;removeStyle&#39; : &#39;applyStyle&#39; ]( style );
+					editor.fire( &#39;saveSnapshot&#39; );
+				},
+
+				onRender: function() {
+					editor.on( &#39;selectionChange&#39;, function( ev ) {
+						var currentValue = this.getValue(),
+							elementPath = ev.data.path,
+							elements = elementPath.elements;
+
+						// For each element into the elements path.
+						for ( var i = 0, count = elements.length, element; i &lt; count; i++ ) {
+							element = elements[ i ];
+
+							// Check if the element is removable by any of
+							// the styles.
+							for ( var value in styles ) {
+								if ( styles[ value ].checkElementRemovable( element, true, editor ) ) {
+									if ( value != currentValue )
+										this.setValue( value );
+									return;
+								}
+							}
+						}
+
+						// If no styles match, just empty it.
+						this.setValue( &#39;&#39; );
+					}, this );
+				},
+
+				onOpen: function() {
+					var selection = editor.getSelection(),
+						element = selection.getSelectedElement(),
+						elementPath = editor.elementPath( element ),
+						counter = [ 0, 0, 0, 0 ];
+
+					this.showAll();
+					this.unmarkAll();
+					for ( var name in styles ) {
+						var style = styles[ name ],
+							type = style._.type;
+
+						if ( style.checkApplicable( elementPath, editor, editor.activeFilter ) )
+							counter[ type ]++;
+						else
+							this.hideItem( name );
+
+						if ( style.checkActive( elementPath, editor ) )
+							this.mark( name );
+					}
+
+					if ( !counter[ CKEDITOR.STYLE_BLOCK ] )
+						this.hideGroup( lang[ &#39;panelTitle&#39; + String( CKEDITOR.STYLE_BLOCK ) ] );
+
+					if ( !counter[ CKEDITOR.STYLE_INLINE ] )
+						this.hideGroup( lang[ &#39;panelTitle&#39; + String( CKEDITOR.STYLE_INLINE ) ] );
+
+					if ( !counter[ CKEDITOR.STYLE_OBJECT ] )
+						this.hideGroup( lang[ &#39;panelTitle&#39; + String( CKEDITOR.STYLE_OBJECT ) ] );
+				},
+
+				refresh: function() {
+					var elementPath = editor.elementPath();
+
+					if ( !elementPath )
+						return;
+
+					for ( var name in styles ) {
+						var style = styles[ name ];
+
+						if ( style.checkApplicable( elementPath, editor, editor.activeFilter ) )
+							return;
+					}
+					this.setState( CKEDITOR.TRISTATE_DISABLED );
+				},
+
+				// Force a reload of the data
+				reset: function() {
+					if ( combo ) {
+						delete combo._.panel;
+						delete combo._.list;
+						combo._.committed = 0;
+						combo._.items = {};
+						combo._.state = CKEDITOR.TRISTATE_OFF;
+					}
+					styles = {};
+					stylesList = [];
+				}
+			} );
 		}
 	} );
 } )();
-
-<span id='CKEDITOR-dom-element-method-focusNext'>/**
-</span> * Moves the UI focus to the element following this element in the tabindex order.
- *
- *		var element = CKEDITOR.document.getById( &#39;example&#39; );
- *		element.focusNext();
- *
- * @param {Boolean} [ignoreChildren=false]
- * @param {Number} [indexToUse]
- * @member CKEDITOR.dom.element
- */
-CKEDITOR.dom.element.prototype.focusNext = function( ignoreChildren, indexToUse ) {
-	var $ = this.$,
-		curTabIndex = ( indexToUse === undefined ? this.getTabIndex() : indexToUse ),
-		passedCurrent, enteredCurrent, elected, electedTabIndex, element, elementTabIndex;
-
-	if ( curTabIndex &lt;= 0 ) {
-		// If this element has tabindex &lt;= 0 then we must simply look for any
-		// element following it containing tabindex=0.
-
-		element = this.getNextSourceNode( ignoreChildren, CKEDITOR.NODE_ELEMENT );
-
-		while ( element ) {
-			if ( element.isVisible() &amp;&amp; element.getTabIndex() === 0 ) {
-				elected = element;
-				break;
-			}
-
-			element = element.getNextSourceNode( false, CKEDITOR.NODE_ELEMENT );
-		}
-	} else {
-		// If this element has tabindex &gt; 0 then we must look for:
-		//		1. An element following this element with the same tabindex.
-		//		2. The first element in source other with the lowest tabindex
-		//		   that is higher than this element tabindex.
-		//		3. The first element with tabindex=0.
-
-		element = this.getDocument().getBody().getFirst();
-
-		while ( ( element = element.getNextSourceNode( false, CKEDITOR.NODE_ELEMENT ) ) ) {
-			if ( !passedCurrent ) {
-				if ( !enteredCurrent &amp;&amp; element.equals( this ) ) {
-					enteredCurrent = true;
-
-					// Ignore this element, if required.
-					if ( ignoreChildren ) {
-						if ( !( element = element.getNextSourceNode( true, CKEDITOR.NODE_ELEMENT ) ) )
-							break;
-						passedCurrent = 1;
-					}
-				} else if ( enteredCurrent &amp;&amp; !this.contains( element ) )
-					passedCurrent = 1;
-			}
-
-			if ( !element.isVisible() || ( elementTabIndex = element.getTabIndex() ) &lt; 0 )
-				continue;
-
-			if ( passedCurrent &amp;&amp; elementTabIndex == curTabIndex ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &gt; curTabIndex &amp;&amp; ( !elected || !electedTabIndex || elementTabIndex &lt; electedTabIndex ) ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			} else if ( !elected &amp;&amp; elementTabIndex === 0 ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		}
-	}
-
-	if ( elected )
-		elected.focus();
-};
-
-<span id='CKEDITOR-dom-element-method-focusPrevious'>/**
-</span> * Moves the UI focus to the element before this element in the tabindex order.
- *
- *		var element = CKEDITOR.document.getById( &#39;example&#39; );
- *		element.focusPrevious();
- *
- * @param {Boolean} [ignoreChildren=false]
- * @param {Number} [indexToUse]
- * @member CKEDITOR.dom.element
- */
-CKEDITOR.dom.element.prototype.focusPrevious = function( ignoreChildren, indexToUse ) {
-	var $ = this.$,
-		curTabIndex = ( indexToUse === undefined ? this.getTabIndex() : indexToUse ),
-		passedCurrent, enteredCurrent, elected,
-		electedTabIndex = 0,
-		elementTabIndex;
-
-	var element = this.getDocument().getBody().getLast();
-
-	while ( ( element = element.getPreviousSourceNode( false, CKEDITOR.NODE_ELEMENT ) ) ) {
-		if ( !passedCurrent ) {
-			if ( !enteredCurrent &amp;&amp; element.equals( this ) ) {
-				enteredCurrent = true;
-
-				// Ignore this element, if required.
-				if ( ignoreChildren ) {
-					if ( !( element = element.getPreviousSourceNode( true, CKEDITOR.NODE_ELEMENT ) ) )
-						break;
-					passedCurrent = 1;
-				}
-			} else if ( enteredCurrent &amp;&amp; !this.contains( element ) )
-				passedCurrent = 1;
-		}
-
-		if ( !element.isVisible() || ( elementTabIndex = element.getTabIndex() ) &lt; 0 )
-			continue;
-
-		if ( curTabIndex &lt;= 0 ) {
-			// If this element has tabindex &lt;= 0 then we must look for:
-			//		1. An element before this one containing tabindex=0.
-			//		2. The last element with the highest tabindex.
-
-			if ( passedCurrent &amp;&amp; elementTabIndex === 0 ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &gt; electedTabIndex ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		} else {
-			// If this element has tabindex &gt; 0 we must look for:
-			//		1. An element preceeding this one, with the same tabindex.
-			//		2. The last element in source other with the highest tabindex
-			//		   that is lower than this element tabindex.
-
-			if ( passedCurrent &amp;&amp; elementTabIndex == curTabIndex ) {
-				elected = element;
-				break;
-			}
-
-			if ( elementTabIndex &lt; curTabIndex &amp;&amp; ( !elected || elementTabIndex &gt; electedTabIndex ) ) {
-				elected = element;
-				electedTabIndex = elementTabIndex;
-			}
-		}
-	}
-
-	if ( elected )
-		elected.focus();
-};
-
-<span id='CKEDITOR-config-cfg-tabSpaces'>/**
-</span> * Intructs the editor to add a number of spaces (`&amp;nbsp;`) to the text when
- * hitting the *TAB* key. If set to zero, the *TAB* key will be used to move the
- * cursor focus to the next element in the page, out of the editor focus.
- *
- *		config.tabSpaces = 4;
- *
- * @cfg {Number} [tabSpaces=0]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-enableTabKeyTools'>/**
-</span> * Allow context-sensitive tab key behaviors, including the following scenarios:
- *
- * When selection is anchored inside **table cells**:
- *
- * * If *TAB* is pressed, select the contents of the &quot;next&quot; cell. If in the last
- *     cell in the table, add a new row to it and focus its first cell.
- * * If *SHIFT+TAB* is pressed, select the contents of the &quot;previous&quot; cell.
- *     Do nothing when it&#39;s in the first cell.
- *
- * Example:
- *
- *		config.enableTabKeyTools = false;
- *
- * @cfg {Boolean} [enableTabKeyTools=true]
- * @member CKEDITOR.config
- */
-
-// If the TAB key is not supposed to be enabled for navigation, the following
-// settings could be used alternatively:
-// config.keystrokes.push(
-//	[ CKEDITOR.ALT + 38 /*Arrow Up*/, &#39;selectPreviousCell&#39; ],
-//	[ CKEDITOR.ALT + 40 /*Arrow Down*/, &#39;selectNextCell&#39; ]
-// );
 </pre>
 </body>
 </html>

@@ -15,75 +15,193 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='global-property-colordialog'>/**
+  <pre class="prettyprint lang-js"><span id='global-property-'>/**
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.colordialog = {
-	requires: &#39;dialog&#39;,
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	init: function( editor ) {
-		var cmd = new CKEDITOR.dialogCommand( &#39;colordialog&#39; );
-		cmd.editorFocus = false;
+<span id='global-property-use strict'> /**
+</span> * @fileOverview Rich code snippets for CKEditor using GeSHi syntax highlighter (http://qbnz.com/highlighter/).
+ */
 
-		editor.addCommand( &#39;colordialog&#39;, cmd );
+&#39;use strict&#39;;
 
-		CKEDITOR.dialog.add( &#39;colordialog&#39;, this.path + &#39;dialogs/colordialog.js&#39; );
+( function() {
+	CKEDITOR.plugins.add( &#39;codesnippetgeshi&#39;, {
+		requires: &#39;ajax,codesnippet&#39;,
 
-<span id='CKEDITOR-editor-method-getColorFromDialog'>		/**
-</span>		 * Open up color dialog and to receive the selected color.
-		 *
-		 * @param {Function} callback The callback when color dialog is closed
-		 * @param {String} callback.color The color value received if selected on the dialog.
-		 * @param [scope] The scope in which the callback will be bound.
-		 * @member CKEDITOR.editor
-		 */
-		editor.getColorFromDialog = function( callback, scope ) {
-			var onClose = function( evt ) {
-				releaseHandlers( this );
-				var color = evt.name == &#39;ok&#39; ? this.getValueOf( &#39;picker&#39;, &#39;selectedColor&#39; ) : null;
-				callback.call( scope, color );
-			};
-			var releaseHandlers = function( dialog ) {
-				dialog.removeListener( &#39;ok&#39;, onClose );
-				dialog.removeListener( &#39;cancel&#39;, onClose );
-			};
-			var bindToDialog = function( dialog ) {
-				dialog.on( &#39;ok&#39;, onClose );
-				dialog.on( &#39;cancel&#39;, onClose );
-			};
-
-			editor.execCommand( &#39;colordialog&#39; );
-
-			if ( editor._.storedDialogs &amp;&amp; editor._.storedDialogs.colordialog )
-				bindToDialog( editor._.storedDialogs.colordialog );
-			else {
-				CKEDITOR.on( &#39;dialogDefinition&#39;, function( e ) {
-					if ( e.data.name != &#39;colordialog&#39; )
-						return;
-
-					var definition = e.data.definition;
-
-					e.removeListener();
-					definition.onLoad = CKEDITOR.tools.override( definition.onLoad,
-						function( orginal ) {
-							return function() {
-								bindToDialog( this );
-								definition.onLoad = orginal;
-								if ( typeof orginal == &#39;function&#39; )
-									orginal.call( this );
-							};
+		init: function( editor ) {
+			var writer = new CKEDITOR.htmlParser.basicWriter(),
+				geSHiHighlighter = new CKEDITOR.plugins.codesnippet.highlighter( {
+					languages: languages,
+					highlighter: function( code, language, callback ) {
+						// AJAX data to be sent in the request.
+						var requestConfig = JSON.stringify( {
+							lang: language,
+							html: code
 						} );
+
+						// We need to pass an empty string if config.codesnippet is not defined,
+						// because CKEDITOR#getUrl expects a String.
+						CKEDITOR.ajax.post( CKEDITOR.getUrl( editor.config.codeSnippetGeshi_url || &#39;&#39; ), requestConfig, &#39;application/json&#39;, function( highlighted ) {
+							// If no response is given it means that we have i.e. 404, so we&#39;ll set
+							// empty content.
+							if ( !highlighted ) {
+								callback( &#39;&#39; );
+								return;
+							}
+
+							var fragment = CKEDITOR.htmlParser.fragment.fromHtml( highlighted || &#39;&#39; );
+
+							// GeSHi returns &lt;pre&gt; as a top-most element. Since &lt;pre&gt; is
+							// already a part of the widget, consider children only.
+							fragment.children[ 0 ].writeChildrenHtml( writer );
+
+							// Return highlighted code.
+							callback( writer.getHtml( true ) );
+						} );
+					}
 				} );
-			}
-		};
 
+			editor.plugins.codesnippet.setHighlighter( geSHiHighlighter );
+		}
+	} );
 
-	}
-};
+	// A list of default languages supported by GeSHi.
+	var languages = {
+		abap: &#39;ABAP&#39;,
+		actionscript: &#39;ActionScript&#39;,
+		ada: &#39;Ada&#39;,
+		apache: &#39;Apache Configuration&#39;,
+		applescript: &#39;AppleScript&#39;,
+		asm: &#39;Assembly&#39;,
+		asp: &#39;Active Server Pages (ASP)&#39;,
+		autoit: &#39;AutoIt&#39;,
+		bash: &#39;Bash&#39;,
+		basic4gl: &#39;Basic4GL&#39;,
+		bf: &#39;Brainfuck&#39;,
+		blitzbasic: &#39;Blitz BASIC&#39;,
+		bnf: &#39;Backus-Naur Form&#39;,
+		c: &#39;C&#39;,
+		c_mac: &#39;C (Mac)&#39;,
+		caddcl: &#39;AutoCAD DCL&#39;,
+		cadlisp: &#39;AutoLISP&#39;,
+		cfdg: &#39;CFDG&#39;,
+		cfm: &#39;ColdFusion Markup Language&#39;,
+		cil: &#39;Common Intermediate Language (CIL)&#39;,
+		cobol: &#39;COBOL&#39;,
+		&#39;cpp-qt&#39;: &#39;C++ (Qt toolkit)&#39;,
+		cpp: &#39;C++&#39;,
+		csharp: &#39;C#&#39;,
+		css: &#39;Cascading Style Sheets (CSS)&#39;,
+		d: &#39;D&#39;,
+		delphi: &#39;Delphi&#39;,
+		diff: &#39;Diff&#39;,
+		div: &#39;DIV&#39;,
+		dos: &#39;DOS batch file&#39;,
+		dot: &#39;DOT&#39;,
+		eiffel: &#39;Eiffel&#39;,
+		fortran: &#39;Fortran&#39;,
+		freebasic: &#39;FreeBASIC&#39;,
+		gambas: &#39;Gambas&#39;,
+		genero: &#39;Genero&#39;,
+		gettext: &#39;GNU internationalization (i18n) library&#39;,
+		glsl: &#39;OpenGL Shading Language (GLSL)&#39;,
+		gml: &#39;Game Maker Language (GML)&#39;,
+		gnuplot: &#39;gnuplot&#39;,
+		groovy: &#39;Groovy&#39;,
+		haskell: &#39;Haskell&#39;,
+		hq9plus: &#39;HQ9+&#39;,
+		html4strict: &#39;HTML&#39;,
+		html5: &#39;HTML5&#39;,
+		idl: &#39;Uno IDL&#39;,
+		ini: &#39;INI&#39;,
+		inno: &#39;Inno&#39;,
+		intercal: &#39;INTERCAL&#39;,
+		io: &#39;Io&#39;,
+		java: &#39;Java&#39;,
+		java5: &#39;Java(TM) 2 Platform Standard Edition 5.0&#39;,
+		javascript: &#39;JavaScript&#39;,
+		kixtart: &#39;KiXtart&#39;,
+		klonec: &#39;Klone C&#39;,
+		klonecpp: &#39;Klone C++&#39;,
+		latex: &#39;LaTeX&#39;,
+		lisp: &#39;Lisp&#39;,
+		lolcode: &#39;LOLCODE&#39;,
+		lotusscript: &#39;LotusScript&#39;,
+		lua: &#39;Lua&#39;,
+		Code: &#39;Language&#39;,
+		m68k: &#39;Motorola 68000 Assembler&#39;,
+		make: &#39;make&#39;,
+		matlab: &#39;MATLAB M&#39;,
+		mirc: &#39;mIRC scripting language&#39;,
+		mxml: &#39;MXML&#39;,
+		mpasm: &#39;Microchip Assembler&#39;,
+		mysql: &#39;MySQL&#39;,
+		nsis: &#39;Nullsoft Scriptable Install System (NSIS)&#39;,
+		objc: &#39;Objective-C&#39;,
+		&#39;ocaml-brief&#39;: &#39;OCaml&#39;,
+		ocaml: &#39;OCaml&#39;,
+		oobas: &#39;OpenOffice.org Basic&#39;,
+		oracle8: &#39;Oracle 8 SQL&#39;,
+		oracle11: &#39;Oracle 11 SQL&#39;,
+		pascal: &#39;Pascal&#39;,
+		per: &#39;per&#39;,
+		perl: &#39;Perl&#39;,
+		&#39;php-brief&#39;: &#39;PHP&#39;,
+		php: &#39;PHP&#39;,
+		pixelbender: &#39;Pixel Bender&#39;,
+		plsql: &#39;PL/SQL&#39;,
+		povray: &#39;Persistence of Vision Raytracer&#39;,
+		powershell: &#39;Windows PowerShell&#39;,
+		progress: &#39;OpenEdge Advanced Business Language&#39;,
+		prolog: &#39;Prolog&#39;,
+		providex: &#39;ProvideX&#39;,
+		python: &#39;Python&#39;,
+		qbasic: &#39;QBasic/QuickBASIC&#39;,
+		rails: &#39;Rails&#39;,
+		reg: &#39;Windows Registry&#39;,
+		robots: &#39;robots.txt&#39;,
+		rsplus: &#39;R&#39;,
+		ruby: &#39;Ruby&#39;,
+		sas: &#39;SAS&#39;,
+		scala: &#39;Scala&#39;,
+		scheme: &#39;Scheme&#39;,
+		scilab: &#39;Scilab&#39;,
+		sdlbasic: &#39;SdlBasic&#39;,
+		smalltalk: &#39;Smalltalk&#39;,
+		smarty: &#39;Smarty&#39;,
+		sql: &#39;SQL&#39;,
+		tcl: &#39;Tcl&#39;,
+		teraterm: &#39;Tera Term&#39;,
+		text: &#39;Plain text&#39;,
+		thinbasic: &#39;thinBasic&#39;,
+		tsql: &#39;Transact-SQL&#39;,
+		typoscript: &#39;TypoScript&#39;,
+		vala: &#39;Vala&#39;,
+		vb: &#39;Visual Basic&#39;,
+		vbnet: &#39;Visual Basic .NET&#39;,
+		verilog: &#39;Verilog&#39;,
+		vhdl: &#39;VHDL&#39;,
+		vim: &#39;Vimscript&#39;,
+		visualfoxpro: &#39;Visual FoxPro&#39;,
+		visualprolog: &#39;Visual Prolog&#39;,
+		whitespace: &#39;Whitespace&#39;,
+		winbatch: &#39;Winbatch&#39;,
+		xml: &#39;XML&#39;,
+		xorg_conf: &#39;Xorg.conf&#39;,
+		xpp: &#39;X++&#39;,
+		z80: &#39;ZiLOG Z80 Assembler&#39;
+	};
+} )();
 
-CKEDITOR.plugins.add( &#39;colordialog&#39;, CKEDITOR.plugins.colordialog );
-</pre>
+<span id='CKEDITOR-config-cfg-codeSnippetGeshi_url'>/**
+</span> * Sets GeSHi URL which, once queried with AJAX, will return highlighted code.
+ *
+ *		config.codeSnippetGeshi_url = &#39;http:\/\/example.com\/geshi\/colorize.php&#39;;
+ *
+ * @cfg {String} [codeSnippetGeshi_url=null]
+ * @member CKEDITOR.config
+ */</pre>
 </body>
 </html>

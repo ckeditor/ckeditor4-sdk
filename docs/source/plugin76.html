@@ -21,153 +21,173 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview The &quot;sourcearea&quot; plugin. It registers the &quot;source&quot; editing
- *		mode, which displays the raw data being edited in the editor.
+</span> * @fileOverview The &quot;show border&quot; plugin. The command display visible outline
+ * border line around all table elements if table doesn&#39;t have a none-zero &#39;border&#39; attribute specified.
  */
 
 ( function() {
-	CKEDITOR.plugins.add( &#39;sourcearea&#39;, {
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;source,source-rtl&#39;, // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
+	var commandDefinition = {
+		preserveState: true,
+		editorFocus: false,
+		readOnly: 1,
+
+		exec: function( editor ) {
+			this.toggleState();
+			this.refresh( editor );
+		},
+
+		refresh: function( editor ) {
+			if ( editor.document ) {
+				var funcName = ( this.state == CKEDITOR.TRISTATE_ON ) ? &#39;attachClass&#39; : &#39;removeClass&#39;;
+				editor.editable()[ funcName ]( &#39;cke_show_borders&#39; );
+			}
+		}
+	};
+
+	var showBorderClassName = &#39;cke_show_border&#39;;
+
+	CKEDITOR.plugins.add( &#39;showborders&#39;, {
+		modes: { &#39;wysiwyg&#39;: 1 },
+
+		onLoad: function() {
+			var cssStyleText,
+				cssTemplate =
+			// TODO: For IE6, we don&#39;t have child selector support,
+			// where nested table cells could be incorrect.
+			( CKEDITOR.env.ie6Compat ? [
+				&#39;.%1 table.%2,&#39;,
+					&#39;.%1 table.%2 td, .%1 table.%2 th&#39;,
+					&#39;{&#39;,
+					&#39;border : #d3d3d3 1px dotted&#39;,
+					&#39;}&#39;
+				] : [
+				&#39;.%1 table.%2,&#39;,
+				&#39;.%1 table.%2 &gt; tr &gt; td, .%1 table.%2 &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; tbody &gt; tr &gt; td, .%1 table.%2 &gt; tbody &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; thead &gt; tr &gt; td, .%1 table.%2 &gt; thead &gt; tr &gt; th,&#39;,
+				&#39;.%1 table.%2 &gt; tfoot &gt; tr &gt; td, .%1 table.%2 &gt; tfoot &gt; tr &gt; th&#39;,
+				&#39;{&#39;,
+					&#39;border : #d3d3d3 1px dotted&#39;,
+				&#39;}&#39;
+				] ).join( &#39;&#39; );
+
+			cssStyleText = cssTemplate.replace( /%2/g, showBorderClassName ).replace( /%1/g, &#39;cke_show_borders &#39; );
+
+			CKEDITOR.addCss( cssStyleText );
+		},
+
 		init: function( editor ) {
-			// Source mode isn&#39;t available in inline mode yet.
-			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
-				return;
 
-			var sourcearea = CKEDITOR.plugins.sourcearea;
+			var command = editor.addCommand( &#39;showborders&#39;, commandDefinition );
+			command.canUndo = false;
 
-			editor.addMode( &#39;source&#39;, function( callback ) {
-				var contentsSpace = editor.ui.space( &#39;contents&#39; ),
-					textarea = contentsSpace.getDocument().createElement( &#39;textarea&#39; );
+			if ( editor.config.startupShowBorders !== false )
+				command.setState( CKEDITOR.TRISTATE_ON );
 
-				textarea.setStyles(
-					CKEDITOR.tools.extend( {
-						// IE7 has overflow the &lt;textarea&gt; from wrapping table cell.
-						width: CKEDITOR.env.ie7Compat ? &#39;99%&#39; : &#39;100%&#39;,
-						height: &#39;100%&#39;,
-						resize: &#39;none&#39;,
-						outline: &#39;none&#39;,
-						&#39;text-align&#39;: &#39;left&#39;
-					},
-					CKEDITOR.tools.cssVendorPrefix( &#39;tab-size&#39;, editor.config.sourceAreaTabSize || 4 ) ) );
+			// Refresh the command on setData.
+			editor.on( &#39;mode&#39;, function() {
+				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
+					command.refresh( editor );
+			}, null, null, 100 );
 
-				// Make sure that source code is always displayed LTR,
-				// regardless of editor language (#10105).
-				textarea.setAttribute( &#39;dir&#39;, &#39;ltr&#39; );
-
-				textarea.addClass( &#39;cke_source cke_reset cke_enable_context_menu&#39; );
-
-				editor.ui.space( &#39;contents&#39; ).append( textarea );
-
-				var editable = editor.editable( new sourceEditable( editor, textarea ) );
-
-				// Fill the textarea with the current editor data.
-				editable.setData( editor.getData( 1 ) );
-
-				// Having to make &lt;textarea&gt; fixed sized to conquer the following bugs:
-				// 1. The textarea height/width=&#39;100%&#39; doesn&#39;t constraint to the &#39;td&#39; in IE6/7.
-				// 2. Unexpected vertical-scrolling behavior happens whenever focus is moving out of editor
-				// if text content within it has overflowed. (#4762)
-				if ( CKEDITOR.env.ie ) {
-					editable.attachListener( editor, &#39;resize&#39;, onResize, editable );
-					editable.attachListener( CKEDITOR.document.getWindow(), &#39;resize&#39;, onResize, editable );
-					CKEDITOR.tools.setTimeout( onResize, 0, editable );
-				}
-
-				editor.fire( &#39;ariaWidget&#39;, this );
-
-				callback();
+			// Refresh the command on wysiwyg frame reloads.
+			editor.on( &#39;contentDom&#39;, function() {
+				if ( command.state != CKEDITOR.TRISTATE_DISABLED )
+					command.refresh( editor );
 			} );
 
-			editor.addCommand( &#39;source&#39;, sourcearea.commands.source );
+			editor.on( &#39;removeFormatCleanup&#39;, function( evt ) {
+				var element = evt.data;
+				if ( editor.getCommand( &#39;showborders&#39; ).state == CKEDITOR.TRISTATE_ON &amp;&amp; element.is( &#39;table&#39; ) &amp;&amp; ( !element.hasAttribute( &#39;border&#39; ) || parseInt( element.getAttribute( &#39;border&#39; ), 10 ) &lt;= 0 ) )
+					element.addClass( showBorderClassName );
+			} );
+		},
 
-			if ( editor.ui.addButton ) {
-				editor.ui.addButton( &#39;Source&#39;, {
-					label: editor.lang.sourcearea.toolbar,
-					command: &#39;source&#39;,
-					toolbar: &#39;mode,10&#39;
+		afterInit: function( editor ) {
+			var dataProcessor = editor.dataProcessor,
+				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter,
+				htmlFilter = dataProcessor &amp;&amp; dataProcessor.htmlFilter;
+
+			if ( dataFilter ) {
+				dataFilter.addRules( {
+					elements: {
+						&#39;table&#39;: function( element ) {
+							var attributes = element.attributes,
+								cssClass = attributes[ &#39;class&#39; ],
+								border = parseInt( attributes.border, 10 );
+
+							if ( ( !border || border &lt;= 0 ) &amp;&amp; ( !cssClass || cssClass.indexOf( showBorderClassName ) == -1 ) )
+								attributes[ &#39;class&#39; ] = ( cssClass || &#39;&#39; ) + &#39; &#39; + showBorderClassName;
+						}
+					}
 				} );
 			}
 
-			editor.on( &#39;mode&#39;, function() {
-				editor.getCommand( &#39;source&#39; ).setState( editor.mode == &#39;source&#39; ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
+			if ( htmlFilter ) {
+				htmlFilter.addRules( {
+					elements: {
+						&#39;table&#39;: function( table ) {
+							var attributes = table.attributes,
+								cssClass = attributes[ &#39;class&#39; ];
+
+							cssClass &amp;&amp; ( attributes[ &#39;class&#39; ] = cssClass.replace( showBorderClassName, &#39;&#39; ).replace( /\s{2}/, &#39; &#39; ).replace( /^\s+|\s+$/, &#39;&#39; ) );
+						}
+					}
+				} );
+			}
+		}
+	} );
+
+	// Table dialog must be aware of it.
+	CKEDITOR.on( &#39;dialogDefinition&#39;, function( ev ) {
+		var dialogName = ev.data.name;
+
+		if ( dialogName == &#39;table&#39; || dialogName == &#39;tableProperties&#39; ) {
+			var dialogDefinition = ev.data.definition,
+				infoTab = dialogDefinition.getContents( &#39;info&#39; ),
+				borderField = infoTab.get( &#39;txtBorder&#39; ),
+				originalCommit = borderField.commit;
+
+			borderField.commit = CKEDITOR.tools.override( originalCommit, function( org ) {
+				return function( data, selectedTable ) {
+					org.apply( this, arguments );
+					var value = parseInt( this.getValue(), 10 );
+					selectedTable[ ( !value || value &lt;= 0 ) ? &#39;addClass&#39; : &#39;removeClass&#39; ]( showBorderClassName );
+				};
 			} );
 
-			function onResize() {
-				// Holder rectange size is stretched by textarea,
-				// so hide it just for a moment.
-				this.hide();
-				this.setStyle( &#39;height&#39;, this.getParent().$.clientHeight + &#39;px&#39; );
-				this.setStyle( &#39;width&#39;, this.getParent().$.clientWidth + &#39;px&#39; );
-				// When we have proper holder size, show textarea again.
-				this.show();
+			var advTab = dialogDefinition.getContents( &#39;advanced&#39; ),
+				classField = advTab &amp;&amp; advTab.get( &#39;advCSSClasses&#39; );
+
+			if ( classField ) {
+				classField.setup = CKEDITOR.tools.override( classField.setup, function( originalSetup ) {
+					return function() {
+						originalSetup.apply( this, arguments );
+						this.setValue( this.getValue().replace( /cke_show_border/, &#39;&#39; ) );
+					};
+				} );
+
+				classField.commit = CKEDITOR.tools.override( classField.commit, function( originalCommit ) {
+					return function( data, element ) {
+						originalCommit.apply( this, arguments );
+
+						if ( !parseInt( element.getAttribute( &#39;border&#39; ), 10 ) )
+							element.addClass( &#39;cke_show_border&#39; );
+					};
+				} );
 			}
 		}
 	} );
 
-	var sourceEditable = CKEDITOR.tools.createClass( {
-		base: CKEDITOR.editable,
-		proto: {
-			setData: function( data ) {
-				this.setValue( data );
-				this.editor.fire( &#39;dataReady&#39; );
-			},
-
-			getData: function() {
-				return this.getValue();
-			},
-
-			// Insertions are not supported in source editable.
-			insertHtml: function() {},
-			insertElement: function() {},
-			insertText: function() {},
-
-			// Read-only support for textarea.
-			setReadOnly: function( isReadOnly ) {
-				this[ ( isReadOnly ? &#39;set&#39; : &#39;remove&#39; ) + &#39;Attribute&#39; ]( &#39;readOnly&#39;, &#39;readonly&#39; );
-			},
-
-			detach: function() {
-				sourceEditable.baseProto.detach.call( this );
-				this.clearCustomData();
-				this.remove();
-			}
-		}
-	} );
 } )();
 
-CKEDITOR.plugins.sourcearea = {
-	commands: {
-		source: {
-			modes: { wysiwyg: 1, source: 1 },
-			editorFocus: false,
-			readOnly: 1,
-			exec: function( editor ) {
-				if ( editor.mode == &#39;wysiwyg&#39; )
-					editor.fire( &#39;saveSnapshot&#39; );
-				editor.getCommand( &#39;source&#39; ).setState( CKEDITOR.TRISTATE_DISABLED );
-				editor.setMode( editor.mode == &#39;source&#39; ? &#39;wysiwyg&#39; : &#39;source&#39; );
-			},
-
-			canUndo: false
-		}
-	}
-};
-
-<span id='CKEDITOR-config-cfg-sourceAreaTabSize'>/**
-</span> * Controls CSS tab-size property of the sourcearea view.
+<span id='CKEDITOR-config-cfg-startupShowBorders'>/**
+</span> * Whether to automatically enable the &quot;show borders&quot; command when the editor loads.
  *
- * **Note:** Works only with {@link #dataIndentationChars}
- * set to `&#39;\t&#39;`. Please consider that not all browsers support CSS
- * `tab-size` property yet.
+ *		config.startupShowBorders = false;
  *
- *		// Set tab-size to 20 characters.
- *		CKEDITOR.config.sourceAreaTabSize = 20;
- *
- * @cfg {Number} [sourceAreaTabSize=4]
+ * @cfg {Boolean} [startupShowBorders=true]
  * @member CKEDITOR.config
- * @see CKEDITOR.config#dataIndentationChars
  */
 </pre>
 </body>

@@ -20,28 +20,96 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;sourcedialog&#39;, {
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;sourcedialog,sourcedialog-rtl&#39;, // %REMOVE_LINE_CORE%
+CKEDITOR.plugins.add( &#39;smiley&#39;, {
+	requires: &#39;dialog&#39;,
+	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+	icons: &#39;smiley&#39;, // %REMOVE_LINE_CORE%
 	hidpi: true, // %REMOVE_LINE_CORE%
-
 	init: function( editor ) {
-		// Register the &quot;source&quot; command, which simply opens the &quot;source&quot; dialog.
-		editor.addCommand( &#39;sourcedialog&#39;, new CKEDITOR.dialogCommand( &#39;sourcedialog&#39; ) );
-
-		// Register the &quot;source&quot; dialog.
-		CKEDITOR.dialog.add( &#39;sourcedialog&#39;, this.path + &#39;dialogs/sourcedialog.js&#39; );
-
-		// If the toolbar is available, create the &quot;Source&quot; button.
-		if ( editor.ui.addButton ) {
-			editor.ui.addButton( &#39;Sourcedialog&#39;, {
-				label: editor.lang.sourcedialog.toolbar,
-				command: &#39;sourcedialog&#39;,
-				toolbar: &#39;mode,10&#39;
-			} );
-		}
+		editor.config.smiley_path = editor.config.smiley_path || ( this.path + &#39;images/&#39; );
+		editor.addCommand( &#39;smiley&#39;, new CKEDITOR.dialogCommand( &#39;smiley&#39;, {
+			allowedContent: &#39;img[alt,height,!src,title,width]&#39;,
+			requiredContent: &#39;img&#39;
+		} ) );
+		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Smiley&#39;, {
+			label: editor.lang.smiley.toolbar,
+			command: &#39;smiley&#39;,
+			toolbar: &#39;insert,50&#39;
+		} );
+		CKEDITOR.dialog.add( &#39;smiley&#39;, this.path + &#39;dialogs/smiley.js&#39; );
 	}
 } );
+
+<span id='CKEDITOR-config-cfg-smiley_path'>/**
+</span> * The base path used to build the URL for the smiley images. It must end with a slash.
+ *
+ *		config.smiley_path = &#39;http://www.example.com/images/smileys/&#39;;
+ *
+ *		config.smiley_path = &#39;/images/smileys/&#39;;
+ *
+ * @cfg {String} [smiley_path=CKEDITOR.basePath + &#39;plugins/smiley/images/&#39;]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-smiley_images'>/**
+</span> * The file names for the smileys to be displayed. These files must be
+ * contained inside the URL path defined with the {@link #smiley_path} setting.
+ *
+ *		// This is actually the default value.
+ *		config.smiley_images = [
+ *			&#39;regular_smile.png&#39;,&#39;sad_smile.png&#39;,&#39;wink_smile.png&#39;,&#39;teeth_smile.png&#39;,&#39;confused_smile.png&#39;,&#39;tongue_smile.png&#39;,
+ *			&#39;embarrassed_smile.png&#39;,&#39;omg_smile.png&#39;,&#39;whatchutalkingabout_smile.png&#39;,&#39;angry_smile.png&#39;,&#39;angel_smile.png&#39;,&#39;shades_smile.png&#39;,
+ *			&#39;devil_smile.png&#39;,&#39;cry_smile.png&#39;,&#39;lightbulb.png&#39;,&#39;thumbs_down.png&#39;,&#39;thumbs_up.png&#39;,&#39;heart.png&#39;,
+ *			&#39;broken_heart.png&#39;,&#39;kiss.png&#39;,&#39;envelope.png&#39;
+ *		];
+ *
+ * @cfg
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.smiley_images = [
+	&#39;regular_smile.png&#39;, &#39;sad_smile.png&#39;, &#39;wink_smile.png&#39;, &#39;teeth_smile.png&#39;, &#39;confused_smile.png&#39;, &#39;tongue_smile.png&#39;,
+	&#39;embarrassed_smile.png&#39;, &#39;omg_smile.png&#39;, &#39;whatchutalkingabout_smile.png&#39;, &#39;angry_smile.png&#39;, &#39;angel_smile.png&#39;, &#39;shades_smile.png&#39;,
+	&#39;devil_smile.png&#39;, &#39;cry_smile.png&#39;, &#39;lightbulb.png&#39;, &#39;thumbs_down.png&#39;, &#39;thumbs_up.png&#39;, &#39;heart.png&#39;,
+	&#39;broken_heart.png&#39;, &#39;kiss.png&#39;, &#39;envelope.png&#39; ];
+
+<span id='CKEDITOR-config-cfg-smiley_descriptions'>/**
+</span> * The description to be used for each of the smileys defined in the
+ * {@link CKEDITOR.config#smiley_images} setting. Each entry in this array list
+ * must match its relative pair in the {@link CKEDITOR.config#smiley_images}
+ * setting.
+ *
+ *		// Default settings.
+ *		config.smiley_descriptions = [
+ *			&#39;smiley&#39;, &#39;sad&#39;, &#39;wink&#39;, &#39;laugh&#39;, &#39;frown&#39;, &#39;cheeky&#39;, &#39;blush&#39;, &#39;surprise&#39;,
+ *			&#39;indecision&#39;, &#39;angry&#39;, &#39;angel&#39;, &#39;cool&#39;, &#39;devil&#39;, &#39;crying&#39;, &#39;enlightened&#39;, &#39;no&#39;,
+ *			&#39;yes&#39;, &#39;heart&#39;, &#39;broken heart&#39;, &#39;kiss&#39;, &#39;mail&#39;
+ *		];
+ *
+ *		// Use textual emoticons as description.
+ *		config.smiley_descriptions = [
+ *			&#39;:)&#39;, &#39;:(&#39;, &#39;;)&#39;, &#39;:D&#39;, &#39;:/&#39;, &#39;:P&#39;, &#39;:*)&#39;, &#39;:-o&#39;,
+ *			&#39;:|&#39;, &#39;&gt;:(&#39;, &#39;o:)&#39;, &#39;8-)&#39;, &#39;&gt;:-)&#39;, &#39;;(&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;,
+ *			&#39;&#39;, &#39;&#39;, &#39;:-*&#39;, &#39;&#39;
+ *		];
+ *
+ * @cfg
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.smiley_descriptions = [
+	&#39;smiley&#39;, &#39;sad&#39;, &#39;wink&#39;, &#39;laugh&#39;, &#39;frown&#39;, &#39;cheeky&#39;, &#39;blush&#39;, &#39;surprise&#39;,
+	&#39;indecision&#39;, &#39;angry&#39;, &#39;angel&#39;, &#39;cool&#39;, &#39;devil&#39;, &#39;crying&#39;, &#39;enlightened&#39;, &#39;no&#39;,
+	&#39;yes&#39;, &#39;heart&#39;, &#39;broken heart&#39;, &#39;kiss&#39;, &#39;mail&#39;
+];
+
+<span id='CKEDITOR-config-cfg-smiley_columns'>/**
+</span> * The number of columns to be generated by the smilies matrix.
+ *
+ *		config.smiley_columns = 6;
+ *
+ * @since 3.3.2
+ * @cfg {Number} [smiley_columns=8]
+ * @member CKEDITOR.config
+ */
 </pre>
 </body>
 </html>

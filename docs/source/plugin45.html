@@ -21,241 +21,308 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Justify commands.
+</span> * @fileOverview Handles the indentation of block elements.
  */
 
 ( function() {
-	function getAlignment( element, useComputedState ) {
-		useComputedState = useComputedState === undefined || useComputedState;
+	&#39;use strict&#39;;
 
-		var align;
-		if ( useComputedState )
-			align = element.getComputedStyle( &#39;text-align&#39; );
-		else {
-			while ( !element.hasAttribute || !( element.hasAttribute( &#39;align&#39; ) || element.getStyle( &#39;text-align&#39; ) ) ) {
-				var parent = element.getParent();
-				if ( !parent )
-					break;
-				element = parent;
-			}
-			align = element.getStyle( &#39;text-align&#39; ) || element.getAttribute( &#39;align&#39; ) || &#39;&#39;;
-		}
+	var $listItem = CKEDITOR.dtd.$listItem,
+		$list = CKEDITOR.dtd.$list,
+		TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
+		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
 
-		// Sometimes computed values doesn&#39;t tell.
-		align &amp;&amp; ( align = align.replace( /(?:-(?:moz|webkit)-)?(?:start|auto)/i, &#39;&#39; ) );
-
-		!align &amp;&amp; useComputedState &amp;&amp; ( align = element.getComputedStyle( &#39;direction&#39; ) == &#39;rtl&#39; ? &#39;right&#39; : &#39;left&#39; );
-
-		return align;
-	}
-
-	function justifyCommand( editor, name, value ) {
-		this.editor = editor;
-		this.name = name;
-		this.value = value;
-		this.context = &#39;p&#39;;
-
-		var classes = editor.config.justifyClasses,
-			blockTag = editor.config.enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39;;
-
-		if ( classes ) {
-			switch ( value ) {
-				case &#39;left&#39;:
-					this.cssClassName = classes[ 0 ];
-					break;
-				case &#39;center&#39;:
-					this.cssClassName = classes[ 1 ];
-					break;
-				case &#39;right&#39;:
-					this.cssClassName = classes[ 2 ];
-					break;
-				case &#39;justify&#39;:
-					this.cssClassName = classes[ 3 ];
-					break;
-			}
-
-			this.cssClassRegex = new RegExp( &#39;(?:^|\\s+)(?:&#39; + classes.join( &#39;|&#39; ) + &#39;)(?=$|\\s)&#39; );
-			this.requiredContent = blockTag + &#39;(&#39; + this.cssClassName + &#39;)&#39;;
-		}
-		else
-			this.requiredContent = blockTag + &#39;{text-align}&#39;;
-
-		this.allowedContent = {
-			&#39;caption div h1 h2 h3 h4 h5 h6 p pre td th li&#39;: {
-				// Do not add elements, but only text-align style if element is validated by other rule.
-				propertiesOnly: true,
-				styles: this.cssClassName ? null : &#39;text-align&#39;,
-				classes: this.cssClassName || null
-			}
-		};
-
-		// In enter mode BR we need to allow here for div, because when non other
-		// feature allows div justify is the only plugin that uses it.
-		if ( editor.config.enterMode == CKEDITOR.ENTER_BR )
-			this.allowedContent.div = true;
-	}
-
-	function onDirChanged( e ) {
-		var editor = e.editor;
-
-		var range = editor.createRange();
-		range.setStartBefore( e.data.node );
-		range.setEndAfter( e.data.node );
-
-		var walker = new CKEDITOR.dom.walker( range ),
-			node;
-
-		while ( ( node = walker.next() ) ) {
-			if ( node.type == CKEDITOR.NODE_ELEMENT ) {
-				// A child with the defined dir is to be ignored.
-				if ( !node.equals( e.data.node ) &amp;&amp; node.getDirection() ) {
-					range.setStartAfter( node );
-					walker = new CKEDITOR.dom.walker( range );
-					continue;
-				}
-
-				// Switch the alignment.
-				var classes = editor.config.justifyClasses;
-				if ( classes ) {
-					// The left align class.
-					if ( node.hasClass( classes[ 0 ] ) ) {
-						node.removeClass( classes[ 0 ] );
-						node.addClass( classes[ 2 ] );
-					}
-					// The right align class.
-					else if ( node.hasClass( classes[ 2 ] ) ) {
-						node.removeClass( classes[ 2 ] );
-						node.addClass( classes[ 0 ] );
-					}
-				}
-
-				// Always switch CSS margins.
-				var style = &#39;text-align&#39;;
-				var align = node.getStyle( style );
-
-				if ( align == &#39;left&#39; )
-					node.setStyle( style, &#39;right&#39; );
-				else if ( align == &#39;right&#39; )
-					node.setStyle( style, &#39;left&#39; );
-			}
-		}
-	}
-
-	justifyCommand.prototype = {
-		exec: function( editor ) {
-			var selection = editor.getSelection(),
-				enterMode = editor.config.enterMode;
-
-			if ( !selection )
-				return;
-
-			var bookmarks = selection.createBookmarks(),
-				ranges = selection.getRanges();
-
-			var cssClassName = this.cssClassName,
-				iterator, block;
-
-			var useComputedState = editor.config.useComputedState;
-			useComputedState = useComputedState === undefined || useComputedState;
-
-			for ( var i = ranges.length - 1; i &gt;= 0; i-- ) {
-				iterator = ranges[ i ].createIterator();
-				iterator.enlargeBr = enterMode != CKEDITOR.ENTER_BR;
-
-				while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) ) ) {
-					if ( block.isReadOnly() )
-						continue;
-
-					block.removeAttribute( &#39;align&#39; );
-					block.removeStyle( &#39;text-align&#39; );
-
-					// Remove any of the alignment classes from the className.
-					var className = cssClassName &amp;&amp; ( block.$.className = CKEDITOR.tools.ltrim( block.$.className.replace( this.cssClassRegex, &#39;&#39; ) ) );
-
-					var apply = ( this.state == CKEDITOR.TRISTATE_OFF ) &amp;&amp; ( !useComputedState || ( getAlignment( block, true ) != this.value ) );
-
-					if ( cssClassName ) {
-						// Append the desired class name.
-						if ( apply )
-							block.addClass( cssClassName );
-						else if ( !className )
-							block.removeAttribute( &#39;class&#39; );
-					} else if ( apply )
-						block.setStyle( &#39;text-align&#39;, this.value );
-				}
-
-			}
-
-			editor.focus();
-			editor.forceNextSelectionCheck();
-			selection.selectBookmarks( bookmarks );
-		},
-
-		refresh: function( editor, path ) {
-			var firstBlock = path.block || path.blockLimit;
-
-			this.setState( firstBlock.getName() != &#39;body&#39; &amp;&amp; getAlignment( firstBlock, this.editor.config.useComputedState ) == this.value ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF );
-		}
-	};
-
-	CKEDITOR.plugins.add( &#39;justify&#39;, {
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;justifyblock,justifycenter,justifyleft,justifyright&#39;, // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
+	CKEDITOR.plugins.add( &#39;indentblock&#39;, {
+		requires: &#39;indent&#39;,
 		init: function( editor ) {
-			if ( editor.blockless )
-				return;
+			var globalHelpers = CKEDITOR.plugins.indent,
+				classes = editor.config.indentClasses;
 
-			var left = new justifyCommand( editor, &#39;justifyleft&#39;, &#39;left&#39; ),
-				center = new justifyCommand( editor, &#39;justifycenter&#39;, &#39;center&#39; ),
-				right = new justifyCommand( editor, &#39;justifyright&#39;, &#39;right&#39; ),
-				justify = new justifyCommand( editor, &#39;justifyblock&#39;, &#39;justify&#39; );
+			// Register commands.
+			globalHelpers.registerCommands( editor, {
+				indentblock: new commandDefinition( editor, &#39;indentblock&#39;, true ),
+				outdentblock: new commandDefinition( editor, &#39;outdentblock&#39; )
+			} );
 
-			editor.addCommand( &#39;justifyleft&#39;, left );
-			editor.addCommand( &#39;justifycenter&#39;, center );
-			editor.addCommand( &#39;justifyright&#39;, right );
-			editor.addCommand( &#39;justifyblock&#39;, justify );
+			function commandDefinition( editor, name ) {
+				globalHelpers.specificDefinition.apply( this, arguments );
 
-			if ( editor.ui.addButton ) {
-				editor.ui.addButton( &#39;JustifyLeft&#39;, {
-					label: editor.lang.justify.left,
-					command: &#39;justifyleft&#39;,
-					toolbar: &#39;align,10&#39;
-				} );
-				editor.ui.addButton( &#39;JustifyCenter&#39;, {
-					label: editor.lang.justify.center,
-					command: &#39;justifycenter&#39;,
-					toolbar: &#39;align,20&#39;
-				} );
-				editor.ui.addButton( &#39;JustifyRight&#39;, {
-					label: editor.lang.justify.right,
-					command: &#39;justifyright&#39;,
-					toolbar: &#39;align,30&#39;
-				} );
-				editor.ui.addButton( &#39;JustifyBlock&#39;, {
-					label: editor.lang.justify.block,
-					command: &#39;justifyblock&#39;,
-					toolbar: &#39;align,40&#39;
-				} );
+				this.allowedContent = {
+					&#39;div h1 h2 h3 h4 h5 h6 ol p pre ul&#39;: {
+						// Do not add elements, but only text-align style if element is validated by other rule.
+						propertiesOnly: true,
+						styles: !classes ? &#39;margin-left,margin-right&#39; : null,
+						classes: classes || null
+					}
+				};
+
+				if ( this.enterBr )
+					this.allowedContent.div = true;
+
+				this.requiredContent = ( this.enterBr ? &#39;div&#39; : &#39;p&#39; ) +
+					( classes ?
+							&#39;(&#39; + classes.join( &#39;,&#39; ) + &#39;)&#39;
+						:
+							&#39;{margin-left}&#39; );
+
+				this.jobs = {
+					&#39;20&#39;: {
+						refresh: function( editor, path ) {
+							var firstBlock = path.block || path.blockLimit;
+
+							// Switch context from list item to list
+							// because indentblock can indent entire list
+							// but not a single list element.
+
+							if ( firstBlock.is( $listItem ) )
+								firstBlock = firstBlock.getParent();
+
+							// If firstBlock isn&#39;t list item, but still there&#39;s
+							// some ascendant (i.e. &lt;ul&gt;), then this is not
+							// a job for indentblock, e.g.:
+							//
+							//		&lt;ul&gt;
+							//			&lt;li&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/li&gt;
+							//		&lt;/ul&gt;
+
+							else if ( firstBlock.getAscendant( $listItem ) )
+								return TRISTATE_DISABLED;
+
+							//	[-] Context in the path or ENTER_BR
+							//
+							//		Don&#39;t try to indent if the element is out of
+							//		this plugin&#39;s scope. This assertion is omitted
+							//		if ENTER_BR is in use since there may be no block
+							//		in the path.
+
+							if ( !this.enterBr &amp;&amp; !this.getContext( path ) )
+								return TRISTATE_DISABLED;
+
+							else if ( classes ) {
+
+								//	[+] Context in the path or ENTER_BR
+								//	[+] IndentClasses
+								//
+								//		If there are indentation classes, check if reached
+								//		the highest level of indentation. If so, disable
+								//		the command.
+
+								if ( indentClassLeft.call( this, firstBlock, classes ) )
+									return TRISTATE_OFF;
+								else
+									return TRISTATE_DISABLED;
+							} else {
+
+								//	[+] Context in the path or ENTER_BR
+								//	[-] IndentClasses
+								//	[+] Indenting
+								//
+								//		No indent-level limitations due to indent classes.
+								//		Indent-like command can always be executed.
+
+								if ( this.isIndent )
+									return TRISTATE_OFF;
+
+								//	[+] Context in the path or ENTER_BR
+								//	[-] IndentClasses
+								//	[-] Indenting
+								//	[-] Block in the path
+								//
+								//		No block in path. There&#39;s no element to apply indentation
+								//		so disable the command.
+
+								else if ( !firstBlock )
+									return TRISTATE_DISABLED;
+
+								//	[+] Context in the path or ENTER_BR
+								//	[-] IndentClasses
+								//	[-] Indenting
+								//	[+] Block in path.
+								//
+								//		Not using indentClasses but there is firstBlock.
+								//		We can calculate current indentation level and
+								//		try to increase/decrease it.
+
+								else {
+									return CKEDITOR[
+										( getIndent( firstBlock ) || 0 ) &lt;= 0 ?
+												&#39;TRISTATE_DISABLED&#39;
+											:
+												&#39;TRISTATE_OFF&#39; ];
+								}
+							}
+						},
+
+						exec: function( editor ) {
+							var selection = editor.getSelection(),
+								range = selection &amp;&amp; selection.getRanges()[ 0 ],
+								nearestListBlock;
+
+							// If there&#39;s some list in the path, then it will be
+							// a full-list indent by increasing or decreasing margin property.
+							if ( ( nearestListBlock = editor.elementPath().contains( $list ) ) )
+								indentElement.call( this, nearestListBlock, classes );
+
+							// If no list in the path, use iterator to indent all the possible
+							// paragraphs in the range, creating them if necessary.
+							else {
+								var iterator = range.createIterator(),
+									enterMode = editor.config.enterMode,
+									block;
+
+								iterator.enforceRealBlocks = true;
+								iterator.enlargeBr = enterMode != CKEDITOR.ENTER_BR;
+
+								while ( ( block = iterator.getNextParagraph( enterMode == CKEDITOR.ENTER_P ? &#39;p&#39; : &#39;div&#39; ) ) ) {
+									if ( !block.isReadOnly() )
+										indentElement.call( this, block, classes );
+								}
+							}
+
+							return true;
+						}
+					}
+				};
 			}
 
-			editor.on( &#39;dirChanged&#39;, onDirChanged );
+			CKEDITOR.tools.extend( commandDefinition.prototype, globalHelpers.specificDefinition.prototype, {
+				// Elements that, if in an elementpath, will be handled by this
+				// command. They restrict the scope of the plugin.
+				context: { div: 1, dl: 1, h1: 1, h2: 1, h3: 1, h4: 1, h5: 1, h6: 1, ul: 1, ol: 1, p: 1, pre: 1, table: 1 },
+
+				// A regex built on config#indentClasses to detect whether an
+				// element has some indentClass or not.
+				classNameRegex: classes ?
+					new RegExp( &#39;(?:^|\\s+)(&#39; + classes.join( &#39;|&#39; ) + &#39;)(?=$|\\s)&#39; )
+						:
+					null
+			} );
 		}
 	} );
+
+	// Generic indentation procedure for indentation of any element
+	// either with margin property or config#indentClass.
+	function indentElement( element, classes, dir ) {
+		if ( element.getCustomData( &#39;indent_processed&#39; ) )
+			return;
+
+		var editor = this.editor,
+			isIndent = this.isIndent;
+
+		if ( classes ) {
+			// Transform current class f to indent step index.
+			var indentClass = element.$.className.match( this.classNameRegex ),
+				indentStep = 0;
+
+			if ( indentClass ) {
+				indentClass = indentClass[ 1 ];
+				indentStep = CKEDITOR.tools.indexOf( classes, indentClass ) + 1;
+			}
+
+			// Operate on indent step index, transform indent step index
+			// back to class name.
+			if ( ( indentStep += isIndent ? 1 : -1 ) &lt; 0 )
+				return;
+
+			indentStep = Math.min( indentStep, classes.length );
+			indentStep = Math.max( indentStep, 0 );
+			element.$.className = CKEDITOR.tools.ltrim( element.$.className.replace( this.classNameRegex, &#39;&#39; ) );
+
+			if ( indentStep &gt; 0 )
+				element.addClass( classes[ indentStep - 1 ] );
+		} else {
+			var indentCssProperty = getIndentCss( element, dir ),
+				currentOffset = parseInt( element.getStyle( indentCssProperty ), 10 ),
+				indentOffset = editor.config.indentOffset || 40;
+
+			if ( isNaN( currentOffset ) )
+				currentOffset = 0;
+
+			currentOffset += ( isIndent ? 1 : -1 ) * indentOffset;
+
+			if ( currentOffset &lt; 0 )
+				return;
+
+			currentOffset = Math.max( currentOffset, 0 );
+			currentOffset = Math.ceil( currentOffset / indentOffset ) * indentOffset;
+
+			element.setStyle( indentCssProperty, currentOffset ?
+					currentOffset + ( editor.config.indentUnit || &#39;px&#39; )
+				:
+					&#39;&#39; );
+
+			if ( element.getAttribute( &#39;style&#39; ) === &#39;&#39; )
+				element.removeAttribute( &#39;style&#39; );
+		}
+
+		CKEDITOR.dom.element.setMarker( this.database, element, &#39;indent_processed&#39;, 1 );
+
+		return;
+	}
+
+	// Method that checks if current indentation level for an element
+	// reached the limit determined by config#indentClasses.
+	function indentClassLeft( node, classes ) {
+		var indentClass = node.$.className.match( this.classNameRegex ),
+			isIndent = this.isIndent;
+
+		// If node has one of the indentClasses:
+		//	* If it holds the topmost indentClass, then
+		//	  no more classes have left.
+		//	* If it holds any other indentClass, it can use the next one
+		//	  or the previous one.
+		//	* Outdent is always possible. We can remove indentClass.
+		if ( indentClass )
+			return isIndent ? indentClass[ 1 ] != classes.slice( -1 ) : true;
+
+		// If node has no class which belongs to indentClasses,
+		// then it is at 0-level. It can be indented but not outdented.
+		else
+			return isIndent;
+	}
+
+	// Determines indent CSS property for an element according to
+	// what is the direction of such element. It can be either `margin-left`
+	// or `margin-right`.
+	function getIndentCss( element, dir ) {
+		return ( dir || element.getComputedStyle( &#39;direction&#39; ) ) == &#39;ltr&#39; ? &#39;margin-left&#39; : &#39;margin-right&#39;;
+	}
+
+	// Return the numerical indent value of margin-left|right of an element,
+	// considering element&#39;s direction. If element has no margin specified,
+	// NaN is returned.
+	function getIndent( element ) {
+		return parseInt( element.getStyle( getIndentCss( element ) ), 10 );
+	}
 } )();
 
-<span id='CKEDITOR-config-cfg-justifyClasses'>/**
-</span> * List of classes to use for aligning the contents. If it&#39;s `null`, no classes will be used
- * and instead the corresponding CSS values will be used.
+<span id='CKEDITOR-config-cfg-indentClasses'>/**
+</span> * A list of classes to use for indenting the contents. If set to `null`, no classes will be used
+ * and instead the {@link #indentUnit} and {@link #indentOffset} properties will be used.
  *
- * The array should contain 4 members, in the following order: left, center, right, justify.
+ *		// Use the &#39;Indent1&#39;, &#39;Indent2&#39;, &#39;Indent3&#39; classes.
+ *		config.indentClasses = [&#39;Indent1&#39;, &#39;Indent2&#39;, &#39;Indent3&#39;];
  *
- *		// Use the classes &#39;AlignLeft&#39;, &#39;AlignCenter&#39;, &#39;AlignRight&#39;, &#39;AlignJustify&#39;
- *		config.justifyClasses = [ &#39;AlignLeft&#39;, &#39;AlignCenter&#39;, &#39;AlignRight&#39;, &#39;AlignJustify&#39; ];
- *
- * @cfg {Array} [justifyClasses=null]
+ * @cfg {Array} [indentClasses=null]
  * @member CKEDITOR.config
  */
-</pre>
+
+<span id='CKEDITOR-config-cfg-indentOffset'>/**
+</span> * The size in {@link CKEDITOR.config#indentUnit indentation units} of each indentation step.
+ *
+ *		config.indentOffset = 4;
+ *
+ * @cfg {Number} [indentOffset=40]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-indentUnit'>/**
+</span> * The unit used for {@link CKEDITOR.config#indentOffset indentation offset}.
+ *
+ *		config.indentUnit = &#39;em&#39;;
+ *
+ * @cfg {String} [indentUnit=&#39;px&#39;]
+ * @member CKEDITOR.config
+ */</pre>
 </body>
 </html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-use strict'>/**
+</span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+
+&#39;use strict&#39;;
+
+( function() {
+	CKEDITOR.dialog.add( &#39;codeSnippet&#39;, function( editor ) {
+		var snippetLangs = editor._.codesnippet.langs,
+			lang = editor.lang.codesnippet,
+			clientHeight = document.documentElement.clientHeight,
+			tabulationString = editor.config.codesnippet_tabulation || &#39;    &#39;,
+			langSelectItems = [],
+			langSelectDefaultValue,
+			snippetLangId;
+
+		for ( snippetLangId in snippetLangs )
+			langSelectItems.push( [ snippetLangs[ snippetLangId ], snippetLangId ] );
+
+		if ( langSelectItems.length )
+			langSelectDefaultValue = langSelectItems[ 0 ][ 1 ];
+
+		// Size adjustments.
+		var size = CKEDITOR.document.getWindow().getViewPaneSize(),
+			// Make it maximum 800px wide, but still fully visible in the viewport.
+			width = Math.min( size.width - 70, 800 ),
+			// Make it use 2/3 of the viewport height.
+			height = size.height / 1.5;
+			// Low resolution settings.
+			if ( clientHeight &lt; 650 )
+				height = clientHeight - 220;
+
+		return  {
+			title: lang.title,
+			minHeight: 200,
+			resizable: CKEDITOR.DIALOG_RESIZE_NONE,
+			contents: [
+				{
+					id: &#39;info&#39;,
+					elements: [
+						{
+							id: &#39;lang&#39;,
+							type: &#39;select&#39;,
+							label: lang.language,
+							items: langSelectItems,
+							&#39;default&#39;: langSelectDefaultValue,
+							setup: function( widget ) {
+								this.setValue( widget.ready ? widget.data.lang : &#39;&#39; );
+
+								// The only way to have an empty select value in Firefox is
+								// to set a negative selectedIndex.
+								if ( CKEDITOR.env.gecko &amp;&amp; ( !widget.data.lang || !widget.ready ) )
+									this.getInputElement().$.selectedIndex = -1;
+							},
+							commit: function( widget ) {
+								widget.setData( &#39;lang&#39;, this.getValue() );
+							}
+						},
+						{
+							id: &#39;code&#39;,
+							type: &#39;textarea&#39;,
+							label: lang.codeContents,
+							setup: function( widget ) {
+								this.setValue( widget.data.code );
+							},
+							commit: function( widget ) {
+								widget.setData( &#39;code&#39;, this.getValue() );
+							},
+							required: true,
+							validate: CKEDITOR.dialog.validate.notEmpty( lang.emptySnippetError ),
+							inputStyle: &#39;cursor:auto;&#39; +
+								&#39;width:&#39; + width + &#39;px;&#39; +
+								&#39;height:&#39; + height + &#39;px;&#39; +
+								&#39;tab-size:4;&#39; +
+								&#39;text-align:left;&#39;,
+								&#39;class&#39;: &#39;cke_source&#39;
+						}
+					]
+				}
+			]
+		};
+	} );
+}() );</pre>
+</body>
+</html>

@@ -20,107 +20,153 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;table&#39;, {
-	requires: &#39;dialog&#39;,
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;table&#39;, // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	init: function( editor ) {
-		if ( editor.blockless )
-			return;
+<span id='global-property-'>/**
+</span> * @fileOverview stylesheetParser plugin.
+ */
 
-		var table = CKEDITOR.plugins.table,
-			lang = editor.lang.table;
+( function() {
+	// We want to extract only the elements with classes defined in the stylesheets:
+	function parseClasses( aRules, skipSelectors, validSelectors ) {
+		// aRules are just the different rules in the style sheets
+		// We want to merge them and them split them by commas, so we end up with only
+		// the selectors
+		var s = aRules.join( &#39; &#39; );
+		// Remove selectors splitting the elements, leave only the class selector (.)
+		s = s.replace( /(,|&gt;|\+|~)/g, &#39; &#39; );
+		// Remove attribute selectors: table[border=&quot;0&quot;]
+		s = s.replace( /\[[^\]]*/g, &#39;&#39; );
+		// Remove Ids: div#main
+		s = s.replace( /#[^\s]*/g, &#39;&#39; );
+		// Remove pseudo-selectors and pseudo-elements: :hover :nth-child(2n+1) ::before
+		s = s.replace( /\:{1,2}[^\s]*/g, &#39;&#39; );
 
-		editor.addCommand( &#39;table&#39;, new CKEDITOR.dialogCommand( &#39;table&#39;, {
-			context: &#39;table&#39;,
-			allowedContent: &#39;table{width,height}[align,border,cellpadding,cellspacing,summary];&#39; +
-				&#39;caption tbody thead tfoot;&#39; +
-				&#39;th td tr[scope];&#39; +
-				( editor.plugins.dialogadvtab ? &#39;table&#39; + editor.plugins.dialogadvtab.allowedContent() : &#39;&#39; ),
-			requiredContent: &#39;table&#39;,
-			contentTransformations: [
-				[ &#39;table{width}: sizeToStyle&#39;, &#39;table[width]: sizeToAttribute&#39; ]
-			]
-		} ) );
+		s = s.replace( /\s+/g, &#39; &#39; );
 
-		function createDef( def ) {
-			return CKEDITOR.tools.extend( def || {}, {
-				contextSensitive: 1,
-				refresh: function( editor, path ) {
-					this.setState( path.contains( &#39;table&#39;, 1 ) ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
-				}
-			} );
-		}
+		var aSelectors = s.split( &#39; &#39; ),
+			aClasses = [];
 
-		editor.addCommand( &#39;tableProperties&#39;, new CKEDITOR.dialogCommand( &#39;tableProperties&#39;, createDef() ) );
-		editor.addCommand( &#39;tableDelete&#39;, createDef( {
-			exec: function( editor ) {
-				var path = editor.elementPath(),
-					table = path.contains( &#39;table&#39;, 1 );
+		for ( var i = 0; i &lt; aSelectors.length; i++ ) {
+			var selector = aSelectors[ i ];
 
-				if ( !table )
-					return;
-
-				// If the table&#39;s parent has only one child remove it as well (unless it&#39;s the body or a table cell) (#5416, #6289)
-				var parent = table.getParent();
-				if ( parent.getChildCount() == 1 &amp;&amp; !parent.is( &#39;body&#39;, &#39;td&#39;, &#39;th&#39; ) )
-					table = parent;
-
-				var range = editor.createRange();
-				range.moveToPosition( table, CKEDITOR.POSITION_BEFORE_START );
-				table.remove();
-				range.select();
+			if ( validSelectors.test( selector ) &amp;&amp; !skipSelectors.test( selector ) ) {
+				// If we still don&#39;t know about this one, add it
+				if ( CKEDITOR.tools.indexOf( aClasses, selector ) == -1 )
+					aClasses.push( selector );
 			}
-		} ) );
-
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Table&#39;, {
-			label: lang.toolbar,
-			command: &#39;table&#39;,
-			toolbar: &#39;insert,30&#39;
-		} );
-
-		CKEDITOR.dialog.add( &#39;table&#39;, this.path + &#39;dialogs/table.js&#39; );
-		CKEDITOR.dialog.add( &#39;tableProperties&#39;, this.path + &#39;dialogs/table.js&#39; );
-
-		// If the &quot;menu&quot; plugin is loaded, register the menu items.
-		if ( editor.addMenuItems ) {
-			editor.addMenuItems( {
-				table: {
-					label: lang.menu,
-					command: &#39;tableProperties&#39;,
-					group: &#39;table&#39;,
-					order: 5
-				},
-
-				tabledelete: {
-					label: lang.deleteTable,
-					command: &#39;tableDelete&#39;,
-					group: &#39;table&#39;,
-					order: 1
-				}
-			} );
 		}
 
-		editor.on( &#39;doubleclick&#39;, function( evt ) {
-			var element = evt.data.element;
-
-			if ( element.is( &#39;table&#39; ) )
-				evt.data.dialog = &#39;tableProperties&#39;;
-		} );
-
-		// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
-		if ( editor.contextMenu ) {
-			editor.contextMenu.addListener( function() {
-				// menu item state is resolved on commands.
-				return {
-					tabledelete: CKEDITOR.TRISTATE_OFF,
-					table: CKEDITOR.TRISTATE_OFF
-				};
-			} );
-		}
+		return aClasses;
 	}
-} );
+
+	function LoadStylesCSS( theDoc, skipSelectors, validSelectors ) {
+		var styles = [],
+			// It will hold all the rules of the applied stylesheets (except those internal to CKEditor)
+			aRules = [],
+			i;
+
+		for ( i = 0; i &lt; theDoc.styleSheets.length; i++ ) {
+			var sheet = theDoc.styleSheets[ i ],
+				node = sheet.ownerNode || sheet.owningElement;
+
+			// Skip the internal stylesheets
+			if ( node.getAttribute( &#39;data-cke-temp&#39; ) )
+				continue;
+
+			// Exclude stylesheets injected by extensions
+			if ( sheet.href &amp;&amp; sheet.href.substr( 0, 9 ) == &#39;chrome://&#39; )
+				continue;
+
+			// Bulletproof with x-domain content stylesheet.
+			try {
+				var sheetRules = sheet.cssRules || sheet.rules;
+				for ( var j = 0; j &lt; sheetRules.length; j++ )
+					aRules.push( sheetRules[ j ].selectorText );
+			} catch ( e ) {}
+		}
+
+		var aClasses = parseClasses( aRules, skipSelectors, validSelectors );
+
+		// Add each style to our &quot;Styles&quot; collection.
+		for ( i = 0; i &lt; aClasses.length; i++ ) {
+			var oElement = aClasses[ i ].split( &#39;.&#39; ),
+				element = oElement[ 0 ].toLowerCase(),
+				sClassName = oElement[ 1 ];
+
+			styles.push( {
+				name: element + &#39;.&#39; + sClassName,
+				element: element,
+				attributes: { &#39;class&#39;: sClassName }
+			} );
+		}
+
+		return styles;
+	}
+
+	// Register a plugin named &quot;stylesheetparser&quot;.
+	CKEDITOR.plugins.add( &#39;stylesheetparser&#39;, {
+		init: function( editor ) {
+			// Stylesheet parser is incompatible with filter (#10136).
+			editor.filter.disable();
+
+			var cachedDefinitions;
+
+			editor.once( &#39;stylesSet&#39;, function( evt ) {
+				// Cancel event and fire it again when styles are ready.
+				evt.cancel();
+
+				// Overwrite editor#getStylesSet asap (contentDom is the first moment
+				// when editor.document is ready), but before stylescombo reads styles set (priority 5).
+				editor.once( &#39;contentDom&#39;, function() {
+					editor.getStylesSet( function( definitions ) {
+						// Rules that must be skipped
+						var skipSelectors = editor.config.stylesheetParser_skipSelectors || ( /(^body\.|^\.)/i ),
+							// Rules that are valid
+							validSelectors = editor.config.stylesheetParser_validSelectors || ( /\w+\.\w+/ );
+
+						cachedDefinitions = definitions.concat( LoadStylesCSS( editor.document.$, skipSelectors, validSelectors ) );
+
+						editor.getStylesSet = function( callback ) {
+							if ( cachedDefinitions )
+								return callback( cachedDefinitions );
+						};
+
+						editor.fire( &#39;stylesSet&#39;, { styles: cachedDefinitions } );
+					} );
+				} );
+			}, null, null, 1 );
+		}
+	} );
+} )();
+
+
+<span id='CKEDITOR-config-cfg-stylesheetParser_skipSelectors'>/**
+</span> * A regular expression that defines whether a CSS rule will be
+ * skipped by the Stylesheet Parser plugin. A CSS rule matching
+ * the regular expression will be ignored and will not be available
+ * in the Styles drop-down list.
+ *
+ *		// Ignore rules for body and caption elements, classes starting with &quot;high&quot;, and any class defined for no specific element.
+ *		config.stylesheetParser_skipSelectors = /(^body\.|^caption\.|\.high|^\.)/i;
+ *
+ * @since 3.6
+ * @cfg {RegExp} [stylesheetParser_skipSelectors=/(^body\.|^\.)/i]
+ * @member CKEDITOR.config
+ * @see CKEDITOR.config#stylesheetParser_validSelectors
+ */
+
+<span id='CKEDITOR-config-cfg-stylesheetParser_validSelectors'>/**
+</span> * A regular expression that defines which CSS rules will be used
+ * by the Stylesheet Parser plugin. A CSS rule matching the regular
+ * expression will be available in the Styles drop-down list.
+ *
+ *		// Only add rules for p and span elements.
+ *		config.stylesheetParser_validSelectors = /\^(p|span)\.\w+/;
+ *
+ * @since 3.6
+ * @cfg {RegExp} [stylesheetParser_validSelectors=/\w+\.\w+/]
+ * @member CKEDITOR.config
+ * @see CKEDITOR.config#stylesheetParser_skipSelectors
+ */
 </pre>
 </body>
 </html>

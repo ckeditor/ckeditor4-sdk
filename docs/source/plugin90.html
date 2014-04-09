@@ -21,652 +21,775 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview The &quot;wysiwygarea&quot; plugin. It registers the &quot;wysiwyg&quot; editing
- *		mode, which handles the main editing area space.
+</span> * @fileOverview Undo/Redo system for saving a shapshot for document modification
+ *		and other recordable changes.
  */
 
 ( function() {
-	CKEDITOR.plugins.add( &#39;wysiwygarea&#39;, {
+	CKEDITOR.plugins.add( &#39;undo&#39;, {
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;redo,redo-rtl,undo,undo-rtl&#39;, // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			if ( editor.config.fullPage ) {
-				editor.addFeature( {
-					allowedContent: &#39;html head title; style [media,type]; body (*)[id]; meta link [*]&#39;,
-					requiredContent: &#39;body&#39;
+			var undoManager = editor.undoManager = new UndoManager( editor );
+
+			var undoCommand = editor.addCommand( &#39;undo&#39;, {
+				exec: function() {
+					if ( undoManager.undo() ) {
+						editor.selectionChange();
+						this.fire( &#39;afterUndo&#39; );
+					}
+				},
+				startDisabled: true,
+				canUndo: false
+			} );
+
+			var redoCommand = editor.addCommand( &#39;redo&#39;, {
+				exec: function() {
+					if ( undoManager.redo() ) {
+						editor.selectionChange();
+						this.fire( &#39;afterRedo&#39; );
+					}
+				},
+				startDisabled: true,
+				canUndo: false
+			} );
+
+			var keystrokes = [ CKEDITOR.CTRL + 90 /*Z*/, CKEDITOR.CTRL + 89 /*Y*/, CKEDITOR.CTRL + CKEDITOR.SHIFT + 90 /*Z*/ ];
+
+			editor.setKeystroke( [
+				[ keystrokes[ 0 ], &#39;undo&#39; ],
+				[ keystrokes[ 1 ], &#39;redo&#39; ],
+				[ keystrokes[ 2 ], &#39;redo&#39; ]
+			] );
+
+			// Block undo/redo keystrokes when at the bottom/top of the undo stack (#11126 and #11677).
+			editor.on( &#39;contentDom&#39;, function() {
+				var editable = editor.editable();
+				editable.attachListener( editable, &#39;keydown&#39;, function( evt ) {
+					if ( CKEDITOR.tools.indexOf( keystrokes, evt.data.getKeystroke() ) &gt; -1 )
+						evt.data.preventDefault();
+				} );
+			} );
+
+			undoManager.onChange = function() {
+				undoCommand.setState( undoManager.undoable() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+				redoCommand.setState( undoManager.redoable() ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+			};
+
+			function recordCommand( event ) {
+				// If the command hasn&#39;t been marked to not support undo.
+				if ( undoManager.enabled &amp;&amp; event.data.command.canUndo !== false )
+					undoManager.save();
+			}
+
+			// We&#39;ll save snapshots before and after executing a command.
+			editor.on( &#39;beforeCommandExec&#39;, recordCommand );
+			editor.on( &#39;afterCommandExec&#39;, recordCommand );
+
+			// Save snapshots before doing custom changes.
+			editor.on( &#39;saveSnapshot&#39;, function( evt ) {
+				undoManager.save( evt.data &amp;&amp; evt.data.contentOnly );
+			} );
+
+			// Registering keydown on every document recreation.(#3844)
+			editor.on( &#39;contentDom&#39;, function() {
+				editor.editable().on( &#39;keydown&#39;, function( event ) {
+					var keystroke = event.data.getKey();
+
+					if ( keystroke == 8 /*Backspace*/ || keystroke == 46 /*Delete*/ )
+						undoManager.type( keystroke, 0 );
+				} );
+
+				editor.editable().on( &#39;keypress&#39;, function( event ) {
+					undoManager.type( event.data.getKey(), 1 );
+				} );
+			} );
+
+			// Always save an undo snapshot - the previous mode might have
+			// changed editor contents.
+			editor.on( &#39;beforeModeUnload&#39;, function() {
+				editor.mode == &#39;wysiwyg&#39; &amp;&amp; undoManager.save( true );
+			} );
+
+			function toggleUndoManager() {
+				undoManager.enabled = editor.readOnly ? false : editor.mode == &#39;wysiwyg&#39;;
+				undoManager.onChange();
+			}
+
+			// Make the undo manager available only in wysiwyg mode.
+			editor.on( &#39;mode&#39;, toggleUndoManager );
+
+			// Disable undo manager when in read-only mode.
+			editor.on( &#39;readOnly&#39;, toggleUndoManager );
+
+			if ( editor.ui.addButton ) {
+				editor.ui.addButton( &#39;Undo&#39;, {
+					label: editor.lang.undo.undo,
+					command: &#39;undo&#39;,
+					toolbar: &#39;undo,10&#39;
+				} );
+
+				editor.ui.addButton( &#39;Redo&#39;, {
+					label: editor.lang.undo.redo,
+					command: &#39;redo&#39;,
+					toolbar: &#39;undo,20&#39;
 				} );
 			}
 
-			editor.addMode( &#39;wysiwyg&#39;, function( callback ) {
-				var src = &#39;document.open();&#39; +
-					// In IE, the document domain must be set any time we call document.open().
-					( CKEDITOR.env.ie ? &#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; : &#39;&#39; ) +
-					&#39;document.close();&#39;;
+<span id='CKEDITOR-editor-method-resetUndo'>			/**
+</span>			 * Resets the undo stack.
+			 *
+			 * @member CKEDITOR.editor
+			 */
+			editor.resetUndo = function() {
+				// Reset the undo stack.
+				undoManager.reset();
 
-				// With IE, the custom domain has to be taken care at first,
-				// for other browers, the &#39;src&#39; attribute should be left empty to
-				// trigger iframe&#39;s &#39;load&#39; event.
-				src = CKEDITOR.env.air ? &#39;javascript:void(0)&#39; : CKEDITOR.env.ie ? &#39;javascript:void(function(){&#39; + encodeURIComponent( src ) + &#39;}())&#39;
-					:
-					&#39;&#39;;
+				// Create the first image.
+				editor.fire( &#39;saveSnapshot&#39; );
+			};
 
-				var iframe = CKEDITOR.dom.element.createFromHtml( &#39;&lt;iframe src=&quot;&#39; + src + &#39;&quot; frameBorder=&quot;0&quot;&gt;&lt;/iframe&gt;&#39; );
-				iframe.setStyles( { width: &#39;100%&#39;, height: &#39;100%&#39; } );
-				iframe.addClass( &#39;cke_wysiwyg_frame cke_reset&#39; );
-
-				var contentSpace = editor.ui.space( &#39;contents&#39; );
-				contentSpace.append( iframe );
-
-
-				// Asynchronous iframe loading is only required in IE&gt;8 and Gecko (other reasons probably).
-				// Do not use it on WebKit as it&#39;ll break the browser-back navigation.
-				var useOnloadEvent = CKEDITOR.env.ie || CKEDITOR.env.gecko;
-				if ( useOnloadEvent )
-					iframe.on( &#39;load&#39;, onLoad );
-
-				var frameLabel = editor.title,
-					frameDesc = editor.lang.common.editorHelp;
-
-				if ( frameLabel ) {
-					if ( CKEDITOR.env.ie )
-						frameLabel += &#39;, &#39; + frameDesc;
-
-					iframe.setAttribute( &#39;title&#39;, frameLabel );
-				}
-
-				var labelId = CKEDITOR.tools.getNextId(),
-					desc = CKEDITOR.dom.element.createFromHtml( &#39;&lt;span id=&quot;&#39; + labelId + &#39;&quot; class=&quot;cke_voice_label&quot;&gt;&#39; + frameDesc + &#39;&lt;/span&gt;&#39; );
-
-				contentSpace.append( desc, 1 );
-
-				// Remove the ARIA description.
-				editor.on( &#39;beforeModeUnload&#39;, function( evt ) {
-					evt.removeListener();
-					desc.remove();
-				} );
-
-				iframe.setAttributes( {
-					&#39;aria-describedby&#39;: labelId,
-					tabIndex: editor.tabIndex,
-					allowTransparency: &#39;true&#39;
-				} );
-
-				// Execute onLoad manually for all non IE||Gecko browsers.
-				!useOnloadEvent &amp;&amp; onLoad();
-
-				if ( CKEDITOR.env.webkit ) {
-					// Webkit: iframe size doesn&#39;t auto fit well. (#7360)
-					var onResize = function() {
-						// Hide the iframe to get real size of the holder. (#8941)
-						contentSpace.setStyle( &#39;width&#39;, &#39;100%&#39; );
-
-						iframe.hide();
-						iframe.setSize( &#39;width&#39;, contentSpace.getSize( &#39;width&#39; ) );
-						contentSpace.removeStyle( &#39;width&#39; );
-						iframe.show();
-					};
-
-					iframe.setCustomData( &#39;onResize&#39;, onResize );
-
-					CKEDITOR.document.getWindow().on( &#39;resize&#39;, onResize );
-				}
-
-				editor.fire( &#39;ariaWidget&#39;, iframe );
-
-				function onLoad( evt ) {
-					evt &amp;&amp; evt.removeListener();
-					editor.editable( new framedWysiwyg( editor, iframe.$.contentWindow.document.body ) );
-					editor.setData( editor.getData( 1 ), callback );
-				}
+<span id='CKEDITOR-editor-event-updateSnapshot'>			/**
+</span>			 * Amends the top of the undo stack (last undo image) with the current DOM changes.
+			 *
+			 *		function() {
+			 *			editor.fire( &#39;saveSnapshot&#39; );
+			 *			editor.document.body.append(...);
+			 *			// Makes new changes following the last undo snapshot a part of it.
+			 *			editor.fire( &#39;updateSnapshot&#39; );
+			 *			..
+			 *		}
+			 *
+			 * @event updateSnapshot
+			 * @member CKEDITOR.editor
+ 			 * @param {CKEDITOR.editor} editor This editor instance.
+			 */
+			editor.on( &#39;updateSnapshot&#39;, function() {
+				if ( undoManager.currentImage )
+					undoManager.update();
 			} );
+
+<span id='CKEDITOR-editor-event-lockSnapshot'>			/**
+</span>			 * Locks the undo manager to prevent any save/update operations.
+			 *
+			 * It is convenient to lock the undo manager before performing DOM operations
+			 * that should not be recored (e.g. auto paragraphing).
+			 *
+			 * See {@link CKEDITOR.plugins.undo.UndoManager#lock} for more details.
+			 *
+			 * **Note:** In order to unlock the undo manager, {@link #unlockSnapshot} has to be fired
+			 * the same number of times that `lockSnapshot` has been fired.
+			 *
+			 * @since 4.0
+			 * @event lockSnapshot
+			 * @member CKEDITOR.editor
+ 			 * @param {CKEDITOR.editor} editor This editor instance.
+			 * @param data
+			 * @param {Boolean} [data.dontUpdate] When set to `true` the last snapshot will not be updated
+			 * with the current contents and selection. Read more in the {@link CKEDITOR.plugins.undo.UndoManager#lock} method.
+			 * @param {Boolean} [data.forceUpdate] When set to `true` the last snapshot will always be updated
+			 * with the current contents and selection. Read more in the {@link CKEDITOR.plugins.undo.UndoManager#lock} method.
+			 */
+			editor.on( &#39;lockSnapshot&#39;, function( evt ) {
+				var data = evt.data;
+				undoManager.lock( data &amp;&amp; data.dontUpdate, data &amp;&amp; data.forceUpdate );
+			} );
+
+<span id='CKEDITOR-editor-event-unlockSnapshot'>			/**
+</span>			 * Unlocks the undo manager and updates the latest snapshot.
+			 *
+			 * @since 4.0
+			 * @event unlockSnapshot
+			 * @member CKEDITOR.editor
+ 			 * @param {CKEDITOR.editor} editor This editor instance.
+			 */
+			editor.on( &#39;unlockSnapshot&#39;, undoManager.unlock, undoManager );
 		}
 	} );
 
-	function onDomReady( win ) {
-		var editor = this.editor,
-			doc = win.document,
-			body = doc.body;
+	CKEDITOR.plugins.undo = {};
 
-		// Remove helper scripts from the DOM.
-		var script = doc.getElementById( &#39;cke_actscrpt&#39; );
-		script &amp;&amp; script.parentNode.removeChild( script );
-		script = doc.getElementById( &#39;cke_shimscrpt&#39; );
-		script &amp;&amp; script.parentNode.removeChild( script );
+<span id='CKEDITOR-plugins-undo-Image-method-constructor'><span id='CKEDITOR-plugins-undo-Image'>	/**
+</span></span>	 * Undoes the snapshot which represents the current document status.
+	 *
+	 * @private
+	 * @class CKEDITOR.plugins.undo.Image
+	 * @constructor Creates an Image class instance.
+	 * @param {CKEDITOR.editor} editor The editor instance on which the image is created.
+	 * @param {Boolean} [contentsOnly] If set to `true` image will contain only contents, without selection.
+	 */
+	var Image = CKEDITOR.plugins.undo.Image = function( editor, contentsOnly ) {
+			this.editor = editor;
 
-		if ( CKEDITOR.env.gecko ) {
-			// Force Gecko to change contentEditable from false to true on domReady
-			// (because it&#39;s previously set to true on iframe&#39;s body creation).
-			// Otherwise del/backspace and some other editable features will be broken in Fx &lt;4
-			// See: #107 and https://bugzilla.mozilla.org/show_bug.cgi?id=440916
-			body.contentEditable = false;
+			editor.fire( &#39;beforeUndoImage&#39; );
 
-			// Remove any leading &lt;br&gt; which is between the &lt;body&gt; and the comment.
-			// This one fixes Firefox 3.6 bug: the browser inserts a leading &lt;br&gt;
-			// on document.write if the body has contenteditable=&quot;true&quot;.
-			if ( CKEDITOR.env.version &lt; 20000 ) {
-				body.innerHTML = body.innerHTML.replace( /^.*&lt;!-- cke-content-start --&gt;/, &#39;&#39; );
+			var contents = editor.getSnapshot();
 
-				// The above hack messes up the selection in FF36.
-				// To clean this up, manually select collapsed range that
-				// starts within the body.
-				setTimeout( function() {
-					var range = new CKEDITOR.dom.range( new CKEDITOR.dom.document( doc ) );
-					range.setStart( new CKEDITOR.dom.node( body ), 0 );
-					editor.getSelection().selectRanges( [ range ] );
-				}, 0 );
-			}
-		}
+			// In IE, we need to remove the expando attributes.
+			if ( CKEDITOR.env.ie &amp;&amp; contents )
+				contents = contents.replace( /\s+data-cke-expando=&quot;.*?&quot;/g, &#39;&#39; );
 
-		body.contentEditable = true;
+			this.contents = contents;
 
-		if ( CKEDITOR.env.ie ) {
-			// Don&#39;t display the focus border.
-			body.hideFocus = true;
-
-			// Disable and re-enable the body to avoid IE from
-			// taking the editing focus at startup. (#141 / #523)
-			body.disabled = true;
-			body.removeAttribute( &#39;disabled&#39; );
-		}
-
-		delete this._.isLoadingData;
-
-		// Play the magic to alter element reference to the reloaded one.
-		this.$ = body;
-
-		doc = new CKEDITOR.dom.document( doc );
-
-		this.setup();
-
-		if ( CKEDITOR.env.ie ) {
-			doc.getDocumentElement().addClass( doc.$.compatMode );
-
-			// Prevent IE from leaving new paragraph after deleting all contents in body. (#6966)
-			editor.config.enterMode != CKEDITOR.ENTER_P &amp;&amp; this.attachListener( doc, &#39;selectionchange&#39;, function() {
-				var body = doc.getBody(),
-					sel = editor.getSelection(),
-					range = sel &amp;&amp; sel.getRanges()[ 0 ];
-
-				if ( range &amp;&amp; body.getHtml().match( /^&lt;p&gt;(?:&amp;nbsp;|&lt;br&gt;)&lt;\/p&gt;$/i ) &amp;&amp; range.startContainer.equals( body ) ) {
-					// Avoid the ambiguity from a real user cursor position.
-					setTimeout( function() {
-						range = editor.getSelection().getRanges()[ 0 ];
-						if ( !range.startContainer.equals( &#39;body&#39; ) ) {
-							body.getFirst().remove( 1 );
-							range.moveToElementEditEnd( body );
-							range.select();
-						}
-					}, 0 );
-				}
-			} );
-		}
-
-		// Fix problem with cursor not appearing in Webkit and IE11+ when clicking below the body (#10945, #10906).
-		// Fix for older IEs (8-10 and QM) is placed inside selection.js.
-		if ( CKEDITOR.env.webkit || ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &gt; 10 ) ) {
-			doc.getDocumentElement().on( &#39;mousedown&#39;, function( evt ) {
-				if ( evt.data.getTarget().is( &#39;html&#39; ) ) {
-					// IE needs this timeout. Webkit does not, but it does not cause problems too.
-					setTimeout( function() {
-						editor.editable().focus();
-					} );
-				}
-			} );
-		}
-
-		// ## START : disableNativeTableHandles and disableObjectResizing settings.
-
-		// Enable dragging of position:absolute elements in IE.
-		try {
-			editor.document.$.execCommand( &#39;2D-position&#39;, false, true );
-		} catch ( e ) {}
-
-		// IE, Opera and Safari may not support it and throw errors.
-		try {
-			editor.document.$.execCommand( &#39;enableInlineTableEditing&#39;, false, !editor.config.disableNativeTableHandles );
-		} catch ( e ) {}
-
-		if ( editor.config.disableObjectResizing ) {
-			try {
-				this.getDocument().$.execCommand( &#39;enableObjectResizing&#39;, false, false );
-			} catch ( e ) {
-				// For browsers in which the above method failed, we can cancel the resizing on the fly (#4208)
-				this.attachListener( this, CKEDITOR.env.ie ? &#39;resizestart&#39; : &#39;resize&#39;, function( evt ) {
-					evt.data.preventDefault();
-				} );
-			}
-		}
-
-		if ( CKEDITOR.env.gecko || CKEDITOR.env.ie &amp;&amp; editor.document.$.compatMode == &#39;CSS1Compat&#39; ) {
-			this.attachListener( this, &#39;keydown&#39;, function( evt ) {
-				var keyCode = evt.data.getKeystroke();
-
-				// PageUp OR PageDown
-				if ( keyCode == 33 || keyCode == 34 ) {
-					// PageUp/PageDown scrolling is broken in document
-					// with standard doctype, manually fix it. (#4736)
-					if ( CKEDITOR.env.ie ) {
-						setTimeout( function() {
-							editor.getSelection().scrollIntoView();
-						}, 0 );
-					}
-					// Page up/down cause editor selection to leak
-					// outside of editable thus we try to intercept
-					// the behavior, while it affects only happen
-					// when editor contents are not overflowed. (#7955)
-					else if ( editor.window.$.innerHeight &gt; this.$.offsetHeight ) {
-						var range = editor.createRange();
-						range[ keyCode == 33 ? &#39;moveToElementEditStart&#39; : &#39;moveToElementEditEnd&#39; ]( this );
-						range.select();
-						evt.data.preventDefault();
-					}
-				}
-			} );
-		}
-
-		if ( CKEDITOR.env.ie ) {
-			// [IE] Iframe will still keep the selection when blurred, if
-			// focus is moved onto a non-editing host, e.g. link or button, but
-			// it becomes a problem for the object type selection, since the resizer
-			// handler attached on it will mark other part of the UI, especially
-			// for the dialog. (#8157)
-			// [IE&lt;8 &amp; Opera] Even worse For old IEs, the cursor will not vanish even if
-			// the selection has been moved to another text input in some cases. (#4716)
-			//
-			// Now the range restore is disabled, so we simply force IE to clean
-			// up the selection before blur.
-			this.attachListener( doc, &#39;blur&#39;, function() {
-				// Error proof when the editor is not visible. (#6375)
-				try {
-					doc.$.selection.empty();
-				} catch ( er ) {}
-			} );
-		}
-
-		// ## END
-
-
-		var title = editor.document.getElementsByTag( &#39;title&#39; ).getItem( 0 );
-		title.data( &#39;cke-title&#39;, editor.document.$.title );
-
-		// [IE] JAWS will not recognize the aria label we used on the iframe
-		// unless the frame window title string is used as the voice label,
-		// backup the original one and restore it on output.
-		if ( CKEDITOR.env.ie )
-			editor.document.$.title = this._.docTitle;
-
-		CKEDITOR.tools.setTimeout( function() {
-			editor.fire( &#39;contentDom&#39; );
-
-			if ( this._.isPendingFocus ) {
-				editor.focus();
-				this._.isPendingFocus = false;
+			if ( !contentsOnly ) {
+				var selection = contents &amp;&amp; editor.getSelection();
+				this.bookmarks = selection &amp;&amp; selection.createBookmarks2( true );
 			}
 
-			setTimeout( function() {
-				editor.fire( &#39;dataReady&#39; );
-			}, 0 );
+			editor.fire( &#39;afterUndoImage&#39; );
+		};
 
-			// IE BUG: IE might have rendered the iframe with invisible contents.
-			// (#3623). Push some inconsequential CSS style changes to force IE to
-			// refresh it.
-			//
-			// Also, for some unknown reasons, short timeouts (e.g. 100ms) do not
-			// fix the problem. :(
-			if ( CKEDITOR.env.ie ) {
-				setTimeout( function() {
-					if ( editor.document ) {
-						var $body = editor.document.$.body;
-						$body.runtimeStyle.marginBottom = &#39;0px&#39;;
-						$body.runtimeStyle.marginBottom = &#39;&#39;;
-					}
-				}, 1000 );
+	// Attributes that browser may changing them when setting via innerHTML.
+	var protectedAttrs = /\b(?:href|src|name)=&quot;[^&quot;]*?&quot;/gi;
+
+	Image.prototype = {
+		equalsContent: function( otherImage ) {
+			var thisContents = this.contents,
+				otherContents = otherImage.contents;
+
+			// For IE7 and IE QM: Comparing only the protected attribute values but not the original ones.(#4522)
+			if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks ) ) {
+				thisContents = thisContents.replace( protectedAttrs, &#39;&#39; );
+				otherContents = otherContents.replace( protectedAttrs, &#39;&#39; );
 			}
-		}, 0, this );
-	}
 
-	var framedWysiwyg = CKEDITOR.tools.createClass( {
-		$: function( editor ) {
-			this.base.apply( this, arguments );
+			if ( thisContents != otherContents )
+				return false;
 
-			this._.frameLoadedHandler = CKEDITOR.tools.addFunction( function( win ) {
-				// Avoid opening design mode in a frame window thread,
-				// which will cause host page scrolling.(#4397)
-				CKEDITOR.tools.setTimeout( onDomReady, 0, this, win );
-			}, this );
-
-			this._.docTitle = this.getWindow().getFrame().getAttribute( &#39;title&#39; );
+			return true;
 		},
 
-		base: CKEDITOR.editable,
+		equalsSelection: function( otherImage ) {
+			var bookmarksA = this.bookmarks,
+				bookmarksB = otherImage.bookmarks;
 
-		proto: {
-			setData: function( data, isSnapshot ) {
-				var editor = this.editor;
+			if ( bookmarksA || bookmarksB ) {
+				if ( !bookmarksA || !bookmarksB || bookmarksA.length != bookmarksB.length )
+					return false;
 
-				if ( isSnapshot ) {
-					this.setHtml( data );
-					// Fire dataReady for the consistency with inline editors
-					// and because it makes sense. (#10370)
-					editor.fire( &#39;dataReady&#39; );
+				for ( var i = 0; i &lt; bookmarksA.length; i++ ) {
+					var bookmarkA = bookmarksA[ i ],
+						bookmarkB = bookmarksB[ i ];
+
+					if ( bookmarkA.startOffset != bookmarkB.startOffset || bookmarkA.endOffset != bookmarkB.endOffset || !CKEDITOR.tools.arrayCompare( bookmarkA.start, bookmarkB.start ) || !CKEDITOR.tools.arrayCompare( bookmarkA.end, bookmarkB.end ) )
+						return false;
 				}
+			}
+
+			return true;
+		}
+	};
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-constructor'><span id='CKEDITOR-plugins-undo-UndoManager'>	/**
+</span></span>	 * Main logic for the Redo/Undo feature.
+	 *
+	 * **Note:** This class is not accessible from the global scope.
+	 *
+	 * @private
+	 * @class CKEDITOR.plugins.undo.UndoManager
+	 * @constructor Creates an UndoManager class instance.
+	 * @param {CKEDITOR.editor} editor
+	 */
+	function UndoManager( editor ) {
+		this.editor = editor;
+
+		// Reset the undo stack.
+		this.reset();
+	}
+
+	UndoManager.prototype = {
+<span id='CKEDITOR-plugins-undo-UndoManager-property-locked'>		/**
+</span>		 * When `locked` property is not `null`, the undo manager is locked, so
+		 * operations like `save` or `update` are forbidden.
+		 *
+		 * The manager can be locked/unlocked by the {@link #lock} and {@link #unlock} methods.
+		 *
+		 * @private
+		 * @property {Object} [locked=null]
+		 */
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-type'>		/**
+</span>		 * Handles keystroke support for the undo manager. It is called whenever a keystroke that
+		 * can change the editor contents is pressed.
+		 *
+		 * @param {Number} keystroke The key code.
+		 * @param {Boolean} isCharacter If `true`, it is a character (&#39;a&#39;, &#39;1&#39;, &#39;&amp;&#39;, ...). Otherwise it is the remove key (*Delete* or *Backspace*).
+		 */
+		type: function( keystroke, isCharacter ) {
+			// Create undo snap for every different modifier key.
+			var modifierSnapshot = ( !isCharacter &amp;&amp; keystroke != this.lastKeystroke );
+
+			// Create undo snap on the following cases:
+			// 1. Just start to type .
+			// 2. Typing some content after a modifier.
+			// 3. Typing some content after make a visible selection.
+			var startedTyping = !this.typing || ( isCharacter &amp;&amp; !this.wasCharacter );
+
+			var editor = this.editor;
+
+			if ( startedTyping || modifierSnapshot ) {
+				var beforeTypeImage = new Image( editor ),
+					beforeTypeCount = this.snapshots.length;
+
+				// Use setTimeout, so we give the necessary time to the
+				// browser to insert the character into the DOM.
+				CKEDITOR.tools.setTimeout( function() {
+					var currentSnapshot = editor.getSnapshot();
+
+					// In IE, we need to remove the expando attributes.
+					if ( CKEDITOR.env.ie )
+						currentSnapshot = currentSnapshot.replace( /\s+data-cke-expando=&quot;.*?&quot;/g, &#39;&#39; );
+
+					// If changes have taken place, while not been captured yet (#8459),
+					// compensate the snapshot.
+					if ( beforeTypeImage.contents != currentSnapshot &amp;&amp; beforeTypeCount == this.snapshots.length ) {
+						// It&#39;s safe to now indicate typing state.
+						this.typing = true;
+
+						// This&#39;s a special save, with specified snapshot
+						// and without auto &#39;fireChange&#39;.
+						if ( !this.save( false, beforeTypeImage, false ) )
+							// Drop future snapshots.
+							this.snapshots.splice( this.index + 1, this.snapshots.length - this.index - 1 );
+
+						this.hasUndo = true;
+						this.hasRedo = false;
+
+						this.typesCount = 1;
+						this.modifiersCount = 1;
+
+						this.onChange();
+					}
+				}, 0, this );
+			}
+
+			this.lastKeystroke = keystroke;
+			this.wasCharacter = isCharacter;
+
+			// Create undo snap after typed too much (over 25 times).
+			if ( !isCharacter ) {
+				this.typesCount = 0;
+				this.modifiersCount++;
+
+				if ( this.modifiersCount &gt; 25 ) {
+					this.save( false, null, false );
+					this.modifiersCount = 1;
+				} else {
+					setTimeout( function() {
+						editor.fire( &#39;change&#39; );
+					}, 0 );
+				}
+			} else {
+				this.modifiersCount = 0;
+				this.typesCount++;
+
+				if ( this.typesCount &gt; 25 ) {
+					this.save( false, null, false );
+					this.typesCount = 1;
+				} else {
+					setTimeout( function() {
+						editor.fire( &#39;change&#39; );
+					}, 0 );
+				}
+			}
+
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-reset'>		/**
+</span>		 * Resets the undo stack.
+		 */
+		reset: function() {
+			// Remember last pressed key.
+			this.lastKeystroke = 0;
+
+			// Stack for all the undo and redo snapshots, they&#39;re always created/removed
+			// in consistency.
+			this.snapshots = [];
+
+			// Current snapshot history index.
+			this.index = -1;
+
+			this.limit = this.editor.config.undoStackSize || 20;
+
+			this.currentImage = null;
+
+			this.hasUndo = false;
+			this.hasRedo = false;
+			this.locked = null;
+
+			this.resetType();
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-resetType'>		/**
+</span>		 * Resets all typing variables.
+		 *
+		 * @see #type
+		 */
+		resetType: function() {
+			this.typing = false;
+			delete this.lastKeystroke;
+			this.typesCount = 0;
+			this.modifiersCount = 0;
+		},
+
+		fireChange: function() {
+			this.hasUndo = !!this.getNextImage( true );
+			this.hasRedo = !!this.getNextImage( false );
+			// Reset typing
+			this.resetType();
+			this.onChange();
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-save'>		/**
+</span>		 * Saves a snapshot of the document image for later retrieval.
+		 */
+		save: function( onContentOnly, image, autoFireChange ) {
+			var editor = this.editor;
+			// Do not change snapshots stack when locked, editor is not ready,
+			// editable is not ready or when editor is in mode difference than &#39;wysiwyg&#39;.
+			if ( this.locked || editor.status != &#39;ready&#39; || editor.mode != &#39;wysiwyg&#39; )
+				return false;
+
+			var editable = editor.editable();
+			if ( !editable || editable.status != &#39;ready&#39; )
+				return false;
+
+			var snapshots = this.snapshots;
+
+			// Get a content image.
+			if ( !image )
+				image = new Image( editor );
+
+			// Do nothing if it was not possible to retrieve an image.
+			if ( image.contents === false )
+				return false;
+
+			// Check if this is a duplicate. In such case, do nothing.
+			if ( this.currentImage ) {
+				if ( image.equalsContent( this.currentImage ) ) {
+					if ( onContentOnly )
+						return false;
+
+					if ( image.equalsSelection( this.currentImage ) )
+						return false;
+				} else
+					editor.fire( &#39;change&#39; );
+			}
+
+			// Drop future snapshots.
+			snapshots.splice( this.index + 1, snapshots.length - this.index - 1 );
+
+			// If we have reached the limit, remove the oldest one.
+			if ( snapshots.length == this.limit )
+				snapshots.shift();
+
+			// Add the new image, updating the current index.
+			this.index = snapshots.push( image ) - 1;
+
+			this.currentImage = image;
+
+			if ( autoFireChange !== false )
+				this.fireChange();
+			return true;
+		},
+
+		restoreImage: function( image ) {
+			// Bring editor focused to restore selection.
+			var editor = this.editor,
+				sel;
+
+			if ( image.bookmarks ) {
+				editor.focus();
+				// Retrieve the selection beforehand. (#8324)
+				sel = editor.getSelection();
+			}
+
+			// Start transaction - do not allow any mutations to the
+			// snapshots stack done when selecting bookmarks (much probably
+			// by selectionChange listener).
+			this.locked = 1;
+
+			this.editor.loadSnapshot( image.contents );
+
+			if ( image.bookmarks )
+				sel.selectBookmarks( image.bookmarks );
+			else if ( CKEDITOR.env.ie ) {
+				// IE BUG: If I don&#39;t set the selection to *somewhere* after setting
+				// document contents, then IE would create an empty paragraph at the bottom
+				// the next time the document is modified.
+				var $range = this.editor.document.getBody().$.createTextRange();
+				$range.collapse( true );
+				$range.select();
+			}
+
+			this.locked = 0;
+
+			this.index = image.index;
+			this.currentImage = this.snapshots[ this.index ];
+
+			// Update current image with the actual editor
+			// content, since actualy content may differ from
+			// the original snapshot due to dom change. (#4622)
+			this.update();
+			this.fireChange();
+
+			editor.fire( &#39;change&#39; );
+		},
+
+		// Get the closest available image.
+		getNextImage: function( isUndo ) {
+			var snapshots = this.snapshots,
+				currentImage = this.currentImage,
+				image, i;
+
+			if ( currentImage ) {
+				if ( isUndo ) {
+					for ( i = this.index - 1; i &gt;= 0; i-- ) {
+						image = snapshots[ i ];
+						if ( !currentImage.equalsContent( image ) ) {
+							image.index = i;
+							return image;
+						}
+					}
+				} else {
+					for ( i = this.index + 1; i &lt; snapshots.length; i++ ) {
+						image = snapshots[ i ];
+						if ( !currentImage.equalsContent( image ) ) {
+							image.index = i;
+							return image;
+						}
+					}
+				}
+			}
+
+			return null;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-redoable'>		/**
+</span>		 * Checks the current redo state.
+		 *
+		 * @returns {Boolean} Whether the document has a previous state to retrieve.
+		 */
+		redoable: function() {
+			return this.enabled &amp;&amp; this.hasRedo;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-undoable'>		/**
+</span>		 * Checks the current undo state.
+		 *
+		 * @returns {Boolean} Whether the document has a future state to restore.
+		 */
+		undoable: function() {
+			return this.enabled &amp;&amp; this.hasUndo;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-undo'>		/**
+</span>		 * Performs undo on current index.
+		 */
+		undo: function() {
+			if ( this.undoable() ) {
+				this.save( true );
+
+				var image = this.getNextImage( true );
+				if ( image )
+					return this.restoreImage( image ), true;
+			}
+
+			return false;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-redo'>		/**
+</span>		 * Performs redo on current index.
+		 */
+		redo: function() {
+			if ( this.redoable() ) {
+				// Try to save. If no changes have been made, the redo stack
+				// will not change, so it will still be redoable.
+				this.save( true );
+
+				// If instead we had changes, we can&#39;t redo anymore.
+				if ( this.redoable() ) {
+					var image = this.getNextImage( false );
+					if ( image )
+						return this.restoreImage( image ), true;
+				}
+			}
+
+			return false;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-update'>		/**
+</span>		 * Updates the last snapshot of the undo stack with the current editor content.
+		 *
+		 * @param {CKEDITOR.plugins.undo.Image} [newImage] The image which will replace the current one.
+		 * If not set defaults to image taken from editor.
+		 */
+		update: function( newImage ) {
+			// Do not change snapshots stack is locked.
+			if ( this.locked )
+				return;
+
+			if ( !newImage )
+				newImage = new Image( this.editor );
+
+			var i = this.index,
+				snapshots = this.snapshots;
+
+			// Find all previous snapshots made for the same content (which differ
+			// only by selection) and replace all of them with the current image.
+			while ( i &gt; 0 &amp;&amp; this.currentImage.equalsContent( snapshots[ i - 1 ] ) )
+				i -= 1;
+
+			snapshots.splice( i, this.index - i + 1, newImage );
+			this.index = i;
+			this.currentImage = newImage;
+		},
+
+<span id='CKEDITOR-plugins-undo-UndoManager-method-lock'>		/**
+</span>		 * Locks the snapshot stack to prevent any save/update operations and when necessary,
+		 * updates the tip of the snapshot stack with the DOM changes introduced during the
+		 * locked period, after the {@link #unlock} method is called.
+		 *
+		 * It is mainly used to ensure any DOM operations that should not be recorded
+		 * (e.g. auto paragraphing) are not added to the stack.
+		 *
+		 * **Note:** For every `lock` call you must call {@link #unlock} once to unlock the undo manager.
+		 *
+		 * @since 4.0
+		 * @param {Boolean} [dontUpdate] When set to `true`, the last snapshot will not be updated
+		 * with current contents and selection. By default, if undo manager was up to date when the lock started,
+		 * the last snapshot will be updated to the current state when unlocking. This means that all changes
+		 * done during the lock will be merged into the previous snapshot or the next one. Use this option to gain
+		 * more control over this behavior. For example, it is possible to group changes done during the lock into
+		 * a separate snapshot.
+		 * @param {Boolean} [forceUpdate] When set to `true` the last snapshot will always be updated with the
+		 * current contents and selection regardless of the current state of undo manager.
+		 * When not set the last snapshot will be updated only if undo manager was up to date when locking.
+		 * Additionally, this option makes it possible to lock snapshot when editor is not in `wysiwyg` mode,
+		 * because when it&#39;s passed snapshots will not need to be compared.
+		 */
+		lock: function( dontUpdate, forceUpdate ) {
+			if ( !this.locked ) {
+				if ( dontUpdate )
+					this.locked = { level: 1 };
 				else {
-					this._.isLoadingData = true;
-					editor._.dataStore = { id: 1 };
+					var update = null;
 
-					var config = editor.config,
-						fullPage = config.fullPage,
-						docType = config.docType;
+					if ( forceUpdate )
+						update = true;
+					else {
+						// Make a contents image. Don&#39;t include bookmarks, because:
+						// * we don&#39;t compare them,
+						// * there&#39;s a chance that DOM has been changed since
+						// locked (e.g. fake) selection was made, so createBookmark2 could fail.
+						// http://dev.ckeditor.com/ticket/11027#comment:3
+						var imageBefore = new Image( this.editor, true );
 
-					// Build the additional stuff to be included into &lt;head&gt;.
-					var headExtra = CKEDITOR.tools.buildStyleHtml( iframeCssFixes() )
-						                .replace( /&lt;style&gt;/, &#39;&lt;style data-cke-temp=&quot;1&quot;&gt;&#39; );
-
-					if ( !fullPage )
-						headExtra += CKEDITOR.tools.buildStyleHtml( editor.config.contentsCss );
-
-					var baseTag = config.baseHref ? &#39;&lt;base href=&quot;&#39; + config.baseHref + &#39;&quot; data-cke-temp=&quot;1&quot; /&gt;&#39; : &#39;&#39;;
-
-					if ( fullPage ) {
-						// Search and sweep out the doctype declaration.
-						data = data.replace( /&lt;!DOCTYPE[^&gt;]*&gt;/i, function( match ) {
-							editor.docType = docType = match;
-							return &#39;&#39;;
-						} ).replace( /&lt;\?xml\s[^\?]*\?&gt;/i, function( match ) {
-							editor.xmlDeclaration = match;
-							return &#39;&#39;;
-						} );
+						// If current editor content matches the tip of snapshot stack,
+						// the stack tip must be updated by unlock, to include any changes made
+						// during this period.
+						if ( this.currentImage &amp;&amp; this.currentImage.equalsContent( imageBefore ) )
+							update = imageBefore;
 					}
 
-					// Get the HTML version of the data.
-					data = editor.dataProcessor.toHtml( data );
+					this.locked = { update: update, level: 1 };
+				}
+			}
+			// Increase the level of lock.
+			else
+				this.locked.level++;
+		},
 
-					if ( fullPage ) {
-						// Check if the &lt;body&gt; tag is available.
-						if ( !( /&lt;body[\s|&gt;]/ ).test( data ) )
-							data = &#39;&lt;body&gt;&#39; + data;
+<span id='CKEDITOR-plugins-undo-UndoManager-method-unlock'>		/**
+</span>		 * Unlocks the snapshot stack and checks to amend the last snapshot.
+		 *
+		 * See {@link #lock} for more details.
+		 *
+		 * @since 4.0
+		 */
+		unlock: function() {
+			if ( this.locked ) {
+				// Decrease level of lock and check if equals 0, what means that undoM is completely unlocked.
+				if ( !--this.locked.level ) {
+					var update = this.locked.update;
 
-						// Check if the &lt;html&gt; tag is available.
-						if ( !( /&lt;html[\s|&gt;]/ ).test( data ) )
-							data = &#39;&lt;html&gt;&#39; + data + &#39;&lt;/html&gt;&#39;;
+					this.locked = null;
 
-						// Check if the &lt;head&gt; tag is available.
-						if ( !( /&lt;head[\s|&gt;]/ ).test( data ) )
-							data = data.replace( /&lt;html[^&gt;]*&gt;/, &#39;$&amp;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;&#39; );
-						else if ( !( /&lt;title[\s|&gt;]/ ).test( data ) )
-							data = data.replace( /&lt;head[^&gt;]*&gt;/, &#39;$&amp;&lt;title&gt;&lt;/title&gt;&#39; );
+					// forceUpdate was passed to lock().
+					if ( update === true )
+						this.update();
+					// update is instance of Image.
+					else if ( update ) {
+						var newImage = new Image( this.editor, true );
 
-						// The base must be the first tag in the HEAD, e.g. to get relative
-						// links on styles.
-						baseTag &amp;&amp; ( data = data.replace( /&lt;head&gt;/, &#39;$&amp;&#39; + baseTag ) );
-
-						// Inject the extra stuff into &lt;head&gt;.
-						// Attention: do not change it before testing it well. (V2)
-						// This is tricky... if the head ends with &lt;meta ... content type&gt;,
-						// Firefox will break. But, it works if we place our extra stuff as
-						// the last elements in the HEAD.
-						data = data.replace( /&lt;\/head\s*&gt;/, headExtra + &#39;$&amp;&#39; );
-
-						// Add the DOCTYPE back to it.
-						data = docType + data;
-					} else {
-						data = config.docType +
-							&#39;&lt;html dir=&quot;&#39; + config.contentsLangDirection + &#39;&quot;&#39; +
-								&#39; lang=&quot;&#39; + ( config.contentsLanguage || editor.langCode ) + &#39;&quot;&gt;&#39; +
-							&#39;&lt;head&gt;&#39; +
-								&#39;&lt;title&gt;&#39; + this._.docTitle + &#39;&lt;/title&gt;&#39; +
-								baseTag +
-								headExtra +
-							&#39;&lt;/head&gt;&#39; +
-							&#39;&lt;body&#39; + ( config.bodyId ? &#39; id=&quot;&#39; + config.bodyId + &#39;&quot;&#39; : &#39;&#39; ) +
-								( config.bodyClass ? &#39; class=&quot;&#39; + config.bodyClass + &#39;&quot;&#39; : &#39;&#39; ) +
-							&#39;&gt;&#39; +
-								data +
-							&#39;&lt;/body&gt;&#39; +
-							&#39;&lt;/html&gt;&#39;;
-					}
-
-					if ( CKEDITOR.env.gecko ) {
-						// Hack to make Fx put cursor at the start of doc on fresh focus.
-						data = data.replace( /&lt;body/, &#39;&lt;body contenteditable=&quot;true&quot; &#39; );
-
-						// Another hack which is used by onDomReady to remove a leading
-						// &lt;br&gt; which is inserted by Firefox 3.6 when document.write is called.
-						// This additional &lt;br&gt; is present because of contenteditable=&quot;true&quot;
-						if ( CKEDITOR.env.version &lt; 20000 )
-							data = data.replace( /&lt;body[^&gt;]*&gt;/, &#39;$&amp;&lt;!-- cke-content-start --&gt;&#39;  );
-					}
-
-					// The script that launches the bootstrap logic on &#39;domReady&#39;, so the document
-					// is fully editable even before the editing iframe is fully loaded (#4455).
-					var bootstrapCode =
-						&#39;&lt;script id=&quot;cke_actscrpt&quot; type=&quot;text/javascript&quot;&#39; + ( CKEDITOR.env.ie ? &#39; defer=&quot;defer&quot; &#39; : &#39;&#39; ) + &#39;&gt;&#39; +
-							&#39;var wasLoaded=0;&#39; +	// It must be always set to 0 as it remains as a window property.
-							&#39;function onload(){&#39; +
-								&#39;if(!wasLoaded)&#39; +	// FF3.6 calls onload twice when editor.setData. Stop that.
-									&#39;window.parent.CKEDITOR.tools.callFunction(&#39; + this._.frameLoadedHandler + &#39;,window);&#39; +
-								&#39;wasLoaded=1;&#39; +
-							&#39;}&#39; +
-							( CKEDITOR.env.ie ? &#39;onload();&#39; : &#39;document.addEventListener(&quot;DOMContentLoaded&quot;, onload, false );&#39; ) +
-						&#39;&lt;/script&gt;&#39;;
-
-					// For IE&lt;9 add support for HTML5&#39;s elements.
-					// Note: this code must not be deferred.
-					if ( CKEDITOR.env.ie &amp;&amp; CKEDITOR.env.version &lt; 9 ) {
-						bootstrapCode +=
-							&#39;&lt;script id=&quot;cke_shimscrpt&quot;&gt;&#39; +
-								&#39;window.parent.CKEDITOR.tools.enableHtml5Elements(document)&#39; +
-							&#39;&lt;/script&gt;&#39;;
-					}
-
-					data = data.replace( /(?=\s*&lt;\/(:?head)&gt;)/, bootstrapCode );
-
-					// Current DOM will be deconstructed by document.write, cleanup required.
-					this.clearCustomData();
-					this.clearListeners();
-
-					editor.fire( &#39;contentDomUnload&#39; );
-
-					var doc = this.getDocument();
-
-					// Work around Firefox bug - error prune when called from XUL (#320),
-					// defer it thanks to the async nature of this method.
-					try { doc.write( data ); } catch ( e ) {
-						setTimeout( function() { doc.write( data ); }, 0 );
+						if ( !update.equalsContent( newImage ) )
+							this.update();
 					}
 				}
-			},
-
-			getData: function( isSnapshot ) {
-				if ( isSnapshot )
-					return this.getHtml();
-				else {
-					var editor = this.editor,
-						config = editor.config,
-						fullPage = config.fullPage,
-						docType = fullPage &amp;&amp; editor.docType,
-						xmlDeclaration = fullPage &amp;&amp; editor.xmlDeclaration,
-						doc = this.getDocument();
-
-					var data = fullPage ? doc.getDocumentElement().getOuterHtml() : doc.getBody().getHtml();
-
-					// BR at the end of document is bogus node for Mozilla. (#5293).
-					// Prevent BRs from disappearing from the end of the content
-					// while enterMode is ENTER_BR (#10146).
-					if ( CKEDITOR.env.gecko &amp;&amp; config.enterMode != CKEDITOR.ENTER_BR )
-						data = data.replace( /&lt;br&gt;(?=\s*(:?$|&lt;\/body&gt;))/, &#39;&#39; );
-
-					data = editor.dataProcessor.toDataFormat( data );
-
-					if ( xmlDeclaration )
-						data = xmlDeclaration + &#39;\n&#39; + data;
-					if ( docType )
-						data = docType + &#39;\n&#39; + data;
-
-					return data;
-				}
-			},
-
-			focus: function() {
-				if ( this._.isLoadingData )
-					this._.isPendingFocus = true;
-				else
-					framedWysiwyg.baseProto.focus.call( this );
-			},
-
-			detach: function() {
-				var editor = this.editor,
-					doc = editor.document,
-					iframe = editor.window.getFrame();
-
-				framedWysiwyg.baseProto.detach.call( this );
-
-				// Memory leak proof.
-				this.clearCustomData();
-				doc.getDocumentElement().clearCustomData();
-				iframe.clearCustomData();
-				CKEDITOR.tools.removeFunction( this._.frameLoadedHandler );
-
-				var onResize = iframe.removeCustomData( &#39;onResize&#39; );
-				onResize &amp;&amp; onResize.removeListener();
-
-				// IE BUG: When destroying editor DOM with the selection remains inside
-				// editing area would break IE7/8&#39;s selection system, we have to put the editing
-				// iframe offline first. (#3812 and #5441)
-				iframe.remove();
 			}
 		}
-	} );
-
-	// DOM modification here should not bother dirty flag.(#4385)
-	function restoreDirty( editor ) {
-		if ( !editor.checkDirty() )
-			setTimeout( function() {
-			editor.resetDirty();
-		}, 0 );
-	}
-
-	function iframeCssFixes() {
-		var css = [];
-
-		// IE&gt;=8 stricts mode doesn&#39;t have &#39;contentEditable&#39; in effect
-		// on element unless it has layout. (#5562)
-		if ( CKEDITOR.document.$.documentMode &gt;= 8 ) {
-			css.push( &#39;html.CSS1Compat [contenteditable=false]{min-height:0 !important}&#39; );
-
-			var selectors = [];
-
-			for ( var tag in CKEDITOR.dtd.$removeEmpty )
-				selectors.push( &#39;html.CSS1Compat &#39; + tag + &#39;[contenteditable=false]&#39; );
-
-			css.push( selectors.join( &#39;,&#39; ) + &#39;{display:inline-block}&#39; );
-		}
-		// Set the HTML style to 100% to have the text cursor in affect (#6341)
-		else if ( CKEDITOR.env.gecko ) {
-			css.push( &#39;html{height:100% !important}&#39; );
-			css.push( &#39;img:-moz-broken{-moz-force-broken-image-icon:1;min-width:24px;min-height:24px}&#39; );
-		}
-
-		// #6341: The text cursor must be set on the editor area.
-		// #6632: Avoid having &quot;text&quot; shape of cursor in IE7 scrollbars.
-		css.push( &#39;html{cursor:text;*cursor:auto}&#39; );
-
-		// Use correct cursor for these elements
-		css.push( &#39;img,input,textarea{cursor:default}&#39; );
-
-		return css.join( &#39;\n&#39; );
-	}
+	};
 } )();
 
-<span id='CKEDITOR-config-cfg-disableObjectResizing'>/**
-</span> * Disables the ability of resize objects (image and tables) in the editing area.
+<span id='CKEDITOR-config-cfg-undoStackSize'>/**
+</span> * The number of undo steps to be saved. The higher value is set, the more
+ * memory is used for it.
  *
- *		config.disableObjectResizing = true;
+ *		config.undoStackSize = 50;
  *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.disableObjectResizing = false;
-
-<span id='CKEDITOR-config-cfg-disableNativeTableHandles'>/**
-</span> * Disables the &quot;table tools&quot; offered natively by the browser (currently
- * Firefox only) to make quick table editing operations, like adding or
- * deleting rows and columns.
- *
- *		config.disableNativeTableHandles = false;
- *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.disableNativeTableHandles = true;
-
-<span id='CKEDITOR-config-cfg-disableNativeSpellChecker'>/**
-</span> * Disables the built-in words spell checker if browser provides one.
- *
- * **Note:** Although word suggestions provided by browsers (natively) will
- * not appear in CKEditor&#39;s default context menu,
- * users can always reach the native context menu by holding the
- * *Ctrl* key when right-clicking if {@link #browserContextMenuOnCtrl}
- * is enabled or you&#39;re simply not using the context menu plugin.
- *
- *		config.disableNativeSpellChecker = false;
- *
- * @cfg
- * @member CKEDITOR.config
- */
-CKEDITOR.config.disableNativeSpellChecker = true;
-
-<span id='CKEDITOR-config-cfg-contentsCss'>/**
-</span> * The CSS file(s) to be used to apply style to the contents. It should
- * reflect the CSS used in the final pages where the contents are to be
- * used.
- *
- *		config.contentsCss = &#39;/css/mysitestyles.css&#39;;
- *		config.contentsCss = [&#39;/css/mysitestyles.css&#39;, &#39;/css/anotherfile.css&#39;];
- *
- * @cfg {String/Array} [contentsCss=CKEDITOR.getUrl( &#39;contents.css&#39; )]
- * @member CKEDITOR.config
- */
-CKEDITOR.config.contentsCss = CKEDITOR.getUrl( &#39;contents.css&#39; );
-
-<span id='CKEDITOR-config-cfg-contentsLanguage'>/**
-</span> * Language code of  the writting language which is used to author the editor
- * contents.
- *
- *		config.contentsLanguage = &#39;fr&#39;;
- *
- * @cfg {String} [contentsLanguage=same value with editor&#39;s UI language]
+ * @cfg {Number} [undoStackSize=20]
  * @member CKEDITOR.config
  */
 
-<span id='CKEDITOR-config-cfg-baseHref'>/**
-</span> * The base href URL used to resolve relative and absolute URLs in the
- * editor content.
+<span id='CKEDITOR-editor-event-saveSnapshot'>/**
+</span> * Fired when the editor is about to save an undo snapshot. This event can be
+ * fired by plugins and customizations to make the editor save undo snapshots.
  *
- *		config.baseHref = &#39;http://www.example.com/path/&#39;;
- *
- * @cfg {String} [baseHref=&#39;&#39;]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-autoParagraph'>/**
-</span> * Whether automatically create wrapping blocks around inline contents inside document body,
- * this helps to ensure the integrality of the block enter mode.
- *
- * **Note:** Changing the default value might introduce unpredictable usability issues.
- *
- *		config.autoParagraph = false;
- *
- * @since 3.6
- * @cfg {Boolean} [autoParagraph=true]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-editor-event-ariaWidget'>/**
-</span> * Fired when some elements are added to the document.
- *
- * @event ariaWidget
+ * @event saveSnapshot
  * @member CKEDITOR.editor
  * @param {CKEDITOR.editor} editor This editor instance.
- * @param {CKEDITOR.dom.element} data The element being added.
+ */
+
+<span id='CKEDITOR-editor-event-beforeUndoImage'>/**
+</span> * Fired before an undo image is to be taken. An undo image represents the
+ * editor state at some point. It is saved into the undo store, so the editor is
+ * able to recover the editor state on undo and redo operations.
+ *
+ * @since 3.5.3
+ * @event beforeUndoImage
+ * @member CKEDITOR.editor
+ * @param {CKEDITOR.editor} editor This editor instance.
+ * @see CKEDITOR.editor#afterUndoImage
+ */
+
+<span id='CKEDITOR-editor-event-afterUndoImage'>/**
+</span> * Fired after an undo image is taken. An undo image represents the
+ * editor state at some point. It is saved into the undo store, so the editor is
+ * able to recover the editor state on undo and redo operations.
+ *
+ * @since 3.5.3
+ * @event afterUndoImage
+ * @member CKEDITOR.editor
+ * @param {CKEDITOR.editor} editor This editor instance.
+ * @see CKEDITOR.editor#beforeUndoImage
+ */
+
+<span id='CKEDITOR-editor-event-change'>/**
+</span> * Fired when the content of the editor is changed.
+ *
+ * Due to performance reasons, it is not verified if the content really changed.
+ * The editor instead watches several editing actions that usually result in
+ * changes. This event may thus in some cases be fired when no changes happen
+ * or may even get fired twice.
+ *
+ * If it is important not to get the change event too often, you should compare the
+ * previous and the current editor content inside the event listener.
+ *
+ * @since 4.2
+ * @event change
+ * @member CKEDITOR.editor
+ * @param {CKEDITOR.editor} editor This editor instance.
  */
 </pre>
 </body>

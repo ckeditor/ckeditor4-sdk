@@ -20,66 +20,77 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;popup&#39; );
+<span id='global-property-'>/**
+</span> * @fileOverview Paste as plain text plugin.
+ */
 
-CKEDITOR.tools.extend( CKEDITOR.editor.prototype, {
-<span id='CKEDITOR-editor-method-popup'>	/**
-</span>	 * Opens Browser in a popup. The `width` and `height` parameters accept
-	 * numbers (pixels) or percent (of screen size) values.
-	 *
-	 * @member CKEDITOR.editor
-	 * @param {String} url The url of the external file browser.
-	 * @param {Number/String} [width=&#39;80%&#39;] Popup window width.
-	 * @param {Number/String} [height=&#39;70%&#39;] Popup window height.
-	 * @param {String} [options=&#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39;]
-	 * Popup window features.
-	 */
-	popup: function( url, width, height, options ) {
-		width = width || &#39;80%&#39;;
-		height = height || &#39;70%&#39;;
+( function() {
+	// The pastetext command definition.
+	var pasteTextCmd = {
+		// Snapshots are done manually by editable.insertXXX methods.
+		canUndo: false,
+		async: true,
 
-		if ( typeof width == &#39;string&#39; &amp;&amp; width.length &gt; 1 &amp;&amp; width.substr( width.length - 1, 1 ) == &#39;%&#39; )
-			width = parseInt( window.screen.width * parseInt( width, 10 ) / 100, 10 );
+		exec: function( editor ) {
+			editor.getClipboardData( { title: editor.lang.pastetext.title }, function( data ) {
+				// Do not use editor#paste, because it would start from beforePaste event.
+				data &amp;&amp; editor.fire( &#39;paste&#39;, { type: &#39;text&#39;, dataValue: data.dataValue } );
 
-		if ( typeof height == &#39;string&#39; &amp;&amp; height.length &gt; 1 &amp;&amp; height.substr( height.length - 1, 1 ) == &#39;%&#39; )
-			height = parseInt( window.screen.height * parseInt( height, 10 ) / 100, 10 );
-
-		if ( width &lt; 640 )
-			width = 640;
-
-		if ( height &lt; 420 )
-			height = 420;
-
-		var top = parseInt( ( window.screen.height - height ) / 2, 10 ),
-			left = parseInt( ( window.screen.width - width ) / 2, 10 );
-
-		options = ( options || &#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39; ) + &#39;,width=&#39; + width +
-			&#39;,height=&#39; + height +
-			&#39;,top=&#39; + top +
-			&#39;,left=&#39; + left;
-
-		var popupWindow = window.open( &#39;&#39;, null, options, true );
-
-		// Blocked by a popup blocker.
-		if ( !popupWindow )
-			return false;
-
-		try {
-			// Chrome is problematic with moveTo/resizeTo, but it&#39;s not really needed here (#8855).
-			var ua = navigator.userAgent.toLowerCase();
-			if ( ua.indexOf( &#39; chrome/&#39; ) == -1 ) {
-				popupWindow.moveTo( left, top );
-				popupWindow.resizeTo( width, height );
-			}
-			popupWindow.focus();
-			popupWindow.location.href = url;
-		} catch ( e ) {
-			popupWindow = window.open( url, null, options, true );
+				editor.fire( &#39;afterCommandExec&#39;, {
+					name: &#39;pastetext&#39;,
+					command: pasteTextCmd,
+					returnValue: !!data
+				} );
+			} );
 		}
+	};
 
-		return true;
-	}
-} );
+	// Register the plugin.
+	CKEDITOR.plugins.add( &#39;pastetext&#39;, {
+		requires: &#39;clipboard&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;pastetext,pastetext-rtl&#39;, // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			var commandName = &#39;pastetext&#39;;
+
+			editor.addCommand( commandName, pasteTextCmd );
+
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;PasteText&#39;, {
+				label: editor.lang.pastetext.button,
+				command: commandName,
+				toolbar: &#39;clipboard,40&#39;
+			} );
+
+			if ( editor.config.forcePasteAsPlainText ) {
+				editor.on( &#39;beforePaste&#39;, function( evt ) {
+					// Do NOT overwrite if HTML format is explicitly requested.
+					// This allows pastefromword dominates over pastetext.
+					if ( evt.data.type != &#39;html&#39; )
+						evt.data.type = &#39;text&#39;;
+				} );
+			}
+
+			editor.on( &#39;pasteState&#39;, function( evt ) {
+				editor.getCommand( commandName ).setState( evt.data );
+			} );
+		}
+	} );
+} )();
+
+
+<span id='CKEDITOR-config-cfg-forcePasteAsPlainText'>/**
+</span> * Whether to force all pasting operations to insert on plain text into the
+ * editor, loosing any formatting information possibly available in the source
+ * text.
+ *
+ * **Note:** paste from word (dialog) is not affected by this configuration.
+ *
+ *		config.forcePasteAsPlainText = true;
+ *
+ * @cfg {Boolean} [forcePasteAsPlainText=false]
+ * @member CKEDITOR.config
+ */
 </pre>
 </body>
 </html>

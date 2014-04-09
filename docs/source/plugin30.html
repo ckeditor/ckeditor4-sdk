@@ -20,150 +20,502 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
+<span id='global-property-'>/**
+</span> * @fileOverview The &quot;filebrowser&quot; plugin that adds support for file uploads and
+ *               browsing.
+ *
+ * When a file is uploaded or selected inside the file browser, its URL is
+ * inserted automatically into a field defined in the &lt;code&gt;filebrowser&lt;/code&gt;
+ * attribute. In order to specify a field that should be updated, pass the tab ID and
+ * the element ID, separated with a colon.&lt;br /&gt;&lt;br /&gt;
+ *
+ * &lt;strong&gt;Example 1: (Browse)&lt;/strong&gt;
+ *
+ * &lt;pre&gt;
+ * {
+ * 	type : &#39;button&#39;,
+ * 	id : &#39;browse&#39;,
+ * 	filebrowser : &#39;tabId:elementId&#39;,
+ * 	label : editor.lang.common.browseServer
+ * }
+ * &lt;/pre&gt;
+ *
+ * If you set the &lt;code&gt;filebrowser&lt;/code&gt; attribute for an element other than
+ * the &lt;code&gt;fileButton&lt;/code&gt;, the &lt;code&gt;Browse&lt;/code&gt; action will be triggered.&lt;br /&gt;&lt;br /&gt;
+ *
+ * &lt;strong&gt;Example 2: (Quick Upload)&lt;/strong&gt;
+ *
+ * &lt;pre&gt;
+ * {
+ * 	type : &#39;fileButton&#39;,
+ * 	id : &#39;uploadButton&#39;,
+ * 	filebrowser : &#39;tabId:elementId&#39;,
+ * 	label : editor.lang.common.uploadSubmit,
+ * 	&#39;for&#39; : [ &#39;upload&#39;, &#39;upload&#39; ]
+ * }
+ * &lt;/pre&gt;
+ *
+ * If you set the &lt;code&gt;filebrowser&lt;/code&gt; attribute for a &lt;code&gt;fileButton&lt;/code&gt;
+ * element, the &lt;code&gt;QuickUpload&lt;/code&gt; action will be executed.&lt;br /&gt;&lt;br /&gt;
+ *
+ * The filebrowser plugin also supports more advanced configuration performed through
+ * a JavaScript object.
+ *
+ * The following settings are supported:
+ *
+ * &lt;ul&gt;
+ * &lt;li&gt;&lt;code&gt;action&lt;/code&gt; &amp;ndash; &lt;code&gt;Browse&lt;/code&gt; or &lt;code&gt;QuickUpload&lt;/code&gt;.&lt;/li&gt;
+ * &lt;li&gt;&lt;code&gt;target&lt;/code&gt; &amp;ndash; the field to update in the &lt;code&gt;&lt;em&gt;tabId:elementId&lt;/em&gt;&lt;/code&gt; format.&lt;/li&gt;
+ * &lt;li&gt;&lt;code&gt;params&lt;/code&gt; &amp;ndash; additional arguments to be passed to the server connector (optional).&lt;/li&gt;
+ * &lt;li&gt;&lt;code&gt;onSelect&lt;/code&gt; &amp;ndash; a function to execute when the file is selected/uploaded (optional).&lt;/li&gt;
+ * &lt;li&gt;&lt;code&gt;url&lt;/code&gt; &amp;ndash; the URL to be called (optional).&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;strong&gt;Example 3: (Quick Upload)&lt;/strong&gt;
+ *
+ * &lt;pre&gt;
+ * {
+ * 	type : &#39;fileButton&#39;,
+ * 	label : editor.lang.common.uploadSubmit,
+ * 	id : &#39;buttonId&#39;,
+ * 	filebrowser :
+ * 	{
+ * 		action : &#39;QuickUpload&#39;, // required
+ * 		target : &#39;tab1:elementId&#39;, // required
+ * 		params : // optional
+ * 		{
+ * 			type : &#39;Files&#39;,
+ * 			currentFolder : &#39;/folder/&#39;
+ * 		},
+ * 		onSelect : function( fileUrl, errorMessage ) // optional
+ * 		{
+ * 			// Do not call the built-in selectFuntion.
+ * 			// return false;
+ * 		}
+ * 	},
+ * 	&#39;for&#39; : [ &#39;tab1&#39;, &#39;myFile&#39; ]
+ * }
+ * &lt;/pre&gt;
+ *
+ * Suppose you have a file element with an ID of &lt;code&gt;myFile&lt;/code&gt;, a text
+ * field with an ID of &lt;code&gt;elementId&lt;/code&gt; and a &lt;code&gt;fileButton&lt;/code&gt;.
+ * If the &lt;code&gt;filebowser.url&lt;/code&gt; attribute is not specified explicitly,
+ * the form action will be set to &lt;code&gt;filebrowser[&lt;em&gt;DialogWindowName&lt;/em&gt;]UploadUrl&lt;/code&gt;
+ * or, if not specified, to &lt;code&gt;filebrowserUploadUrl&lt;/code&gt;. Additional parameters
+ * from the &lt;code&gt;params&lt;/code&gt; object will be added to the query string. It is
+ * possible to create your own &lt;code&gt;uploadHandler&lt;/code&gt; and cancel the built-in
+ * &lt;code&gt;updateTargetElement&lt;/code&gt; command.&lt;br /&gt;&lt;br /&gt;
+ *
+ * &lt;strong&gt;Example 4: (Browse)&lt;/strong&gt;
+ *
+ * &lt;pre&gt;
+ * {
+ * 	type : &#39;button&#39;,
+ * 	id : &#39;buttonId&#39;,
+ * 	label : editor.lang.common.browseServer,
+ * 	filebrowser :
+ * 	{
+ * 		action : &#39;Browse&#39;,
+ * 		url : &#39;/ckfinder/ckfinder.html&amp;amp;type=Images&#39;,
+ * 		target : &#39;tab1:elementId&#39;
+ * 	}
+ * }
+ * &lt;/pre&gt;
+ *
+ * In this example, when the button is pressed, the file browser will be opened in a
+ * popup window. If you do not specify the &lt;code&gt;filebrowser.url&lt;/code&gt; attribute,
+ * &lt;code&gt;filebrowser[&lt;em&gt;DialogName&lt;/em&gt;]BrowseUrl&lt;/code&gt; or
+ * &lt;code&gt;filebrowserBrowseUrl&lt;/code&gt; will be used. After selecting a file in the file
+ * browser, an element with an ID of &lt;code&gt;elementId&lt;/code&gt; will be updated. Just
+ * like in the third example, a custom &lt;code&gt;onSelect&lt;/code&gt; function may be defined.
+ */
+
 ( function() {
-	var flashFilenameRegex = /\.swf(?:$|\?)/i;
+	// Adds (additional) arguments to given url.
+	//
+	// @param {String}
+	//            url The url.
+	// @param {Object}
+	//            params Additional parameters.
+	function addQueryString( url, params ) {
+		var queryString = [];
 
-	function isFlashEmbed( element ) {
-		var attributes = element.attributes;
+		if ( !params )
+			return url;
+		else {
+			for ( var i in params )
+				queryString.push( i + &quot;=&quot; + encodeURIComponent( params[ i ] ) );
+		}
 
-		return ( attributes.type == &#39;application/x-shockwave-flash&#39; || flashFilenameRegex.test( attributes.src || &#39;&#39; ) );
+		return url + ( ( url.indexOf( &quot;?&quot; ) != -1 ) ? &quot;&amp;&quot; : &quot;?&quot; ) + queryString.join( &quot;&amp;&quot; );
 	}
 
-	function createFakeElement( editor, realElement ) {
-		return editor.createFakeParserElement( realElement, &#39;cke_flash&#39;, &#39;flash&#39;, true );
+	// Make a string&#39;s first character uppercase.
+	//
+	// @param {String}
+	//            str String.
+	function ucFirst( str ) {
+		str += &#39;&#39;;
+		var f = str.charAt( 0 ).toUpperCase();
+		return f + str.substr( 1 );
 	}
 
-	CKEDITOR.plugins.add( &#39;flash&#39;, {
-		requires: &#39;dialog,fakeobjects&#39;,
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;flash&#39;, // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
-		onLoad: function() {
-			CKEDITOR.addCss( &#39;img.cke_flash&#39; +
-				&#39;{&#39; +
-					&#39;background-image: url(&#39; + CKEDITOR.getUrl( this.path + &#39;images/placeholder.png&#39; ) + &#39;);&#39; +
-					&#39;background-position: center center;&#39; +
-					&#39;background-repeat: no-repeat;&#39; +
-					&#39;border: 1px solid #a9a9a9;&#39; +
-					&#39;width: 80px;&#39; +
-					&#39;height: 80px;&#39; +
-				&#39;}&#39;
-				);
+	// The onlick function assigned to the &#39;Browse Server&#39; button. Opens the
+	// file browser and updates target field when file is selected.
+	//
+	// @param {CKEDITOR.event}
+	//            evt The event object.
+	function browseServer( evt ) {
+		var dialog = this.getDialog();
+		var editor = dialog.getParentEditor();
 
-		},
-		init: function( editor ) {
-			var allowed = &#39;object[classid,codebase,height,hspace,vspace,width];&#39; +
-				&#39;param[name,value];&#39; +
-				&#39;embed[height,hspace,pluginspage,src,type,vspace,width]&#39;;
+		editor._.filebrowserSe = this;
 
-			if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;flash&#39;, &#39;properties&#39; ) )
-				allowed += &#39;;object[align]; embed[allowscriptaccess,quality,scale,wmode]&#39;;
-			if ( CKEDITOR.dialog.isTabEnabled( editor, &#39;flash&#39;, &#39;advanced&#39; ) )
-				allowed += &#39;;object[id]{*}; embed[bgcolor]{*}(*)&#39;;
+		var width = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowWidth&#39; ] || editor.config.filebrowserWindowWidth || &#39;80%&#39;;
+		var height = editor.config[ &#39;filebrowser&#39; + ucFirst( dialog.getName() ) + &#39;WindowHeight&#39; ] || editor.config.filebrowserWindowHeight || &#39;70%&#39;;
 
-			editor.addCommand( &#39;flash&#39;, new CKEDITOR.dialogCommand( &#39;flash&#39;, {
-				allowedContent: allowed,
-				requiredContent: &#39;embed&#39;
-			} ) );
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Flash&#39;, {
-				label: editor.lang.common.flash,
-				command: &#39;flash&#39;,
-				toolbar: &#39;insert,20&#39;
-			} );
-			CKEDITOR.dialog.add( &#39;flash&#39;, this.path + &#39;dialogs/flash.js&#39; );
+		var params = this.filebrowser.params || {};
+		params.CKEditor = editor.name;
+		params.CKEditorFuncNum = editor._.filebrowserFn;
+		if ( !params.langCode )
+			params.langCode = editor.langCode;
 
-			// If the &quot;menu&quot; plugin is loaded, register the menu items.
-			if ( editor.addMenuItems ) {
-				editor.addMenuItems( {
-					flash: {
-						label: editor.lang.flash.properties,
-						command: &#39;flash&#39;,
-						group: &#39;flash&#39;
-					}
-				} );
+		var url = addQueryString( this.filebrowser.url, params );
+		// TODO: V4: Remove backward compatibility (#8163).
+		editor.popup( url, width, height, editor.config.filebrowserWindowFeatures || editor.config.fileBrowserWindowFeatures );
+	}
+
+	// The onlick function assigned to the &#39;Upload&#39; button. Makes the final
+	// decision whether form is really submitted and updates target field when
+	// file is uploaded.
+	//
+	// @param {CKEDITOR.event}
+	//            evt The event object.
+	function uploadFile( evt ) {
+		var dialog = this.getDialog();
+		var editor = dialog.getParentEditor();
+
+		editor._.filebrowserSe = this;
+
+		// If user didn&#39;t select the file, stop the upload.
+		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getInputElement().$.value )
+			return false;
+
+		if ( !dialog.getContentElement( this[ &#39;for&#39; ][ 0 ], this[ &#39;for&#39; ][ 1 ] ).getAction() )
+			return false;
+
+		return true;
+	}
+
+	// Setups the file element.
+	//
+	// @param {CKEDITOR.ui.dialog.file}
+	//            fileInput The file element used during file upload.
+	// @param {Object}
+	//            filebrowser Object containing filebrowser settings assigned to
+	//            the fileButton associated with this file element.
+	function setupFileElement( editor, fileInput, filebrowser ) {
+		var params = filebrowser.params || {};
+		params.CKEditor = editor.name;
+		params.CKEditorFuncNum = editor._.filebrowserFn;
+		if ( !params.langCode )
+			params.langCode = editor.langCode;
+
+		fileInput.action = addQueryString( filebrowser.url, params );
+		fileInput.filebrowser = filebrowser;
+	}
+
+	// Traverse through the content definition and attach filebrowser to
+	// elements with &#39;filebrowser&#39; attribute.
+	//
+	// @param String
+	//            dialogName Dialog name.
+	// @param {CKEDITOR.dialog.definitionObject}
+	//            definition Dialog definition.
+	// @param {Array}
+	//            elements Array of {@link CKEDITOR.dialog.definition.content}
+	//            objects.
+	function attachFileBrowser( editor, dialogName, definition, elements ) {
+		if ( !elements || !elements.length )
+			return;
+
+		var element, fileInput;
+
+		for ( var i = elements.length; i--; ) {
+			element = elements[ i ];
+
+			if ( element.type == &#39;hbox&#39; || element.type == &#39;vbox&#39; || element.type == &#39;fieldset&#39; )
+				attachFileBrowser( editor, dialogName, definition, element.children );
+
+			if ( !element.filebrowser )
+				continue;
+
+			if ( typeof element.filebrowser == &#39;string&#39; ) {
+				var fb = {
+					action: ( element.type == &#39;fileButton&#39; ) ? &#39;QuickUpload&#39; : &#39;Browse&#39;,
+					target: element.filebrowser
+				};
+				element.filebrowser = fb;
 			}
 
-			editor.on( &#39;doubleclick&#39;, function( evt ) {
-				var element = evt.data.element;
+			if ( element.filebrowser.action == &#39;Browse&#39; ) {
+				var url = element.filebrowser.url;
+				if ( url === undefined ) {
+					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;BrowseUrl&#39; ];
+					if ( url === undefined )
+						url = editor.config.filebrowserBrowseUrl;
+				}
 
-				if ( element.is( &#39;img&#39; ) &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;flash&#39; )
-					evt.data.dialog = &#39;flash&#39;;
-			} );
+				if ( url ) {
+					element.onClick = browseServer;
+					element.filebrowser.url = url;
+					element.hidden = false;
+				}
+			} else if ( element.filebrowser.action == &#39;QuickUpload&#39; &amp;&amp; element[ &#39;for&#39; ] ) {
+				url = element.filebrowser.url;
+				if ( url === undefined ) {
+					url = editor.config[ &#39;filebrowser&#39; + ucFirst( dialogName ) + &#39;UploadUrl&#39; ];
+					if ( url === undefined )
+						url = editor.config.filebrowserUploadUrl;
+				}
 
-			// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
-			if ( editor.contextMenu ) {
-				editor.contextMenu.addListener( function( element, selection ) {
-					if ( element &amp;&amp; element.is( &#39;img&#39; ) &amp;&amp; !element.isReadOnly() &amp;&amp; element.data( &#39;cke-real-element-type&#39; ) == &#39;flash&#39; )
-						return { flash: CKEDITOR.TRISTATE_OFF };
-				} );
+				if ( url ) {
+					var onClick = element.onClick;
+					element.onClick = function( evt ) {
+						// &quot;element&quot; here means the definition object, so we need to find the correct
+						// button to scope the event call
+						var sender = evt.sender;
+						if ( onClick &amp;&amp; onClick.call( sender, evt ) === false )
+							return false;
+
+						return uploadFile.call( sender, evt );
+					};
+
+					element.filebrowser.url = url;
+					element.hidden = false;
+					setupFileElement( editor, definition.getContents( element[ &#39;for&#39; ][ 0 ] ).get( element[ &#39;for&#39; ][ 1 ] ), element.filebrowser );
+				}
 			}
-		},
+		}
+	}
 
-		afterInit: function( editor ) {
-			var dataProcessor = editor.dataProcessor,
-				dataFilter = dataProcessor &amp;&amp; dataProcessor.dataFilter;
+	// Updates the target element with the url of uploaded/selected file.
+	//
+	// @param {String}
+	//            url The url of a file.
+	function updateTargetElement( url, sourceElement ) {
+		var dialog = sourceElement.getDialog();
+		var targetElement = sourceElement.filebrowser.target || null;
 
-			if ( dataFilter ) {
-				dataFilter.addRules( {
-					elements: {
-						&#39;cke:object&#39;: function( element ) {
-							var attributes = element.attributes,
-								classId = attributes.classid &amp;&amp; String( attributes.classid ).toLowerCase();
+		// If there is a reference to targetElement, update it.
+		if ( targetElement ) {
+			var target = targetElement.split( &#39;:&#39; );
+			var element = dialog.getContentElement( target[ 0 ], target[ 1 ] );
+			if ( element ) {
+				element.setValue( url );
+				dialog.selectPage( target[ 0 ] );
+			}
+		}
+	}
 
-							if ( !classId &amp;&amp; !isFlashEmbed( element ) ) {
-								// Look for the inner &lt;embed&gt;
-								for ( var i = 0; i &lt; element.children.length; i++ ) {
-									if ( element.children[ i ].name == &#39;cke:embed&#39; ) {
-										if ( !isFlashEmbed( element.children[ i ] ) )
-											return null;
+	// Returns true if filebrowser is configured in one of the elements.
+	//
+	// @param {CKEDITOR.dialog.definitionObject}
+	//            definition Dialog definition.
+	// @param String
+	//            tabId The tab id where element(s) can be found.
+	// @param String
+	//            elementId The element id (or ids, separated with a semicolon) to check.
+	function isConfigured( definition, tabId, elementId ) {
+		if ( elementId.indexOf( &quot;;&quot; ) !== -1 ) {
+			var ids = elementId.split( &quot;;&quot; );
+			for ( var i = 0; i &lt; ids.length; i++ ) {
+				if ( isConfigured( definition, tabId, ids[ i ] ) )
+					return true;
+			}
+			return false;
+		}
 
-										return createFakeElement( editor, element );
-									}
-								}
-								return null;
-							}
+		var elementFileBrowser = definition.getContents( tabId ).get( elementId ).filebrowser;
+		return ( elementFileBrowser &amp;&amp; elementFileBrowser.url );
+	}
 
-							return createFakeElement( editor, element );
-						},
+	function setUrl( fileUrl, data ) {
+		var dialog = this._.filebrowserSe.getDialog(),
+			targetInput = this._.filebrowserSe[ &#39;for&#39; ],
+			onSelect = this._.filebrowserSe.filebrowser.onSelect;
 
-						&#39;cke:embed&#39;: function( element ) {
-							if ( !isFlashEmbed( element ) )
-								return null;
+		if ( targetInput )
+			dialog.getContentElement( targetInput[ 0 ], targetInput[ 1 ] ).reset();
 
-							return createFakeElement( editor, element );
-						}
-					}
-				}, 5 );
+		if ( typeof data == &#39;function&#39; &amp;&amp; data.call( this._.filebrowserSe ) === false )
+			return;
+
+		if ( onSelect &amp;&amp; onSelect.call( this._.filebrowserSe, fileUrl, data ) === false )
+			return;
+
+		// The &quot;data&quot; argument may be used to pass the error message to the editor.
+		if ( typeof data == &#39;string&#39; &amp;&amp; data )
+			alert( data );
+
+		if ( fileUrl )
+			updateTargetElement( fileUrl, this._.filebrowserSe );
+	}
+
+	CKEDITOR.plugins.add( &#39;filebrowser&#39;, {
+		requires: &#39;popup&#39;,
+		init: function( editor, pluginPath ) {
+			editor._.filebrowserFn = CKEDITOR.tools.addFunction( setUrl, editor );
+			editor.on( &#39;destroy&#39;, function() {
+				CKEDITOR.tools.removeFunction( this._.filebrowserFn );
+			} );
+		}
+	} );
+
+	CKEDITOR.on( &#39;dialogDefinition&#39;, function( evt ) {
+		// We require filebrowser plugin to be loaded.
+		if ( !evt.editor.plugins.filebrowser )
+			return;
+
+		var definition = evt.data.definition,
+			element;
+		// Associate filebrowser to elements with &#39;filebrowser&#39; attribute.
+		for ( var i = 0; i &lt; definition.contents.length; ++i ) {
+			if ( ( element = definition.contents[ i ] ) ) {
+				attachFileBrowser( evt.editor, evt.data.name, definition, element.elements );
+				if ( element.hidden &amp;&amp; element.filebrowser )
+					element.hidden = !isConfigured( definition, element[ &#39;id&#39; ], element.filebrowser );
+
 			}
 		}
 	} );
+
 } )();
 
-CKEDITOR.tools.extend( CKEDITOR.config, {
-<span id='CKEDITOR-config-cfg-flashEmbedTagOnly'>	/**
-</span>	 * Save as `&lt;embed&gt;` tag only. This tag is unrecommended.
-	 *
-	 * @cfg {Boolean} [flashEmbedTagOnly=false]
-	 * @member CKEDITOR.config
-	 */
-	flashEmbedTagOnly: false,
+<span id='CKEDITOR-config-cfg-filebrowserBrowseUrl'>/**
+</span> * The location of an external file browser that should be launched when the **Browse Server**
+ * button is pressed. If configured, the **Browse Server** button will appear in the
+ * **Link**, **Image**, and **Flash** dialog windows.
+ *
+ * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
+ *
+ *		config.filebrowserBrowseUrl = &#39;/browser/browse.php&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} [filebrowserBrowseUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
 
-<span id='CKEDITOR-config-cfg-flashAddEmbedTag'>	/**
-</span>	 * Add `&lt;embed&gt;` tag as alternative: `&lt;object&gt;&lt;embed&gt;&lt;/embed&gt;&lt;/object&gt;`.
-	 *
-	 * @cfg {Boolean} [flashAddEmbedTag=false]
-	 * @member CKEDITOR.config
-	 */
-	flashAddEmbedTag: true,
+<span id='CKEDITOR-config-cfg-filebrowserUploadUrl'>/**
+</span> * The location of the script that handles file uploads.
+ * If set, the **Upload** tab will appear in the **Link**, **Image**,
+ * and **Flash** dialog windows.
+ *
+ * See the [File Browser/Uploader](http://docs.cksource.com/CKEditor_3.x/Developers_Guide/File_Browser_(Uploader\)) documentation.
+ *
+ *		config.filebrowserUploadUrl = &#39;/uploader/upload.php&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} [filebrowserUploadUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
 
-<span id='CKEDITOR-config-cfg-flashConvertOnEdit'>	/**
-</span>	 * Use {@link #flashEmbedTagOnly} and {@link #flashAddEmbedTag} values on edit.
-	 *
-	 * @cfg {Boolean} [flashConvertOnEdit=false]
-	 * @member CKEDITOR.config
-	 */
-	flashConvertOnEdit: false
-} );
+<span id='CKEDITOR-config-cfg-filebrowserImageBrowseUrl'>/**
+</span> * The location of an external file browser that should be launched when the **Browse Server**
+ * button is pressed in the **Image** dialog window.
+ *
+ * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
+ *
+ *		config.filebrowserImageBrowseUrl = &#39;/browser/browse.php?type=Images&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} [filebrowserImageBrowseUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserFlashBrowseUrl'>/**
+</span> * The location of an external file browser that should be launched when the **Browse Server**
+ * button is pressed in the **Flash** dialog window.
+ *
+ * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
+ *
+ *		config.filebrowserFlashBrowseUrl = &#39;/browser/browse.php?type=Flash&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} [filebrowserFlashBrowseUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserImageUploadUrl'>/**
+</span> * The location of the script that handles file uploads in the **Image** dialog window.
+ *
+ * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
+ *
+ *		config.filebrowserImageUploadUrl = &#39;/uploader/upload.php?type=Images&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} [filebrowserImageUploadUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserFlashUploadUrl'>/**
+</span> * The location of the script that handles file uploads in the **Flash** dialog window.
+ *
+ * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserUploadUrl}.
+ *
+ *		config.filebrowserFlashUploadUrl = &#39;/uploader/upload.php?type=Flash&#39;;
+ *
+ * @since 3.0
+ * @cfg {String} filebrowserFlashUploadUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserImageBrowseLinkUrl'>/**
+</span> * The location of an external file browser that should be launched when the **Browse Server**
+ * button is pressed in the **Link** tab of the **Image** dialog window.
+ *
+ * If not set, CKEditor will use {@link CKEDITOR.config#filebrowserBrowseUrl}.
+ *
+ *		config.filebrowserImageBrowseLinkUrl = &#39;/browser/browse.php&#39;;
+ *
+ * @since 3.2
+ * @cfg {String} [filebrowserImageBrowseLinkUrl=&#39;&#39; (empty string = disabled)]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserWindowFeatures'>/**
+</span> * The features to use in the file browser popup window.
+ *
+ *		config.filebrowserWindowFeatures = &#39;resizable=yes,scrollbars=no&#39;;
+ *
+ * @since 3.4.1
+ * @cfg {String} [filebrowserWindowFeatures=&#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39;]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserWindowWidth'>/**
+</span> * The width of the file browser popup window. It can be a number denoting a value in
+ * pixels or a percent string.
+ *
+ *		config.filebrowserWindowWidth = 750;
+ *
+ *		config.filebrowserWindowWidth = &#39;50%&#39;;
+ *
+ * @cfg {Number/String} [filebrowserWindowWidth=&#39;80%&#39;]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-filebrowserWindowHeight'>/**
+</span> * The height of the file browser popup window. It can be a number denoting a value in
+ * pixels or a percent string.
+ *
+ *		config.filebrowserWindowHeight = 580;
+ *
+ *		config.filebrowserWindowHeight = &#39;50%&#39;;
+ *
+ * @cfg {Number/String} [filebrowserWindowHeight=&#39;70%&#39;]
+ * @member CKEDITOR.config
+ */
 </pre>
 </body>
 </html>

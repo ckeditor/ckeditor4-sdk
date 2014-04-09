@@ -104,7 +104,7 @@ CKEDITOR.keystrokeHandler = function( editor ) {
 
 			// Some browsers instead, don&#39;t cancel key events in the keydown, but in the
 			// keypress. So we must do a longer trip in those cases.
-			if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
+			if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac )
 				domObject.on( &#39;keypress&#39;, onKeyPress, this );
 		}
 	};

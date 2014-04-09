@@ -15,1245 +15,940 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='global-property-'>/**
+  <pre class="prettyprint lang-js"><span id='global-property-use strict'>/**
 </span> * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( &#39;link&#39;, function( editor ) {
-	var plugin = CKEDITOR.plugins.link;
-	// Handles the event when the &quot;Target&quot; selection box is changed.
-	var targetChanged = function() {
-			var dialog = this.getDialog(),
-				popupFeatures = dialog.getContentElement( &#39;target&#39;, &#39;popupFeatures&#39; ),
-				targetName = dialog.getContentElement( &#39;target&#39;, &#39;linkTargetName&#39; ),
-				value = this.getValue();
+&#39;use strict&#39;;
 
-			if ( !popupFeatures || !targetName )
-				return;
+( function() {
+	CKEDITOR.dialog.add( &#39;link&#39;, function( editor ) {
+		var plugin = CKEDITOR.plugins.link;
 
-			popupFeatures = popupFeatures.getElement();
-			popupFeatures.hide();
-			targetName.setValue( &#39;&#39; );
+		// Handles the event when the &quot;Target&quot; selection box is changed.
+		var targetChanged = function() {
+				var dialog = this.getDialog(),
+					popupFeatures = dialog.getContentElement( &#39;target&#39;, &#39;popupFeatures&#39; ),
+					targetName = dialog.getContentElement( &#39;target&#39;, &#39;linkTargetName&#39; ),
+					value = this.getValue();
 
-			switch ( value ) {
-				case &#39;frame&#39;:
-					targetName.setLabel( editor.lang.link.targetFrameName );
-					targetName.getElement().show();
-					break;
-				case &#39;popup&#39;:
-					popupFeatures.show();
-					targetName.setLabel( editor.lang.link.targetPopupName );
-					targetName.getElement().show();
-					break;
-				default:
-					targetName.setValue( value );
-					targetName.getElement().hide();
-					break;
-			}
+				if ( !popupFeatures || !targetName )
+					return;
 
-		};
+				popupFeatures = popupFeatures.getElement();
+				popupFeatures.hide();
+				targetName.setValue( &#39;&#39; );
 
-	// Handles the event when the &quot;Type&quot; selection box is changed.
-	var linkTypeChanged = function() {
-			var dialog = this.getDialog(),
-				partIds = [ &#39;urlOptions&#39;, &#39;anchorOptions&#39;, &#39;emailOptions&#39; ],
-				typeValue = this.getValue(),
-				uploadTab = dialog.definition.getContents( &#39;upload&#39; ),
-				uploadInitiallyHidden = uploadTab &amp;&amp; uploadTab.hidden;
-
-			if ( typeValue == &#39;url&#39; ) {
-				if ( editor.config.linkShowTargetTab )
-					dialog.showPage( &#39;target&#39; );
-				if ( !uploadInitiallyHidden )
-					dialog.showPage( &#39;upload&#39; );
-			} else {
-				dialog.hidePage( &#39;target&#39; );
-				if ( !uploadInitiallyHidden )
-					dialog.hidePage( &#39;upload&#39; );
-			}
-
-			for ( var i = 0; i &lt; partIds.length; i++ ) {
-				var element = dialog.getContentElement( &#39;info&#39;, partIds[ i ] );
-				if ( !element )
-					continue;
-
-				element = element.getElement().getParent().getParent();
-				if ( partIds[ i ] == typeValue + &#39;Options&#39; )
-					element.show();
-				else
-					element.hide();
-			}
-
-			dialog.layout();
-		};
-
-	// Loads the parameters in a selected link to the link dialog fields.
-	var javascriptProtocolRegex = /^javascript:/,
-		emailRegex = /^mailto:([^?]+)(?:\?(.+))?$/,
-		emailSubjectRegex = /subject=([^;?:@&amp;=$,\/]*)/,
-		emailBodyRegex = /body=([^;?:@&amp;=$,\/]*)/,
-		anchorRegex = /^#(.*)$/,
-		urlRegex = /^((?:http|https|ftp|news):\/\/)?(.*)$/,
-		selectableTargets = /^(_(?:self|top|parent|blank))$/,
-		encodedEmailLinkRegex = /^javascript:void\(location\.href=&#39;mailto:&#39;\+String\.fromCharCode\(([^)]+)\)(?:\+&#39;(.*)&#39;)?\)$/,
-		functionCallProtectedEmailLinkRegex = /^javascript:([^(]+)\(([^)]+)\)$/;
-
-	var popupRegex = /\s*window.open\(\s*this\.href\s*,\s*(?:&#39;([^&#39;]*)&#39;|null)\s*,\s*&#39;([^&#39;]*)&#39;\s*\)\s*;\s*return\s*false;*\s*/;
-	var popupFeaturesRegex = /(?:^|,)([^=]+)=(\d+|yes|no)/gi;
-
-	var parseLink = function( editor, element ) {
-			var href = ( element &amp;&amp; ( element.data( &#39;cke-saved-href&#39; ) || element.getAttribute( &#39;href&#39; ) ) ) || &#39;&#39;,
-				javascriptMatch, emailMatch, anchorMatch, urlMatch,
-				retval = {};
-
-			if ( ( javascriptMatch = href.match( javascriptProtocolRegex ) ) ) {
-				if ( emailProtection == &#39;encode&#39; ) {
-					href = href.replace( encodedEmailLinkRegex, function( match, protectedAddress, rest ) {
-						return &#39;mailto:&#39; +
-							String.fromCharCode.apply( String, protectedAddress.split( &#39;,&#39; ) ) +
-							( rest &amp;&amp; unescapeSingleQuote( rest ) );
-					} );
+				switch ( value ) {
+					case &#39;frame&#39;:
+						targetName.setLabel( editor.lang.link.targetFrameName );
+						targetName.getElement().show();
+						break;
+					case &#39;popup&#39;:
+						popupFeatures.show();
+						targetName.setLabel( editor.lang.link.targetPopupName );
+						targetName.getElement().show();
+						break;
+					default:
+						targetName.setValue( value );
+						targetName.getElement().hide();
+						break;
 				}
-				// Protected email link as function call.
-				else if ( emailProtection ) {
-					href.replace( functionCallProtectedEmailLinkRegex, function( match, funcName, funcArgs ) {
-						if ( funcName == compiledProtectionFunction.name ) {
-							retval.type = &#39;email&#39;;
-							var email = retval.email = {};
 
-							var paramRegex = /[^,\s]+/g,
-								paramQuoteRegex = /(^&#39;)|(&#39;$)/g,
-								paramsMatch = funcArgs.match( paramRegex ),
-								paramsMatchLength = paramsMatch.length,
-								paramName, paramVal;
+			};
 
-							for ( var i = 0; i &lt; paramsMatchLength; i++ ) {
-								paramVal = decodeURIComponent( unescapeSingleQuote( paramsMatch[ i ].replace( paramQuoteRegex, &#39;&#39; ) ) );
-								paramName = compiledProtectionFunction.params[ i ].toLowerCase();
-								email[ paramName ] = paramVal;
-							}
-							email.address = [ email.name, email.domain ].join( &#39;@&#39; );
-						}
-					} );
-				}
-			}
+		// Handles the event when the &quot;Type&quot; selection box is changed.
+		var linkTypeChanged = function() {
+				var dialog = this.getDialog(),
+					partIds = [ &#39;urlOptions&#39;, &#39;anchorOptions&#39;, &#39;emailOptions&#39; ],
+					typeValue = this.getValue(),
+					uploadTab = dialog.definition.getContents( &#39;upload&#39; ),
+					uploadInitiallyHidden = uploadTab &amp;&amp; uploadTab.hidden;
 
-			if ( !retval.type ) {
-				if ( ( anchorMatch = href.match( anchorRegex ) ) ) {
-					retval.type = &#39;anchor&#39;;
-					retval.anchor = {};
-					retval.anchor.name = retval.anchor.id = anchorMatch[ 1 ];
-				}
-				// Protected email link as encoded string.
-				else if ( ( emailMatch = href.match( emailRegex ) ) ) {
-					var subjectMatch = href.match( emailSubjectRegex ),
-						bodyMatch = href.match( emailBodyRegex );
-
-					retval.type = &#39;email&#39;;
-					var email = ( retval.email = {} );
-					email.address = emailMatch[ 1 ];
-					subjectMatch &amp;&amp; ( email.subject = decodeURIComponent( subjectMatch[ 1 ] ) );
-					bodyMatch &amp;&amp; ( email.body = decodeURIComponent( bodyMatch[ 1 ] ) );
-				}
-				// urlRegex matches empty strings, so need to check for href as well.
-				else if ( href &amp;&amp; ( urlMatch = href.match( urlRegex ) ) ) {
-					retval.type = &#39;url&#39;;
-					retval.url = {};
-					retval.url.protocol = urlMatch[ 1 ];
-					retval.url.url = urlMatch[ 2 ];
-				} else
-					retval.type = &#39;url&#39;;
-			}
-
-			// Load target and popup settings.
-			if ( element ) {
-				var target = element.getAttribute( &#39;target&#39; );
-				retval.target = {};
-				retval.adv = {};
-
-				// IE BUG: target attribute is an empty string instead of null in IE if it&#39;s not set.
-				if ( !target ) {
-					var onclick = element.data( &#39;cke-pa-onclick&#39; ) || element.getAttribute( &#39;onclick&#39; ),
-						onclickMatch = onclick &amp;&amp; onclick.match( popupRegex );
-					if ( onclickMatch ) {
-						retval.target.type = &#39;popup&#39;;
-						retval.target.name = onclickMatch[ 1 ];
-
-						var featureMatch;
-						while ( ( featureMatch = popupFeaturesRegex.exec( onclickMatch[ 2 ] ) ) ) {
-							// Some values should remain numbers (#7300)
-							if ( ( featureMatch[ 2 ] == &#39;yes&#39; || featureMatch[ 2 ] == &#39;1&#39; ) &amp;&amp; !( featureMatch[ 1 ] in { height: 1, width: 1, top: 1, left: 1 } ) )
-								retval.target[ featureMatch[ 1 ] ] = true;
-							else if ( isFinite( featureMatch[ 2 ] ) )
-								retval.target[ featureMatch[ 1 ] ] = featureMatch[ 2 ];
-						}
-					}
+				if ( typeValue == &#39;url&#39; ) {
+					if ( editor.config.linkShowTargetTab )
+						dialog.showPage( &#39;target&#39; );
+					if ( !uploadInitiallyHidden )
+						dialog.showPage( &#39;upload&#39; );
 				} else {
-					var targetMatch = target.match( selectableTargets );
-					if ( targetMatch )
-						retval.target.type = retval.target.name = target;
-					else {
-						retval.target.type = &#39;frame&#39;;
-						retval.target.name = target;
-					}
+					dialog.hidePage( &#39;target&#39; );
+					if ( !uploadInitiallyHidden )
+						dialog.hidePage( &#39;upload&#39; );
 				}
 
-				var me = this;
-				var advAttr = function( inputName, attrName ) {
-						var value = element.getAttribute( attrName );
-						if ( value !== null )
-							retval.adv[ inputName ] = value || &#39;&#39;;
-					};
-				advAttr( &#39;advId&#39;, &#39;id&#39; );
-				advAttr( &#39;advLangDir&#39;, &#39;dir&#39; );
-				advAttr( &#39;advAccessKey&#39;, &#39;accessKey&#39; );
+				for ( var i = 0; i &lt; partIds.length; i++ ) {
+					var element = dialog.getContentElement( &#39;info&#39;, partIds[ i ] );
+					if ( !element )
+						continue;
 
-				retval.adv.advName = element.data( &#39;cke-saved-name&#39; ) || element.getAttribute( &#39;name&#39; ) || &#39;&#39;;
-				advAttr( &#39;advLangCode&#39;, &#39;lang&#39; );
-				advAttr( &#39;advTabIndex&#39;, &#39;tabindex&#39; );
-				advAttr( &#39;advTitle&#39;, &#39;title&#39; );
-				advAttr( &#39;advContentType&#39;, &#39;type&#39; );
-				CKEDITOR.plugins.link.synAnchorSelector ? retval.adv.advCSSClasses = getLinkClass( element ) : advAttr( &#39;advCSSClasses&#39;, &#39;class&#39; );
-				advAttr( &#39;advCharset&#39;, &#39;charset&#39; );
-				advAttr( &#39;advStyles&#39;, &#39;style&#39; );
-				advAttr( &#39;advRel&#39;, &#39;rel&#39; );
-			}
-
-			// Find out whether we have any anchors in the editor.
-			retval.anchors = CKEDITOR.plugins.link.getEditorAnchors( editor );
-
-			// Record down the selected element in the dialog.
-			this._.selectedElement = element;
-			return retval;
-		};
-
-	var setupParams = function( page, data ) {
-			if ( data[ page ] )
-				this.setValue( data[ page ][ this.id ] || &#39;&#39; );
-		};
-
-	var setupPopupParams = function( data ) {
-			return setupParams.call( this, &#39;target&#39;, data );
-		};
-
-	var setupAdvParams = function( data ) {
-			return setupParams.call( this, &#39;adv&#39;, data );
-		};
-
-	var commitParams = function( page, data ) {
-			if ( !data[ page ] )
-				data[ page ] = {};
-
-			data[ page ][ this.id ] = this.getValue() || &#39;&#39;;
-		};
-
-	var commitPopupParams = function( data ) {
-			return commitParams.call( this, &#39;target&#39;, data );
-		};
-
-	var commitAdvParams = function( data ) {
-			return commitParams.call( this, &#39;adv&#39;, data );
-		};
-
-	function unescapeSingleQuote( str ) {
-		return str.replace( /\\&#39;/g, &#39;\&#39;&#39; );
-	}
-
-	function escapeSingleQuote( str ) {
-		return str.replace( /&#39;/g, &#39;\\$&amp;&#39; );
-	}
-
-	var emailProtection = editor.config.emailProtection || &#39;&#39;;
-
-	// Compile the protection function pattern.
-	if ( emailProtection &amp;&amp; emailProtection != &#39;encode&#39; ) {
-		var compiledProtectionFunction = {};
-
-		emailProtection.replace( /^([^(]+)\(([^)]+)\)$/, function( match, funcName, params ) {
-			compiledProtectionFunction.name = funcName;
-			compiledProtectionFunction.params = [];
-			params.replace( /[^,\s]+/g, function( param ) {
-				compiledProtectionFunction.params.push( param );
-			} );
-		} );
-	}
-
-	function protectEmailLinkAsFunction( email ) {
-		var retval,
-			name = compiledProtectionFunction.name,
-			params = compiledProtectionFunction.params,
-			paramName, paramValue;
-
-		retval = [ name, &#39;(&#39; ];
-		for ( var i = 0; i &lt; params.length; i++ ) {
-			paramName = params[ i ].toLowerCase();
-			paramValue = email[ paramName ];
-
-			i &gt; 0 &amp;&amp; retval.push( &#39;,&#39; );
-			retval.push( &#39;\&#39;&#39;, paramValue ? escapeSingleQuote( encodeURIComponent( email[ paramName ] ) ) : &#39;&#39;, &#39;\&#39;&#39; );
-		}
-		retval.push( &#39;)&#39; );
-		return retval.join( &#39;&#39; );
-	}
-
-	function protectEmailAddressAsEncodedString( address ) {
-		var charCode,
-			length = address.length,
-			encodedChars = [];
-		for ( var i = 0; i &lt; length; i++ ) {
-			charCode = address.charCodeAt( i );
-			encodedChars.push( charCode );
-		}
-		return &#39;String.fromCharCode(&#39; + encodedChars.join( &#39;,&#39; ) + &#39;)&#39;;
-	}
-
-	function getLinkClass( ele ) {
-		var className = ele.getAttribute( &#39;class&#39; );
-		return className ? className.replace( /\s*(?:cke_anchor_empty|cke_anchor)(?:\s*$)?/g, &#39;&#39; ) : &#39;&#39;;
-	}
-
-	var commonLang = editor.lang.common,
-		linkLang = editor.lang.link;
-
-	return {
-		title: linkLang.title,
-		minWidth: 350,
-		minHeight: 230,
-		contents: [
-			{
-			id: &#39;info&#39;,
-			label: linkLang.info,
-			title: linkLang.info,
-			elements: [
-				{
-				id: &#39;linkType&#39;,
-				type: &#39;select&#39;,
-				label: linkLang.type,
-				&#39;default&#39;: &#39;url&#39;,
-				items: [
-					[ linkLang.toUrl, &#39;url&#39; ],
-					[ linkLang.toAnchor, &#39;anchor&#39; ],
-					[ linkLang.toEmail, &#39;email&#39; ]
-					],
-				onChange: linkTypeChanged,
-				setup: function( data ) {
-					if ( data.type )
-						this.setValue( data.type );
-				},
-				commit: function( data ) {
-					data.type = this.getValue();
+					element = element.getElement().getParent().getParent();
+					if ( partIds[ i ] == typeValue + &#39;Options&#39; )
+						element.show();
+					else
+						element.hide();
 				}
-			},
+
+				dialog.layout();
+			};
+
+		var setupParams = function( page, data ) {
+				if ( data[ page ] )
+					this.setValue( data[ page ][ this.id ] || &#39;&#39; );
+			};
+
+		var setupPopupParams = function( data ) {
+				return setupParams.call( this, &#39;target&#39;, data );
+			};
+
+		var setupAdvParams = function( data ) {
+				return setupParams.call( this, &#39;advanced&#39;, data );
+			};
+
+		var commitParams = function( page, data ) {
+				if ( !data[ page ] )
+					data[ page ] = {};
+
+				data[ page ][ this.id ] = this.getValue() || &#39;&#39;;
+			};
+
+		var commitPopupParams = function( data ) {
+				return commitParams.call( this, &#39;target&#39;, data );
+			};
+
+		var commitAdvParams = function( data ) {
+				return commitParams.call( this, &#39;advanced&#39;, data );
+			};
+
+
+		var commonLang = editor.lang.common,
+			linkLang = editor.lang.link;
+
+		return {
+			title: linkLang.title,
+			minWidth: 350,
+			minHeight: 230,
+			contents: [
 				{
-				type: &#39;vbox&#39;,
-				id: &#39;urlOptions&#39;,
-				children: [
+				id: &#39;info&#39;,
+				label: linkLang.info,
+				title: linkLang.info,
+				elements: [
 					{
-					type: &#39;hbox&#39;,
-					widths: [ &#39;25%&#39;, &#39;75%&#39; ],
-					children: [
-						{
-						id: &#39;protocol&#39;,
-						type: &#39;select&#39;,
-						label: commonLang.protocol,
-						&#39;default&#39;: &#39;http://&#39;,
-						items: [
-							// Force &#39;ltr&#39; for protocol names in BIDI. (#5433)
-							[ &#39;http://\u200E&#39;, &#39;http://&#39; ],
-							[ &#39;https://\u200E&#39;, &#39;https://&#39; ],
-							[ &#39;ftp://\u200E&#39;, &#39;ftp://&#39; ],
-							[ &#39;news://\u200E&#39;, &#39;news://&#39; ],
-							[ linkLang.other, &#39;&#39; ]
-							],
-						setup: function( data ) {
-							if ( data.url )
-								this.setValue( data.url.protocol || &#39;&#39; );
-						},
-						commit: function( data ) {
-							if ( !data.url )
-								data.url = {};
-
-							data.url.protocol = this.getValue();
-						}
-					},
-						{
-						type: &#39;text&#39;,
-						id: &#39;url&#39;,
-						label: commonLang.url,
-						required: true,
-						onLoad: function() {
-							this.allowOnChange = true;
-						},
-						onKeyUp: function() {
-							this.allowOnChange = false;
-							var protocolCmb = this.getDialog().getContentElement( &#39;info&#39;, &#39;protocol&#39; ),
-								url = this.getValue(),
-								urlOnChangeProtocol = /^(http|https|ftp|news):\/\/(?=.)/i,
-								urlOnChangeTestOther = /^((javascript:)|[#\/\.\?])/i;
-
-							var protocol = urlOnChangeProtocol.exec( url );
-							if ( protocol ) {
-								this.setValue( url.substr( protocol[ 0 ].length ) );
-								protocolCmb.setValue( protocol[ 0 ].toLowerCase() );
-							} else if ( urlOnChangeTestOther.test( url ) )
-								protocolCmb.setValue( &#39;&#39; );
-
-							this.allowOnChange = true;
-						},
-						onChange: function() {
-							if ( this.allowOnChange ) // Dont&#39;t call on dialog load.
-							this.onKeyUp();
-						},
-						validate: function() {
-							var dialog = this.getDialog();
-
-							if ( dialog.getContentElement( &#39;info&#39;, &#39;linkType&#39; ) &amp;&amp; dialog.getValueOf( &#39;info&#39;, &#39;linkType&#39; ) != &#39;url&#39; )
-								return true;
-
-							if ( ( /javascript\:/ ).test( this.getValue() ) ) {
-								alert( commonLang.invalidValue );
-								return false;
-							}
-
-							if ( this.getDialog().fakeObj ) // Edit Anchor.
-							return true;
-
-							var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noUrl );
-							return func.apply( this );
-						},
-						setup: function( data ) {
-							this.allowOnChange = false;
-							if ( data.url )
-								this.setValue( data.url.url );
-							this.allowOnChange = true;
-
-						},
-						commit: function( data ) {
-							// IE will not trigger the onChange event if the mouse has been used
-							// to carry all the operations #4724
-							this.onChange();
-
-							if ( !data.url )
-								data.url = {};
-
-							data.url.url = this.getValue();
-							this.allowOnChange = false;
-						}
-					}
-					],
+					id: &#39;linkType&#39;,
+					type: &#39;select&#39;,
+					label: linkLang.type,
+					&#39;default&#39;: &#39;url&#39;,
+					items: [
+						[ linkLang.toUrl, &#39;url&#39; ],
+						[ linkLang.toAnchor, &#39;anchor&#39; ],
+						[ linkLang.toEmail, &#39;email&#39; ]
+						],
+					onChange: linkTypeChanged,
 					setup: function( data ) {
-						if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
-							this.getElement().show();
+						this.setValue( data.type || &#39;url&#39; );
+					},
+					commit: function( data ) {
+						data.type = this.getValue();
 					}
 				},
 					{
-					type: &#39;button&#39;,
-					id: &#39;browse&#39;,
-					hidden: &#39;true&#39;,
-					filebrowser: &#39;info:url&#39;,
-					label: commonLang.browseServer
-				}
-				]
-			},
-				{
-				type: &#39;vbox&#39;,
-				id: &#39;anchorOptions&#39;,
-				width: 260,
-				align: &#39;center&#39;,
-				padding: 0,
-				children: [
-					{
-					type: &#39;fieldset&#39;,
-					id: &#39;selectAnchorText&#39;,
-					label: linkLang.selectAnchor,
-					setup: function( data ) {
-						if ( data.anchors.length &gt; 0 )
-							this.getElement().show();
-						else
-							this.getElement().hide();
-					},
+					type: &#39;vbox&#39;,
+					id: &#39;urlOptions&#39;,
 					children: [
 						{
 						type: &#39;hbox&#39;,
-						id: &#39;selectAnchor&#39;,
+						widths: [ &#39;25%&#39;, &#39;75%&#39; ],
 						children: [
 							{
+							id: &#39;protocol&#39;,
 							type: &#39;select&#39;,
-							id: &#39;anchorName&#39;,
-							&#39;default&#39;: &#39;&#39;,
-							label: linkLang.anchorName,
-							style: &#39;width: 100%;&#39;,
+							label: commonLang.protocol,
+							&#39;default&#39;: &#39;http://&#39;,
 							items: [
-								[ &#39;&#39; ]
+								// Force &#39;ltr&#39; for protocol names in BIDI. (#5433)
+								[ &#39;http://\u200E&#39;, &#39;http://&#39; ],
+								[ &#39;https://\u200E&#39;, &#39;https://&#39; ],
+								[ &#39;ftp://\u200E&#39;, &#39;ftp://&#39; ],
+								[ &#39;news://\u200E&#39;, &#39;news://&#39; ],
+								[ linkLang.other, &#39;&#39; ]
 								],
 							setup: function( data ) {
-								this.clear();
-								this.add( &#39;&#39; );
-								for ( var i = 0; i &lt; data.anchors.length; i++ ) {
-									if ( data.anchors[ i ].name )
-										this.add( data.anchors[ i ].name );
-								}
-
-								if ( data.anchor )
-									this.setValue( data.anchor.name );
-
-								var linkType = this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; );
-								if ( linkType &amp;&amp; linkType.getValue() == &#39;email&#39; )
-									this.focus();
+								if ( data.url )
+									this.setValue( data.url.protocol || &#39;&#39; );
 							},
 							commit: function( data ) {
-								if ( !data.anchor )
-									data.anchor = {};
+								if ( !data.url )
+									data.url = {};
 
-								data.anchor.name = this.getValue();
+								data.url.protocol = this.getValue();
 							}
 						},
 							{
-							type: &#39;select&#39;,
-							id: &#39;anchorId&#39;,
-							&#39;default&#39;: &#39;&#39;,
-							label: linkLang.anchorId,
-							style: &#39;width: 100%;&#39;,
-							items: [
-								[ &#39;&#39; ]
-								],
-							setup: function( data ) {
-								this.clear();
-								this.add( &#39;&#39; );
-								for ( var i = 0; i &lt; data.anchors.length; i++ ) {
-									if ( data.anchors[ i ].id )
-										this.add( data.anchors[ i ].id );
+							type: &#39;text&#39;,
+							id: &#39;url&#39;,
+							label: commonLang.url,
+							required: true,
+							onLoad: function() {
+								this.allowOnChange = true;
+							},
+							onKeyUp: function() {
+								this.allowOnChange = false;
+								var protocolCmb = this.getDialog().getContentElement( &#39;info&#39;, &#39;protocol&#39; ),
+									url = this.getValue(),
+									urlOnChangeProtocol = /^(http|https|ftp|news):\/\/(?=.)/i,
+									urlOnChangeTestOther = /^((javascript:)|[#\/\.\?])/i;
+
+								var protocol = urlOnChangeProtocol.exec( url );
+								if ( protocol ) {
+									this.setValue( url.substr( protocol[ 0 ].length ) );
+									protocolCmb.setValue( protocol[ 0 ].toLowerCase() );
+								} else if ( urlOnChangeTestOther.test( url ) )
+									protocolCmb.setValue( &#39;&#39; );
+
+								this.allowOnChange = true;
+							},
+							onChange: function() {
+								if ( this.allowOnChange ) // Dont&#39;t call on dialog load.
+								this.onKeyUp();
+							},
+							validate: function() {
+								var dialog = this.getDialog();
+
+								if ( dialog.getContentElement( &#39;info&#39;, &#39;linkType&#39; ) &amp;&amp; dialog.getValueOf( &#39;info&#39;, &#39;linkType&#39; ) != &#39;url&#39; )
+									return true;
+
+								if ( ( /javascript\:/ ).test( this.getValue() ) ) {
+									alert( commonLang.invalidValue );
+									return false;
 								}
 
-								if ( data.anchor )
-									this.setValue( data.anchor.id );
+								if ( this.getDialog().fakeObj ) // Edit Anchor.
+								return true;
+
+								var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noUrl );
+								return func.apply( this );
+							},
+							setup: function( data ) {
+								this.allowOnChange = false;
+								if ( data.url )
+									this.setValue( data.url.url );
+								this.allowOnChange = true;
+
 							},
 							commit: function( data ) {
-								if ( !data.anchor )
-									data.anchor = {};
+								// IE will not trigger the onChange event if the mouse has been used
+								// to carry all the operations #4724
+								this.onChange();
 
-								data.anchor.id = this.getValue();
+								if ( !data.url )
+									data.url = {};
+
+								data.url.url = this.getValue();
+								this.allowOnChange = false;
 							}
 						}
 						],
 						setup: function( data ) {
-							if ( data.anchors.length &gt; 0 )
+							if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
+								this.getElement().show();
+						}
+					},
+						{
+						type: &#39;button&#39;,
+						id: &#39;browse&#39;,
+						hidden: &#39;true&#39;,
+						filebrowser: &#39;info:url&#39;,
+						label: commonLang.browseServer
+					}
+					]
+				},
+					{
+					type: &#39;vbox&#39;,
+					id: &#39;anchorOptions&#39;,
+					width: 260,
+					align: &#39;center&#39;,
+					padding: 0,
+					children: [
+						{
+						type: &#39;fieldset&#39;,
+						id: &#39;selectAnchorText&#39;,
+						label: linkLang.selectAnchor,
+						setup: function( data ) {
+							if ( data.anchors &amp;&amp; data.anchors.length &gt; 0 )
+								this.getElement().show();
+							else
+								this.getElement().hide();
+						},
+						children: [
+							{
+							type: &#39;hbox&#39;,
+							id: &#39;selectAnchor&#39;,
+							children: [
+								{
+								type: &#39;select&#39;,
+								id: &#39;anchorName&#39;,
+								&#39;default&#39;: &#39;&#39;,
+								label: linkLang.anchorName,
+								style: &#39;width: 100%;&#39;,
+								items: [
+									[ &#39;&#39; ]
+									],
+								setup: function( data ) {
+									this.clear();
+									this.add( &#39;&#39; );
+
+									if ( data.anchors ) {
+										for ( var i = 0; i &lt; data.anchors.length; i++ ) {
+											if ( data.anchors[ i ].name )
+												this.add( data.anchors[ i ].name );
+										}
+									}
+
+									if ( data.anchor )
+										this.setValue( data.anchor.name );
+
+									var linkType = this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; );
+									if ( linkType &amp;&amp; linkType.getValue() == &#39;email&#39; )
+										this.focus();
+								},
+								commit: function( data ) {
+									if ( !data.anchor )
+										data.anchor = {};
+
+									data.anchor.name = this.getValue();
+								}
+							},
+								{
+								type: &#39;select&#39;,
+								id: &#39;anchorId&#39;,
+								&#39;default&#39;: &#39;&#39;,
+								label: linkLang.anchorId,
+								style: &#39;width: 100%;&#39;,
+								items: [
+									[ &#39;&#39; ]
+									],
+								setup: function( data ) {
+									this.clear();
+									this.add( &#39;&#39; );
+
+									if ( data.anchors ) {
+										for ( var i = 0; i &lt; data.anchors.length; i++ ) {
+											if ( data.anchors[ i ].id )
+												this.add( data.anchors[ i ].id );
+										}
+									}
+
+									if ( data.anchor )
+										this.setValue( data.anchor.id );
+								},
+								commit: function( data ) {
+									if ( !data.anchor )
+										data.anchor = {};
+
+									data.anchor.id = this.getValue();
+								}
+							}
+							],
+							setup: function( data ) {
+								if ( data.anchors &amp;&amp; data.anchors.length &gt; 0 )
+									this.getElement().show();
+								else
+									this.getElement().hide();
+							}
+						}
+						]
+					},
+						{
+						type: &#39;html&#39;,
+						id: &#39;noAnchors&#39;,
+						style: &#39;text-align: center;&#39;,
+						html: &#39;&lt;div role=&quot;note&quot; tabIndex=&quot;-1&quot;&gt;&#39; + CKEDITOR.tools.htmlEncode( linkLang.noAnchors ) + &#39;&lt;/div&gt;&#39;,
+						// Focus the first element defined in above html.
+						focus: true,
+						setup: function( data ) {
+							if ( data.anchors &amp;&amp; data.anchors.length &lt; 1 )
 								this.getElement().show();
 							else
 								this.getElement().hide();
 						}
 					}
-					]
+					],
+					setup: function( data ) {
+						if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
+							this.getElement().hide();
+					}
 				},
 					{
-					type: &#39;html&#39;,
-					id: &#39;noAnchors&#39;,
-					style: &#39;text-align: center;&#39;,
-					html: &#39;&lt;div role=&quot;note&quot; tabIndex=&quot;-1&quot;&gt;&#39; + CKEDITOR.tools.htmlEncode( linkLang.noAnchors ) + &#39;&lt;/div&gt;&#39;,
-					// Focus the first element defined in above html.
-					focus: true,
+					type: &#39;vbox&#39;,
+					id: &#39;emailOptions&#39;,
+					padding: 1,
+					children: [
+						{
+						type: &#39;text&#39;,
+						id: &#39;emailAddress&#39;,
+						label: linkLang.emailAddress,
+						required: true,
+						validate: function() {
+							var dialog = this.getDialog();
+
+							if ( !dialog.getContentElement( &#39;info&#39;, &#39;linkType&#39; ) || dialog.getValueOf( &#39;info&#39;, &#39;linkType&#39; ) != &#39;email&#39; )
+								return true;
+
+							var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noEmail );
+							return func.apply( this );
+						},
+						setup: function( data ) {
+							if ( data.email )
+								this.setValue( data.email.address );
+
+							var linkType = this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; );
+							if ( linkType &amp;&amp; linkType.getValue() == &#39;email&#39; )
+								this.select();
+						},
+						commit: function( data ) {
+							if ( !data.email )
+								data.email = {};
+
+							data.email.address = this.getValue();
+						}
+					},
+						{
+						type: &#39;text&#39;,
+						id: &#39;emailSubject&#39;,
+						label: linkLang.emailSubject,
+						setup: function( data ) {
+							if ( data.email )
+								this.setValue( data.email.subject );
+						},
+						commit: function( data ) {
+							if ( !data.email )
+								data.email = {};
+
+							data.email.subject = this.getValue();
+						}
+					},
+						{
+						type: &#39;textarea&#39;,
+						id: &#39;emailBody&#39;,
+						label: linkLang.emailBody,
+						rows: 3,
+						&#39;default&#39;: &#39;&#39;,
+						setup: function( data ) {
+							if ( data.email )
+								this.setValue( data.email.body );
+						},
+						commit: function( data ) {
+							if ( !data.email )
+								data.email = {};
+
+							data.email.body = this.getValue();
+						}
+					}
+					],
 					setup: function( data ) {
-						if ( data.anchors.length &lt; 1 )
-							this.getElement().show();
-						else
+						if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
 							this.getElement().hide();
 					}
 				}
-				],
-				setup: function( data ) {
-					if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
-						this.getElement().hide();
-				}
-			},
-				{
-				type: &#39;vbox&#39;,
-				id: &#39;emailOptions&#39;,
-				padding: 1,
-				children: [
-					{
-					type: &#39;text&#39;,
-					id: &#39;emailAddress&#39;,
-					label: linkLang.emailAddress,
-					required: true,
-					validate: function() {
-						var dialog = this.getDialog();
-
-						if ( !dialog.getContentElement( &#39;info&#39;, &#39;linkType&#39; ) || dialog.getValueOf( &#39;info&#39;, &#39;linkType&#39; ) != &#39;email&#39; )
-							return true;
-
-						var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noEmail );
-						return func.apply( this );
-					},
-					setup: function( data ) {
-						if ( data.email )
-							this.setValue( data.email.address );
-
-						var linkType = this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; );
-						if ( linkType &amp;&amp; linkType.getValue() == &#39;email&#39; )
-							this.select();
-					},
-					commit: function( data ) {
-						if ( !data.email )
-							data.email = {};
-
-						data.email.address = this.getValue();
-					}
-				},
-					{
-					type: &#39;text&#39;,
-					id: &#39;emailSubject&#39;,
-					label: linkLang.emailSubject,
-					setup: function( data ) {
-						if ( data.email )
-							this.setValue( data.email.subject );
-					},
-					commit: function( data ) {
-						if ( !data.email )
-							data.email = {};
-
-						data.email.subject = this.getValue();
-					}
-				},
-					{
-					type: &#39;textarea&#39;,
-					id: &#39;emailBody&#39;,
-					label: linkLang.emailBody,
-					rows: 3,
-					&#39;default&#39;: &#39;&#39;,
-					setup: function( data ) {
-						if ( data.email )
-							this.setValue( data.email.body );
-					},
-					commit: function( data ) {
-						if ( !data.email )
-							data.email = {};
-
-						data.email.body = this.getValue();
-					}
-				}
-				],
-				setup: function( data ) {
-					if ( !this.getDialog().getContentElement( &#39;info&#39;, &#39;linkType&#39; ) )
-						this.getElement().hide();
-				}
-			}
-			]
-		},
-			{
-			id: &#39;target&#39;,
-			requiredContent: &#39;a[target]&#39;, // This is not fully correct, because some target option requires JS.
-			label: linkLang.target,
-			title: linkLang.target,
-			elements: [
-				{
-				type: &#39;hbox&#39;,
-				widths: [ &#39;50%&#39;, &#39;50%&#39; ],
-				children: [
-					{
-					type: &#39;select&#39;,
-					id: &#39;linkTargetType&#39;,
-					label: commonLang.target,
-					&#39;default&#39;: &#39;notSet&#39;,
-					style: &#39;width : 100%;&#39;,
-					&#39;items&#39;: [
-						[ commonLang.notSet, &#39;notSet&#39; ],
-						[ linkLang.targetFrame, &#39;frame&#39; ],
-						[ linkLang.targetPopup, &#39;popup&#39; ],
-						[ commonLang.targetNew, &#39;_blank&#39; ],
-						[ commonLang.targetTop, &#39;_top&#39; ],
-						[ commonLang.targetSelf, &#39;_self&#39; ],
-						[ commonLang.targetParent, &#39;_parent&#39; ]
-						],
-					onChange: targetChanged,
-					setup: function( data ) {
-						if ( data.target )
-							this.setValue( data.target.type || &#39;notSet&#39; );
-						targetChanged.call( this );
-					},
-					commit: function( data ) {
-						if ( !data.target )
-							data.target = {};
-
-						data.target.type = this.getValue();
-					}
-				},
-					{
-					type: &#39;text&#39;,
-					id: &#39;linkTargetName&#39;,
-					label: linkLang.targetFrameName,
-					&#39;default&#39;: &#39;&#39;,
-					setup: function( data ) {
-						if ( data.target )
-							this.setValue( data.target.name );
-					},
-					commit: function( data ) {
-						if ( !data.target )
-							data.target = {};
-
-						data.target.name = this.getValue().replace( /\W/gi, &#39;&#39; );
-					}
-				}
 				]
 			},
 				{
-				type: &#39;vbox&#39;,
-				width: &#39;100%&#39;,
-				align: &#39;center&#39;,
-				padding: 2,
-				id: &#39;popupFeatures&#39;,
-				children: [
-					{
-					type: &#39;fieldset&#39;,
-					label: linkLang.popupFeatures,
-					children: [
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;resizable&#39;,
-							label: linkLang.popupResizable,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-						},
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;status&#39;,
-							label: linkLang.popupStatusBar,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					},
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;location&#39;,
-							label: linkLang.popupLocationBar,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						},
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;toolbar&#39;,
-							label: linkLang.popupToolbar,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					},
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;menubar&#39;,
-							label: linkLang.popupMenuBar,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						},
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;fullscreen&#39;,
-							label: linkLang.popupFullScreen,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					},
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;scrollbars&#39;,
-							label: linkLang.popupScrollBars,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						},
-							{
-							type: &#39;checkbox&#39;,
-							id: &#39;dependent&#39;,
-							label: linkLang.popupDependent,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					},
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;text&#39;,
-							widths: [ &#39;50%&#39;, &#39;50%&#39; ],
-							labelLayout: &#39;horizontal&#39;,
-							label: commonLang.width,
-							id: &#39;width&#39;,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						},
-							{
-							type: &#39;text&#39;,
-							labelLayout: &#39;horizontal&#39;,
-							widths: [ &#39;50%&#39;, &#39;50%&#39; ],
-							label: linkLang.popupLeft,
-							id: &#39;left&#39;,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					},
-						{
-						type: &#39;hbox&#39;,
-						children: [
-							{
-							type: &#39;text&#39;,
-							labelLayout: &#39;horizontal&#39;,
-							widths: [ &#39;50%&#39;, &#39;50%&#39; ],
-							label: commonLang.height,
-							id: &#39;height&#39;,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						},
-							{
-							type: &#39;text&#39;,
-							labelLayout: &#39;horizontal&#39;,
-							label: linkLang.popupTop,
-							widths: [ &#39;50%&#39;, &#39;50%&#39; ],
-							id: &#39;top&#39;,
-							setup: setupPopupParams,
-							commit: commitPopupParams
-
-						}
-						]
-					}
-					]
-				}
-				]
-			}
-			]
-		},
-			{
-			id: &#39;upload&#39;,
-			label: linkLang.upload,
-			title: linkLang.upload,
-			hidden: true,
-			filebrowser: &#39;uploadButton&#39;,
-			elements: [
-				{
-				type: &#39;file&#39;,
-				id: &#39;upload&#39;,
-				label: commonLang.upload,
-				style: &#39;height:40px&#39;,
-				size: 29
-			},
-				{
-				type: &#39;fileButton&#39;,
-				id: &#39;uploadButton&#39;,
-				label: commonLang.uploadSubmit,
-				filebrowser: &#39;info:url&#39;,
-				&#39;for&#39;: [ &#39;upload&#39;, &#39;upload&#39; ]
-			}
-			]
-		},
-			{
-			id: &#39;advanced&#39;,
-			label: linkLang.advanced,
-			title: linkLang.advanced,
-			elements: [
-				{
-				type: &#39;vbox&#39;,
-				padding: 1,
-				children: [
+				id: &#39;target&#39;,
+				requiredContent: &#39;a[target]&#39;, // This is not fully correct, because some target option requires JS.
+				label: linkLang.target,
+				title: linkLang.target,
+				elements: [
 					{
 					type: &#39;hbox&#39;,
-					widths: [ &#39;45%&#39;, &#39;35%&#39;, &#39;20%&#39; ],
+					widths: [ &#39;50%&#39;, &#39;50%&#39; ],
 					children: [
-						{
-						type: &#39;text&#39;,
-						id: &#39;advId&#39;,
-						requiredContent: &#39;a[id]&#39;,
-						label: linkLang.id,
-						setup: setupAdvParams,
-						commit: commitAdvParams
-					},
 						{
 						type: &#39;select&#39;,
-						id: &#39;advLangDir&#39;,
-						requiredContent: &#39;a[dir]&#39;,
-						label: linkLang.langDir,
-						&#39;default&#39;: &#39;&#39;,
-						style: &#39;width:110px&#39;,
-						items: [
-							[ commonLang.notSet, &#39;&#39; ],
-							[ linkLang.langDirLTR, &#39;ltr&#39; ],
-							[ linkLang.langDirRTL, &#39;rtl&#39; ]
+						id: &#39;linkTargetType&#39;,
+						label: commonLang.target,
+						&#39;default&#39;: &#39;notSet&#39;,
+						style: &#39;width : 100%;&#39;,
+						&#39;items&#39;: [
+							[ commonLang.notSet, &#39;notSet&#39; ],
+							[ linkLang.targetFrame, &#39;frame&#39; ],
+							[ linkLang.targetPopup, &#39;popup&#39; ],
+							[ commonLang.targetNew, &#39;_blank&#39; ],
+							[ commonLang.targetTop, &#39;_top&#39; ],
+							[ commonLang.targetSelf, &#39;_self&#39; ],
+							[ commonLang.targetParent, &#39;_parent&#39; ]
 							],
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						onChange: targetChanged,
+						setup: function( data ) {
+							if ( data.target )
+								this.setValue( data.target.type || &#39;notSet&#39; );
+							targetChanged.call( this );
+						},
+						commit: function( data ) {
+							if ( !data.target )
+								data.target = {};
+
+							data.target.type = this.getValue();
+						}
 					},
 						{
 						type: &#39;text&#39;,
-						id: &#39;advAccessKey&#39;,
-						requiredContent: &#39;a[accesskey]&#39;,
-						width: &#39;80px&#39;,
-						label: linkLang.acccessKey,
-						maxLength: 1,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						id: &#39;linkTargetName&#39;,
+						label: linkLang.targetFrameName,
+						&#39;default&#39;: &#39;&#39;,
+						setup: function( data ) {
+							if ( data.target )
+								this.setValue( data.target.name );
+						},
+						commit: function( data ) {
+							if ( !data.target )
+								data.target = {};
 
+							data.target.name = this.getValue().replace( /\W/gi, &#39;&#39; );
+						}
 					}
 					]
 				},
 					{
-					type: &#39;hbox&#39;,
-					widths: [ &#39;45%&#39;, &#39;35%&#39;, &#39;20%&#39; ],
+					type: &#39;vbox&#39;,
+					width: &#39;100%&#39;,
+					align: &#39;center&#39;,
+					padding: 2,
+					id: &#39;popupFeatures&#39;,
 					children: [
 						{
-						type: &#39;text&#39;,
-						label: linkLang.name,
-						id: &#39;advName&#39;,
-						requiredContent: &#39;a[name]&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;fieldset&#39;,
+						label: linkLang.popupFeatures,
+						children: [
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;resizable&#39;,
+								label: linkLang.popupResizable,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+							},
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;status&#39;,
+								label: linkLang.popupStatusBar,
+								setup: setupPopupParams,
+								commit: commitPopupParams
 
-					},
-						{
-						type: &#39;text&#39;,
-						label: linkLang.langCode,
-						id: &#39;advLangCode&#39;,
-						requiredContent: &#39;a[lang]&#39;,
-						width: &#39;110px&#39;,
-						&#39;default&#39;: &#39;&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+							}
+							]
+						},
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;location&#39;,
+								label: linkLang.popupLocationBar,
+								setup: setupPopupParams,
+								commit: commitPopupParams
 
-					},
-						{
-						type: &#39;text&#39;,
-						label: linkLang.tabIndex,
-						id: &#39;advTabIndex&#39;,
-						requiredContent: &#39;a[tabindex]&#39;,
-						width: &#39;80px&#39;,
-						maxLength: 5,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+							},
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;toolbar&#39;,
+								label: linkLang.popupToolbar,
+								setup: setupPopupParams,
+								commit: commitPopupParams
 
+							}
+							]
+						},
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;menubar&#39;,
+								label: linkLang.popupMenuBar,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							},
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;fullscreen&#39;,
+								label: linkLang.popupFullScreen,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							}
+							]
+						},
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;scrollbars&#39;,
+								label: linkLang.popupScrollBars,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							},
+								{
+								type: &#39;checkbox&#39;,
+								id: &#39;dependent&#39;,
+								label: linkLang.popupDependent,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							}
+							]
+						},
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;text&#39;,
+								widths: [ &#39;50%&#39;, &#39;50%&#39; ],
+								labelLayout: &#39;horizontal&#39;,
+								label: commonLang.width,
+								id: &#39;width&#39;,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							},
+								{
+								type: &#39;text&#39;,
+								labelLayout: &#39;horizontal&#39;,
+								widths: [ &#39;50%&#39;, &#39;50%&#39; ],
+								label: linkLang.popupLeft,
+								id: &#39;left&#39;,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							}
+							]
+						},
+							{
+							type: &#39;hbox&#39;,
+							children: [
+								{
+								type: &#39;text&#39;,
+								labelLayout: &#39;horizontal&#39;,
+								widths: [ &#39;50%&#39;, &#39;50%&#39; ],
+								label: commonLang.height,
+								id: &#39;height&#39;,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							},
+								{
+								type: &#39;text&#39;,
+								labelLayout: &#39;horizontal&#39;,
+								label: linkLang.popupTop,
+								widths: [ &#39;50%&#39;, &#39;50%&#39; ],
+								id: &#39;top&#39;,
+								setup: setupPopupParams,
+								commit: commitPopupParams
+
+							}
+							]
+						}
+						]
 					}
 					]
 				}
 				]
 			},
 				{
-				type: &#39;vbox&#39;,
-				padding: 1,
-				children: [
+				id: &#39;upload&#39;,
+				label: linkLang.upload,
+				title: linkLang.upload,
+				hidden: true,
+				filebrowser: &#39;uploadButton&#39;,
+				elements: [
 					{
-					type: &#39;hbox&#39;,
-					widths: [ &#39;45%&#39;, &#39;55%&#39; ],
+					type: &#39;file&#39;,
+					id: &#39;upload&#39;,
+					label: commonLang.upload,
+					style: &#39;height:40px&#39;,
+					size: 29
+				},
+					{
+					type: &#39;fileButton&#39;,
+					id: &#39;uploadButton&#39;,
+					label: commonLang.uploadSubmit,
+					filebrowser: &#39;info:url&#39;,
+					&#39;for&#39;: [ &#39;upload&#39;, &#39;upload&#39; ]
+				}
+				]
+			},
+				{
+				id: &#39;advanced&#39;,
+				label: linkLang.advanced,
+				title: linkLang.advanced,
+				elements: [
+					{
+					type: &#39;vbox&#39;,
+					padding: 1,
 					children: [
 						{
-						type: &#39;text&#39;,
-						label: linkLang.advisoryTitle,
-						requiredContent: &#39;a[title]&#39;,
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advTitle&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;35%&#39;, &#39;20%&#39; ],
+						children: [
+							{
+							type: &#39;text&#39;,
+							id: &#39;advId&#39;,
+							requiredContent: &#39;a[id]&#39;,
+							label: linkLang.id,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+						},
+							{
+							type: &#39;select&#39;,
+							id: &#39;advLangDir&#39;,
+							requiredContent: &#39;a[dir]&#39;,
+							label: linkLang.langDir,
+							&#39;default&#39;: &#39;&#39;,
+							style: &#39;width:110px&#39;,
+							items: [
+								[ commonLang.notSet, &#39;&#39; ],
+								[ linkLang.langDirLTR, &#39;ltr&#39; ],
+								[ linkLang.langDirRTL, &#39;rtl&#39; ]
+								],
+							setup: setupAdvParams,
+							commit: commitAdvParams
+						},
+							{
+							type: &#39;text&#39;,
+							id: &#39;advAccessKey&#39;,
+							requiredContent: &#39;a[accesskey]&#39;,
+							width: &#39;80px&#39;,
+							label: linkLang.acccessKey,
+							maxLength: 1,
+							setup: setupAdvParams,
+							commit: commitAdvParams
 
+						}
+						]
 					},
 						{
-						type: &#39;text&#39;,
-						label: linkLang.advisoryContentType,
-						requiredContent: &#39;a[type]&#39;,
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advContentType&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;35%&#39;, &#39;20%&#39; ],
+						children: [
+							{
+							type: &#39;text&#39;,
+							label: linkLang.name,
+							id: &#39;advName&#39;,
+							requiredContent: &#39;a[name]&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
 
+						},
+							{
+							type: &#39;text&#39;,
+							label: linkLang.langCode,
+							id: &#39;advLangCode&#39;,
+							requiredContent: &#39;a[lang]&#39;,
+							width: &#39;110px&#39;,
+							&#39;default&#39;: &#39;&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+
+						},
+							{
+							type: &#39;text&#39;,
+							label: linkLang.tabIndex,
+							id: &#39;advTabIndex&#39;,
+							requiredContent: &#39;a[tabindex]&#39;,
+							width: &#39;80px&#39;,
+							maxLength: 5,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+
+						}
+						]
 					}
 					]
 				},
 					{
-					type: &#39;hbox&#39;,
-					widths: [ &#39;45%&#39;, &#39;55%&#39; ],
+					type: &#39;vbox&#39;,
+					padding: 1,
 					children: [
 						{
-						type: &#39;text&#39;,
-						label: linkLang.cssClasses,
-						requiredContent: &#39;a(cke-xyz)&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advCSSClasses&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;55%&#39; ],
+						children: [
+							{
+							type: &#39;text&#39;,
+							label: linkLang.advisoryTitle,
+							requiredContent: &#39;a[title]&#39;,
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advTitle&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
 
+						},
+							{
+							type: &#39;text&#39;,
+							label: linkLang.advisoryContentType,
+							requiredContent: &#39;a[type]&#39;,
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advContentType&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+
+						}
+						]
 					},
 						{
-						type: &#39;text&#39;,
-						label: linkLang.charset,
-						requiredContent: &#39;a[charset]&#39;,
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advCharset&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;55%&#39; ],
+						children: [
+							{
+							type: &#39;text&#39;,
+							label: linkLang.cssClasses,
+							requiredContent: &#39;a(cke-xyz)&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advCSSClasses&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
 
-					}
-					]
-				},
-					{
-					type: &#39;hbox&#39;,
-					widths: [ &#39;45%&#39;, &#39;55%&#39; ],
-					children: [
-						{
-						type: &#39;text&#39;,
-						label: linkLang.rel,
-						requiredContent: &#39;a[rel]&#39;,
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advRel&#39;,
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						},
+							{
+							type: &#39;text&#39;,
+							label: linkLang.charset,
+							requiredContent: &#39;a[charset]&#39;,
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advCharset&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+
+						}
+						]
 					},
 						{
-						type: &#39;text&#39;,
-						label: linkLang.styles,
-						requiredContent: &#39;a{cke-xyz}&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
-						&#39;default&#39;: &#39;&#39;,
-						id: &#39;advStyles&#39;,
-						validate: CKEDITOR.dialog.validate.inlineStyle( editor.lang.common.invalidInlineStyle ),
-						setup: setupAdvParams,
-						commit: commitAdvParams
+						type: &#39;hbox&#39;,
+						widths: [ &#39;45%&#39;, &#39;55%&#39; ],
+						children: [
+							{
+							type: &#39;text&#39;,
+							label: linkLang.rel,
+							requiredContent: &#39;a[rel]&#39;,
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advRel&#39;,
+							setup: setupAdvParams,
+							commit: commitAdvParams
+						},
+							{
+							type: &#39;text&#39;,
+							label: linkLang.styles,
+							requiredContent: &#39;a{cke-xyz}&#39;, // Random text like &#39;xyz&#39; will check if all are allowed.
+							&#39;default&#39;: &#39;&#39;,
+							id: &#39;advStyles&#39;,
+							validate: CKEDITOR.dialog.validate.inlineStyle( editor.lang.common.invalidInlineStyle ),
+							setup: setupAdvParams,
+							commit: commitAdvParams
+						}
+						]
 					}
 					]
 				}
 				]
 			}
-			]
-		}
-		],
-		onShow: function() {
-			var editor = this.getParentEditor(),
-				selection = editor.getSelection(),
-				element = null;
+			],
+			onShow: function() {
+				var editor = this.getParentEditor(),
+					selection = editor.getSelection(),
+					element = null;
 
-			// Fill in all the relevant fields if there&#39;s already one link selected.
-			if ( ( element = plugin.getSelectedLink( editor ) ) &amp;&amp; element.hasAttribute( &#39;href&#39; ) ) {
-				// Don&#39;t change selection if some element is already selected.
-				// For example - don&#39;t destroy fake selection.
-				if ( !selection.getSelectedElement() )
-					selection.selectElement( element );
-			} else
-				element = null;
+				// Fill in all the relevant fields if there&#39;s already one link selected.
+				if ( ( element = plugin.getSelectedLink( editor ) ) &amp;&amp; element.hasAttribute( &#39;href&#39; ) ) {
+					// Don&#39;t change selection if some element is already selected.
+					// For example - don&#39;t destroy fake selection.
+					if ( !selection.getSelectedElement() )
+						selection.selectElement( element );
+				} else
+					element = null;
 
-			this.setupContent( parseLink.apply( this, [ editor, element ] ) );
-		},
-		onOk: function() {
-			var attributes = {},
-				removeAttributes = [],
-				data = {},
-				me = this,
-				editor = this.getParentEditor();
+				var data = plugin.parseLinkAttributes( editor, element );
 
-			this.commitContent( data );
+				// Record down the selected element in the dialog.
+				this._.selectedElement = element;
 
-			// Compose the URL.
-			switch ( data.type || &#39;url&#39; ) {
-				case &#39;url&#39;:
-					var protocol = ( data.url &amp;&amp; data.url.protocol != undefined ) ? data.url.protocol : &#39;http://&#39;,
-						url = ( data.url &amp;&amp; CKEDITOR.tools.trim( data.url.url ) ) || &#39;&#39;;
-					attributes[ &#39;data-cke-saved-href&#39; ] = ( url.indexOf( &#39;/&#39; ) === 0 ) ? url : protocol + url;
-					break;
-				case &#39;anchor&#39;:
-					var name = ( data.anchor &amp;&amp; data.anchor.name ),
-						id = ( data.anchor &amp;&amp; data.anchor.id );
-					attributes[ &#39;data-cke-saved-href&#39; ] = &#39;#&#39; + ( name || id || &#39;&#39; );
-					break;
-				case &#39;email&#39;:
+				this.setupContent( data );
+			},
+			onOk: function() {
+				var data = {};
 
-					var linkHref,
-					email = data.email,
-						address = email.address;
+				// Collect data from fields.
+				this.commitContent( data );
 
-					switch ( emailProtection ) {
-						case &#39;&#39;:
-						case &#39;encode&#39;:
-							{
-								var subject = encodeURIComponent( email.subject || &#39;&#39; ),
-									body = encodeURIComponent( email.body || &#39;&#39; );
+				var selection = editor.getSelection(),
+					attributes = plugin.getLinkAttributes( editor, data );
 
-								// Build the e-mail parameters first.
-								var argList = [];
-								subject &amp;&amp; argList.push( &#39;subject=&#39; + subject );
-								body &amp;&amp; argList.push( &#39;body=&#39; + body );
-								argList = argList.length ? &#39;?&#39; + argList.join( &#39;&amp;&#39; ) : &#39;&#39;;
+				if ( !this._.selectedElement ) {
+					var range = selection.getRanges()[ 0 ];
 
-								if ( emailProtection == &#39;encode&#39; ) {
-									linkHref = [ &#39;javascript:void(location.href=\&#39;mailto:\&#39;+&#39;,
-																															protectEmailAddressAsEncodedString( address ) ];
-									// parameters are optional.
-									argList &amp;&amp; linkHref.push( &#39;+\&#39;&#39;, escapeSingleQuote( argList ), &#39;\&#39;&#39; );
-
-									linkHref.push( &#39;)&#39; );
-								} else
-									linkHref = [ &#39;mailto:&#39;, address, argList ];
-
-								break;
-							}
-						default:
-							{
-								// Separating name and domain.
-								var nameAndDomain = address.split( &#39;@&#39;, 2 );
-								email.name = nameAndDomain[ 0 ];
-								email.domain = nameAndDomain[ 1 ];
-
-								linkHref = [ &#39;javascript:&#39;, protectEmailLinkAsFunction( email ) ];
-							}
+					// Use link URL as text with a collapsed cursor.
+					if ( range.collapsed ) {
+						// Short mailto link text view (#5736).
+						var text = new CKEDITOR.dom.text( data.type == &#39;email&#39; ?
+							data.email.address : attributes.set[ &#39;data-cke-saved-href&#39; ], editor.document );
+						range.insertNode( text );
+						range.selectNodeContents( text );
 					}
 
-					attributes[ &#39;data-cke-saved-href&#39; ] = linkHref.join( &#39;&#39; );
-					break;
-			}
+					// Apply style.
+					var style = new CKEDITOR.style( {
+						element: &#39;a&#39;,
+						attributes: attributes.set
+					} );
 
-			// Popups and target.
-			if ( data.target ) {
-				if ( data.target.type == &#39;popup&#39; ) {
-					var onclickList = [ &#39;window.open(this.href, \&#39;&#39;,
-																			data.target.name || &#39;&#39;, &#39;\&#39;, \&#39;&#39; ];
-					var featureList = [ &#39;resizable&#39;, &#39;status&#39;, &#39;location&#39;, &#39;toolbar&#39;, &#39;menubar&#39;, &#39;fullscreen&#39;,
-																			&#39;scrollbars&#39;, &#39;dependent&#39; ];
-					var featureLength = featureList.length;
-					var addFeature = function( featureName ) {
-							if ( data.target[ featureName ] )
-								featureList.push( featureName + &#39;=&#39; + data.target[ featureName ] );
-						};
-
-					for ( var i = 0; i &lt; featureLength; i++ )
-						featureList[ i ] = featureList[ i ] + ( data.target[ featureList[ i ] ] ? &#39;=yes&#39; : &#39;=no&#39; );
-					addFeature( &#39;width&#39; );
-					addFeature( &#39;left&#39; );
-					addFeature( &#39;height&#39; );
-					addFeature( &#39;top&#39; );
-
-					onclickList.push( featureList.join( &#39;,&#39; ), &#39;\&#39;); return false;&#39; );
-					attributes[ &#39;data-cke-pa-onclick&#39; ] = onclickList.join( &#39;&#39; );
-
-					// Add the &quot;target&quot; attribute. (#5074)
-					removeAttributes.push( &#39;target&#39; );
+					style.type = CKEDITOR.STYLE_INLINE; // need to override... dunno why.
+					style.applyToRange( range, editor );
+					range.select();
 				} else {
-					if ( data.target.type != &#39;notSet&#39; &amp;&amp; data.target.name )
-						attributes.target = data.target.name;
-					else
-						removeAttributes.push( &#39;target&#39; );
+					// We&#39;re only editing an existing link, so just overwrite the attributes.
+					var element = this._.selectedElement,
+						href = element.data( &#39;cke-saved-href&#39; ),
+						textView = element.getHtml();
 
-					removeAttributes.push( &#39;data-cke-pa-onclick&#39;, &#39;onclick&#39; );
+					element.setAttributes( attributes.set );
+					element.removeAttributes( attributes.removed );
+
+					// Update text view when user changes protocol (#4612).
+					if ( href == textView || data.type == &#39;email&#39; &amp;&amp; textView.indexOf( &#39;@&#39; ) != -1 ) {
+						// Short mailto link text view (#5736).
+						element.setHtml( data.type == &#39;email&#39; ?
+							data.email.address : attributes.set[ &#39;data-cke-saved-href&#39; ] );
+
+						// We changed the content, so need to select it again.
+						selection.selectElement( element );
+					}
+
+					delete this._.selectedElement;
+				}
+			},
+			onLoad: function() {
+				if ( !editor.config.linkShowAdvancedTab )
+					this.hidePage( &#39;advanced&#39; ); //Hide Advanded tab.
+
+				if ( !editor.config.linkShowTargetTab )
+					this.hidePage( &#39;target&#39; ); //Hide Target tab.
+			},
+			// Inital focus on &#39;url&#39; field if link is of type URL.
+			onFocus: function() {
+				var linkType = this.getContentElement( &#39;info&#39;, &#39;linkType&#39; ),
+					urlField;
+
+				if ( linkType &amp;&amp; linkType.getValue() == &#39;url&#39; ) {
+					urlField = this.getContentElement( &#39;info&#39;, &#39;url&#39; );
+					urlField.select();
 				}
 			}
-
-			// Advanced attributes.
-			if ( data.adv ) {
-				var advAttr = function( inputName, attrName ) {
-						var value = data.adv[ inputName ];
-						if ( value )
-							attributes[ attrName ] = value;
-						else
-							removeAttributes.push( attrName );
-					};
-
-				advAttr( &#39;advId&#39;, &#39;id&#39; );
-				advAttr( &#39;advLangDir&#39;, &#39;dir&#39; );
-				advAttr( &#39;advAccessKey&#39;, &#39;accessKey&#39; );
-
-				if ( data.adv[ &#39;advName&#39; ] )
-					attributes[ &#39;name&#39; ] = attributes[ &#39;data-cke-saved-name&#39; ] = data.adv[ &#39;advName&#39; ];
-				else
-					removeAttributes = removeAttributes.concat( [ &#39;data-cke-saved-name&#39;, &#39;name&#39; ] );
-
-				advAttr( &#39;advLangCode&#39;, &#39;lang&#39; );
-				advAttr( &#39;advTabIndex&#39;, &#39;tabindex&#39; );
-				advAttr( &#39;advTitle&#39;, &#39;title&#39; );
-				advAttr( &#39;advContentType&#39;, &#39;type&#39; );
-				advAttr( &#39;advCSSClasses&#39;, &#39;class&#39; );
-				advAttr( &#39;advCharset&#39;, &#39;charset&#39; );
-				advAttr( &#39;advStyles&#39;, &#39;style&#39; );
-				advAttr( &#39;advRel&#39;, &#39;rel&#39; );
-			}
-
-
-			var selection = editor.getSelection();
-
-			// Browser need the &quot;href&quot; fro copy/paste link to work. (#6641)
-			attributes.href = attributes[ &#39;data-cke-saved-href&#39; ];
-
-			if ( !this._.selectedElement ) {
-				var range = selection.getRanges()[ 0 ];
-
-				// Use link URL as text with a collapsed cursor.
-				if ( range.collapsed ) {
-					// Short mailto link text view (#5736).
-					var text = new CKEDITOR.dom.text( data.type == &#39;email&#39; ? data.email.address : attributes[ &#39;data-cke-saved-href&#39; ], editor.document );
-					range.insertNode( text );
-					range.selectNodeContents( text );
-				}
-
-				// Apply style.
-				var style = new CKEDITOR.style( { element: &#39;a&#39;, attributes: attributes } );
-				style.type = CKEDITOR.STYLE_INLINE; // need to override... dunno why.
-				style.applyToRange( range );
-				range.select();
-			} else {
-				// We&#39;re only editing an existing link, so just overwrite the attributes.
-				var element = this._.selectedElement,
-					href = element.data( &#39;cke-saved-href&#39; ),
-					textView = element.getHtml();
-
-				element.setAttributes( attributes );
-				element.removeAttributes( removeAttributes );
-
-				if ( data.adv &amp;&amp; data.adv.advName &amp;&amp; CKEDITOR.plugins.link.synAnchorSelector )
-					element.addClass( element.getChildCount() ? &#39;cke_anchor&#39; : &#39;cke_anchor_empty&#39; );
-
-				// Update text view when user changes protocol (#4612).
-				if ( href == textView || data.type == &#39;email&#39; &amp;&amp; textView.indexOf( &#39;@&#39; ) != -1 ) {
-					// Short mailto link text view (#5736).
-					element.setHtml( data.type == &#39;email&#39; ? data.email.address : attributes[ &#39;data-cke-saved-href&#39; ] );
-
-					// We changed the content, so need to select it again.
-					selection.selectElement( element );
-				}
-
-				delete this._.selectedElement;
-			}
-		},
-		onLoad: function() {
-			if ( !editor.config.linkShowAdvancedTab )
-				this.hidePage( &#39;advanced&#39; ); //Hide Advanded tab.
-
-			if ( !editor.config.linkShowTargetTab )
-				this.hidePage( &#39;target&#39; ); //Hide Target tab.
-		},
-		// Inital focus on &#39;url&#39; field if link is of type URL.
-		onFocus: function() {
-			var linkType = this.getContentElement( &#39;info&#39;, &#39;linkType&#39; ),
-				urlField;
-			if ( linkType &amp;&amp; linkType.getValue() == &#39;url&#39; ) {
-				urlField = this.getContentElement( &#39;info&#39;, &#39;url&#39; );
-				urlField.select();
-			}
-		}
-	};
-} );
+		};
+	} );
+} )();
 
 <span id='CKEDITOR-config-cfg-emailProtection'>/**
 </span> * The e-mail address anti-spam protection option. The protection will be

@@ -21,460 +21,170 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Increase and Decrease Indent commands.
+</span> * @fileOverview Image plugin
  */
 
 ( function() {
-	&#39;use strict&#39;;
 
-	var TRISTATE_DISABLED = CKEDITOR.TRISTATE_DISABLED,
-		TRISTATE_OFF = CKEDITOR.TRISTATE_OFF;
-
-	CKEDITOR.plugins.add( &#39;indent&#39;, {
+	CKEDITOR.plugins.add( &#39;image&#39;, {
+		requires: &#39;dialog&#39;,
 		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;indent,indent-rtl,outdent,outdent-rtl&#39;, // %REMOVE_LINE_CORE%
-
+		icons: &#39;image&#39;, // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
 		init: function( editor ) {
-			var genericDefinition = CKEDITOR.plugins.indent.genericDefinition;
+			// Abort when Image2 is to be loaded since both plugins
+			// share the same button, command, etc. names (#11222).
+			if ( editor.plugins.image2 )
+				return;
 
-			// Register generic commands.
-			setupGenericListeners( editor, editor.addCommand( &#39;indent&#39;, new genericDefinition( true ) ) );
-			setupGenericListeners( editor, editor.addCommand( &#39;outdent&#39;, new genericDefinition() ) );
+			var pluginName = &#39;image&#39;;
 
-			// Create and register toolbar button if possible.
-			if ( editor.ui.addButton ) {
-				editor.ui.addButton( &#39;Indent&#39;, {
-					label: editor.lang.indent.indent,
-					command: &#39;indent&#39;,
-					directional: true,
-					toolbar: &#39;indent,20&#39;
-				} );
+			// Register the dialog.
+			CKEDITOR.dialog.add( pluginName, this.path + &#39;dialogs/image.js&#39; );
 
-				editor.ui.addButton( &#39;Outdent&#39;, {
-					label: editor.lang.indent.outdent,
-					command: &#39;outdent&#39;,
-					directional: true,
-					toolbar: &#39;indent,10&#39;
+			var allowed = &#39;img[alt,!src]{border-style,border-width,float,height,margin,margin-bottom,margin-left,margin-right,margin-top,width}&#39;,
+				required = &#39;img[alt,src]&#39;;
+
+			if ( CKEDITOR.dialog.isTabEnabled( editor, pluginName, &#39;advanced&#39; ) )
+				allowed = &#39;img[alt,dir,id,lang,longdesc,!src,title]{*}(*)&#39;;
+
+			// Register the command.
+			editor.addCommand( pluginName, new CKEDITOR.dialogCommand( pluginName, {
+				allowedContent: allowed,
+				requiredContent: required,
+				contentTransformations: [
+					[ &#39;img{width}: sizeToStyle&#39;, &#39;img[width]: sizeToAttribute&#39; ],
+					[ &#39;img{float}: alignmentToStyle&#39;, &#39;img[align]: alignmentToAttribute&#39; ]
+				]
+			} ) );
+
+			// Register the toolbar button.
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Image&#39;, {
+				label: editor.lang.common.image,
+				command: pluginName,
+				toolbar: &#39;insert,10&#39;
+			} );
+
+			editor.on( &#39;doubleclick&#39;, function( evt ) {
+				var element = evt.data.element;
+
+				if ( element.is( &#39;img&#39; ) &amp;&amp; !element.data( &#39;cke-realelement&#39; ) &amp;&amp; !element.isReadOnly() )
+					evt.data.dialog = &#39;image&#39;;
+			} );
+
+			// If the &quot;menu&quot; plugin is loaded, register the menu items.
+			if ( editor.addMenuItems ) {
+				editor.addMenuItems( {
+					image: {
+						label: editor.lang.image.menu,
+						command: &#39;image&#39;,
+						group: &#39;image&#39;
+					}
 				} );
 			}
 
-			// Register dirChanged listener.
-			editor.on( &#39;dirChanged&#39;, function( evt ) {
-				var range = editor.createRange(),
-					dataNode = evt.data.node;
+			// If the &quot;contextmenu&quot; plugin is loaded, register the listeners.
+			if ( editor.contextMenu ) {
+				editor.contextMenu.addListener( function( element, selection ) {
+					if ( getSelectedImage( editor, element ) )
+						return { image: CKEDITOR.TRISTATE_OFF };
+				} );
+			}
+		},
+		afterInit: function( editor ) {
+			// Abort when Image2 is to be loaded since both plugins
+			// share the same button, command, etc. names (#11222).
+			if ( editor.plugins.image2 )
+				return;
 
-				range.setStartBefore( dataNode );
-				range.setEndAfter( dataNode );
+			// Customize the behavior of the alignment commands. (#7430)
+			setupAlignCommand( &#39;left&#39; );
+			setupAlignCommand( &#39;right&#39; );
+			setupAlignCommand( &#39;center&#39; );
+			setupAlignCommand( &#39;block&#39; );
 
-				var walker = new CKEDITOR.dom.walker( range ),
-					node;
+			function setupAlignCommand( value ) {
+				var command = editor.getCommand( &#39;justify&#39; + value );
+				if ( command ) {
+					if ( value == &#39;left&#39; || value == &#39;right&#39; ) {
+						command.on( &#39;exec&#39;, function( evt ) {
+							var img = getSelectedImage( editor ),
+								align;
+							if ( img ) {
+								align = getImageAlignment( img );
+								if ( align == value ) {
+									img.removeStyle( &#39;float&#39; );
 
-				while ( ( node = walker.next() ) ) {
-					if ( node.type == CKEDITOR.NODE_ELEMENT ) {
-						// A child with the defined dir is to be ignored.
-						if ( !node.equals( dataNode ) &amp;&amp; node.getDirection() ) {
-							range.setStartAfter( node );
-							walker = new CKEDITOR.dom.walker( range );
-							continue;
-						}
+									// Remove &quot;align&quot; attribute when necessary.
+									if ( value == getImageAlignment( img ) )
+										img.removeAttribute( &#39;align&#39; );
+								} else
+									img.setStyle( &#39;float&#39;, value );
 
-						// Switch alignment classes.
-						var classes = editor.config.indentClasses;
-						if ( classes ) {
-							var suffix = ( evt.data.dir == &#39;ltr&#39; ) ? [ &#39;_rtl&#39;, &#39;&#39; ] : [ &#39;&#39;, &#39;_rtl&#39; ];
-							for ( var i = 0; i &lt; classes.length; i++ ) {
-								if ( node.hasClass( classes[ i ] + suffix[ 0 ] ) ) {
-									node.removeClass( classes[ i ] + suffix[ 0 ] );
-									node.addClass( classes[ i ] + suffix[ 1 ] );
-								}
+								evt.cancel();
 							}
-						}
-
-						// Switch the margins.
-						var marginLeft = node.getStyle( &#39;margin-right&#39; ),
-							marginRight = node.getStyle( &#39;margin-left&#39; );
-
-						marginLeft ? node.setStyle( &#39;margin-left&#39;, marginLeft ) : node.removeStyle( &#39;margin-left&#39; );
-						marginRight ? node.setStyle( &#39;margin-right&#39;, marginRight ) : node.removeStyle( &#39;margin-right&#39; );
+						} );
 					}
+
+					command.on( &#39;refresh&#39;, function( evt ) {
+						var img = getSelectedImage( editor ),
+							align;
+						if ( img ) {
+							align = getImageAlignment( img );
+
+							this.setState(
+							( align == value ) ? CKEDITOR.TRISTATE_ON : ( value == &#39;right&#39; || value == &#39;left&#39; ) ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED );
+
+							evt.cancel();
+						}
+					} );
 				}
-			} );
+			}
 		}
 	} );
 
-<span id='CKEDITOR-plugins-indent'>	/**
-</span>	 * Global command class definitions and global helpers.
-	 *
-	 * @class
-	 * @singleton
-	 */
-	CKEDITOR.plugins.indent = {
-<span id='CKEDITOR-plugins-indent-genericDefinition'>		/**
-</span>		 * A base class for a generic command definition, responsible mainly for creating
-		 * Increase Indent and Decrease Indent toolbar buttons as well as for refreshing
-		 * UI states.
-		 *
-		 * Commands of this class do not perform any indentation by themselves. They
-		 * delegate this job to content-specific indentation commands (i.e. indentlist).
-		 *
-		 * @class CKEDITOR.plugins.indent.genericDefinition
-		 * @extends CKEDITOR.commandDefinition
-		 * @param {CKEDITOR.editor} editor The editor instance this command will be
-		 * applied to.
-		 * @param {String} name The name of the command.
-		 * @param {Boolean} [isIndent] Defines the command as indenting or outdenting.
-		 */
-		genericDefinition: function( isIndent ) {
-<span id='CKEDITOR-plugins-indent-genericDefinition-property-isIndent'>			/**
-</span>			 * Determines whether the command belongs to the indentation family.
-			 * Otherwise it is assumed to be an outdenting command.
-			 *
-			 * @readonly
-			 * @property {Boolean} [=false]
-			 */
-			this.isIndent = !!isIndent;
-
-			// Mimic naive startDisabled behavior for outdent.
-			this.startDisabled = !this.isIndent;
-		},
-
-<span id='CKEDITOR-plugins-indent-specificDefinition'>		/**
-</span>		 * A base class for specific indentation command definitions responsible for
-		 * handling a pre-defined set of elements i.e. indentlist for lists or
-		 * indentblock for text block elements.
-		 *
-		 * Commands of this class perform indentation operations and modify the DOM structure.
-		 * They listen for events fired by {@link CKEDITOR.plugins.indent.genericDefinition}
-		 * and execute defined actions.
-		 *
-		 * **NOTE**: This is not an {@link CKEDITOR.command editor command}.
-		 * Context-specific commands are internal, for indentation system only.
-		 *
-		 * @class CKEDITOR.plugins.indent.specificDefinition
-		 * @param {CKEDITOR.editor} editor The editor instance this command will be
-		 * applied to.
-		 * @param {String} name The name of the command.
-		 * @param {Boolean} [isIndent] Defines the command as indenting or outdenting.
-		 */
-		specificDefinition: function( editor, name, isIndent ) {
-			this.name = name;
-			this.editor = editor;
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-jobs'>			/**
-</span>			 * An object of jobs handled by the command. Each job consists
-			 * of two functions: `refresh` and `exec` as well as the execution priority.
-			 *
-			 *	* The `refresh` function determines whether a job is doable for
-			 *	  a particular context. These functions are executed in the
-			 *	  order of priorities, one by one, for all plugins that registered
-			 *	  jobs. As jobs are related to generic commands, refreshing
-			 *	  occurs when the global command is firing the `refresh` event.
-			 *
-			 *	  **Note**: This function must return either {@link CKEDITOR#TRISTATE_DISABLED}
-			 *	  or {@link CKEDITOR#TRISTATE_OFF}.
-			 *
-			 *	* The `exec` function modifies the DOM if possible. Just like
-			 *	  `refresh`, `exec` functions are executed in the order of priorities
-			 *	  while the generic command is executed. This function is not executed
-			 *	  if `refresh` for this job returned {@link CKEDITOR#TRISTATE_DISABLED}.
-			 *
-			 *	  **Note**: This function must return a Boolean value, indicating whether it
-			 *	  was successful. If a job was successful, then no other jobs are being executed.
-			 *
-			 * Sample definition:
-			 *
-			 *		command.jobs = {
-			 *			// Priority = 20.
-			 *			&#39;20&#39;: {
-			 *				refresh( editor, path ) {
-			 *					if ( condition )
-			 *						return CKEDITOR.TRISTATE_OFF;
-			 *					else
-			 *						return CKEDITOR.TRISTATE_DISABLED;
-			 *				},
-			 *				exec( editor ) {
-			 *					// DOM modified! This was OK.
-			 *					return true;
-			 *				}
-			 *			},
-			 *			// Priority = 60. This job is done later.
-			 *			&#39;60&#39;: {
-			 *				// Another job.
-			 *			}
-			 *		};
-			 *
-			 * For additional information, please check comments for
-			 * the `setupGenericListeners` function.
-			 *
-			 * @readonly
-			 * @property {Object} [={}]
-			 */
-			this.jobs = {};
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-enterBr'>			/**
-</span>			 * Determines whether the editor that the command belongs to has
-			 * {@link CKEDITOR.config#enterMode config.enterMode} set to {@link CKEDITOR#ENTER_BR}.
-			 *
-			 * @readonly
-			 * @see CKEDITOR.config#enterMode
-			 * @property {Boolean} [=false]
-			 */
-			this.enterBr = editor.config.enterMode == CKEDITOR.ENTER_BR;
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-isIndent'>			/**
-</span>			 * Determines whether the command belongs to the indentation family.
-			 * Otherwise it is assumed to be an outdenting command.
-			 *
-			 * @readonly
-			 * @property {Boolean} [=false]
-			 */
-			this.isIndent = !!isIndent;
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-relatedGlobal'>			/**
-</span>			 * The name of the global command related to this one.
-			 *
-			 * @readonly
-			 */
-			this.relatedGlobal = isIndent ? &#39;indent&#39; : &#39;outdent&#39;;
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-indentKey'>			/**
-</span>			 * A keystroke associated with this command (*Tab* or *Shift+Tab*).
-			 *
-			 * @readonly
-			 */
-			this.indentKey = isIndent ? 9 : CKEDITOR.SHIFT + 9;
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-property-database'>			/**
-</span>			 * Stores created markers for the command so they can eventually be
-			 * purged after the `exec` function is run.
-			 */
-			this.database = {};
-		},
-
-<span id='CKEDITOR-plugins-indent-method-registerCommands'>		/**
-</span>		 * Registers content-specific commands as a part of the indentation system
-		 * directed by generic commands. Once a command is registered,
-		 * it listens for events of a related generic command.
-		 *
-		 *		CKEDITOR.plugins.indent.registerCommands( editor, {
-		 *			&#39;indentlist&#39;: new indentListCommand( editor, &#39;indentlist&#39; ),
-		 *			&#39;outdentlist&#39;: new indentListCommand( editor, &#39;outdentlist&#39; )
-		 *		} );
-		 *
-		 * Content-specific commands listen for the generic command&#39;s `exec` and
-		 * try to execute their own jobs, one after another. If some execution is
-		 * successful, `evt.data.done` is set so no more jobs (commands) are involved.
-		 *
-		 * Content-specific commands also listen for the generic command&#39;s `refresh`
-		 * and fill the `evt.data.states` object with states of jobs. A generic command
-		 * uses this data to determine its own state and to update the UI.
-		 *
-		 * @member CKEDITOR.plugins.indent
-		 * @param {CKEDITOR.editor} editor The editor instance this command is
-		 * applied to.
-		 * @param {Object} commands An object of {@link CKEDITOR.command}.
-		 */
-		registerCommands: function( editor, commands ) {
-			editor.on( &#39;pluginsLoaded&#39;, function() {
-				for ( var name in commands ) {
-					( function( editor, command ) {
-						var relatedGlobal = editor.getCommand( command.relatedGlobal );
-
-						for ( var priority in command.jobs ) {
-							// Observe generic exec event and execute command when necessary.
-							// If the command was successfully handled by the command and
-							// DOM has been modified, stop event propagation so no other plugin
-							// will bother. Job is done.
-							relatedGlobal.on( &#39;exec&#39;, function( evt ) {
-								if ( evt.data.done )
-									return;
-
-								// Make sure that anything this command will do is invisible
-								// for undoManager. What undoManager only can see and
-								// remember is the execution of the global command (relatedGlobal).
-								editor.fire( &#39;lockSnapshot&#39; );
-
-								if ( command.execJob( editor, priority ) )
-									evt.data.done = true;
-
-								editor.fire( &#39;unlockSnapshot&#39; );
-
-								// Clean up the markers.
-								CKEDITOR.dom.element.clearAllMarkers( command.database );
-							}, this, null, priority );
-
-							// Observe generic refresh event and force command refresh.
-							// Once refreshed, save command state in event data
-							// so generic command plugin can update its own state and UI.
-							relatedGlobal.on( &#39;refresh&#39;, function( evt ) {
-								if ( !evt.data.states )
-									evt.data.states = {};
-
-								evt.data.states[ command.name + &#39;@&#39; + priority ] =
-									command.refreshJob( editor, priority, evt.data.path );
-							}, this, null, priority );
-						}
-
-						// Since specific indent commands have no UI elements,
-						// they need to be manually registered as a editor feature.
-						editor.addFeature( command );
-					} )( this, commands[ name ] );
-				}
-			} );
+	function getSelectedImage( editor, element ) {
+		if ( !element ) {
+			var sel = editor.getSelection();
+			element = sel.getSelectedElement();
 		}
-	};
 
-	CKEDITOR.plugins.indent.genericDefinition.prototype = {
-		context: &#39;p&#39;,
-
-		exec: function() {}
-	};
-
-	CKEDITOR.plugins.indent.specificDefinition.prototype = {
-<span id='CKEDITOR-plugins-indent-specificDefinition-method-execJob'>		/**
-</span>		 * Executes the content-specific procedure if the context is correct.
-		 * It calls the `exec` function of a job of the given `priority`
-		 * that modifies the DOM.
-		 *
-		 * @param {CKEDITOR.editor} editor The editor instance this command
-		 * will be applied to.
-		 * @param {Number} priority The priority of the job to be executed.
-		 * @returns {Boolean} Indicates whether the job was successful.
-		 */
-		execJob: function( editor, priority ) {
-			var job = this.jobs[ priority ];
-
-			if ( job.state != TRISTATE_DISABLED )
-				return job.exec.call( this, editor );
-		},
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-method-refreshJob'>		/**
-</span>		 * Calls the `refresh` function of a job of the given `priority`.
-		 * The function returns the state of the job which can be either
-		 * {@link CKEDITOR#TRISTATE_DISABLED} or {@link CKEDITOR#TRISTATE_OFF}.
-		 *
-		 * @param {CKEDITOR.editor} editor The editor instance this command
-		 * will be applied to.
-		 * @param {Number} priority The priority of the job to be executed.
-		 * @returns {Number} The state of the job.
-		 */
-		refreshJob: function( editor, priority, path ) {
-			var job = this.jobs[ priority ];
-
-			if ( !editor.activeFilter.checkFeature( this ) )
-				job.state = TRISTATE_DISABLED;
-			else
-				job.state = job.refresh.call( this, editor, path );
-
-			return job.state;
-		},
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-method-getContext'>		/**
-</span>		 * Checks if the element path contains the element handled
-		 * by this indentation command.
-		 *
-		 * @param {CKEDITOR.dom.elementPath} node A path to be checked.
-		 * @returns {CKEDITOR.dom.element}
-		 */
-		getContext: function( path ) {
-			return path.contains( this.context );
-		}
-	};
-
-<span id='CKEDITOR-plugins-indent-specificDefinition-method-setupGenericListeners'>	/**
-</span>	 * Attaches event listeners for this generic command. Since the indentation
-	 * system is event-oriented, generic commands communicate with
-	 * content-specific commands using the `exec` and `refresh` events.
-	 *
-	 * Listener priorities are crucial. Different indentation phases
-	 * are executed with different priorities.
-	 *
-	 * For the `exec` event:
-	 *
-	 *	* 0: Selection and bookmarks are saved by the generic command.
-	 *	* 1-99: Content-specific commands try to indent the code by executing
-	 *	  their own jobs ({@link CKEDITOR.plugins.indent.specificDefinition#jobs}).
-	 *	* 100: Bookmarks are re-selected by the generic command.
-	 *
-	 * The visual interpretation looks as follows:
-	 *
-	 *		  +------------------+
-	 *		  | Exec event fired |
-	 *		  +------ + ---------+
-	 *		          |
-	 *		        0 -&lt;----------+ Selection and bookmarks saved.
-	 *		          |
-	 *		          |
-	 *		       25 -&lt;---+ Exec 1st job of plugin#1 (return false, continuing...).
-	 *		          |
-	 *		          |
-	 *		       50 -&lt;---+ Exec 1st job of plugin#2 (return false, continuing...).
-	 *		          |
-	 *		          |
-	 *		       75 -&lt;---+ Exec 2nd job of plugin#1 (only if plugin#2 failed).
-	 *		          |
-	 *		          |
-	 *		      100 -&lt;-----------+ Re-select bookmarks, clean-up.
-	 *		          |
-	 *		+-------- v ----------+
-	 *		| Exec event finished |
-	 *		+---------------------+
-	 *
-	 * For the `refresh` event:
-	 *
-	 *	* &lt;100: Content-specific commands refresh their job states according
-	 *	  to the given path. Jobs save their states in the `evt.data.states` object
-	 *	  passed along with the event. This can be either {@link CKEDITOR#TRISTATE_DISABLED}
-	 *	  or {@link CKEDITOR#TRISTATE_OFF}.
-	 *	* 100: Command state is determined according to what states
-	 *	  have been returned by content-specific jobs (`evt.data.states`).
-	 *	  UI elements are updated at this stage.
-	 *
-	 *	  **Note**: If there is at least one job with the {@link CKEDITOR#TRISTATE_OFF} state,
-	 *	  then the generic command state is also {@link CKEDITOR#TRISTATE_OFF}. Otherwise,
-	 *	  the command state is {@link CKEDITOR#TRISTATE_DISABLED}.
-	 *
-	 * @param {CKEDITOR.command} command The command to be set up.
-	 * @private
-	 */
-	function setupGenericListeners( editor, command ) {
-		var selection, bookmarks;
-
-		// Set the command state according to content-specific
-		// command states.
-		command.on( &#39;refresh&#39;, function( evt ) {
-			// If no state comes with event data, disable command.
-			var states = [ TRISTATE_DISABLED ];
-
-			for ( var s in evt.data.states )
-				states.push( evt.data.states[ s ] );
-
-			this.setState( CKEDITOR.tools.search( states, TRISTATE_OFF ) ?
-					TRISTATE_OFF
-				:
-					TRISTATE_DISABLED );
-		}, command, null, 100 );
-
-		// Initialization. Save bookmarks and mark event as not handled
-		// by any plugin (command) yet.
-		command.on( &#39;exec&#39;, function( evt ) {
-			selection = editor.getSelection();
-			bookmarks = selection.createBookmarks( 1 );
-
-			// Mark execution as not handled yet.
-			if ( !evt.data )
-				evt.data = {};
-
-			evt.data.done = false;
-		}, command, null, 0 );
-
-		// Housekeeping. Make sure selectionChange will be called.
-		// Also re-select previously saved bookmarks.
-		command.on( &#39;exec&#39;, function( evt ) {
-			editor.forceNextSelectionCheck();
-			selection.selectBookmarks( bookmarks );
-		}, command, null, 100 );
+		if ( element &amp;&amp; element.is( &#39;img&#39; ) &amp;&amp; !element.data( &#39;cke-realelement&#39; ) &amp;&amp; !element.isReadOnly() )
+			return element;
 	}
-} )();</pre>
+
+	function getImageAlignment( element ) {
+		var align = element.getStyle( &#39;float&#39; );
+
+		if ( align == &#39;inherit&#39; || align == &#39;none&#39; )
+			align = 0;
+
+		if ( !align )
+			align = element.getAttribute( &#39;align&#39; );
+
+		return align;
+	}
+
+} )();
+
+<span id='CKEDITOR-config-cfg-image_removeLinkByEmptyURL'>/**
+</span> * Whether to remove links when emptying the link URL field in the image dialog.
+ *
+ *		config.image_removeLinkByEmptyURL = false;
+ *
+ * @cfg {Boolean} [image_removeLinkByEmptyURL=true]
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.image_removeLinkByEmptyURL = true;
+
+<span id='CKEDITOR-config-cfg-image_previewText'>/**
+</span> * Padding text to set off the image in preview area.
+ *
+ *		config.image_previewText = CKEDITOR.tools.repeat( &#39;___ &#39;, 100 );
+ *
+ * @cfg {String} [image_previewText=&#39;Lorem ipsum dolor...&#39; (placeholder text)]
+ * @member CKEDITOR.config
+ */
+</pre>
 </body>
 </html>

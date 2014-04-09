@@ -20,46 +20,66 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-<span id='global-property-'>/**
-</span> * @fileOverview Print Plugin
- */
+CKEDITOR.plugins.add( &#39;popup&#39; );
 
-CKEDITOR.plugins.add( &#39;print&#39;, {
-	lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;print,&#39;, // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	init: function( editor ) {
-		// Print plugin isn&#39;t available in inline mode yet.
-		if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
-			return;
+CKEDITOR.tools.extend( CKEDITOR.editor.prototype, {
+<span id='CKEDITOR-editor-method-popup'>	/**
+</span>	 * Opens Browser in a popup. The `width` and `height` parameters accept
+	 * numbers (pixels) or percent (of screen size) values.
+	 *
+	 * @member CKEDITOR.editor
+	 * @param {String} url The url of the external file browser.
+	 * @param {Number/String} [width=&#39;80%&#39;] Popup window width.
+	 * @param {Number/String} [height=&#39;70%&#39;] Popup window height.
+	 * @param {String} [options=&#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39;]
+	 * Popup window features.
+	 */
+	popup: function( url, width, height, options ) {
+		width = width || &#39;80%&#39;;
+		height = height || &#39;70%&#39;;
 
-		var pluginName = &#39;print&#39;;
+		if ( typeof width == &#39;string&#39; &amp;&amp; width.length &gt; 1 &amp;&amp; width.substr( width.length - 1, 1 ) == &#39;%&#39; )
+			width = parseInt( window.screen.width * parseInt( width, 10 ) / 100, 10 );
 
-		// Register the command.
-		var command = editor.addCommand( pluginName, CKEDITOR.plugins.print );
+		if ( typeof height == &#39;string&#39; &amp;&amp; height.length &gt; 1 &amp;&amp; height.substr( height.length - 1, 1 ) == &#39;%&#39; )
+			height = parseInt( window.screen.height * parseInt( height, 10 ) / 100, 10 );
 
-		// Register the toolbar button.
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Print&#39;, {
-			label: editor.lang.print.toolbar,
-			command: pluginName,
-			toolbar: &#39;document,50&#39;
-		} );
+		if ( width &lt; 640 )
+			width = 640;
+
+		if ( height &lt; 420 )
+			height = 420;
+
+		var top = parseInt( ( window.screen.height - height ) / 2, 10 ),
+			left = parseInt( ( window.screen.width - width ) / 2, 10 );
+
+		options = ( options || &#39;location=no,menubar=no,toolbar=no,dependent=yes,minimizable=no,modal=yes,alwaysRaised=yes,resizable=yes,scrollbars=yes&#39; ) + &#39;,width=&#39; + width +
+			&#39;,height=&#39; + height +
+			&#39;,top=&#39; + top +
+			&#39;,left=&#39; + left;
+
+		var popupWindow = window.open( &#39;&#39;, null, options, true );
+
+		// Blocked by a popup blocker.
+		if ( !popupWindow )
+			return false;
+
+		try {
+			// Chrome is problematic with moveTo/resizeTo, but it&#39;s not really needed here (#8855).
+			var ua = navigator.userAgent.toLowerCase();
+			if ( ua.indexOf( &#39; chrome/&#39; ) == -1 ) {
+				popupWindow.moveTo( left, top );
+				popupWindow.resizeTo( width, height );
+			}
+			popupWindow.focus();
+			popupWindow.location.href = url;
+		} catch ( e ) {
+			popupWindow = window.open( url, null, options, true );
+		}
+
+		return true;
 	}
 } );
-
-CKEDITOR.plugins.print = {
-	exec: function( editor ) {
-		if ( CKEDITOR.env.opera )
-			return;
-		else if ( CKEDITOR.env.gecko )
-			editor.window.$.print();
-		else
-			editor.document.$.execCommand( &quot;Print&quot; );
-	},
-	canUndo: false,
-	readOnly: 1,
-	modes: { wysiwyg: !( CKEDITOR.env.opera ) } // It is imposible to print the inner document in Opera.
-};
 </pre>
 </body>
 </html>

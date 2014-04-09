@@ -274,7 +274,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @param {Boolean} [force] Append filler regardless of the environment.
 	 */
 	appendBogus: function( force ) {
-		if ( !force &amp;&amp; !( CKEDITOR.env.needsBrFiller || CKEDITOR.env.opera ) )
+		if ( !force &amp;&amp; !CKEDITOR.env.needsBrFiller )
 			return;
 
 		var lastChild = this.getLast();
@@ -283,7 +283,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		while ( lastChild &amp;&amp; lastChild.type == CKEDITOR.NODE_TEXT &amp;&amp; !CKEDITOR.tools.rtrim( lastChild.getText() ) )
 			lastChild = lastChild.getPrevious();
 		if ( !lastChild || !lastChild.is || !lastChild.is( &#39;br&#39; ) ) {
-			var bogus = CKEDITOR.env.opera ? this.getDocument().createText( &#39;&#39; ) : this.getDocument().createElement( &#39;br&#39; );
+			var bogus = this.getDocument().createElement( &#39;br&#39; );
 
 			CKEDITOR.env.gecko &amp;&amp; bogus.setAttribute( &#39;type&#39;, &#39;_moz&#39; );
 
@@ -509,7 +509,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				return this.$.getAttribute( name, 2 );
 			};
 
-		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks ) ) {
 			return function( name ) {
 				switch ( name ) {
 					case &#39;class&#39;:
@@ -902,7 +902,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 
 		// Webkit and Opera report non-zero offsetHeight despite that
 		// element is inside an invisible iframe. (#4542)
-		if ( isVisible &amp;&amp; ( CKEDITOR.env.webkit || CKEDITOR.env.opera ) ) {
+		if ( isVisible &amp;&amp; CKEDITOR.env.webkit ) {
 			elementWindow = this.getWindow();
 
 			if ( !elementWindow.equals( CKEDITOR.document.getWindow() ) &amp;&amp; ( elementWindowFrame = elementWindow.$.frameElement ) )
@@ -948,7 +948,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 	 * @method
 	 * @returns {Boolean} True if the element has attributes.
 	 */
-	hasAttributes: CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ?
+	hasAttributes: CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks ) ?
 		function() {
 			var attributes = this.$.attributes;
 
@@ -1134,7 +1134,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				return this;
 			};
 
-		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks ) ) {
 			return function( name, value ) {
 				if ( name == &#39;class&#39; )
 					this.$.className = value;
@@ -1211,7 +1211,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 				this.$.removeAttribute( name );
 			};
 
-		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.ie6Compat ) ) {
+		if ( CKEDITOR.env.ie &amp;&amp; ( CKEDITOR.env.ie7Compat || CKEDITOR.env.quirks ) ) {
 			return function( name ) {
 				if ( name == &#39;class&#39; )
 					name = &#39;className&#39;;
@@ -1336,7 +1336,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype, {
 		// For IE/Opera which doesn&#39;t support for the above CSS style,
 		// the unselectable=&quot;on&quot; attribute only specifies the selection
 		// process cannot start in the element itself, and it doesn&#39;t inherit.
-		if ( CKEDITOR.env.ie || CKEDITOR.env.opera ) {
+		if ( CKEDITOR.env.ie ) {
 			this.setAttribute( &#39;unselectable&#39;, &#39;on&#39; );
 
 			var element,

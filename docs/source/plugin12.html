@@ -23,7 +23,7 @@
 ( function() {
 	var template = &#39;&lt;a id=&quot;{id}&quot;&#39; +
 		&#39; class=&quot;cke_button cke_button__{name} cke_button_{state} {cls}&quot;&#39; +
-		( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &gt;= 10900 &amp;&amp; !CKEDITOR.env.hc ? &#39;&#39; : &#39; href=&quot;javascript:void(\&#39;{titleJs}\&#39;)&quot;&#39; ) +
+		( CKEDITOR.env.gecko &amp;&amp; !CKEDITOR.env.hc ? &#39;&#39; : &#39; href=&quot;javascript:void(\&#39;{titleJs}\&#39;)&quot;&#39; ) +
 		&#39; title=&quot;{title}&quot;&#39; +
 		&#39; tabindex=&quot;-1&quot;&#39; +
 		&#39; hidefocus=&quot;true&quot;&#39; +
@@ -34,8 +34,8 @@
 
 	// Some browsers don&#39;t cancel key events in the keydown but in the
 	// keypress.
-	// TODO: Check if really needed for Gecko+Mac.
-	if ( CKEDITOR.env.opera || ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac ) )
+	// TODO: Check if really needed.
+	if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.mac )
 		template += &#39; onkeypress=&quot;return false;&quot;&#39;;
 
 	// With Firefox, we need to force the button to redraw, otherwise it
@@ -45,7 +45,6 @@
 
 	template += &#39; onkeydown=&quot;return CKEDITOR.tools.callFunction({keydownFn},event);&quot;&#39; +
 		&#39; onfocus=&quot;return CKEDITOR.tools.callFunction({focusFn},event);&quot; &#39; +
-		&#39; onmousedown=&quot;return CKEDITOR.tools.callFunction({mousedownFn},event);&quot; &#39; +
 		( CKEDITOR.env.ie ? &#39;onclick=&quot;return false;&quot; onmouseup&#39; : &#39;onclick&#39; ) + // #188
 			&#39;=&quot;CKEDITOR.tools.callFunction({clickFn},this);return false;&quot;&gt;&#39; +
 		&#39;&lt;span class=&quot;cke_button_icon cke_button__{iconName}_icon&quot; style=&quot;{style}&quot;&#39;;
@@ -171,24 +170,10 @@
 				if ( instance.onfocus )
 					retVal = ( instance.onfocus( instance, new CKEDITOR.dom.event( ev ) ) !== false );
 
-				// FF2: prevent focus event been bubbled up to editor container, which caused unexpected editor focus.
-				if ( CKEDITOR.env.gecko &amp;&amp; CKEDITOR.env.version &lt; 10900 )
-					ev.preventBubble();
 				return retVal;
 			} );
 
 			var selLocked = 0;
-
-			var mousedownFn = CKEDITOR.tools.addFunction( function() {
-				// Opera: lock to prevent loosing editable text selection when clicking on button.
-				if ( CKEDITOR.env.opera ) {
-					var edt = editor.editable();
-					if ( edt.isInline() &amp;&amp; edt.hasFocus ) {
-						editor.lockSelection();
-						selLocked = 1;
-					}
-				}
-			} );
 
 			instance.clickFn = clickFn = CKEDITOR.tools.addFunction( function() {
 
@@ -289,10 +274,9 @@
 				state: stateName,
 				ariaDisabled: stateName == &#39;disabled&#39; ? &#39;true&#39; : &#39;false&#39;,
 				title: this.title,
-				titleJs: env.gecko &amp;&amp; env.version &gt;= 10900 &amp;&amp; !env.hc ? &#39;&#39; : ( this.title || &#39;&#39; ).replace( &quot;&#39;&quot;, &#39;&#39; ),
+				titleJs: env.gecko &amp;&amp; !env.hc ? &#39;&#39; : ( this.title || &#39;&#39; ).replace( &quot;&#39;&quot;, &#39;&#39; ),
 				hasArrow: this.hasArrow ? &#39;true&#39; : &#39;false&#39;,
 				keydownFn: keydownFn,
-				mousedownFn: mousedownFn,
 				focusFn: focusFn,
 				clickFn: clickFn,
 				style: CKEDITOR.skin.getIconStyle( iconName, ( editor.lang.dir == &#39;rtl&#39; ), this.icon, this.iconOffset ),

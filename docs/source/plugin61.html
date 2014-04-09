@@ -21,144 +21,401 @@
  */
 
 ( function() {
-	CKEDITOR.plugins.add( &#39;pastefromword&#39;, {
-		requires: &#39;clipboard&#39;,
-		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-		icons: &#39;pastefromword,pastefromword-rtl&#39;, // %REMOVE_LINE_CORE%
-		hidpi: true, // %REMOVE_LINE_CORE%
-		init: function( editor ) {
-			var commandName = &#39;pastefromword&#39;,
-				// Flag indicate this command is actually been asked instead of a generic pasting.
-				forceFromWord = 0,
-				path = this.path;
-
-			editor.addCommand( commandName, {
-				// Snapshots are done manually by editable.insertXXX methods.
-				canUndo: false,
-				async: true,
-
-				exec: function( editor ) {
-					var cmd = this;
-
-					forceFromWord = 1;
-					// Force html mode for incomming paste events sequence.
-					editor.once( &#39;beforePaste&#39;, forceHtmlMode );
-
-					editor.getClipboardData( { title: editor.lang.pastefromword.title }, function( data ) {
-						// Do not use editor#paste, because it would start from beforePaste event.
-						data &amp;&amp; editor.fire( &#39;paste&#39;, { type: &#39;html&#39;, dataValue: data.dataValue } );
-
-						editor.fire( &#39;afterCommandExec&#39;, {
-							name: commandName,
-							command: cmd,
-							returnValue: !!data
-						} );
-					} );
-				}
-			} );
-
-			// Register the toolbar button.
-			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;PasteFromWord&#39;, {
-				label: editor.lang.pastefromword.toolbar,
-				command: commandName,
-				toolbar: &#39;clipboard,50&#39;
-			} );
-
-			editor.on( &#39;pasteState&#39;, function( evt ) {
-				editor.getCommand( commandName ).setState( evt.data );
-			} );
-
-			// Features bring by this command beside the normal process:
-			// 1. No more bothering of user about the clean-up.
-			// 2. Perform the clean-up even if content is not from MS-Word.
-			// (e.g. from a MS-Word similar application.)
-			// 3. Listen with high priority (3), so clean up is done before content
-			// type sniffing (priority = 6).
-			editor.on( &#39;paste&#39;, function( evt ) {
-				var data = evt.data,
-					mswordHtml = data.dataValue;
-
-				// MS-WORD format sniffing.
-				if ( mswordHtml &amp;&amp; ( forceFromWord || ( /(class=\&quot;?Mso|style=\&quot;[^\&quot;]*\bmso\-|w:WordDocument)/ ).test( mswordHtml ) ) ) {
-					// If filter rules aren&#39;t loaded then cancel &#39;paste&#39; event,
-					// load them and when they&#39;ll get loaded fire new paste event
-					// for which data will be filtered in second execution of
-					// this listener.
-					var isLazyLoad = loadFilterRules( editor, path, function() {
-						// Event continuation with the original data.
-						if ( isLazyLoad )
-							editor.fire( &#39;paste&#39;, data );
-						else if ( !editor.config.pasteFromWordPromptCleanup || ( forceFromWord || confirm( editor.lang.pastefromword.confirmCleanup ) ) )
-							data.dataValue = CKEDITOR.cleanWord( mswordHtml, editor );
-
-					} );
-
-					// The cleanup rules are to be loaded, we should just cancel
-					// this event.
-					isLazyLoad &amp;&amp; evt.cancel();
-				}
-			}, null, null, 3 );
-
-			function resetFromWord( evt ) {
-				evt &amp;&amp; evt.removeListener();
-				editor.removeListener( &#39;beforePaste&#39;, forceHtmlMode );
-				forceFromWord &amp;&amp; setTimeout( function() {
-					forceFromWord = 0;
-				}, 0 );
-			}
+	CKEDITOR.plugins.add( &#39;panel&#39;, {
+		beforeInit: function( editor ) {
+			editor.ui.addHandler( CKEDITOR.UI_PANEL, CKEDITOR.ui.panel.handler );
 		}
-
 	} );
 
-	function loadFilterRules( editor, path, callback ) {
-		var isLoaded = CKEDITOR.cleanWord;
+<span id='CKEDITOR-property-UI_PANEL'>	/**
+</span>	 * Panel UI element.
+	 *
+	 * @readonly
+	 * @property {String} [=&#39;panel&#39;]
+	 * @member CKEDITOR
+	 */
+	CKEDITOR.UI_PANEL = &#39;panel&#39;;
 
-		if ( isLoaded )
-			callback();
-		else {
-			var filterFilePath = CKEDITOR.getUrl( editor.config.pasteFromWordCleanupFile || ( path + &#39;filter/default.js&#39; ) );
+<span id='CKEDITOR-ui-panel-method-constructor'><span id='CKEDITOR-ui-panel'>	/**
+</span></span>	 * @class
+	 * @constructor Creates a panel class instance.
+	 * @param {CKEDITOR.dom.document} document
+	 * @param {Object} definition
+	 */
+	CKEDITOR.ui.panel = function( document, definition ) {
+		// Copy all definition properties to this object.
+		if ( definition )
+			CKEDITOR.tools.extend( this, definition );
 
-			// Load with busy indicator.
-			CKEDITOR.scriptLoader.load( filterFilePath, callback, null, true );
+		// Set defaults.
+		CKEDITOR.tools.extend( this, {
+			className: &#39;&#39;,
+			css: []
+		} );
+
+		this.id = CKEDITOR.tools.getNextId();
+		this.document = document;
+		this.isFramed = this.forceIFrame || this.css.length;
+
+		this._ = {
+			blocks: {}
+		};
+	};
+
+<span id='CKEDITOR-ui-panel-handler'>	/**
+</span>	 * Represents panel handler object.
+	 *
+	 * @class
+	 * @singleton
+	 * @extends CKEDITOR.ui.handlerDefinition
+	 */
+	CKEDITOR.ui.panel.handler = {
+<span id='CKEDITOR-ui-panel-handler-method-create'>		/**
+</span>		 * Transforms a panel definition in a {@link CKEDITOR.ui.panel} instance.
+		 *
+		 * @param {Object} definition
+		 * @returns {CKEDITOR.ui.panel}
+		 */
+		create: function( definition ) {
+			return new CKEDITOR.ui.panel( definition );
 		}
+	};
 
-		return !isLoaded;
-	}
+	var panelTpl = CKEDITOR.addTemplate( &#39;panel&#39;, &#39;&lt;div lang=&quot;{langCode}&quot; id=&quot;{id}&quot; dir={dir}&#39; +
+		&#39; class=&quot;cke cke_reset_all {editorId} cke_panel cke_panel {cls} cke_{dir}&quot;&#39; +
+		&#39; style=&quot;z-index:{z-index}&quot; role=&quot;presentation&quot;&gt;&#39; +
+		&#39;{frame}&#39; +
+		&#39;&lt;/div&gt;&#39; );
 
-	function forceHtmlMode( evt ) {
-		evt.data.type = &#39;html&#39;;
-	}
+	var frameTpl = CKEDITOR.addTemplate( &#39;panel-frame&#39;, &#39;&lt;iframe id=&quot;{id}&quot; class=&quot;cke_panel_frame&quot; role=&quot;presentation&quot; frameborder=&quot;0&quot; src=&quot;{src}&quot;&gt;&lt;/iframe&gt;&#39; );
+
+	var frameDocTpl = CKEDITOR.addTemplate( &#39;panel-frame-inner&#39;, &#39;&lt;!DOCTYPE html&gt;&#39; +
+		&#39;&lt;html class=&quot;cke_panel_container {env}&quot; dir=&quot;{dir}&quot; lang=&quot;{langCode}&quot;&gt;&#39; +
+			&#39;&lt;head&gt;{css}&lt;/head&gt;&#39; +
+			&#39;&lt;body class=&quot;cke_{dir}&quot;&#39; +
+				&#39; style=&quot;margin:0;padding:0&quot; onload=&quot;{onload}&quot;&gt;&lt;/body&gt;&#39; +
+		&#39;&lt;\/html&gt;&#39; );
+
+<span id='CKEDITOR-ui-panel'>	/** @class CKEDITOR.ui.panel */
+</span>	CKEDITOR.ui.panel.prototype = {
+<span id='CKEDITOR-ui-panel-method-render'>		/**
+</span>		 * Renders the combo.
+		 *
+		 * @param {CKEDITOR.editor} editor The editor instance which this button is
+		 * to be used by.
+		 * @param {Array} [output] The output array to which append the HTML relative
+		 * to this button.
+		 */
+		render: function( editor, output ) {
+			this.getHolderElement = function() {
+				var holder = this._.holder;
+
+				if ( !holder ) {
+					if ( this.isFramed ) {
+						var iframe = this.document.getById( this.id + &#39;_frame&#39; ),
+							parentDiv = iframe.getParent(),
+							doc = iframe.getFrameDocument();
+
+						// Make it scrollable on iOS. (#8308)
+						CKEDITOR.env.iOS &amp;&amp; parentDiv.setStyles( {
+							&#39;overflow&#39;: &#39;scroll&#39;,
+							&#39;-webkit-overflow-scrolling&#39;: &#39;touch&#39;
+						} );
+
+						var onLoad = CKEDITOR.tools.addFunction( CKEDITOR.tools.bind( function( ev ) {
+							this.isLoaded = true;
+							if ( this.onLoad )
+								this.onLoad();
+						}, this ) );
+
+						doc.write( frameDocTpl.output( CKEDITOR.tools.extend( {
+							css: CKEDITOR.tools.buildStyleHtml( this.css ),
+							onload: &#39;window.parent.CKEDITOR.tools.callFunction(&#39; + onLoad + &#39;);&#39;
+						}, data ) ) );
+
+						var win = doc.getWindow();
+
+						// Register the CKEDITOR global.
+						win.$.CKEDITOR = CKEDITOR;
+
+						// Arrow keys for scrolling is only preventable with &#39;keypress&#39; event in Opera (#4534).
+						doc.on( &#39;keydown&#39;, function( evt ) {
+							var keystroke = evt.data.getKeystroke(),
+								dir = this.document.getById( this.id ).getAttribute( &#39;dir&#39; );
+
+							// Delegate key processing to block.
+							if ( this._.onKeyDown &amp;&amp; this._.onKeyDown( keystroke ) === false ) {
+								evt.data.preventDefault();
+								return;
+							}
+
+							// ESC/ARROW-LEFT(ltr) OR ARROW-RIGHT(rtl)
+							if ( keystroke == 27 || keystroke == ( dir == &#39;rtl&#39; ? 39 : 37 ) ) {
+								if ( this.onEscape &amp;&amp; this.onEscape( keystroke ) === false )
+									evt.data.preventDefault();
+							}
+						}, this );
+
+						holder = doc.getBody();
+						holder.unselectable();
+						CKEDITOR.env.air &amp;&amp; CKEDITOR.tools.callFunction( onLoad );
+					} else
+						holder = this.document.getById( this.id );
+
+					this._.holder = holder;
+				}
+
+				return holder;
+			};
+
+			var data = {
+				editorId: editor.id,
+				id: this.id,
+				langCode: editor.langCode,
+				dir: editor.lang.dir,
+				cls: this.className,
+				frame: &#39;&#39;,
+				env: CKEDITOR.env.cssClass,
+				&#39;z-index&#39;: editor.config.baseFloatZIndex + 1
+			};
+
+			if ( this.isFramed ) {
+				// With IE, the custom domain has to be taken care at first,
+				// for other browers, the &#39;src&#39; attribute should be left empty to
+				// trigger iframe&#39;s &#39;load&#39; event.
+				var src =
+					CKEDITOR.env.air ? &#39;javascript:void(0)&#39; :
+					CKEDITOR.env.ie ? &#39;javascript:void(function(){&#39; + encodeURIComponent(
+						&#39;document.open();&#39; +
+						// In IE, the document domain must be set any time we call document.open().
+						&#39;(&#39; + CKEDITOR.tools.fixDomain + &#39;)();&#39; +
+						&#39;document.close();&#39;
+					) + &#39;}())&#39; :
+					&#39;&#39;;
+
+				data.frame = frameTpl.output( {
+					id: this.id + &#39;_frame&#39;,
+					src: src
+				} );
+			}
+
+			var html = panelTpl.output( data );
+
+			if ( output )
+				output.push( html );
+
+			return html;
+		},
+
+<span id='CKEDITOR-ui-panel-method-addBlock'>		/**
+</span>		 * @todo
+		 */
+		addBlock: function( name, block ) {
+			block = this._.blocks[ name ] = block instanceof CKEDITOR.ui.panel.block ? block : new CKEDITOR.ui.panel.block( this.getHolderElement(), block );
+
+			if ( !this._.currentBlock )
+				this.showBlock( name );
+
+			return block;
+		},
+
+<span id='CKEDITOR-ui-panel-method-getBlock'>		/**
+</span>		 * @todo
+		 */
+		getBlock: function( name ) {
+			return this._.blocks[ name ];
+		},
+
+<span id='CKEDITOR-ui-panel-method-showBlock'>		/**
+</span>		 * @todo
+		 */
+		showBlock: function( name ) {
+			var blocks = this._.blocks,
+				block = blocks[ name ],
+				current = this._.currentBlock;
+
+			// ARIA role works better in IE on the body element, while on the iframe
+			// for FF. (#8864)
+			var holder = !this.forceIFrame || CKEDITOR.env.ie ? this._.holder : this.document.getById( this.id + &#39;_frame&#39; );
+
+			if ( current )
+				current.hide();
+
+			this._.currentBlock = block;
+
+			CKEDITOR.fire( &#39;ariaWidget&#39;, holder );
+
+			// Reset the focus index, so it will always go into the first one.
+			block._.focusIndex = -1;
+
+			this._.onKeyDown = block.onKeyDown &amp;&amp; CKEDITOR.tools.bind( block.onKeyDown, block );
+
+			block.show();
+
+			return block;
+		},
+
+<span id='CKEDITOR-ui-panel-method-destroy'>		/**
+</span>		 * @todo
+		 */
+		destroy: function() {
+			this.element &amp;&amp; this.element.remove();
+		}
+	};
+
+<span id='CKEDITOR-ui-panel-block'>	/**
+</span>	 * @class
+	 *
+	 * @todo class and all methods
+	 */
+	CKEDITOR.ui.panel.block = CKEDITOR.tools.createClass( {
+<span id='CKEDITOR-ui-panel-block-method-constructor'>		/**
+</span>		 * Creates a block class instances.
+		 *
+		 * @constructor
+		 * @todo
+		 */
+		$: function( blockHolder, blockDefinition ) {
+			this.element = blockHolder.append( blockHolder.getDocument().createElement( &#39;div&#39;, {
+				attributes: {
+					&#39;tabindex&#39;: -1,
+					&#39;class&#39;: &#39;cke_panel_block&#39;
+				},
+				styles: {
+					display: &#39;none&#39;
+				}
+			} ) );
+
+			// Copy all definition properties to this object.
+			if ( blockDefinition )
+				CKEDITOR.tools.extend( this, blockDefinition );
+
+			// Set the a11y attributes of this element ...
+			this.element.setAttributes( {
+				&#39;role&#39;: this.attributes.role || &#39;presentation&#39;,
+				&#39;aria-label&#39;: this.attributes[ &#39;aria-label&#39; ],
+				&#39;title&#39;: this.attributes.title || this.attributes[ &#39;aria-label&#39; ]
+			} );
+
+			this.keys = {};
+
+			this._.focusIndex = -1;
+
+			// Disable context menu for panels.
+			this.element.disableContextMenu();
+		},
+
+		_: {
+
+<span id='CKEDITOR-ui-panel-block-method-markItem'>			/**
+</span>			 * Mark the item specified by the index as current activated.
+			 */
+			markItem: function( index ) {
+				if ( index == -1 )
+					return;
+				var links = this.element.getElementsByTag( &#39;a&#39; );
+				var item = links.getItem( this._.focusIndex = index );
+
+				// Safari need focus on the iframe window first(#3389), but we need
+				// lock the blur to avoid hiding the panel.
+				if ( CKEDITOR.env.webkit )
+					item.getDocument().getWindow().focus();
+				item.focus();
+
+				this.onMark &amp;&amp; this.onMark( item );
+			}
+		},
+
+		proto: {
+			show: function() {
+				this.element.setStyle( &#39;display&#39;, &#39;&#39; );
+			},
+
+			hide: function() {
+				if ( !this.onHide || this.onHide.call( this ) !== true )
+					this.element.setStyle( &#39;display&#39;, &#39;none&#39; );
+			},
+
+			onKeyDown: function( keystroke, noCycle ) {
+				var keyAction = this.keys[ keystroke ];
+				switch ( keyAction ) {
+					// Move forward.
+					case &#39;next&#39;:
+						var index = this._.focusIndex,
+							links = this.element.getElementsByTag( &#39;a&#39; ),
+							link;
+
+						while ( ( link = links.getItem( ++index ) ) ) {
+							// Move the focus only if the element is marked with
+							// the _cke_focus and it it&#39;s visible (check if it has
+							// width).
+							if ( link.getAttribute( &#39;_cke_focus&#39; ) &amp;&amp; link.$.offsetWidth ) {
+								this._.focusIndex = index;
+								link.focus();
+								break;
+							}
+						}
+
+						// If no link was found, cycle and restart from the top. (#11125)
+						if ( !link &amp;&amp; !noCycle ) {
+							this._.focusIndex = -1;
+							return this.onKeyDown( keystroke, 1 );
+						}
+
+						return false;
+
+						// Move backward.
+					case &#39;prev&#39;:
+						index = this._.focusIndex;
+						links = this.element.getElementsByTag( &#39;a&#39; );
+
+						while ( index &gt; 0 &amp;&amp; ( link = links.getItem( --index ) ) ) {
+							// Move the focus only if the element is marked with
+							// the _cke_focus and it it&#39;s visible (check if it has
+							// width).
+							if ( link.getAttribute( &#39;_cke_focus&#39; ) &amp;&amp; link.$.offsetWidth ) {
+								this._.focusIndex = index;
+								link.focus();
+								break;
+							}
+
+							// Make sure link is null when the loop ends and nothing was
+							// found (#11125).
+							link = null;
+						}
+
+						// If no link was found, cycle and restart from the bottom. (#11125)
+						if ( !link &amp;&amp; !noCycle ) {
+							this._.focusIndex = links.count();
+							return this.onKeyDown( keystroke, 1 );
+						}
+
+						return false;
+
+					case &#39;click&#39;:
+					case &#39;mouseup&#39;:
+						index = this._.focusIndex;
+						link = index &gt;= 0 &amp;&amp; this.element.getElementsByTag( &#39;a&#39; ).getItem( index );
+
+						if ( link )
+							link.$[ keyAction ] ? link.$[ keyAction ]() : link.$[ &#39;on&#39; + keyAction ]();
+
+						return false;
+				}
+
+				return true;
+			}
+		}
+	} );
+
 } )();
 
-
-<span id='CKEDITOR-config-cfg-pasteFromWordPromptCleanup'>/**
-</span> * Whether to prompt the user about the clean up of content being pasted from MS Word.
+<span id='CKEDITOR-event-ariaWidget'>/**
+</span> * Fired when a panel is added to the document.
  *
- *		config.pasteFromWordPromptCleanup = true;
- *
- * @since 3.1
- * @cfg {Boolean} [pasteFromWordPromptCleanup=false]
- * @member CKEDITOR.config
- */
-
-<span id='CKEDITOR-config-cfg-pasteFromWordCleanupFile'>/**
-</span> * The file that provides the MS Word cleanup function for pasting operations.
- *
- * **Note:** This is a global configuration shared by all editor instances present
- * in the page.
- *
- *		// Load from &#39;pastefromword&#39; plugin &#39;filter&#39; sub folder (custom.js file) using path relative to CKEditor installation folder.
- *		CKEDITOR.config.pasteFromWordCleanupFile = &#39;plugins/pastefromword/filter/custom.js&#39;;
- *
- *		// Load from &#39;pastefromword&#39; plugin &#39;filter&#39; sub folder (custom.js file) using full path (including CKEditor installation folder).
- *		CKEDITOR.config.pasteFromWordCleanupFile = &#39;/ckeditor/plugins/pastefromword/filter/custom.js&#39;;
- *
- *		// Load custom.js file from &#39;customFilerts&#39; folder (located in server&#39;s root) using full URL.
- *		CKEDITOR.config.pasteFromWordCleanupFile = &#39;http://my.example.com/customFilerts/custom.js&#39;;
- *
- * @since 3.1
- * @cfg {String} [pasteFromWordCleanupFile=&lt;plugin path&gt; + &#39;filter/default.js&#39;]
- * @member CKEDITOR.config
+ * @event ariaWidget
+ * @member CKEDITOR
+ * @param {Object} data The element wrapping the panel.
  */
 </pre>
 </body>

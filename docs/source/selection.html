@@ -576,7 +576,7 @@
 			// Browsers could loose the selection once the editable lost focus,
 			// in such case we need to reproduce it by saving a locked selection
 			// and restoring it upon focus gain.
-			if ( CKEDITOR.env.ie || CKEDITOR.env.opera || isInline ) {
+			if ( CKEDITOR.env.ie || isInline ) {
 				// Save a cloned version of current selection.
 				function saveSel() {
 					lastSel = new CKEDITOR.dom.selection( editor.getSelection() );
@@ -740,11 +740,10 @@
 				editor.selectionChange( 1 );
 			} );
 
-			// #9699: On Webkit&amp;Gecko in inline editor and on Opera in classic (`iframe`-based) editor we have to check selection
-			// when it was changed by dragging and releasing mouse button outside editable. Dragging (mousedown)
+			// #9699: On Webkit&amp;Gecko in inline editor we have to check selection when it was changed
+			// by dragging and releasing mouse button outside editable. Dragging (mousedown)
 			// has to be initialized in editable, but for mouseup we listen on document element.
-			// On Opera, listening on document element, helps even if mouse button is released outside iframe.
-			if ( isInline ? ( CKEDITOR.env.webkit || CKEDITOR.env.gecko ) : CKEDITOR.env.opera ) {
+			if ( isInline &amp;&amp; ( CKEDITOR.env.webkit || CKEDITOR.env.gecko ) ) {
 				var mouseDown;
 				editable.attachListener( editable, &#39;mousedown&#39;, function() {
 					mouseDown = 1;
@@ -791,8 +790,26 @@
 			editable.attachListener( editable, &#39;keydown&#39;, getOnKeyDownListener( editor ), null, null, -1 );
 		} );
 
-		// Clear the cached range path before unload. (#7174)
-		editor.on( &#39;contentDomUnload&#39;, editor.forceNextSelectionCheck, editor );
+		editor.on( &#39;setData&#39;, function() {
+			// Invalidate locked selection when unloading DOM.
+			// (#9521, #5217#comment:32 and #11500#comment:11)
+			editor.unlockSelection();
+
+			// Webkit&#39;s selection will mess up after the data loading.
+			if ( CKEDITOR.env.webkit )
+				clearSelection();
+		} );
+
+		// Catch all the cases which above setData listener couldn&#39;t catch.
+		// For example: switching to source mode and destroying editor.
+		editor.on( &#39;contentDomUnload&#39;, function() {
+			editor.unlockSelection();
+		} );
+
+		// IE9 might cease to work if there&#39;s an object selection inside the iframe (#7639).
+		if ( CKEDITOR.env.ie9Compat )
+			editor.on( &#39;beforeDestroy&#39;, clearSelection, null, null, 9 );
+
 		// Check selection change on data reload.
 		editor.on( &#39;dataReady&#39;, function() {
 			// Clean up fake selection after setting data.
@@ -801,6 +818,7 @@
 
 			editor.selectionChange( 1 );
 		} );
+
 		// When loaded data are ready check whether hidden selection container was not loaded.
 		editor.on( &#39;loadSnapshot&#39;, function() {
 			// TODO replace with el.find() which will be introduced in #9764,
@@ -812,24 +830,6 @@
 			if ( el &amp;&amp; el.hasAttribute( &#39;data-cke-hidden-sel&#39; ) )
 				el.remove();
 		}, null, null, 100 );
-
-		function clearSelection() {
-			var sel = editor.getSelection();
-			sel &amp;&amp; sel.removeAllRanges();
-		}
-
-		// Clear dom selection before editable destroying to fix some browser
-		// craziness.
-
-		// IE9 might cease to work if there&#39;s an object selection inside the iframe (#7639).
-		CKEDITOR.env.ie9Compat &amp;&amp; editor.on( &#39;beforeDestroy&#39;, clearSelection, null, null, 9 );
-		// Webkit&#39;s selection will mess up after the data loading.
-		CKEDITOR.env.webkit &amp;&amp; editor.on( &#39;setData&#39;, clearSelection );
-
-		// Invalidate locked selection when unloading DOM (e.g. after setData). (#9521)
-		editor.on( &#39;contentDomUnload&#39;, function() {
-			editor.unlockSelection();
-		} );
 
 		editor.on( &#39;key&#39;, function( evt ) {
 			if ( editor.mode != &#39;wysiwyg&#39; )
@@ -843,6 +843,11 @@
 			if ( handler )
 				return handler( { editor: editor, selected: sel.getSelectedElement(), selection: sel, keyEvent: evt } );
 		} );
+
+		function clearSelection() {
+			var sel = editor.getSelection();
+			sel &amp;&amp; sel.removeAllRanges();
+		}
 	} );
 
 	CKEDITOR.on( &#39;instanceReady&#39;, function( evt ) {
@@ -1907,14 +1912,6 @@
 				if ( !sel )
 					return;
 
-				// Opera: The above hack work around a *visually wrong* text selection that
-				// happens in certain situation. (#6874, #9447)
-				if ( CKEDITOR.env.opera ) {
-					var nativeRng = this.document.$.createRange();
-					nativeRng.selectNodeContents( this.root.$ );
-					sel.addRange( nativeRng );
-				}
-
 				this.removeAllRanges();
 
 				for ( var i = 0; i &lt; ranges.length; i++ ) {
@@ -1949,23 +1946,6 @@
 
 					var nativeRange = this.document.$.createRange();
 					var startContainer = range.startContainer;
-
-					// In Opera, we have some cases when a collapsed text selection cursor will be moved out of the
-					// anchor node:
-					// 1. Inside of any empty inline. (#4657)
-					// 2. In adjacent to any inline element.
-					if ( CKEDITOR.env.opera &amp;&amp; range.collapsed &amp;&amp; startContainer.type == CKEDITOR.NODE_ELEMENT ) {
-
-						var leftSib = startContainer.getChild( range.startOffset - 1 ),
-							rightSib = startContainer.getChild( range.startOffset );
-
-						if ( !leftSib &amp;&amp; !rightSib &amp;&amp; startContainer.is( CKEDITOR.dtd.$removeEmpty ) ||
-								 leftSib &amp;&amp; leftSib.type == CKEDITOR.NODE_ELEMENT ||
-								 rightSib &amp;&amp; rightSib.type == CKEDITOR.NODE_ELEMENT ) {
-							range.insertNode( this.document.createText( &#39;&#39; ) );
-							range.collapse( 1 );
-						}
-					}
 
 					if ( range.collapsed &amp;&amp; CKEDITOR.env.webkit &amp;&amp; rangeRequiresFix( range ) ) {
 						// Append a zero-width space so WebKit will not try to

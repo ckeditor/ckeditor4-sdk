@@ -21,7 +21,7 @@
  */
 
 <span id='global-property-'>/**
-</span> * @fileOverview Defines the {@link CKEDITOR.tools} object, which contains
+</span> * @fileOverview Defines the {@link CKEDITOR.tools} object that contains
  *		utility functions.
  */
 
@@ -30,9 +30,17 @@
 		cssVendorPrefix =
 			CKEDITOR.env.gecko ? &#39;-moz-&#39; :
 			CKEDITOR.env.webkit ? &#39;-webkit-&#39; :
-			CKEDITOR.env.opera ? &#39;-o-&#39; :
 			CKEDITOR.env.ie ? &#39;-ms-&#39; :
-			&#39;&#39;;
+			&#39;&#39;,
+		ampRegex = /&amp;/g,
+		gtRegex = /&gt;/g,
+		ltRegex = /&lt;/g,
+		quoteRegex = /&quot;/g,
+
+		ampEscRegex = /&amp;amp;/g,
+		gtEscRegex = /&amp;gt;/g,
+		ltEscRegex = /&amp;lt;/g,
+		quoteEscRegex = /&amp;quot;/g;
 
 	CKEDITOR.on( &#39;reset&#39;, function() {
 		functions = [];
@@ -339,20 +347,31 @@
 		 * @returns {String} The encoded string.
 		 */
 		htmlEncode: function( text ) {
-			return String( text ).replace( /&amp;/g, &#39;&amp;amp;&#39; ).replace( /&gt;/g, &#39;&amp;gt;&#39; ).replace( /&lt;/g, &#39;&amp;lt;&#39; );
+			return String( text ).replace( ampRegex, &#39;&amp;amp;&#39; ).replace( gtRegex, &#39;&amp;gt;&#39; ).replace( ltRegex, &#39;&amp;lt;&#39; );
+		},
+
+<span id='CKEDITOR-tools-method-htmlDecode'>		/**
+</span>		 * Decodes HTML entities.
+		 *
+		 *		alert( CKEDITOR.tools.htmlDecode( &#39;&amp;lt;a &amp;amp; b &amp;gt;&#39; ) ); // &#39;&lt;a &amp; b &gt;&#39;
+		 *
+		 * @param {String} The string to be decoded.
+		 * @returns {String} The decoded string.
+		 */
+		htmlDecode: function( text ) {
+			return text.replace( ampEscRegex, &#39;&amp;&#39; ).replace( gtEscRegex, &#39;&gt;&#39; ).replace( ltEscRegex, &#39;&lt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-htmlEncodeAttr'>		/**
 </span>		 * Replaces special HTML characters in HTMLElement attribute with their relative HTML entity values.
 		 *
-		 *		element.setAttribute( &#39;title&#39;, &#39;&lt;a &quot; b &gt;&#39; );
-		 *		alert( CKEDITOR.tools.htmlEncodeAttr( element.getAttribute( &#39;title&#39; ) ); // &#39;&amp;gt;a &amp;quot; b &amp;lt;&#39;
+		 *		alert( CKEDITOR.tools.htmlEncodeAttr( &#39;&lt;a &quot; b &gt;&#39; ) ); // &#39;&amp;lt;a &amp;quot; b &amp;gt;&#39;
 		 *
 		 * @param {String} The attribute value to be encoded.
 		 * @returns {String} The encoded value.
 		 */
 		htmlEncodeAttr: function( text ) {
-			return text.replace( /&quot;/g, &#39;&amp;quot;&#39; ).replace( /&lt;/g, &#39;&amp;lt;&#39; ).replace( /&gt;/g, &#39;&amp;gt;&#39; );
+			return text.replace( quoteRegex, &#39;&amp;quot;&#39; ).replace( ltRegex, &#39;&amp;lt;&#39; ).replace( gtRegex, &#39;&amp;gt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-htmlDecodeAttr'>		/**
@@ -360,13 +379,13 @@
 		 * {@link #htmlEncodeAttr htmlEncodeAttr} back to their plain character
 		 * representation.
 		 *
-		 *		alert( CKEDITOR.tools.htmlDecodeAttr( &#39;&amp;gt;a &amp;quot; b &amp;lt;&#39; ); // &#39;&lt;a &quot; b &gt;&#39;
+		 *		alert( CKEDITOR.tools.htmlDecodeAttr( &#39;&amp;lt;a &amp;quot; b&amp;gt;&#39; ) ); // &#39;&lt;a &quot; b&gt;&#39;
 		 *
 		 * @param {String} text The text to be decoded.
 		 * @returns {String} The decoded text.
 		 */
 		htmlDecodeAttr: function( text ) {
-			return text.replace( /&amp;quot;/g, &#39;&quot;&#39; ).replace( /&amp;lt;/g, &#39;&lt;&#39; ).replace( /&amp;gt;/g, &#39;&gt;&#39; );
+			return text.replace( quoteEscRegex, &#39;&quot;&#39; ).replace( ltEscRegex, &#39;&lt;&#39; ).replace( gtEscRegex, &#39;&gt;&#39; );
 		},
 
 <span id='CKEDITOR-tools-method-getNextNumber'>		/**
@@ -1113,14 +1132,14 @@
 		},
 
 <span id='CKEDITOR-tools-method-enableHtml5Elements'>		/**
-</span>		 * Enable HTML5 elements for older browsers (IE8) in passed document.
+</span>		 * Enable HTML5 elements for older browsers (IE8) in the passed document.
 		 *
-		 * In IE8 this method can be also executed on document fragment.
+		 * In IE8 this method can also be executed on a document fragment.
 		 *
 		 * **Note:** This method has to be used in the `&lt;head&gt;` section of the document.
 		 *
 		 * @since 4.3
-		 * @param {Object} doc Native `Document` or `DocumentFragment` in which elements will be enabled.
+		 * @param {Object} doc Native `Document` or `DocumentFragment` in which the elements will be enabled.
 		 * @param {Boolean} [withAppend] Whether to append created elements to the `doc`.
 		 */
 		enableHtml5Elements: function( doc, withAppend ) {
@@ -1133,7 +1152,47 @@
 				if ( withAppend )
 					doc.appendChild( el );
 			}
-		}
+		},
+
+<span id='CKEDITOR-tools-method-checkIfAnyArrayItemMatches'>		/**
+</span>		 * Checks if any of the `arr` items match provided regular expression.
+		 *
+		 * @param {Array} arr The array which items will be checked.
+		 * @param {RegExp} regexp The regular expression.
+		 * @returns {Boolean} Returns `true` for the first occurrence of searched pattern.
+		 * @since 4.4
+		 */
+		checkIfAnyArrayItemMatches: function( arr, regexp ) {
+			for ( var i = 0, l = arr.length; i &lt; l; ++i ) {
+				if ( arr[ i ].match( regexp ) )
+					return true;
+			}
+			return false;
+		},
+
+<span id='CKEDITOR-tools-method-checkIfAnyObjectPropertyMatches'>		/**
+</span>		 * Checks if any of the `obj` properties match provided regular expression.
+		 *
+		 * @param obj The object which properties will be checked.
+		 * @param {RegExp} regexp The regular expression.
+		 * @returns {Boolean} Returns `true` for the first occurrence of searched pattern.
+		 * @since 4.4
+		 */
+		checkIfAnyObjectPropertyMatches: function( obj, regexp ) {
+			for ( var i in obj ) {
+				if ( i.match( regexp ) )
+					return true;
+			}
+			return false;
+		},
+
+<span id='CKEDITOR-tools-property-transparentImageData'>		/**
+</span>		 * The data URI of a transparent image. May be used e.g. in HTML as an image source or in CSS in `url()`.
+		 *
+		 * @since 4.4
+		 * @readonly
+		 */
+		transparentImageData: &#39;data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==&#39;
 	};
 } )();
 

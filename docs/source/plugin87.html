@@ -20,30 +20,92 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( &#39;uicolor&#39;, {
-	requires: &#39;dialog&#39;,
-	lang: &#39;ar,bg,ca,cs,cy,da,de,el,en,en-gb,eo,es,et,eu,fa,fi,fr,fr-ca,gl,he,hr,hu,id,it,ja,km,ko,ku,lv,mk,nb,nl,no,pl,pt,pt-br,ru,si,sk,sl,sq,sv,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
-	icons: &#39;uicolor&#39;, // %REMOVE_LINE_CORE%
-	hidpi: true, // %REMOVE_LINE_CORE%
-	init: function( editor ) {
-		if ( CKEDITOR.env.ie6Compat )
-			return;
+( function() {
+	CKEDITOR.plugins.add( &#39;templates&#39;, {
+		requires: &#39;dialog&#39;,
+		lang: &#39;af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn&#39;, // %REMOVE_LINE_CORE%
+		icons: &#39;templates,templates-rtl&#39;, // %REMOVE_LINE_CORE%
+		hidpi: true, // %REMOVE_LINE_CORE%
+		init: function( editor ) {
+			CKEDITOR.dialog.add( &#39;templates&#39;, CKEDITOR.getUrl( this.path + &#39;dialogs/templates.js&#39; ) );
 
-		editor.addCommand( &#39;uicolor&#39;, new CKEDITOR.dialogCommand( &#39;uicolor&#39; ) );
-		editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;UIColor&#39;, {
-			label: editor.lang.uicolor.title,
-			command: &#39;uicolor&#39;,
-			toolbar: &#39;tools,1&#39;
-		} );
-		CKEDITOR.dialog.add( &#39;uicolor&#39;, this.path + &#39;dialogs/uicolor.js&#39; );
+			editor.addCommand( &#39;templates&#39;, new CKEDITOR.dialogCommand( &#39;templates&#39; ) );
 
-		// Load YUI js files.
-		CKEDITOR.scriptLoader.load( CKEDITOR.getUrl( &#39;plugins/uicolor/yui/yui.js&#39; ) );
+			editor.ui.addButton &amp;&amp; editor.ui.addButton( &#39;Templates&#39;, {
+				label: editor.lang.templates.button,
+				command: &#39;templates&#39;,
+				toolbar: &#39;doctools,10&#39;
+			} );
+		}
+	} );
 
-		// Load YUI css files.
-		CKEDITOR.document.appendStyleSheet( CKEDITOR.getUrl( &#39;plugins/uicolor/yui/assets/yui.css&#39; ) );
-	}
-} );
+	var templates = {},
+		loadedTemplatesFiles = {};
+
+	CKEDITOR.addTemplates = function( name, definition ) {
+		templates[ name ] = definition;
+	};
+
+	CKEDITOR.getTemplates = function( name ) {
+		return templates[ name ];
+	};
+
+	CKEDITOR.loadTemplates = function( templateFiles, callback ) {
+		// Holds the templates files to be loaded.
+		var toLoad = [];
+
+		// Look for pending template files to get loaded.
+		for ( var i = 0, count = templateFiles.length; i &lt; count; i++ ) {
+			if ( !loadedTemplatesFiles[ templateFiles[ i ] ] ) {
+				toLoad.push( templateFiles[ i ] );
+				loadedTemplatesFiles[ templateFiles[ i ] ] = 1;
+			}
+		}
+
+		if ( toLoad.length )
+			CKEDITOR.scriptLoader.load( toLoad, callback );
+		else
+			setTimeout( callback, 0 );
+	};
+} )();
+
+
+
+<span id='CKEDITOR-config-cfg-templates'>/**
+</span> * The templates definition set to use. It accepts a list of names separated by
+ * comma. It must match definitions loaded with the {@link #templates_files} setting.
+ *
+ *		config.templates = &#39;my_templates&#39;;
+ *
+ * @cfg {String} [templates=&#39;default&#39;]
+ * @member CKEDITOR.config
+ */
+
+<span id='CKEDITOR-config-cfg-templates_files'>/**
+</span> * The list of templates definition files to load.
+ *
+ *		config.templates_files = [
+ *			&#39;/editor_templates/site_default.js&#39;,
+ *			&#39;http://www.example.com/user_templates.js
+ *		];
+ *
+ * @cfg
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.templates_files = [
+	CKEDITOR.getUrl( &#39;plugins/templates/templates/default.js&#39; )
+];
+
+<span id='CKEDITOR-config-cfg-templates_replaceContent'>/**
+</span> * Whether the &quot;Replace actual contents&quot; checkbox is checked by default in the
+ * Templates dialog.
+ *
+ *		config.templates_replaceContent = false;
+ *
+ * @cfg
+ * @member CKEDITOR.config
+ */
+CKEDITOR.config.templates_replaceContent = true;
 </pre>
 </body>
 </html>
