@@ -170,6 +170,23 @@ body
 	padding: 30px;
 }
 
+.sdk-sidebar h2, .sdk-sidebar h3
+{
+	font-family: "Maven Pro";
+	font-weight: normal;
+	color: #000;
+}
+
+.sdk-sidebar h2
+{
+	font-size: 1.2rem;
+}
+
+.sdk-sidebar h3
+{
+	font-size: 1rem;
+}
+
 /* --- Footer ------------------------ */
 
 .sdk-footer
@@ -211,7 +228,7 @@ body
 
 .sdk-contents h1,
 .sdk-contents h2,
-.sdk-contents h3
+.sdk-contents h3,
 {
 	font-family: "Maven Pro";
 	font-weight: normal;
