@@ -1,0 +1,7 @@
+{
+    "name": "ckeditor-sdk-builder",
+    "version": "0.0.1",
+    "dependencies": {
+        "cheerio": "0.16.0"
+    }
+}
