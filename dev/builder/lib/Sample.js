@@ -70,7 +70,7 @@ Sample.createSidebar = function( categories, highlight ) {
                     sample.name == highlight.name
                     );
 
-                result.push( '<li><a class="' + ( highlightMe ? 'active' : '' )  + '" href="' + sample.name + '.html">' + sample.title + '</a></li>' );
+                result.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + sample.name + '.html">' + sample.title + '</a></li>' );
             } );
             result.push('</ul>')
         } );
