@@ -42,16 +42,16 @@ function readFiles( filesArr ) {
 
 // return array of Sample instances
 function setupSamplesSync( _samples ) {
-    index = new Sample( 'index', _samples[ 'index.html' ] );
+    index = new Sample( 'index', _samples[ '_index.html' ] );
 
-    var removed = delete _samples[ 'index.html' ];
+    var removed = delete _samples[ '_index.html' ];
 
     samples = _.map( _samples, function( fileContent, fileName ) {
         return new Sample( fileName.split( '.' )[ 0 ], fileContent, index );
     } );
 
     if ( !removed )
-        throw 'Could not found "index.html" file in samples directory.';
+        throw 'Could not found "_index.html" file in samples directory.';
 
     return samples;
 }
