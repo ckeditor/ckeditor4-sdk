@@ -1,0 +1,29 @@
+{
+    "categories": [
+        {
+            "name": "End-user Features",
+            "subcategories": [
+                "Appearance",
+                "Size control",
+                "Inserting content",
+                "Content creation",
+                "Working with document",
+                "Content filtering",
+                "Content cleanup",
+                "Accessibility"
+            ]
+        },
+        {
+            "name": "Integration",
+            "subcategories": [
+                "Inserting CKEditor",
+                "Tools",
+                "jQuery",
+                "API Usage",
+                "HTML Output control",
+                "File management",
+                "Tutorials"
+            ]
+        }
+    ]
+}
