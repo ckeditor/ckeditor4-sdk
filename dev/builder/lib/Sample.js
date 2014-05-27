@@ -22,24 +22,25 @@ function Sample( name, content, index ) {
     this.$nav = this.$( 'nav.sdk-sidebar' );
 
     if ( this.name != 'index' ) {
-        this.category = this.$( 'meta[name="sdk-category"]' );
-        if ( this.category.length != 1 )
-            throw 'Invalid number of sdk-category meta tags in sample: ' + this.name;
-        this.category = this.category.attr( 'content' );
-
-        this.subcategory = this.$( 'meta[name="sdk-subcategory"]' );
-        if ( this.subcategory.length != 1 )
-            throw 'Invalid number of sdk-subcategory meta tags in sample: ' + this.name;
-        this.subcategory = this.subcategory.attr( 'content' );
-
-        this.weight = this.$( 'meta[name="sdk-weight"]' );
-        if ( this.weight.length > 1 )
-            throw 'Invalid number of sdk-weight meta tags in sample: ' + this.name;
-        this.weight = Number( this.weight.attr( 'content' ) ) || 1;
+        this.parseMeta( 'category' );
+        this.parseMeta( 'subcategory' );
+        this.parseMeta( 'weight', function( element ) { return element.length > 1;  } );
     }
 }
 
 Sample.prototype = {
+    parseMeta: function( name, lengthValidator ) {
+
+        lengthValidator = lengthValidator || function( element ) {
+            return element.length != 1;
+        };
+
+        this[ name ] = this.$( 'meta[name="sdk-' + name + '"]' );
+        if ( lengthValidator( this[ name ] ) )
+            throw 'Invalid number of sdk-' + name + ' meta tags in sample: ' + this.name;
+        this[ name ] = this[ name ].attr( 'content' );
+    },
+
     setSidebar: function( categories ) {
         if ( this.name != 'index' )
             this.$nav.html( Sample.createSidebar( categories, _.pick( this, 'category', 'subcategory', 'name' ) ) );

@@ -58,7 +58,7 @@ function setupSamplesSync( _samples ) {
 
 // return array of categories
 function parseCategoriesSync( samples ) {
-    console.log( 'Parsing files.' );
+    console.log( 'Parsing categories.' );
 
     _.each( samples, function( sample ) {
         var category, subcategory;
@@ -70,7 +70,6 @@ function parseCategoriesSync( samples ) {
 
         subcategory = category.subcategories[ sample.subcategory ] = category.subcategories[ sample.subcategory ] || {
             name: sample.subcategory,
-            weight: null,
             samples: []
         };
 
@@ -89,6 +88,13 @@ function parseCategoriesSync( samples ) {
         subcategory.samples.push( sample );
     } );
 
+    // Sorting each subcategory elements by their weights.
+    sortSamplesByWeight( categories );
+
+    return categories;
+}
+
+function sortSamplesByWeight( categories ) {
     _.each( categories, function( category ) {
         _.each( category.subcategories, function( subcategory ) {
             subcategory.samples.sort( function( a, b ) {
@@ -96,8 +102,6 @@ function parseCategoriesSync( samples ) {
             } );
         } );
     } );
-
-    return categories;
 }
 
 // return promise
