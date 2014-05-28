@@ -8,7 +8,7 @@ It will be used for building online CKEditor SDK and you will also be able to do
 
 ### Building a release SDK
 
-To build SDK you need to have [node.js](http://nodejs.org) installed. Once you have it, open terminal and navigate to `dev\builder` directory:
+To build SDK you need to have [node.js](http://nodejs.org) installed. Once you have it, open the command line and navigate to the `dev/builder` directory:
 
         > cd dev/builder
 
@@ -16,8 +16,8 @@ Then install all package dependencies:
 
         > npm install
 
-After that run builder:
+After that run the builder:
 
         > node app.js
 
-When build process is finished, you can find working copy in the `dev/release` directory.
+When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
