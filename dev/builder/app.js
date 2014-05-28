@@ -1,10 +1,12 @@
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
+    rimraf = require( 'rimraf' ),
     path = require( 'path' ),
     call = require( 'when/node' ).call,
     cheerio = require( 'cheerio' ),
     when = require( 'when' ),
     whenFs = require( 'when/node' ).liftAll( fs ),
+    whenRimraf = require( 'when/node' ).lift( rimraf ),
     whenKeys = require( 'when/keys' ),
     _ = require( 'lodash-node' ),
 
@@ -146,7 +148,8 @@ function readSamplesDir() {
     return whenFs.readdir( SAMPLES_PATH );
 }
 
-copyFiles()
+whenRimraf( RELEASE_PATH )
+    .then( copyFiles )
     .then( readSamplesDir )
     .then( selectFilesSync )
     .then( readFiles )
