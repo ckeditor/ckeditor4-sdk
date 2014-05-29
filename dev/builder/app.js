@@ -2,6 +2,7 @@ var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
     rimraf = require( 'rimraf' ),
     path = require( 'path' ),
+    Path = require( './lib/Path' ),
     call = require( 'when/node' ).call,
     cheerio = require( 'cheerio' ),
     when = require( 'when' ),
@@ -14,11 +15,15 @@ var fs = require( 'fs' ),
 
     SAMPLES_PATH = '../../samples',
     RELEASE_PATH = '../release',
+    BASE_PATH = path.resolve('../..'),
+    VENDORMATHJAX_PATH = path.resolve(BASE_PATH + '/vendor/mathjax'),
 
     validCategories = JSON.parse( fs.readFileSync( './categories.json', 'utf8' ) ).categories,
     samples = [],
     index = null,
-    categories = {};
+    categories = {},
+
+    DEBUG = false;
 
 require( 'when/monitor/console' );
 
@@ -108,19 +113,73 @@ function sortSamplesByWeight( categories ) {
 
 // return promise
 function copyFiles() {
-    console.log( 'Copying files.' );
+    console.log('Copying new release files');
+
     var options = {};
 
-    options.filter = function( name ) {
-        var basename = path.basename( name ),
-            startFromDot = !!basename.match( /^\./i ),
-            isReleaseDir = basename == 'release',
-            isSamplesDir = basename == 'samples';
+    options.filter = function ( name ) {
+        var currPath = new Path( name );
 
-        return !( startFromDot || isReleaseDir || isSamplesDir );
+        var blackList = _.some( [
+            !!path.basename( name ).match( /^\./i ),
+            currPath.matchLeft( new Path( BASE_PATH + '/dev/release' ) ),
+            currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
+            currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) )
+        ] );
+
+        var whiteList = false;
+
+        var preventCopy = !whiteList && blackList;
+        if ( DEBUG && preventCopy ) {
+            console.log( name );
+        }
+
+        return !preventCopy;
     };
 
     return call( ncp, '../../', RELEASE_PATH, options );
+}
+
+function copyMathjaxFiles() {
+    var options = {};
+
+    console.log( 'Copying Mathjax files' );
+
+    fs.mkdirSync( RELEASE_PATH + '/vendor/mathjax' );
+
+    options.filter = function ( name ) {
+        var currPath = new Path( name );
+
+        var whiteList = _.some( [
+            ( path.resolve( name ) === path.resolve( '../../vendor/mathjax' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/localization/en' ) )
+        ] );
+
+        var blackList = _.some( [
+            !!path.basename( name ).match( /^\./i ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/docs' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/extensions/MathML' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Asana-Math' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Gyre-Pagella' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Gyre-Termes' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Latin-Modern' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Neo-Euler' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fontsHTML-CSS/STIX-Web' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/input/MathML' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/localization/*' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/test' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/unpacked' ) )
+        ] );
+
+        var preventCopy = !whiteList && blackList;
+        if ( DEBUG && preventCopy ) {
+            console.log( 'Ommited', name );
+        }
+
+        return !preventCopy;
+    };
+
+    return call( ncp, '../../vendor/mathjax', RELEASE_PATH + '/vendor/mathjax', options );
 }
 
 // return promise
@@ -148,8 +207,10 @@ function readSamplesDir() {
     return whenFs.readdir( SAMPLES_PATH );
 }
 
+console.log('Removing old release directory');
 whenRimraf( RELEASE_PATH )
     .then( copyFiles )
+    .then( copyMathjaxFiles )
     .then( readSamplesDir )
     .then( selectFilesSync )
     .then( readFiles )
