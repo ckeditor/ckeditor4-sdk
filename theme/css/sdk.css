@@ -296,7 +296,7 @@ body
 	font-size: 1.3125rem;
 }
 
-.sdk-contents a
+.sdk-contents a:not(.cke_path_item)
 {
 	color: #cf5d4e;
 	text-decoration: none;
@@ -309,7 +309,7 @@ body
 	border-bottom: 1px solid #eee;
 }
 
-.sdk-contents a:hover
+.sdk-contents a:hover:not(.cke_path_item)
 {
 	color: #a64b3f;
 }
