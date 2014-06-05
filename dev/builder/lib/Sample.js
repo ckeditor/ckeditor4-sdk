@@ -62,7 +62,7 @@ Sample.createSidebar = function( categories, highlight ) {
 
             result.push( '<h3>' + subcategory.name + '</h3>' );
 
-            result.push('<ul>');
+            result.push( '<ul>' );
             _.each( subcategory.samples, function( sample ) {
                 var highlightMe = (
                     highlight &&
@@ -73,7 +73,7 @@ Sample.createSidebar = function( categories, highlight ) {
 
                 result.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + sample.name + '.html">' + sample.title + '</a></li>' );
             } );
-            result.push('</ul>')
+            result.push( '</ul>' )
         } );
     } );
 
