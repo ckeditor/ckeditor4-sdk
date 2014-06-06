@@ -1,15 +1,17 @@
 var cheerio = require( 'cheerio' ),
     _ = require( 'lodash-node' ),
-    TITLE_PREFIX = 'CKEditor SDK &raquo; Samples &raquo; ';
+    TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
 function Sample( name, content, index ) {
-    this.$ = cheerio.load( content );
+    this.$ = cheerio.load( content, {
+        decodeEntities: false
+    } );
 
     this.name = name;
 
     this.$title = this.$( 'title' );
-    this.title = this.$title.text();
-    this.$title.html( TITLE_PREFIX + this.title );
+    this.title = this.$title.html();
+    this.$title.text( TITLE_PREFIX + this.title );
 
     this.$header = this.$( 'header' );
     this.$footer = this.$( 'footer' );
