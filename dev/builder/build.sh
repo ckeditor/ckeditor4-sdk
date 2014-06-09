@@ -4,4 +4,11 @@
 
 # Build CKEditor SDK
 
+# Running builder excluding documentation
 node app.js
+
+# Running documentation builder
+sh ../../docs/build.sh
+
+# Move generated documentation to proper directory
+mv ../../docs/build ../release/docs

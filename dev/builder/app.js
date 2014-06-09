@@ -124,7 +124,8 @@ function copyFiles() {
             !!path.basename( name ).match( /^\./i ),
             currPath.matchLeft( new Path( BASE_PATH + '/dev/release' ) ),
             currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
-            currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) )
+            currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
+            currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
         ] );
 
         var whiteList = false;
