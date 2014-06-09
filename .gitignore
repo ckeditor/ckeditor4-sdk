@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 dev/release
 dev/builder/node_modules
+=======
+.idea
+>>>>>>> 78efdfd... Added .gitignore
