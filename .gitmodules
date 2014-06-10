@@ -4,6 +4,3 @@
 [submodule "vendor/mathjax"]
 	path = vendor/mathjax
 	url = git@github.com:mathjax/MathJax.git
-[submodule "docs"]
-	path = docs
-	url = git@github.com:ckeditor/ckeditor-docs.git
