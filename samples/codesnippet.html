@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="sdk-category" content="End-user Features">
+    <meta name="sdk-subcategory" content="Inserting content">
+    <meta name="description" content="Code Snippets">
+    <meta name="keywords" content="ckeditor, editor, wysiwyg, code, snippet, snippets, pre, syntax, highlighting, highlighter, coloring, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<title>Code Snippets</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Inserting Code Snippets</h1>
+
+            <p>
+                This editor is using the optional <a href="http://ckeditor.com/addon/codesnippet">Code Snippet</a> plugin which introduces beautiful code snippets. By default the plugin depends on the built-in client-side syntax highlighting library <a href="http://highlightjs.org">highlight.js</a>.
+            </p>
+            <p>
+                A few configuration options are available to fine-tune this feature, including setting a custom highlighter theme (see <a href="http://highlightjs.org/static/test.html">available themes</a>), adjusting support for programming languages, or even implementing a different highlighter library. Refer to the <a href="../docs/#!/guide/dev_codesnippet">Code Snippets in CKEditor</a> article to learn more about this feature.
+            </p>
+            <p>
+                You can select a theme for the editor instance below here: <select id="select"></select>
+            </p>
+			<p>
+				This editor sample was customized by setting the following <a href="../docs/#!/guide/dev_configuration">configuration options</a>:
+			</p>
+<pre class="samples" id="sampleConfig">
+CKEDITOR.replace( 'editor1', {
+	<strong>extraPlugins: 'codesnippet',</strong>
+	codeSnippet_theme: 'monokai_sublime'
+} );
+</pre>
+
+            <textarea id="editor1">
+&lt;p&gt;JavaScript code:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;code class="language-javascript"&gt;function isEmpty( object ) {
+	for ( var i in object ) {
+		if ( object.hasOwnProperty( i ) )
+			return false;
+	}
+	return true;
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unknown markup:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;code&gt; ________________
+/                \
+| How about moo? |  ^__^
+\________________/  (oo)\_______
+                  \ (__)\       )\/\
+                        ||----w |
+                        ||     ||
+&lt;/code&gt;&lt;/pre&gt;
+            </textarea>
+            <p id="ie8-warning">
+                Please note that this plugin is not compatible with Internet Explorer 8.
+            </p>
+
+            <h2>Server-side Highlighting and Custom Highlighting Engines</h2>
+
+            <p>
+                The <a href="http://ckeditor.com/addon/codesnippetgeshi"><strong>Code Snippet GeSHi</strong></a> plugin is an
+		extension of the <strong>Code Snippet</strong> plugin. It implements the well-known <a href="http://qbnz.com/highlighter/">GeSHi</a> library with a server-side highlighter. See the <a href="../docs/#!/guide/dev_codesnippetgeshi">Code Snippet GeSHi</a> article for implementation details.
+            </p>
+
+            <p>
+                It also is possible to replace the default highlighter with any library using the <a href="../docs/#!/api/CKEDITOR.plugins.codesnippet.highlighter">Highlighter API</a> and the <code><a href="../docs/#!/api/CKEDITOR.plugins.codesnippet-method-setHighlighter">editor.plugins.codesnippet.setHighlighter()</a></code> method. Refer to the <a href="../docs/#!/guide/dev_codesnippet">Code Snippets in CKEditor</a> article for more information.
+            </p>
+    
+            <script>
+
+                ( function() {
+
+                    var config = {
+                        extraPlugins: 'codesnippet',
+                        codeSnippet_theme: 'monokai_sublime',
+                        height: 400
+                    };
+
+                    CKEDITOR.replace( 'editor1', config );
+
+                    initThemeChange();
+
+                    function initThemeChange() {
+                        var templates = [
+                            'monokai_sublime', 'default', 'arta', 'ascetic', 'atelier-dune.dark', 'atelier-dune.light', 'atelier-forest.dark', 'atelier-forest.light', 'atelier-heath.dark', 'atelier-heath.light', 'atelier-lakeside.dark', 'atelier-lakeside.light', 'atelier-seaside.dark', 'atelier-seaside.light', 'brown_paper', 'dark', 'docco', 'far', 'foundation', 'github', 'googlecode', 'idea', 'ir_black', 'magula', 'mono-blue', 'monokai', 'obsidian', 'paraiso.dark', 'paraiso.light', 'pojoaque', 'railscasts', 'rainbow', 'school_book', 'solarized_dark', 'solarized_light', 'sunburst', 'tomorrow-night-blue', 'tomorrow-night-bright', 'tomorrow-night-eighties', 'tomorrow-night', 'tomorrow', 'vs', 'xcode', 'zenburn'
+                        ],
+                            pre = CKEDITOR.document.getById( 'sampleConfig' ),
+                            select = CKEDITOR.document.getById( 'select' ),
+                            codeTemplate = 'CKEDITOR.replace( \'editor1\', {\n' +
+                            '	<strong>extraPlugins: \'codesnippet\',</strong>\n' +
+                            '	codeSnippet_theme: \'{tpl}\'\n' +
+                            '} );',
+                            name, option;
+
+                        while ( ( name = templates.shift() ) ) {
+                            option = CKEDITOR.document.createElement( 'option', {
+                                attributes: {
+                                    value: name
+                                }
+                            } );
+
+                            option.setText( name );
+                            select.append( option );
+                        }
+
+                        select.$.onchange = function() {
+                            if ( CKEDITOR.instances.editor1 )
+                                CKEDITOR.instances.editor1.destroy();
+
+                            CKEDITOR.replace( 'editor1', CKEDITOR.tools.extend( {}, config, {
+                                codeSnippet_theme: this.value
+                            }, true ) );
+
+                            pre.setHtml( codeTemplate.replace( '{tpl}', this.value ) );
+                        };
+                    }
+
+                    if ( CKEDITOR.env.ie && CKEDITOR.env.version == 8 )
+                        CKEDITOR.document.getById( 'ie8-warning' ).addClass( 'warning' );
+                }() );
+            
+            </script>
+                
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
