@@ -37,10 +37,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				This editor sample was customized by setting the following <a href="../docs/#!/guide/dev_configuration">configuration options</a>:
 			</p>
 <pre class="samples" id="sampleConfig">
-CKEDITOR.replace( 'editor1', {
-	<strong>extraPlugins: 'codesnippet',</strong>
-	codeSnippet_theme: 'monokai_sublime'
-} );
+<strong>config.extraPlugins = 'codesnippet';</strong>
+config.codeSnippet_theme = 'monokai_sublime';
 </pre>
 
             <textarea id="editor1">
@@ -81,7 +79,7 @@ CKEDITOR.replace( 'editor1', {
             <p>
                 It also is possible to replace the default highlighter with any library using the <a href="../docs/#!/api/CKEDITOR.plugins.codesnippet.highlighter">Highlighter API</a> and the <code><a href="../docs/#!/api/CKEDITOR.plugins.codesnippet-method-setHighlighter">editor.plugins.codesnippet.setHighlighter()</a></code> method. Refer to the <a href="../docs/#!/guide/dev_codesnippet">Code Snippets in CKEditor</a> article for more information.
             </p>
-    
+
             <script>
 
                 ( function() {
@@ -102,10 +100,8 @@ CKEDITOR.replace( 'editor1', {
                         ],
                             pre = CKEDITOR.document.getById( 'sampleConfig' ),
                             select = CKEDITOR.document.getById( 'select' ),
-                            codeTemplate = 'CKEDITOR.replace( \'editor1\', {\n' +
-                            '	<strong>extraPlugins: \'codesnippet\',</strong>\n' +
-                            '	codeSnippet_theme: \'{tpl}\'\n' +
-                            '} );',
+                            codeTemplate = '<strong>config.extraPlugins = \'codesnippet\';</strong>\n' +
+								'config.codeSnippet_theme = \'{tpl}\';\n',
                             name, option;
 
                         while ( ( name = templates.shift() ) ) {
@@ -134,9 +130,9 @@ CKEDITOR.replace( 'editor1', {
                     if ( CKEDITOR.env.ie && CKEDITOR.env.version == 8 )
                         CKEDITOR.document.getById( 'ie8-warning' ).addClass( 'warning' );
                 }() );
-            
+
             </script>
-                
+
 		</section>
 	</section>
 
