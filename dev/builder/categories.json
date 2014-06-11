@@ -4,12 +4,12 @@
             "name": "End-user Features",
             "subcategories": [
                 "Appearance",
-                "Size control",
-                "Inserting content",
-                "Content creation",
-                "Working with document",
-                "Content filtering",
-                "Content cleanup",
+                "Size Control",
+                "Inserting Content",
+                "Content Creation",
+                "Working With Document",
+                "Content Filtering",
+                "Content Cleanup",
                 "Accessibility"
             ]
         },
@@ -20,8 +20,8 @@
                 "Tools",
                 "jQuery",
                 "API Usage",
-                "HTML Output control",
-                "File management",
+                "HTML Output Control",
+                "File Vanagement",
                 "Tutorials"
             ]
         }
