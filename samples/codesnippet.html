@@ -45,13 +45,9 @@ config.codeSnippet_theme = 'monokai_sublime';
 &lt;p&gt;JavaScript code:&lt;/p&gt;
 
 &lt;pre&gt;
-&lt;code class="language-javascript"&gt;function isEmpty( object ) {
-	for ( var i in object ) {
-		if ( object.hasOwnProperty( i ) )
-			return false;
-	}
-	return true;
-}&lt;/code&gt;&lt;/pre&gt;
+&lt;code class="language-javascript"&gt;var cow = new Mammal( "moo", {
+	legs: 4
+} );&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Unknown markup:&lt;/p&gt;
 
@@ -87,7 +83,7 @@ config.codeSnippet_theme = 'monokai_sublime';
                     var config = {
                         extraPlugins: 'codesnippet',
                         codeSnippet_theme: 'monokai_sublime',
-                        height: 400
+                        height: 356
                     };
 
                     CKEDITOR.replace( 'editor1', config );
