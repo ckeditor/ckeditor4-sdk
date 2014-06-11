@@ -208,6 +208,14 @@ function readSamplesDir() {
     return whenFs.readdir( SAMPLES_PATH );
 }
 
+function prepareDocsBuilderConfig() {
+    var cfg = JSON.parse( fs.readFileSync( BASE_PATH + '/docs/config.json', 'utf8' ) );
+    delete cfg[ '--seo' ];
+    fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
+}
+
+prepareDocsBuilderConfig();
+
 console.log('Removing old release directory');
 whenRimraf( RELEASE_PATH )
     .then( copyFiles )
@@ -218,4 +226,5 @@ whenRimraf( RELEASE_PATH )
     .then( setupSamplesSync )
     .then( parseCategoriesSync )
     .then( prepareSamplesDir )
-    .then( prepareSamplesFilesSync );
+    .then( prepareSamplesFilesSync )
+    .then( prepareDocsBuilderConfig );

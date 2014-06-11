@@ -8,7 +8,10 @@
 node app.js
 
 # Running documentation builder
-sh ../../docs/build.sh
+sh ../../docs/build.sh --config seo-off-config.json
 
 # Move generated documentation to proper directory
 mv ../../docs/build ../release/docs
+
+# Remove dynamically generated config
+rm ../../docs/seo-off-config.json
