@@ -5,7 +5,7 @@
 # Build CKEditor SDK
 
 # Running builder excluding documentation
-node app.js
+node app.js build
 
 # Running documentation builder
 sh ../../docs/build.sh --config seo-off-config.json
@@ -15,3 +15,5 @@ mv ../../docs/build ../release/docs
 
 # Remove dynamically generated config
 rm ../../docs/seo-off-config.json
+
+node app.js fixdocs

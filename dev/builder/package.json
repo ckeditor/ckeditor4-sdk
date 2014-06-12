@@ -6,6 +6,7 @@
         "when": "~3.0.1",
         "lodash-node": "*",
         "ncp": "0.5.1",
-        "rimraf": "2.2.8"
+        "rimraf": "2.2.8",
+        "nomnom": "1.7.0"
     }
 }

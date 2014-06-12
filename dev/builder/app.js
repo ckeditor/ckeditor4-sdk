@@ -1,5 +1,6 @@
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
+    nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
     path = require( 'path' ),
     Path = require( './lib/Path' ),
@@ -214,17 +215,45 @@ function prepareDocsBuilderConfig() {
     fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
 }
 
-prepareDocsBuilderConfig();
+function done() {
+    process.exit( 1 );
+}
 
-console.log('Removing old release directory');
-whenRimraf( RELEASE_PATH )
-    .then( copyFiles )
-    .then( copyMathjaxFiles )
-    .then( readSamplesDir )
-    .then( selectFilesSync )
-    .then( readFiles )
-    .then( setupSamplesSync )
-    .then( parseCategoriesSync )
-    .then( prepareSamplesDir )
-    .then( prepareSamplesFilesSync )
-    .then( prepareDocsBuilderConfig );
+nomnom.command( 'build' )
+    .callback( build )
+    .help( 'Building release version of sdk.' );
+
+nomnom.command( 'fixdocs' )
+    .callback( fixdocs )
+    .help( 'Fixing docs for offline use.' );
+
+nomnom.parse();
+
+function build() {
+    console.log( 'Removing old release directory' );
+    whenRimraf( RELEASE_PATH )
+        .then( copyFiles )
+        .then( copyMathjaxFiles )
+        .then( readSamplesDir )
+        .then( selectFilesSync )
+        .then( readFiles )
+        .then( setupSamplesSync )
+        .then( parseCategoriesSync )
+        .then( prepareSamplesDir )
+        .then( prepareSamplesFilesSync )
+        .then( prepareDocsBuilderConfig )
+        .then( done );
+}
+
+function fixdocs() {
+    var filePath = RELEASE_PATH + '/docs/index.html',
+        $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
+            decodeEntities: false
+        } );
+
+    $( '.print.guide' ).remove();
+
+    fs.writeFileSync( filePath, $.html(), 'utf8' );
+
+    done();
+}
