@@ -6,10 +6,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <html>
 <head>
 	<meta charset="utf-8">
-    <meta name="sdk-category" content="End-user Features">
-    <meta name="sdk-subcategory" content="Working With Document">
-    <meta name="description" content="Magic Line">
-    <meta name="keywords" content="ckeditor, editor, wysiwyg, magicline, magic line, focus, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-category" content="End-user Features">
+	<meta name="sdk-subcategory" content="Working With Document">
+	<meta name="description" content="Magic Line">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, magicline, magic line, focus, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 	<title>Magic Line</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -28,76 +28,84 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h1>Magic Line</h1>
 
 			<p>
-				Some document elements make placing the cursor in their vicinty problematic. This pertains to, for example, images, tables or <code>&lt;div&gt;</code> elements that start or end a document, lists, or even adjacent horizontal lines.
+				Some document elements make placing the cursor in their vicinty problematic. This pertains to, for example, images, tables or <code>&lt;div&gt;</code> elements that start or end a
+				document, lists, or even adjacent horizontal lines.
 			</p>
-            <p>
-                CKEditor 4 introduced the <a href="http://ckeditor.com/addon/magicline">Magic Line</a> plugin that helps overcome these limitations. The plugin is included in the Standard and Full installation packages. It causes a red line with a handle (<img src="assets/magicline/magicline_01.png" alt="Magic Line handle">) to appear when you hover your mouse over any such otherwise inaccessible place in an active editor. When you click the magic line's handle (or use the default <kbd>Shift+Ctrl+3</kbd> and <kbd>Shift+Ctrl+4</kbd> keyboard shortcut), a new paragraph will be inserted into the document.  
-            </p>
-            <p>
-                A few configuration options are available to fine-tune this feature, including adjusting the magic line color, setting custom keyboard shortcuts, or adjusting which elements should trigger the appearance of the magic line. Refer to the <a href="../docs/#!/guide/dev_magicline">Magic Line</a> article to learn more about this feature.
-            </p>
+
+			<p>
+				CKEditor 4 introduced the <a href="http://ckeditor.com/addon/magicline">Magic Line</a> plugin that helps overcome these limitations. The plugin is included in the Standard and Full
+				installation packages. It causes a red line with a handle (<img src="assets/magicline/magicline_01.png" alt="Magic Line handle">) to appear when you hover your mouse over any such
+				otherwise inaccessible place in an active editor. When you click the magic line's handle (or use the default <kbd>Shift+Ctrl+3</kbd> and <kbd>Shift+Ctrl+4</kbd> keyboard shortcut), a
+				new paragraph will be inserted into the document.
+			</p>
+
+			<p>
+				A few configuration options are available to fine-tune this feature, including adjusting the magic line color, setting custom keyboard shortcuts, or adjusting which elements should
+				trigger the appearance of the magic line. Refer to the <a href="../docs/#!/guide/dev_magicline">Magic Line</a> article to learn more about this feature.
+			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
 				&lt;table border=&quot;1&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; style=&quot;width: 100%; &quot;&gt;
 				&lt;tbody&gt;
-					&lt;tr&gt;
-						&lt;td&gt;This table&lt;/td&gt;
-						&lt;td&gt;is the&lt;/td&gt;
-						&lt;td&gt;very first&lt;/td&gt;
-						&lt;td&gt;element of the document.&lt;/td&gt;
-					&lt;/tr&gt;
-					&lt;tr&gt;
-						&lt;td&gt;You are still&lt;/td&gt;
-						&lt;td&gt;able to place&lt;/td&gt;
-						&lt;td&gt;the cursor before it.&lt;/td&gt;
-						&lt;td&gt;
-						&lt;table border=&quot;1&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; style=&quot;width: 100%; &quot;&gt;
-							&lt;tbody&gt;
-								&lt;tr&gt;
-									&lt;td&gt;This table is inside a cell of another table.&lt;/td&gt;
-								&lt;/tr&gt;
-								&lt;tr&gt;
-									&lt;td&gt;You can type&amp;nbsp;either before or after it, though.&lt;/td&gt;
-								&lt;/tr&gt;
-							&lt;/tbody&gt;
-						&lt;/table&gt;
-						&lt;/td&gt;
-					&lt;/tr&gt;
+				&lt;tr&gt;
+				&lt;td&gt;This table&lt;/td&gt;
+				&lt;td&gt;is the&lt;/td&gt;
+				&lt;td&gt;very first&lt;/td&gt;
+				&lt;td&gt;element of the document.&lt;/td&gt;
+				&lt;/tr&gt;
+				&lt;tr&gt;
+				&lt;td&gt;You are still&lt;/td&gt;
+				&lt;td&gt;able to place&lt;/td&gt;
+				&lt;td&gt;the cursor before it.&lt;/td&gt;
+				&lt;td&gt;
+				&lt;table border=&quot;1&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; style=&quot;width: 100%; &quot;&gt;
+				&lt;tbody&gt;
+				&lt;tr&gt;
+				&lt;td&gt;This table is inside a cell of another table.&lt;/td&gt;
+				&lt;/tr&gt;
+				&lt;tr&gt;
+				&lt;td&gt;You can type&amp;nbsp;either before or after it, though.&lt;/td&gt;
+				&lt;/tr&gt;
 				&lt;/tbody&gt;
-			&lt;/table&gt;
+				&lt;/table&gt;
+				&lt;/td&gt;
+				&lt;/tr&gt;
+				&lt;/tbody&gt;
+				&lt;/table&gt;
 
-			&lt;p&gt;The following are two successive horizontal lines (&lt;code&gt;hr&lt;/code&gt; elements). Thanks to Magic Line you can easily place the cursor in between them:&lt;/p&gt;
+				&lt;p&gt;The following are two successive horizontal lines (&lt;code&gt;hr&lt;/code&gt; elements). Thanks to Magic Line you can easily place the cursor in between them:&lt;/p&gt;
 
-			&lt;hr /&gt;
-			&lt;hr /&gt;
-			&lt;ol&gt;
+				&lt;hr /&gt;
+				&lt;hr /&gt;
+				&lt;ol&gt;
 				&lt;li&gt;This numbered list...&lt;/li&gt;
 				&lt;li&gt;...is a neighbor of the horizontal line above...&lt;/li&gt;
 				&lt;li&gt;...and also of another list.&lt;/li&gt;
-			&lt;/ol&gt;
+				&lt;/ol&gt;
 
-			&lt;ul&gt;
+				&lt;ul&gt;
 				&lt;li&gt;Nevertheless, you can type between the lists...&lt;/li&gt;
 				&lt;li&gt;...thanks to &lt;strong&gt;Magic Line&lt;/strong&gt;!&lt;/li&gt;
-			&lt;/ul&gt;
+				&lt;/ul&gt;
 
-			&lt;p&gt;Lorem ipsum dolor sit amet dui. Morbi vel turpis. Nullam et leo. Etiam rutrum, urna tellus dui vel tincidunt mattis egestas, justo fringilla vel, massa.&lt;/p&gt;
+				&lt;p&gt;Lorem ipsum dolor sit amet dui. Morbi vel turpis. Nullam et leo. Etiam rutrum, urna tellus dui vel tincidunt mattis egestas, justo fringilla vel, massa.&lt;/p&gt;
 
-			&lt;p&gt;Ut pretium. Vestibulum rutrum in, adipiscing elit. Sed in quam in purus sem vitae pede. Pellentesque bibendum, urna sem vel risus. Vivamus posuere metus. Aliquam gravida iaculis nisl. Nam enim. Aliquam erat ac lacus tellus ac felis.&lt;/p&gt;
+				&lt;p&gt;Ut pretium. Vestibulum rutrum in, adipiscing elit. Sed in quam in purus sem vitae pede. Pellentesque bibendum, urna sem vel risus. Vivamus posuere metus. Aliquam gravida
+				iaculis nisl. Nam enim. Aliquam erat ac lacus tellus ac felis.&lt;/p&gt;
 
-			&lt;div style=&quot;border: 2px dashed green; background: #ddd; text-align: center;&quot;&gt;
-			&lt;p&gt;This text is wrapped in a&amp;nbsp;&lt;code&gt;div&lt;/code&gt;&amp;nbsp;element. Thanks to Magic Line you can type after this element, too.&lt;/p&gt;
-			&lt;/div&gt;
+				&lt;div style=&quot;border: 2px dashed green; background: #ddd; text-align: center;&quot;&gt;
+				&lt;p&gt;This text is wrapped in a&amp;nbsp;&lt;code&gt;div&lt;/code&gt;&amp;nbsp;element. Thanks to Magic Line you can type after this element, too.&lt;/p&gt;
+				&lt;/div&gt;
 			</textarea>
 
 			<script>
 
 				CKEDITOR.replace( 'editor1', {
-                    height: '500',
-				    extraPlugins: 'magicline',	// Ensure that the Magic Line plugin, which is required for
-                                                // this sample, is loaded.
-				    allowedContent: true		// Switch off the ACF, so very complex content created to
-                                                // show Magic Line's power is not filtered.
-			} );
+					height: '500',
+					extraPlugins: 'magicline',	// Ensure that the Magic Line plugin, which is required for
+					// this sample, is loaded.
+					allowedContent: true		// Switch off the ACF, so very complex content created to
+					// show Magic Line's power is not filtered.
+				} );
 
 			</script>
 

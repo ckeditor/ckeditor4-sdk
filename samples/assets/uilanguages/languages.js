@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-var CKEDITOR_LANGS = ( function() {
+var CKEDITOR_LANGS = (function () {
 	var langs = {
 		af: 'Afrikaans',
 		ar: 'Arabic',
@@ -42,7 +42,7 @@ var CKEDITOR_LANGS = ( function() {
 		ka: 'Georgian',
 		km: 'Khmer',
 		ko: 'Korean',
-		ku : 'Kurdish',
+		ku: 'Kurdish',
 		lt: 'Lithuanian',
 		lv: 'Latvian',
 		mk: 'Macedonian',
@@ -58,7 +58,7 @@ var CKEDITOR_LANGS = ( function() {
 		ru: 'Russian',
 		si: 'Sinhala',
 		sk: 'Slovak',
-		sq : 'Albanian',
+		sq: 'Albanian',
 		sl: 'Slovenian',
 		sr: 'Serbian (Cyrillic)',
 		'sr-latn': 'Serbian (Latin)',
@@ -78,9 +78,9 @@ var CKEDITOR_LANGS = ( function() {
 		langsArray.push( { code: code, name: ( langs[ code ] || code ) } );
 	}
 
-	langsArray.sort( function( a, b ) {
+	langsArray.sort( function ( a, b ) {
 		return ( a.name < b.name ) ? -1 : 1;
 	} );
 
 	return langsArray;
-} )();
+})();

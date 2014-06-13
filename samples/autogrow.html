@@ -6,10 +6,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <html>
 <head>
 	<meta charset="utf-8">
-    <meta name="sdk-category" content="End-user Features">
-    <meta name="sdk-subcategory" content="Size Control">
-    <meta name="description" content="CKEditor Auto Grow">
-    <meta name="keywords" content="ckeditor, editor, wysiwyg, size, autogrow, width, height, ui, interface, expand, grow, shrink, autogrow, auto, adjustment, adjust, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-category" content="End-user Features">
+	<meta name="sdk-subcategory" content="Size Control">
+	<meta name="description" content="CKEditor Auto Grow">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, size, autogrow, width, height, ui, interface, expand, grow, shrink, autogrow, auto, adjustment, adjust, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 	<title>CKEditor Auto Grow</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -28,14 +28,18 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h1>Automatic Editor Height Adjustment to Content</h1>
 
 			<p>
-				The optional <a href="http://ckeditor.com/addon/autogrow">Auto Grow</a> plugin makes it possible to configure CKEditor to automatically expand and shrink vertically depending on the amount and size of content entered in its editing area.
+				The optional <a href="http://ckeditor.com/addon/autogrow">Auto Grow</a> plugin makes it possible to configure CKEditor to automatically expand and shrink vertically depending on the
+				amount and size of content entered in its editing area.
 			</p>
-            <p>
-                A few configuration options are available to fine-tune this feature, including setting a minimum and maximum height that the editor can reach when automatically adjusting its size to content. Refer to the <a href="../docs/#!/guide/dev_autogrow">Automatic Editor Height Adjustment to Content</a> article to learn more about this feature.
-            </p>
-            <p>
-                The editor instance below was customized by setting the following Auto Grow plugin <a href="../docs/#!/guide/dev_configuration">configuration options</a>:
-            </p>
+
+			<p>
+				A few configuration options are available to fine-tune this feature, including setting a minimum and maximum height that the editor can reach when automatically adjusting its size to
+				content. Refer to the <a href="../docs/#!/guide/dev_autogrow">Automatic Editor Height Adjustment to Content</a> article to learn more about this feature.
+			</p>
+
+			<p>
+				The editor instance below was customized by setting the following Auto Grow plugin <a href="../docs/#!/guide/dev_configuration">configuration options</a>:
+			</p>
 <pre>
 config.extraPlugins = 'autogrow';
 config.autoGrow_minHeight = 250;
@@ -43,23 +47,26 @@ config.autoGrow_maxHeight = 600;
 config.autoGrow_bottomSpace = 50;
 </pre>
 			<p>
-				Notice how the editor expands when you start adding more content and see how it reaches the <a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_maxHeight">maximum auto grow height</a> defined in its configuration (<code>600</code> pixels). At the same time, when you start deleting content, the editor UI will shrink to finally reach the <a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_minHeight">minimum defined height</a> (<code>250</code> pixels). An <a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_bottomSpace">additional bottom space</a> of 50 pixels will also separate the content from the editor bottom bar. 
+				Notice how the editor expands when you start adding more content and see how it reaches the <a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_maxHeight">maximum auto grow height</a>
+				defined in its configuration (<code>600</code> pixels). At the same time, when you start deleting content, the editor UI will shrink to finally reach the
+				<a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_minHeight">minimum defined height</a> (<code>250</code> pixels). An
+				<a href="../docs/#!/api/CKEDITOR.config-cfg-autoGrow_bottomSpace">additional bottom space</a> of 50 pixels will also separate the content from the editor bottom bar.
 			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
-                &lt;p&gt;This editor instance was configured to &lt;strong&gt;automatically adjust its height to content&lt;/strong&gt; that is added to it.&lt;/p&gt;
+				&lt;p&gt;This editor instance was configured to &lt;strong&gt;automatically adjust its height to content&lt;/strong&gt; that is added to it.&lt;/p&gt;
 
-                &lt;p&gt;&lt;strong&gt;Add some content here &lt;/strong&gt;to see &lt;strong&gt;how the editor expands&lt;/strong&gt; in order to fit it in.&lt;/p&gt;
+				&lt;p&gt;&lt;strong&gt;Add some content here &lt;/strong&gt;to see &lt;strong&gt;how the editor expands&lt;/strong&gt; in order to fit it in.&lt;/p&gt;
 			</textarea>
 
 			<script>
 
 				CKEDITOR.replace( 'editor1', {
-                    extraPlugins: 'autogrow',
-                    autoGrow_minHeight: 250,
-                    autoGrow_maxHeight: 600,
-                    autoGrow_bottomSpace: 50,
-                    removePlugins: 'resize'
-				});
+					extraPlugins: 'autogrow',
+					autoGrow_minHeight: 250,
+					autoGrow_maxHeight: 600,
+					autoGrow_bottomSpace: 50,
+					removePlugins: 'resize'
+				} );
 
 			</script>
 

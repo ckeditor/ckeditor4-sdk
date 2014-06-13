@@ -27,39 +27,47 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		</nav>
 		<section class="sdk-contents">
 			<h1>Source Code Editing</h1>
-			
+
 			<p>
-				The main CKEditor strength is WYSIWYG editing, but the underlying format of the editor content is HTML. However, working directly with HTML code is also possible thanks to the source code editing feature provided by the <a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> and <a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a> plugins.
-			</p>
-			
-			<p>
-				Both plugins introduce the <span class="button_icon" data-icon="source" title="Source">&nbsp;</span> toolbar button. Refer to the <a href="../docs/#!/guide/dev_source">Source Code Editing</a> article to learn more about this feature as well as the functional differences between the plugins. 
+				The main CKEditor strength is WYSIWYG editing, but the underlying format of the editor content is HTML. However, working directly with HTML code is also possible thanks to the source
+				code editing feature provided by the <a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> and <a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>
+				plugins.
 			</p>
 
 			<p>
-				The following editor instances show how both plugins can be combined with classic and inline editor. The first one is a classic editor instance with default settings, using the source editing area. The second one is an inline editor with the source dialog. The third instance is a classic editor using the source dialog instead of the default source editing area. 
+				Both plugins introduce the <span class="button_icon" data-icon="source" title="Source">&nbsp;</span> toolbar button. Refer to the <a href="../docs/#!/guide/dev_source">Source Code
+				Editing</a> article to learn more about this feature as well as the functional differences between the plugins.
 			</p>
-			
+
+			<p>
+				The following editor instances show how both plugins can be combined with classic and inline editor. The first one is a classic editor instance with default settings, using the source
+				editing area. The second one is an inline editor with the source dialog. The third instance is a classic editor using the source dialog instead of the default source editing area.
+			</p>
+
 			<h2><label for="editor1">
 				Classic editor with default source editing area
 			</label></h2>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
-				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
+				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source
+				Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
 
 				&lt;p&gt;Follow the steps below to try it out:&lt;/p&gt;
 
 				&lt;ul&gt;
-					&lt;li&gt;Click the &lt;strong&gt;Source &lt;/strong&gt;button to display the HTML source of this text in the source editing area.&lt;/li&gt;
-					&lt;li&gt;Click the &lt;strong&gt;Source &lt;/strong&gt;button again to return to the WYSIWYG view.&lt;/li&gt;
+				&lt;li&gt;Click the &lt;strong&gt;Source &lt;/strong&gt;button to display the HTML source of this text in the source editing area.&lt;/li&gt;
+				&lt;li&gt;Click the &lt;strong&gt;Source &lt;/strong&gt;button again to return to the WYSIWYG view.&lt;/li&gt;
 				&lt;/ul&gt;
 
 			</textarea>
+
 			<h2><label for="editor2">
 				Inline editor with source dialog
 			</label></h2>
+
 			<div id="editor2" contenteditable="true" style="padding: 5px 20px;">
 				<p>
-					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin for source editing.
+					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
+					for source editing.
 				</p>
 
 				<p>
@@ -86,20 +94,21 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 				Classic editor with source dialog
 			</label></h2>
 			<textarea cols="80" id="editor3" name="editor3" rows="10">
-				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
+				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source
+				Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
 
 				&lt;ul&gt;
-					&lt;li&gt;Click the&amp;nbsp;&lt;strong&gt;Source&amp;nbsp;&lt;/strong&gt;button to display the HTML source of this text in the Source dialog window.&lt;/li&gt;
-					&lt;li&gt;Close the Source dialog window&amp;nbsp;to return to the WYSIWYG view.&lt;/li&gt;
+				&lt;li&gt;Click the&amp;nbsp;&lt;strong&gt;Source&amp;nbsp;&lt;/strong&gt;button to display the HTML source of this text in the Source dialog window.&lt;/li&gt;
+				&lt;li&gt;Close the Source dialog window&amp;nbsp;to return to the WYSIWYG view.&lt;/li&gt;
 				&lt;/ul&gt;
 
 				&lt;p&gt;The following configuration option was used:&lt;/p&gt;
 
 				&lt;pre&gt;
-config.extraPlugins = &amp;#39;sourcedialog&amp;#39;;
-config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
+				config.extraPlugins = &amp;#39;sourcedialog&amp;#39;;
+				config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 			</textarea>
-			
+
 			<script>
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
@@ -107,7 +116,7 @@ config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 				var config = {
 					extraPlugins: 'sourcedialog',
 					removePlugins: 'sourcearea'
-				}
+				};
 
 				CKEDITOR.replace( 'editor1' );
 				CKEDITOR.inline( 'editor2', config );
