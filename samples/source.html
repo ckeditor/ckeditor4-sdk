@@ -44,9 +44,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				editing area. The second one is an inline editor with the source dialog. The third instance is a classic editor using the source dialog instead of the default source editing area.
 			</p>
 
-			<h2><label for="editor1">
-				Classic editor with default source editing area
-			</label></h2>
+			<h2 class="editor-title">Classic editor with default source editing area</h2>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
 				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source
 				Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
@@ -60,11 +58,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			</textarea>
 
-			<h2><label for="editor2">
-				Inline editor with source dialog
-			</label></h2>
+			<h2 class="editor-title">Inline editor with source dialog</h2>
 
-			<div id="editor2" contenteditable="true" style="padding: 5px 20px;">
+			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor">
 				<p>
 					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
 					for source editing.
@@ -90,9 +86,7 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 </pre>
 
 			</div>
-			<h2><label for="editor3">
-				Classic editor with source dialog
-			</label></h2>
+			<h2 class="editor-title">Classic editor with source dialog</h2>
 			<textarea cols="80" id="editor3" name="editor3" rows="10">
 				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source
 				Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
@@ -113,14 +107,18 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
 
-				var config = {
+				CKEDITOR.replace( 'editor1' );
+
+				CKEDITOR.inline( 'editor2', {
+					extraPlugins: 'sourcedialog',
+					removePlugins: 'sourcearea',
+					startupFocus: true
+				} );
+
+				CKEDITOR.replace( 'editor3', {
 					extraPlugins: 'sourcedialog',
 					removePlugins: 'sourcearea'
-				};
-
-				CKEDITOR.replace( 'editor1' );
-				CKEDITOR.inline( 'editor2', config );
-				CKEDITOR.replace( 'editor3', config );
+				} );
 
 			</script>
 

@@ -273,7 +273,6 @@ body
 .sdk-contents h3,
 {
 	font-family: "Maven Pro";
-	font-weight: normal;
 	color: #000;
 }
 
@@ -282,18 +281,31 @@ body
 	font-size: 27px;
 	font-size: 1.6875rem;
 	color: #66ab16;
+	font-weight: normal;
 }
 
 .sdk-contents h2
 {
 	font-size: 24px;
 	font-size: 1.5rem;
+	font-weight: normal;
 }
 
 .sdk-contents h3
 {
 	font-size: 21px;
 	font-size: 1.3125rem;
+	font-weight: normal;
+}
+
+.sdk-contents h2.editor-title
+{
+	margin-bottom:10px;
+}
+
+.sdk-contents .inline-editor
+{
+	margin-top:85px;
 }
 
 .sdk-contents a:not(.cke_path_item)
@@ -319,11 +331,6 @@ body
 	background: #f8f8f8;
 	padding: 20px;
 	border-bottom: 1px solid #eee;
-	margin: 30px 0;
-}
-
-.sdk-contents .cke
-{
 	margin: 30px 0;
 }
 
