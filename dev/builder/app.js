@@ -1,5 +1,6 @@
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
+    archiver = require( 'archiver' )
     nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
     path = require( 'path' ),
@@ -215,19 +216,66 @@ function prepareDocsBuilderConfig() {
     fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
 }
 
+function determineCKEditorVersion() {
+    var content  = fs.readFileSync( BASE_PATH + '/vendor/ckeditor/ckeditor.js', 'utf8' );
+
+    return content.match( /version:"(.+?)\s.+"/ )[ 1 ];
+}
+
+function zipBuild() {
+    console.log( 'Packing release into zip file...' );
+
+    return when.promise( function ( resolve, reject ) {
+        var outputPath = path.resolve( RELEASE_PATH + '/../release.zip' ),
+            output,
+            archive = archiver( 'zip' );
+
+        if ( fs.existsSync( outputPath ) )
+            fs.unlinkSync( outputPath );
+
+        output = fs.createWriteStream( outputPath )
+        output.on( 'close', function () {
+            resolve();
+            console.log( 'Packing done. ' + archive.pointer() + ' total bytes.' );
+        } );
+
+        archive.on( 'error', function( err ) {
+            reject( err );
+        } );
+
+        archive.pipe( output );
+        archive.bulk( [
+            { expand: true, cwd: RELEASE_PATH, src: [ '**' ], dest: 'release' }
+        ] );
+        archive.finalize();
+    } );
+}
+
 function done() {
     process.exit( 1 );
 }
 
 nomnom.command( 'build' )
     .callback( build )
-    .help( 'Building release version of sdk.' );
+    .help( 'Building release version of sdk.' )
+    .option( 'version', {
+        default: 'offline'
+    } );
 
 nomnom.command( 'fixdocs' )
     .callback( fixdocs )
     .help( 'Fixing docs for offline use.' );
 
-nomnom.parse();
+nomnom.command( 'packbuild' )
+    .callback( packbuild );
+
+var opts = nomnom.parse();
+
+function packbuild() {
+    zipBuild().then( function() {
+        whenRimraf( RELEASE_PATH );
+    } );
+}
 
 function build() {
     console.log( 'Removing old release directory' );
@@ -241,7 +289,13 @@ function build() {
         .then( parseCategoriesSync )
         .then( prepareSamplesDir )
         .then( prepareSamplesFilesSync )
-        .then( prepareDocsBuilderConfig )
+        .then( function() {
+            if ( opts.version === 'offline' ) {
+                prepareDocsBuilderConfig();
+            } else if ( opts.version === 'online' ) {
+
+            }
+        } )
         .then( done );
 }
 
@@ -251,8 +305,10 @@ function fixdocs() {
             decodeEntities: false
         } );
 
+    // Remove print version button
     $( '.print.guide' ).remove();
 
+    // Save it in same location
     fs.writeFileSync( filePath, $.html(), 'utf8' );
 
     done();

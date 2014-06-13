@@ -2,11 +2,12 @@
     "name": "ckeditor-sdk-builder",
     "version": "0.0.1",
     "dependencies": {
-        "cheerio": "0.16.0",
+        "cheerio": "0.17.0",
         "when": "~3.0.1",
         "lodash-node": "*",
         "ncp": "0.5.1",
         "rimraf": "2.2.8",
-        "nomnom": "1.7.0"
+        "nomnom": "1.7.0",
+        "archiver": "0.10.0"
     }
 }

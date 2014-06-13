@@ -4,16 +4,28 @@
 
 # Build CKEditor SDK
 
+VERSION="offline"
+
+if [[ $1 = online ]]
+then
+    VERSION="online"
+fi
+
 # Running builder excluding documentation
-node app.js build
+node app.js build $VERSION
 
 # Running documentation builder
-sh ../../docs/build.sh --config seo-off-config.json
+if [[ VERSION="offline" ]]
+then
+    sh ../../docs/build.sh --config seo-off-config.json
 
-# Move generated documentation to proper directory
-mv ../../docs/build ../release/docs
+    # Move generated documentation to proper directory
+    mv ../../docs/build ../release/docs
 
-# Remove dynamically generated config
-rm ../../docs/seo-off-config.json
+    # Remove dynamically generated config
+    rm ../../docs/seo-off-config.json
 
-node app.js fixdocs
+    node app.js fixdocs $VERSION
+
+    node app.js packbuild
+fi
