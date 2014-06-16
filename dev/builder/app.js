@@ -219,14 +219,16 @@ function prepareDocsBuilderConfig() {
 function determineCKEditorVersion() {
     var content  = fs.readFileSync( BASE_PATH + '/vendor/ckeditor/ckeditor.js', 'utf8' );
 
-    return content.match( /version:"(.+?)\s.+"/ )[ 1 ];
+    // Replace white spaces with underscore sign, remove everything which is in brackets
+    return content.match( /version:"(.+?\s[a-zA-Z]*).+"/ )[ 1 ].trim().replace( '/\s/g', '_' );
 }
 
 function zipBuild() {
     console.log( 'Packing release into zip file...' );
 
     return when.promise( function ( resolve, reject ) {
-        var outputPath = path.resolve( RELEASE_PATH + '/../release.zip' ),
+        var outputFile = 'ckeditor_' + determineCKEditorVersion() +  '_sdk.zip',
+            outputPath = path.resolve( RELEASE_PATH + '/../' + outputFile ),
             output,
             archive = archiver( 'zip' );
 
