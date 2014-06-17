@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="sdk-category" content="End-user Features">
+	<meta name="sdk-subcategory" content="Inserting Content">
+	<meta name="description" content="Mathematical Formulas">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, math, maths, mathematical, formula, formulas, formulae, mathjax, widget, equation, equations, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<title>Mathematical Formulas</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/sample.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Creating Mathematical Formulas</h1>
+
+			<p>
+				CKEditor 4.3 introduced the <a href="../docs/#!/guide/dev_widgets">Widget System</a> that paved way to a handful of innovative widget plugins. One of these is the optional <a href="http://ckeditor.com/addon/mathjax">Mathematical Formulas</a> plugin that provides the <a href="http://www.mathjax.org/">MathJax</a> widget which can be used to create or modify equations using TeX.
+			</p>
+			<p>
+				When the Mathematical Formulas plugin is enabled, the <span class="button_icon" data-icon="mathjax" title="Math">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Mathematics in TeX</strong> dialog window that lets you write an equation and see its preview.
+			</p>
+			<p>
+				A few configuration options are available to fine-tune this feature, including setting the <a href="../docs/#!/api/CKEDITOR.config-cfg-mathJaxClass">default class</a> for an element that will be converted into a mathematical formulas widget and changing the <a href="../docs/#!/api/CKEDITOR.config-cfg-mathJaxLib">default path</a> to the MathJax library. Refer to the <a href="../docs/#!/guide/dev_mathjax">Creating Mathematical Formulas</a> article to learn more about this feature.
+			</p>
+
+			<textarea id="editor1" cols="10" rows="10">
+				&lt;p&gt;The following equations are represented in the HTML source code as LaTeX expressions.&lt;/p&gt;&lt;h1&gt;The Cauchy-Schwarz Inequality&lt;/h1&gt;&lt;p&gt;&lt;span class=&quot;math-tex&quot;&gt;\( \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) \)&lt;/span&gt;&lt;/p&gt;&lt;h1&gt;The probability of getting &lt;span class=&quot;math-tex&quot;&gt;\(k\)&lt;/span&gt; heads when flipping &lt;span class=&quot;math-tex&quot;&gt;\(n\)&lt;/span&gt; coins is&lt;/h1&gt;&lt;p&gt;&lt;span class=&quot;math-tex&quot;&gt;\(P(E) = {n \choose k} p^k (1-p)^{ n-k} \)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Finally, while displaying equations is useful for demonstration purposes, the ability to mix math and text in a paragraph is also important. This expression &lt;span class=&quot;math-tex&quot;&gt;\(\sqrt{3x-1}+(1+x)^2\)&lt;/span&gt; is an example of an inline equation.  As you see, MathJax equations can be used this way as well, without disturbing the spacing between the lines.&lt;/p&gt;
+			</textarea>
+
+			<script>
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'mathjax',
+					height: 350
+				} );
+
+				if ( CKEDITOR.env.ie && CKEDITOR.env.version == 8 )
+					document.getElementById( 'ie8-warning' ).className = 'warning';
+
+			</script>
+			
+			<p id="ie8-warning">
+				Please note that this plugin is not compatible with Internet Explorer 8.
+			</p>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
