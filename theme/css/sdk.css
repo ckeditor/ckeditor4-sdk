@@ -344,3 +344,12 @@ body
 {
 	font-style: italic;
 }
+
+.warning
+{
+	color: #ff0000;
+	background-color: #FFCCBA;
+	border: 2px dotted #ff0000;
+	padding: 15px 10px;
+	margin: 10px 0;
+}
