@@ -273,32 +273,29 @@ body
 
 .sdk-contents h1,
 .sdk-contents h2,
-.sdk-contents h3,
+.sdk-contents h3
 {
 	font-family: "Maven Pro";
-	color: #000;
+	font-weight: normal;
+	color: #66ab16;
 }
 
 .sdk-contents h1
 {
-	font-size: 27px;
-	font-size: 1.6875rem;
-	color: #66ab16;
-	font-weight: normal;
+	font-size: 36px;
+	font-size: 2.25rem;
 }
 
 .sdk-contents h2
 {
-	font-size: 24px;
-	font-size: 1.5rem;
-	font-weight: normal;
+	font-size: 30px;
+	font-size: 1.875rem;
 }
 
 .sdk-contents h3
 {
-	font-size: 21px;
-	font-size: 1.3125rem;
-	font-weight: normal;
+	font-size: 24px;
+	font-size: 1.5rem;
 }
 
 .sdk-contents h2.editor-title
