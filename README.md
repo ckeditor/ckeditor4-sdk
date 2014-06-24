@@ -18,6 +18,12 @@ Then install all package dependencies:
 
 After that run the builder:
 
-        > node app.js
+        > build.sh
+
+#### Available commands
+
+Determines whether build offline or online version (default is offline one).
+
+        > --version online|offline
 
 When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
