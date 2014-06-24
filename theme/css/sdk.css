@@ -201,6 +201,8 @@ body
 {
 	font-size: 19px;
 	font-size: 1.1875rem;
+	font-weight: bold;
+	margin-top: 35px;
 }
 
 .sdk-sidebar h3
@@ -213,6 +215,7 @@ body
 {
 	color: #535353;
 	list-style-type: none;
+	margin: 6px inherit;
 }
 
 .sdk-sidebar li a
