@@ -1,8 +1,9 @@
 var cheerio = require( 'cheerio' ),
+    url = require( 'url' ),
     _ = require( 'lodash-node' ),
     TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
-function Sample( name, content, index ) {
+function Sample( name, content, index, zipFilename, opts ) {
     this.$ = cheerio.load( content, {
         decodeEntities: false
     } );
@@ -19,6 +20,10 @@ function Sample( name, content, index ) {
     if ( index ) {
         this.$header.html( index.$header.html() );
         this.$footer.html( index.$footer.html() );
+    } else {
+        if ( opts.version === 'online' ) {
+            this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
+        }
     }
 
     this.$nav = this.$( 'nav.sdk-sidebar' );
@@ -48,7 +53,30 @@ Sample.prototype = {
             this.$nav.html( Sample.createSidebar( categories, _.pick( this, 'category', 'subcategory', 'name' ) ) );
         else
             this.$nav.html( Sample.createSidebar( categories ) );
+    },
+
+    fixLinks: function() {
+        var that = this;
+
+        this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
+            that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href ) );
+        } );
     }
+};
+
+Sample.fixLink = function( href ) {
+    var base = 'http://sdk.ckeditor.com/samples/';
+
+    if ( href.indexOf( 'docs/' ) !== -1 ) {
+        base = 'http://docs.ckeditor.com/';
+        href = href.replace( 'docs/', '' );
+    }
+
+    if ( href.indexOf( 'samples/' ) !== -1 ) {
+        href = href.replace( 'samples/', '' );
+    }
+
+    return url.resolve( base, href );
 };
 
 // return sidebar HTML string

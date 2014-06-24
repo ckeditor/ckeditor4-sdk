@@ -51,12 +51,16 @@ function readFiles( filesArr ) {
 
 // return array of Sample instances
 function setupSamplesSync( _samples ) {
-    index = new Sample( 'index', _samples[ '_index.html' ] );
+    var zipFilename = getZipFilename();
+
+    index = new Sample( 'index', _samples[ '_index.html' ], undefined, zipFilename, opts );
 
     var removed = delete _samples[ '_index.html' ];
 
     samples = _.map( _samples, function( fileContent, fileName ) {
-        return new Sample( fileName.split( '.' )[ 0 ], fileContent, index );
+        var sample = new Sample( fileName.split( '.' )[ 0 ], fileContent, index, zipFilename, opts );
+
+        return sample;
     } );
 
     if ( !removed )
@@ -124,7 +128,7 @@ function copyFiles() {
 
         var blackList = _.some( [
             !!path.basename( name ).match( /^\./i ),
-            currPath.matchLeft( new Path( BASE_PATH + '/dev/release' ) ),
+            currPath.matchLeft( new Path( BASE_PATH + '/dev' ) ),
             currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
             currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
             currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
@@ -196,11 +200,16 @@ function prepareSamplesDir() {
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
         sample.setSidebar( categories );
+        if ( opts.version === 'online' )
+            sample.fixLinks();
 
         fs.writeFileSync( RELEASE_PATH + '/samples/' + sample.name + '.html', sample.$.html(), 'utf8' );
     } );
 
     index.setSidebar( categories );
+    if ( opts.version === 'online' )
+        index.fixLinks();
+
     fs.writeFileSync( RELEASE_PATH + '/samples/index.html', index.$.html(), 'utf8' );
 }
 
@@ -223,11 +232,15 @@ function determineCKEditorVersion() {
     return content.match( /version:"(.+?\s[a-zA-Z]*).+"/ )[ 1 ].trim().replace( '/\s/g', '_' );
 }
 
+function getZipFilename() {
+    return 'ckeditor_' + determineCKEditorVersion() +  '_sdk.zip';
+}
+
 function zipBuild() {
     console.log( 'Packing release into zip file...' );
 
     return when.promise( function ( resolve, reject ) {
-        var outputFile = 'ckeditor_' + determineCKEditorVersion() +  '_sdk.zip',
+        var outputFile = getZipFilename(),
             outputPath = path.resolve( RELEASE_PATH + '/../' + outputFile ),
             output,
             archive = archiver( 'zip' );
@@ -235,7 +248,7 @@ function zipBuild() {
         if ( fs.existsSync( outputPath ) )
             fs.unlinkSync( outputPath );
 
-        output = fs.createWriteStream( outputPath )
+        output = fs.createWriteStream( outputPath );
         output.on( 'close', function () {
             resolve();
             console.log( 'Packing done. ' + archive.pointer() + ' total bytes.' );
@@ -266,7 +279,10 @@ nomnom.command( 'build' )
 
 nomnom.command( 'fixdocs' )
     .callback( fixdocs )
-    .help( 'Fixing docs for offline use.' );
+    .help( 'Fixing docs for offline use.' )
+    .option( 'version', {
+        default: 'offline'
+    } );
 
 nomnom.command( 'packbuild' )
     .callback( packbuild );
@@ -293,21 +309,40 @@ function build() {
         .then( prepareSamplesFilesSync )
         .then( function() {
             if ( opts.version === 'offline' ) {
+                // Have to crate artificial config with specific options for offline version.
                 prepareDocsBuilderConfig();
-            } else if ( opts.version === 'online' ) {
-
+            } else {
+                fixIndexLinks();
             }
         } )
-        .then( done );
+        .then( done )
+        .catch( function( e ) {
+            throw e;
+        } );
 }
 
-function fixdocs() {
+function fixIndexLinks() {
+    var filePath = RELEASE_PATH + '/index.html',
+        $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
+            decodeEntities: false
+        } );
+
+    $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
+
+    $( '.sdk-main-navigation a' ).each( function( index, element ) {
+        $( element ).attr( 'href', Sample.fixLink( this.attribs.href ) );
+    } );
+
+    // Save it in same location
+    fs.writeFileSync( filePath, $.html(), 'utf8' );
+}
+
+function fixdocs( opts ) {
     var filePath = RELEASE_PATH + '/docs/index.html',
         $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
             decodeEntities: false
         } );
 
-    // Remove print version button
     $( '.print.guide' ).remove();
 
     // Save it in same location

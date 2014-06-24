@@ -6,16 +6,16 @@
 
 VERSION="offline"
 
-if [[ $1 = online ]]
+if [ "$1" = "--version" ]
 then
-    VERSION="online"
+    VERSION=$2
 fi
 
 # Running builder excluding documentation
-node app.js build $VERSION
+node app.js build $@
 
 # Running documentation builder
-if [[ VERSION="offline" ]]
+if [ "$VERSION" = "offline" ]
 then
     sh ../../docs/build.sh --config seo-off-config.json
 
@@ -25,7 +25,7 @@ then
     # Remove dynamically generated config
     rm ../../docs/seo-off-config.json
 
-    node app.js fixdocs $VERSION
+    node app.js fixdocs $@
 
-    node app.js packbuild
+    node app.js packbuild $@
 fi
