@@ -267,6 +267,11 @@ function zipBuild() {
 }
 
 function done() {
+    process.exit( 0 );
+}
+
+function fail( e ) {
+    console.log( e );
     process.exit( 1 );
 }
 
@@ -316,9 +321,7 @@ function build() {
             }
         } )
         .then( done )
-        .catch( function( e ) {
-            throw e;
-        } );
+        .catch( fail );
 }
 
 function fixIndexLinks() {

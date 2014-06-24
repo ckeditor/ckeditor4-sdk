@@ -4,6 +4,14 @@
 
 # Build CKEditor SDK
 
+function verifyErrors {
+    OUT=$1
+    if [ $OUT -ne 0 ]
+    then
+        exit $?
+    fi
+}
+
 VERSION="offline"
 
 if [ "$1" = "--version" ]
@@ -13,6 +21,7 @@ fi
 
 # Running builder excluding documentation
 node app.js build $@
+verifyErrors $?
 
 # Running documentation builder
 if [ "$VERSION" = "offline" ]
@@ -26,6 +35,8 @@ then
     rm ../../docs/seo-off-config.json
 
     node app.js fixdocs $@
+    verifyErrors $?
 
     node app.js packbuild $@
+    verifyErrors $?
 fi
