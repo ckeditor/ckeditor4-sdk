@@ -14,6 +14,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/sample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -31,11 +32,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				This editor is using the optional <a href="http://ckeditor.com/addon/codesnippet">Code Snippet</a> plugin which introduces beautiful code snippets. By default the plugin depends on the
 				built-in client-side syntax highlighting library <a href="http://highlightjs.org">highlight.js</a>.
 			</p>
-
 			<p>
-				A few configuration options are available to fine-tune this feature, including setting a custom highlighter theme (see <a href="http://highlightjs.org/static/test.html">available
-				themes</a>), adjusting support for programming languages, or even implementing a different highlighter library. Refer to the <a href="../docs/#!/guide/dev_codesnippet">Code Snippets in
-				CKEditor</a> article to learn more about this feature.
+				When the Code Snippet plugin is enabled, the <span class="button_icon" data-icon="codesnippet" title="Insert code snippet">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Code snippet</strong> dialog window that lets you add a piece of code and set the programming language it is written in.
+			</p>
+			<p>
+				A few configuration options are available to fine-tune this feature, including setting a custom highlighter theme (see <a href="http://highlightjs.org/static/test.html">available themes</a>), adjusting support for programming languages, or even implementing a different highlighter library. Refer to the <a href="../docs/#!/guide/dev_codesnippet">Inserting Code Snippets</a> article to learn more about this feature.
 			</p>
 
 			<p>
@@ -55,8 +56,8 @@ config.codeSnippet_theme = 'monokai_sublime';
 
 				&lt;pre&gt;
 				&lt;code class="language-javascript"&gt;var cow = new Mammal( "moo", {
-				legs: 4
-				} );&lt;/code&gt;&lt;/pre&gt;
+	legs: 4
+} );&lt;/code&gt;&lt;/pre&gt;
 
 				&lt;p&gt;Unknown markup:&lt;/p&gt;
 
@@ -80,13 +81,13 @@ config.codeSnippet_theme = 'monokai_sublime';
 			<p>
 				The <a href="http://ckeditor.com/addon/codesnippetgeshi"><strong>Code Snippet GeSHi</strong></a> plugin is an
 				extension of the <strong>Code Snippet</strong> plugin. It implements the well-known <a href="http://qbnz.com/highlighter/">GeSHi</a> library with a server-side highlighter. See the
-				<a href="../docs/#!/guide/dev_codesnippetgeshi">Code Snippet GeSHi</a> article for implementation details.
+				<a href="../docs/#!/guide/dev_codesnippetgeshi">Inserting Code Snippets Using GeSHi</a> article for implementation details.
 			</p>
 
 			<p>
 				It also is possible to replace the default highlighter with any library using the <a href="../docs/#!/api/CKEDITOR.plugins.codesnippet.highlighter">Highlighter API</a> and the
 				<code><a href="../docs/#!/api/CKEDITOR.plugins.codesnippet-method-setHighlighter">editor.plugins.codesnippet.setHighlighter()</a></code> method. Refer to the
-				<a href="../docs/#!/guide/dev_codesnippet">Code Snippets in CKEditor</a> article for more information.
+				<a href="../docs/#!/guide/dev_codesnippet">Inserting Code Snippets</a> article for more information.
 			</p>
 
 			<script>
