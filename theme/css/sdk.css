@@ -314,6 +314,13 @@ body
 	text-decoration: none;
 }
 
+.sdk-contents h1 > a.documentation {
+	background:url(../img/documentation.png) no-repeat 0 50%;
+	padding-left:25px;
+	font-size:0.55em;
+	float:right;
+	margin-top:1em
+}
 .sdk-contents code
 {
 	background: #f8f8f8;
