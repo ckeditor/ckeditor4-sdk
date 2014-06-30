@@ -147,6 +147,16 @@ function copyFiles() {
     return call( ncp, '../../', RELEASE_PATH, options );
 }
 
+function copyGuides( urls ) {
+    console.log( 'Copying guides' );
+
+    return when.promise( function ( resolve, reject ) {
+        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
+            resolve( urls );
+        }, reject);
+    });
+}
+
 function copyMathjaxFiles() {
     var options = {};
 
@@ -219,10 +229,19 @@ function readSamplesDir() {
     return whenFs.readdir( SAMPLES_PATH );
 }
 
-function prepareDocsBuilderConfig() {
-    var cfg = JSON.parse( fs.readFileSync( BASE_PATH + '/docs/config.json', 'utf8' ) );
+function getOriginalDocsBuilderConfig() {
+    return JSON.parse( fs.readFileSync( BASE_PATH + '/docs/config.json', 'utf8' ) );
+}
+
+function prepareOfflineDocsBuilderConfig( cfg ) {
+    cfg = _.extend( {}, cfg );
+
     delete cfg[ '--seo' ];
+    cfg[ '--guides' ] = '../dev/guides/guides.json';
+
     fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
+
+    return cfg;
 }
 
 function determineCKEditorVersion() {
@@ -301,7 +320,8 @@ function packbuild() {
 }
 
 function build() {
-    console.log( 'Removing old release directory' );
+    console.log( 'Removing old release directory', RELEASE_PATH );
+    whenRimraf( RELEASE_PATH )
     whenRimraf( RELEASE_PATH )
         .then( copyFiles )
         .then( copyMathjaxFiles )
@@ -315,13 +335,59 @@ function build() {
         .then( function() {
             if ( opts.version === 'offline' ) {
                 // Have to crate artificial config with specific options for offline version.
-                prepareDocsBuilderConfig();
+                var originalCfg = getOriginalDocsBuilderConfig(),
+                    offlineCfg = prepareOfflineDocsBuilderConfig( originalCfg ),
+                    urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
+
+                return copyGuides( urls )
+                    .then( fixGuidesLinks )
+                    .then( saveFiles );
+
             } else {
                 fixIndexLinks();
             }
         } )
         .then( done )
         .catch( fail );
+}
+
+/**
+ * In first param key is a file name and value is file content.
+ *
+ * @param {Object} data
+ * @returns {Promise}
+ */
+function saveFiles( data ) {
+    var filesReadPromises = _.map( data, function( fileContent, fileName ) {
+        var promise = whenFs.writeFile( fileName, fileContent, 'utf8' );
+
+        return [ fileName, promise ];
+    } );
+
+    filesReadPromises = _.object( filesReadPromises );
+
+    return whenKeys.all( filesReadPromises );
+}
+
+/**
+ * Replace links in guides files from absolute to relative ones.
+ * First param is array of strings.
+ *
+ * @param {Array} urls
+ * @returns {Promise}
+ */
+function fixGuidesLinks( urls ) {
+    var filesReadPromises = _.map( urls, function( url ) {
+        url = path.resolve( '../guides/' + url );
+        var promise = whenFs.readFile( url, 'utf8' );
+
+        return [ url, promise ];
+    } );
+    filesReadPromises = _.object( filesReadPromises );
+
+    return whenKeys.map( filesReadPromises, function mapper( content ) {
+        return content.replace( /(\[.*?\])\((?:http:\/\/sdk\.ckeditor\.com([^)]*?))\)/, '$1(..$2)' );
+    } );
 }
 
 function fixIndexLinks() {
@@ -338,6 +404,20 @@ function fixIndexLinks() {
 
     // Save it in same location
     fs.writeFileSync( filePath, $.html(), 'utf8' );
+}
+
+function getGuidesFromConfig( guidesCfgPath ) {
+    var guideCfg = JSON.parse( fs.readFileSync( guidesCfgPath, 'utf8' ) ),
+        devSectionCfg = _.find( guideCfg, function ( section ) {
+            return section.title === 'CKEditor 4 Developer\'s Guide';
+        } ),
+        functionalityOverviewSectionCfgItems = _.find( devSectionCfg.items, function( subSection ) {
+            return subSection.title === 'Functionality Overview';
+        } ).items;
+
+    return _.map( functionalityOverviewSectionCfgItems, function( item ) {
+        return item.url + '/README.md';
+    } );
 }
 
 function fixdocs( opts ) {

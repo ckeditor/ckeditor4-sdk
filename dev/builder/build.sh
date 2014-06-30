@@ -37,6 +37,10 @@ then
     node app.js fixdocs $@
     verifyErrors $?
 
+    rm -rf ../guides
+
     node app.js packbuild $@
     verifyErrors $?
+
+    rm ../release
 fi
