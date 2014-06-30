@@ -16,13 +16,16 @@
         {
             "name": "Integration",
             "subcategories": [
-                "Inserting CKEditor",
-                "Tools",
-                "jQuery",
+                "Editor Types",
+                "Editor UI",
+                "Saving Data",
                 "API Usage",
-                "HTML Output Control",
-                "File Management",
-                "Tutorials"
+                "HTML Output control",
+                "Content Filtering",
+                "jQuery",
+                "Tools",
+                "Tutorials",
+                "File Management"
             ]
         }
     ]
