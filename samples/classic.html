@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="sdk-category" content="Integration">
+	<meta name="sdk-subcategory" content="Editor Types">
+	<meta name="description" content="Classic editing with CKEditor. Easy integration with administration backends.">
+	<meta name="keywords" content="TODO">
+	<title>Classic Editor</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Classic Editor <a class="documentation" href="../docs/#!/guide/dev_frame">Documentation</a></h1>
+
+			<p><strong>Classic editor</strong> is an editing solution where the styles of the content are separated from the surrounding page. It is particularly useful when:</p>
+			<ul>
+				<li>Admininistration and frontend themes in a CMS are different, in such case inheriting styles from backend theme would make no sense.</li>
+				<li>The edited content is rendered in different locations of a website with possibly different styling, in such case it's more efficient to just focus on creating semantically correct
+					syntax.
+				</li>
+				<li>Providing an editor for variable environments (e.g. a themable CMS), where it's hard to predict how user themes are constructed.</li>
+			</ul>
+			<p>Due to the possible differences between the style of the content within editor and when its rendered on a page, such editors are sometimes called
+				<abbr title="What You See Is What You Mean">WYSIWYM</abbr> editors (What You See Is What You Mean)</p>
+
+			<h2 class="editor-title">Classic editor with default styles</h2>
+
+			<p>Classic editor uses its own, sane default styles for edited content. Note that the font style, size and colors on this sample page and inside CKEditor editing area are different (e.g.
+				the "Apollo 11" header is black, not green).</p>
+			<textarea cols="80" id="editor1" name="editor1" rows="10">
+				<h1><img alt="Saturn V carrying Apollo 11" class="right" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
+
+				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
+					<a href="http://en.wikipedia.org/wiki/Buzz_Aldrin">Buzz Aldrin</a>, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+					later on July 21 at 02:56 UTC.</p>
+
+				<p>Armstrong spent about <s>three and a half</s> two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&nbsp;kg) of lunar
+					material for return to Earth. A third member of the mission, <a href="http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)">Michael Collins</a>, piloted the
+					<a href="http://en.wikipedia.org/wiki/Apollo_Command/Service_Module">command</a> spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+					Earth.</p>
+			</textarea>
+
+			<h2 class="editor-title">Classic editor with custom styles</h2>
+
+			<p>It is possible to specify own precisely selected styles for edited content with <a href="../docs/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a>. In the editor below the
+				font size has been increased and the colors of links, headings and striked content have been changed.</p>
+			<textarea cols="80" id="editor2" name="editor1" rows="10">
+				<h1><img alt="Saturn V carrying Apollo 11" class="right" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
+
+				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
+					<a href="http://en.wikipedia.org/wiki/Buzz_Aldrin">Buzz Aldrin</a>, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+					later on July 21 at 02:56 UTC.</p>
+
+				<p>Armstrong spent about <s>three and a half</s> two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&nbsp;kg) of lunar
+					material for return to Earth. A third member of the mission, <a href="http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)">Michael Collins</a>, piloted the
+					<a href="http://en.wikipedia.org/wiki/Apollo_Command/Service_Module">command</a> spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+					Earth.</p>
+			</textarea>
+
+			<p>By fine-tuning a stylesheet for CKEditor it is in fact possible to make the content look exactly the same both on the page and inside editor.</p>
+			<script>
+
+				CKEDITOR.replace( 'editor1', {
+					height: 260
+				} );
+				CKEDITOR.replace( 'editor2', {
+					height: 260,
+					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/classic.css' ]
+				} );
+
+			</script>
+
+			<h3>Related samples</h3>
+
+			<ul>
+				<li><a href="inline.html">Editor Types &ndash; Inline editor</a></li>
+				<li><a href="saving.html">Saving data &ndash; CKEditor as textarea</a></li>
+			</ul>
+
+			<div style="border:2px dotted #444; padding:10px;margin:60px 0 10px 0;">
+				<h4>TODO: write something like this in <a href="../docs/#!/guide/dev_framed-section-creating-a-classic-editor">Docs</a></h4>
+
+				<p>"Milestone 1"</p>
+
+				<p>Classic editor is usually created with <a href="../docs/#!/guide/dev_framed-section-creating-a-classic-editor">CKEditor.replace()</a>. The other methods to create classic editor
+					are:</p>
+				<ul>
+					<li><a href="../docs/#!/api/CKEDITOR-method-appendTo">CKEDITOR.appendTo()</a></li>
+					<li><a href="../docs/#!/api/CKEDITOR-method-replaceAll">CKEDITOR.replaceAll()</a></li>
+					<li>Using automatic replacement of all elements with class "ckeditor" (and explain how it works)</li>
+				</ul>
+				<p>"Milestone 2"</p>
+
+				<p>To keep "Classic editing" documentation short in CKEditor guides, I suggest providing simple, fully working samples in CKEditor API documentation for appendTo() and replaceAll()
+					methods. Use "Quick example" from http://cdn.ckeditor.com/ as an inspiration on how to provide a quick fully working example.</p>
+			</div>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
