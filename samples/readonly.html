@@ -51,7 +51,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>CKEditor Read-Only Mode</h1>
+			<h1>CKEditor Read-Only Mode <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_readonly">Documentation</a></h1>
 
 			<p>
 				CKEditor API makes it possible to put the editor into the read-only mode. This mode renders the editor content non-editable and the users will not be able to modify it.
@@ -59,6 +59,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<p>
 				Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_readonly">Read-Only Mode</a> article to learn more about this feature.
+			</p>
+			<p>
+				<input id="readOnlyOn" onclick="toggleReadOnly();" type="button" value="Make CKEditor read-only" style="display:none">
+				<input id="readOnlyOff" onclick="toggleReadOnly( false );" type="button" value="Make CKEditor editable again" style="display:none">
 			</p>
 			<textarea cols="80" class="ckeditor" id="editor1" name="editor1" rows="10">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
@@ -89,11 +93,6 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				in the &lt;a href=&quot;http://en.wikipedia.org/wiki/Pacific_Ocean&quot; title=&quot;Pacific Ocean&quot;&gt;Pacific Ocean&lt;/a&gt; on July 24.&lt;/p&gt; &lt;hr/&gt; &lt;p style=&quot;text-align:
 				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
-
-			<p>
-				<input id="readOnlyOn" onclick="toggleReadOnly();" type="button" value="Make CKEditor read-only" style="display:none">
-				<input id="readOnlyOff" onclick="toggleReadOnly( false );" type="button" value="Make CKEditor editable again" style="display:none">
-			</p>
 
 		</section>
 	</section>
