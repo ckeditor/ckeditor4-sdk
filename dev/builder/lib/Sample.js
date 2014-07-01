@@ -61,6 +61,19 @@ Sample.prototype = {
         this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
             that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href, prefix ) );
         } );
+    },
+
+    validateLinks: function( errors ) {
+        var that = this;
+
+        this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
+            if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
+                errors.push( {
+                    sample: that.name,
+                    link: this.attribs.href
+                } );
+            }
+        } );
     }
 };
 
@@ -72,6 +85,12 @@ Sample.fixLink = function( href, prefix ) {
     }
 
     return href;
+};
+
+Sample.validateLink = function( href, errors ) {
+    if ( href.indexOf( '/docs/' ) !== -1 ) {
+        return new Error( 'Invalid link "/docs/" use "http://docs.ckeditor.com" instead.' );
+    }
 };
 
 // return sidebar HTML string

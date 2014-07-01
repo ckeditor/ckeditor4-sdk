@@ -66,11 +66,15 @@ function setupSamplesSync( _samples ) {
     if ( !removed )
         throw 'Could not found "_index.html" file in samples directory.';
 
-    return samples;
+    return {
+        samples: samples,
+        index: index
+    };
 }
 
 // return array of categories
-function parseCategoriesSync( samples ) {
+function parseCategoriesSync( elements ) {
+    var samples = elements.samples;
     console.log( 'Parsing categories.' );
 
     _.each( samples, function( sample ) {
@@ -285,6 +289,44 @@ function zipBuild() {
     } );
 }
 
+function validatelinks() {
+    return readSamplesDir()
+        .then( selectFilesSync )
+        .then( readFiles )
+        .then( setupSamplesSync )
+        .then( function( elements ) {
+            var errors = [];
+            console.log( 'Validating links in samples' );
+
+            _.each( elements.samples, function( sample ) {
+                sample.validateLinks( errors );
+            } );
+            elements.index.validateLinks( errors );
+
+            handleFileSync( BASE_PATH + '/index.html', function ( content ) {
+                var $ = cheerio.load( content, {
+                    decodeEntities: false
+                } );
+
+                $( '.sdk-main-navigation a' ).each( function( index, element ) {
+                    if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
+                        errors.push( {
+                            sample: 'index.html',
+                            link: this.attribs.href
+                        } );
+                    }
+                } );
+            } );
+
+            if ( errors.length ) {
+                console.log( 'Errors found:' );
+                console.log( JSON.stringify( errors, null, '  ' ) );
+            } else {
+                console.log( 'There are no errors :)' );
+            }
+        } );
+}
+
 function done() {
     process.exit( 0 );
 }
@@ -310,6 +352,9 @@ nomnom.command( 'fixdocs' )
 
 nomnom.command( 'packbuild' )
     .callback( packbuild );
+
+nomnom.command( 'validatelinks' )
+    .callback( validatelinks );
 
 var opts = nomnom.parse();
 
@@ -391,24 +436,35 @@ function fixGuidesLinks( urls ) {
     } );
 }
 
+function handleFileSync( path, handler ) {
+    var content = fs.readFileSync( path, 'utf8' ),
+        result = handler( content );
+
+    ( typeof result === 'string' ) && fs.writeFileSync( path, result, 'utf8' );
+}
+
 function fixIndexSync() {
-    var filePath = RELEASE_PATH + '/index.html',
-        $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
+    var path = RELEASE_PATH + '/index.html';
+
+    function handler( content ) {
+        var $ = cheerio.load( content, {
             decodeEntities: false
         } );
 
-    if ( opts.version === 'online' ) {
-        $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
+        if ( opts.version === 'online' ) {
+            $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
+        }
+
+        if ( opts.version === 'offline' ) {
+            $( '.sdk-main-navigation a' ).each( function( index, element ) {
+                $( element ).attr( 'href', Sample.fixLink( this.attribs.href, '' ) );
+            } );
+        }
+
+        return $.html();
     }
 
-    if ( opts.version === 'offline' ) {
-        $( '.sdk-main-navigation a' ).each( function( index, element ) {
-            $( element ).attr( 'href', Sample.fixLink( this.attribs.href, '' ) );
-        } );
-    }
-
-    // Save it in same location
-    fs.writeFileSync( filePath, $.html(), 'utf8' );
+    handleFileSync( path, handler );
 }
 
 function getGuidesFromConfig( guidesCfgPath ) {
@@ -425,16 +481,18 @@ function getGuidesFromConfig( guidesCfgPath ) {
     } );
 }
 
-function fixdocs( opts ) {
-    var filePath = RELEASE_PATH + '/docs/index.html',
-        $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
+function fixdocs() {
+    var path = RELEASE_PATH + '/docs/index.html';
+
+    function handler( content ) {
+        var $ = cheerio.load( content, {
             decodeEntities: false
         } );
 
-    $( '.print.guide' ).remove();
+        $( '.print.guide' ).remove();
+        return $.html();
+    }
 
-    // Save it in same location
-    fs.writeFileSync( filePath, $.html(), 'utf8' );
-
+    handleFileSync( path, handler );
     done();
 }
