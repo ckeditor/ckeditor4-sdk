@@ -1,15 +1,17 @@
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
+    exec = require( 'child_process' ).exec,
     archiver = require( 'archiver' )
     nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
     path = require( 'path' ),
     Path = require( './lib/Path' ),
-    call = require( 'when/node' ).call,
+    nodefn = require('when/node'),
+    call = nodefn.call,
     cheerio = require( 'cheerio' ),
     when = require( 'when' ),
-    whenFs = require( 'when/node' ).liftAll( fs ),
-    whenRimraf = require( 'when/node' ).lift( rimraf ),
+    whenFs = nodefn.liftAll( fs ),
+    whenRimraf = nodefn.lift( rimraf ),
     whenKeys = require( 'when/keys' ),
     _ = require( 'lodash-node' ),
 
@@ -387,7 +389,14 @@ function build() {
 
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
-                    .then( saveFiles );
+                    .then( saveFiles )
+                    .then( curryExec( 'sh ../../docs/build.sh --config seo-off-config.json' ) )
+                    .then( curryExec( 'mv ../../docs/build ../release/docs' ) )
+                    .then( curryExec( 'rm ../../docs/seo-off-config.json' ) )
+                    .then( fixdocs )
+                    .then( curryExec( 'rm -rf ../guides' ) )
+                    .then( packbuild )
+                    .then( 'rm ../release' );
 
             } else {
                 fixIndexSync();
@@ -395,6 +404,13 @@ function build() {
         } )
         .then( done )
         .catch( fail );
+}
+
+function curryExec( command ) {
+    return function () {
+        console.log( 'Executing: ', command );
+        return nodefn.call( exec, command );
+    }
 }
 
 /**
@@ -494,5 +510,4 @@ function fixdocs() {
     }
 
     handleFileSync( path, handler );
-    done();
 }
