@@ -210,14 +210,14 @@ function prepareSamplesDir() {
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
         sample.setSidebar( categories );
-        if ( opts.version === 'online' )
+        if ( opts.version === 'offline' )
             sample.fixLinks();
 
         fs.writeFileSync( RELEASE_PATH + '/samples/' + sample.name + '.html', sample.$.html(), 'utf8' );
     } );
 
     index.setSidebar( categories );
-    if ( opts.version === 'online' )
+    if ( opts.version === 'offline' )
         index.fixLinks();
 
     fs.writeFileSync( RELEASE_PATH + '/samples/index.html', index.$.html(), 'utf8' );
@@ -322,7 +322,6 @@ function packbuild() {
 function build() {
     console.log( 'Removing old release directory', RELEASE_PATH );
     whenRimraf( RELEASE_PATH )
-    whenRimraf( RELEASE_PATH )
         .then( copyFiles )
         .then( copyMathjaxFiles )
         .then( readSamplesDir )
@@ -339,12 +338,14 @@ function build() {
                     offlineCfg = prepareOfflineDocsBuilderConfig( originalCfg ),
                     urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
 
+                fixIndexSync();
+
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
                     .then( saveFiles );
 
             } else {
-                fixIndexLinks();
+                fixIndexSync();
             }
         } )
         .then( done )
@@ -390,17 +391,21 @@ function fixGuidesLinks( urls ) {
     } );
 }
 
-function fixIndexLinks() {
+function fixIndexSync() {
     var filePath = RELEASE_PATH + '/index.html',
         $ = cheerio.load( fs.readFileSync( filePath, 'utf8' ), {
             decodeEntities: false
         } );
 
-    $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
+    if ( opts.version === 'online' ) {
+        $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
+    }
 
-    $( '.sdk-main-navigation a' ).each( function( index, element ) {
-        $( element ).attr( 'href', Sample.fixLink( this.attribs.href ) );
-    } );
+    if ( opts.version === 'offline' ) {
+        $( '.sdk-main-navigation a' ).each( function( index, element ) {
+            $( element ).attr( 'href', Sample.fixLink( this.attribs.href, '' ) );
+        } );
+    }
 
     // Save it in same location
     fs.writeFileSync( filePath, $.html(), 'utf8' );

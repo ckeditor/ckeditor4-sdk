@@ -55,28 +55,23 @@ Sample.prototype = {
             this.$nav.html( Sample.createSidebar( categories ) );
     },
 
-    fixLinks: function() {
+    fixLinks: function( prefix ) {
         var that = this;
 
         this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
-            that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href ) );
+            that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href, prefix ) );
         } );
     }
 };
 
-Sample.fixLink = function( href ) {
-    var base = 'http://sdk.ckeditor.com/samples/';
+Sample.fixLink = function( href, prefix ) {
+    prefix = ( typeof prefix === 'string' ? prefix : '../' );
 
-    if ( href.indexOf( 'docs/' ) !== -1 ) {
-        base = 'http://docs.ckeditor.com/';
-        href = href.replace( 'docs/', '' );
+    if ( href.indexOf( 'http://docs.ckeditor.com/' ) !== -1 ) {
+        href = href.replace( 'http://docs.ckeditor.com/', prefix + 'docs/index.html' );
     }
 
-    if ( href.indexOf( 'samples/' ) !== -1 ) {
-        href = href.replace( 'samples/', '' );
-    }
-
-    return url.resolve( base, href );
+    return href;
 };
 
 // return sidebar HTML string
