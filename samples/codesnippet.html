@@ -26,10 +26,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Inserting Code Snippets</h1>
+			<h1>Inserting Code Snippets <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_codesnippet">Documentation</a></h1>
 
 			<p>
-				This editor is using the optional <a href="http://ckeditor.com/addon/codesnippet">Code Snippet</a> plugin which introduces beautiful code snippets. By default the plugin depends on the
+				The optional <a href="http://ckeditor.com/addon/codesnippet">Code Snippet</a> plugin, introduced in CKEditor 4.4, supports inserting beautiful code snippets into the editor content. By default the plugin depends on the
 				built-in client-side syntax highlighting library <a href="http://highlightjs.org">highlight.js</a>.
 			</p>
 			<p>
@@ -39,20 +39,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h2>Using Syntax Highlighting</h2>
 			
 			<p>
-				A few configuration options are available to fine-tune this feature, including setting a custom highlighter theme (see <a href="http://highlightjs.org/static/test.html">available themes</a>), adjusting support for programming languages, or even implementing a different highlighter library. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_codesnippet">Inserting Code Snippets</a> article to learn more about this feature.
+				A few configuration options are available to fine-tune this feature, including setting a <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-codeSnippet_theme">custom highlighter theme</a> (see <a href="http://highlightjs.org/static/test.html">available themes</a>), adjusting support for <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-codeSnippet_languages">programming languages</a>, or even implementing a <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.codesnippet.highlighter">different highlighter library</a>. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_codesnippet">Inserting Code Snippets</a> article to learn more about this feature.
 			</p>
 
 			<p>
 				You can select a theme for the editor instance below here: <select id="select"></select>
 			</p>
-
-			<p>
-				This editor sample was customized by setting the following <a href="http://docs.ckeditor.com/#!/guide/dev_configuration">configuration options</a>:
-			</p>
-<pre class="samples" id="sampleConfig">
-config.extraPlugins = 'codesnippet';
-config.codeSnippet_theme = 'monokai_sublime';
-</pre>
 
 			<textarea id="editor1">
 				&lt;p&gt;JavaScript code:&lt;/p&gt;
