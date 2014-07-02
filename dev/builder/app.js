@@ -1,6 +1,8 @@
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
+    StringDecoder = require('string_decoder' ).StringDecoder,
     exec = require( 'child_process' ).exec,
+    spawn = require( 'child_process' ).spawn,
     archiver = require( 'archiver' )
     nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
@@ -390,11 +392,11 @@ function build() {
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
                     .then( saveFiles )
-                    .then( curryExec( 'sh ../../docs/build.sh --config seo-off-config.json' ) )
-                    .then( curryExec( 'mv ../../docs/build ../release/docs' ) )
-                    .then( curryExec( 'rm ../../docs/seo-off-config.json' ) )
+                    .then( curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ] ) )
+                    .then( curryExec( 'mv', [ '../../docs/build', '../release/docs' ] ) )
+                    .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
-                    .then( curryExec( 'rm -rf ../guides' ) )
+                    .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
                     .then( packbuild )
                     .then( 'rm ../release' );
 
@@ -406,10 +408,29 @@ function build() {
         .catch( fail );
 }
 
-function curryExec( command ) {
+function curryExec( command, args ) {
     return function () {
-        console.log( 'Executing: ', command );
-        return nodefn.call( exec, command );
+        return when.promise( function( resolve, reject ) {
+            var cmd = spawn( command, args );
+
+            cmd.stdout.on( 'data', consoleBuffer );
+            cmd.stderr.on( 'data', consoleBuffer );
+
+            function consoleBuffer( data ) {
+                var decoder = new StringDecoder( 'utf8' );
+                console.log( decoder.write( data ) );
+            }
+
+            cmd.on( 'exit', function( code ) {
+                cmd.stdin.end();
+
+                if ( code === 0 ) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            } );
+        } );
     }
 }
 
