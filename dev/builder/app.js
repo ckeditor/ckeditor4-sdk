@@ -293,42 +293,44 @@ function zipBuild() {
     } );
 }
 
-function validatelinks() {
+function readFilesAndValidateLinks() {
     return readSamplesDir()
         .then( selectFilesSync )
         .then( readFiles )
         .then( setupSamplesSync )
-        .then( function( elements ) {
-            var errors = [];
-            console.log( 'Validating links in samples' );
+        .then( validateLinks );
+}
 
-            _.each( elements.samples, function( sample ) {
-                sample.validateLinks( errors );
-            } );
-            elements.index.validateLinks( errors );
+function validateLinks( elements ) {
+    var errors = [];
+    console.log( 'Validating links in samples and index' );
 
-            handleFileSync( BASE_PATH + '/index.html', function ( content ) {
-                var $ = cheerio.load( content, {
-                    decodeEntities: false
+    _.each( elements.samples, function( sample ) {
+        sample.validateLinks( errors );
+    } );
+    elements.index.validateLinks( errors );
+
+    handleFileSync( BASE_PATH + '/index.html', function ( content ) {
+        var $ = cheerio.load( content, {
+            decodeEntities: false
+        } );
+
+        $( '.sdk-main-navigation a' ).each( function( index, element ) {
+            if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
+                errors.push( {
+                    sample: 'index.html',
+                    link: this.attribs.href
                 } );
-
-                $( '.sdk-main-navigation a' ).each( function( index, element ) {
-                    if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
-                        errors.push( {
-                            sample: 'index.html',
-                            link: this.attribs.href
-                        } );
-                    }
-                } );
-            } );
-
-            if ( errors.length ) {
-                console.log( 'Errors found:' );
-                console.log( JSON.stringify( errors, null, '  ' ) );
-            } else {
-                console.log( 'There are no errors :)' );
             }
         } );
+    } );
+
+    if ( errors.length ) {
+        console.log( 'Errors found:' );
+        console.log( JSON.stringify( errors, null, '  ' ) );
+    }
+
+    return elements;
 }
 
 function done() {
@@ -347,29 +349,21 @@ nomnom.command( 'build' )
         default: 'offline'
     } );
 
-nomnom.command( 'fixdocs' )
-    .callback( fixdocs )
-    .help( 'Fixing docs for offline use.' )
-    .option( 'version', {
-        default: 'offline'
-    } );
-
-nomnom.command( 'packbuild' )
-    .callback( packbuild );
-
 nomnom.command( 'validatelinks' )
-    .callback( validatelinks );
+    .callback( readFilesAndValidateLinks );
 
 var opts = nomnom.parse();
 
 function packbuild() {
-    zipBuild().then( function() {
-        whenRimraf( RELEASE_PATH );
+    return zipBuild().then( function() {
+        return whenRimraf( RELEASE_PATH );
     } );
 }
 
-function build() {
+function build( opts ) {
+    console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
     console.log( 'Removing old release directory', RELEASE_PATH );
+
     whenRimraf( RELEASE_PATH )
         .then( copyFiles )
         .then( copyMathjaxFiles )
@@ -377,6 +371,7 @@ function build() {
         .then( selectFilesSync )
         .then( readFiles )
         .then( setupSamplesSync )
+        .then( validateLinks )
         .then( parseCategoriesSync )
         .then( prepareSamplesDir )
         .then( prepareSamplesFilesSync )
@@ -392,13 +387,12 @@ function build() {
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
                     .then( saveFiles )
-                    .then( curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ] ) )
+                    .then( buildDocumentation )
                     .then( curryExec( 'mv', [ '../../docs/build', '../release/docs' ] ) )
                     .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
                     .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
-                    .then( packbuild )
-                    .then( 'rm ../release' );
+                    .then( packbuild );
 
             } else {
                 fixIndexSync();
@@ -408,13 +402,22 @@ function build() {
         .catch( fail );
 }
 
-function curryExec( command, args ) {
+function buildDocumentation() {
+    console.log( 'Building documentation.' );
+    return curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
+}
+
+function curryExec( command, args, silent ) {
+    silent = ( silent === true );
+
     return function () {
         return when.promise( function( resolve, reject ) {
             var cmd = spawn( command, args );
 
-            cmd.stdout.on( 'data', consoleBuffer );
-            cmd.stderr.on( 'data', consoleBuffer );
+            if ( !silent ) {
+                cmd.stdout.on( 'data', consoleBuffer );
+                cmd.stderr.on( 'data', consoleBuffer );
+            }
 
             function consoleBuffer( data ) {
                 var decoder = new StringDecoder( 'utf8' );
@@ -427,7 +430,7 @@ function curryExec( command, args ) {
                 if ( code === 0 ) {
                     resolve();
                 } else {
-                    reject();
+                    reject( code );
                 }
             } );
         } );

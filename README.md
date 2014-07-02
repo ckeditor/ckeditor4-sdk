@@ -18,12 +18,19 @@ Then install all package dependencies:
 
 After that run the builder:
 
-        > build.sh
+        > build.sh build
 
-#### Available commands
+### Available commands:
 
-Determines whether build offline or online version (default is offline one).
+        > build
+When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+
+##### options:
 
         > --version online|offline
+Determines whether build offline or online version (default is offline one).
 
-When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+---
+
+        > validatelinks
+Validate links in samples and main index file.
