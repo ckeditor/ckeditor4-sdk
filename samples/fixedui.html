@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="sdk-category" content="Integration">
+	<meta name="sdk-subcategory" content="Editor UI">
+	<meta name="description" content="CKEditor with Fixed User Interface. Common solution for static administration backends.">
+	<meta name="keywords" content="TODO">
+	<title>Fixed User Interface</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Fixed User Interface <a class="documentation" href="http://docs.ckeditor.com/#!/guide/TODO">Documentation</a></h1>
+
+			<p>Fixed user interface is the <strong>default UI for classic editor</strong>. The basic features of fixed UI are:</p>
+
+			<ul>
+				<li>Toolbar is always visible.</li>
+				<li>The location of a toolbar and bottom bar is static and do not change.</li>
+				<li>The editing area takes a predefined amount of space, regardless of the size of the content inside.</li>
+			</ul>
+			<p>
+				The default behavior of an editor with fixed UI can be adopted though:
+			<ul>
+				<li>Toolbar position is configurable with <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-toolbarLocation">config.toolbarLocation</a></code></li>
+				<li>The size of editing area can be automatically adjusted when fixed UI is used &ndash; check the <a href="">Auto Grow</a> feature.</li>
+				<li>The size of the editor can be manually controlled by using the resize handle at the bottom.</li>
+			</ul>
+			</p>
+
+			<h2 class="editor-title">Classic editor with fixed UI</h2>
+
+			<p>The following sample presents classic editor with fixed UI and with toolbar location set to <code>bottom</code>. </p>
+			<textarea cols="80" id="editor1" name="editor1" rows="10">
+				<h1><img alt="Saturn V carrying Apollo 11" class="right" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
+
+				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
+					<a href="http://en.wikipedia.org/wiki/Buzz_Aldrin">Buzz Aldrin</a>, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+					later on July 21 at 02:56 UTC.</p>
+
+				<p>Armstrong spent about <s>three and a half</s> two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&nbsp;kg) of lunar
+					material for return to Earth. A third member of the mission, <a href="http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)">Michael Collins</a>, piloted the
+					<a href="http://en.wikipedia.org/wiki/Apollo_Command/Service_Module">command</a> spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+					Earth.</p>
+			</textarea>
+
+			<h2 class="editor-title">Inline editor with fixed UI</h2>
+
+			<p>Inline editor comes with <a href="floatingui.html">floating ui</a> by default. The following sample presents inline editor with fixed UI instead.</p>
+
+			<style type="text/css">
+				#editor2 {
+					min-height: 200px;
+					color: red;
+				}
+			</style>
+			<div id="editor2">
+				<h1><img alt="Saturn V carrying Apollo 11" style="float:right" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
+
+				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
+					<a href="http://en.wikipedia.org/wiki/Buzz_Aldrin">Buzz Aldrin</a>, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+					later on July 21 at 02:56 UTC.</p>
+
+				<p>Armstrong spent about <s>three and a half</s> two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&nbsp;kg) of lunar
+					material for return to Earth. A third member of the mission, <a href="http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)">Michael Collins</a>, piloted the
+					<a href="http://en.wikipedia.org/wiki/Apollo_Command/Service_Module">command</a> spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+					Earth.</p>
+			</div>
+
+			<div class="note">
+				<p><strong>Note:</strong> Fixed UI for inline editor is provided by a dedicated, optional plugin: <a href="http://ckeditor.com/addon/divarea">Div Editing Area</a>.<br/>Please be aware
+					that this plugin has a couple of drawbacks:</p>
+				<ul>
+					<li>Under the hood, the element replaced by CKEditor is hidden automatically and Div Based Editor is created next to it. Such behavior might affect the styles of content inside,
+						e.g. because of the lack of original element ID attribute used by CSS selectors.
+					</li>
+					<li>The Div Based Editor is rendered using multiple nested &lt;div&gt; elements. It might affect the styles of content inside as well.</li>
+					<li>Last but not least, the <a href="autogrow.html">Auto Grow</a> feature is not fully supported &ndash;
+						<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-autoGrow_minHeight">config.autoGrow_minHeight</a></code> is not respected.
+					</li>
+				</ul>
+				<p>For Fixed UI experience with inline editor consider using <a href="sharedspaces.html">Shared Spaces</a> instead, where these limitations do not exist,</p>
+			</div>
+
+			<h3>Related samples</h3>
+
+			<ul>
+				<li><a href="floatingui.html">Editor UI &ndash; Floating toolbar</a></li>
+				<li><a href="sharedspaces.html">Editor UI &ndash; Shared spaces</a></li>
+			</ul>
+
+			<div class="todo">
+				<p>Create a single documentation page for different UI types (fixed and floating). Make sure it is located nearby <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">Shared
+					Toolbar and Bottom Bar</a> documentation page.</p>
+
+				<p>Add this to documentation about UI types as well:</p>
+
+				<div class="note">
+					<p><strong>Note:</strong> Fixed UI for inline editor is provided by a dedicated, optional plugin: <a href="http://ckeditor.com/addon/divarea">Div Editing Area</a>.<br/>Please be
+						aware that this plugin has a couple of drawbacks:</p>
+					<ul>
+						<li>The element replaced by CKEditor is hidden and Div Based Editor is created next to it. Such behavior might affect the styles of content inside, e.g. because of the lack of
+							original element ID attribute used in CSS selectors.
+						</li>
+						<li>The Div Based Editor is rendered using multiple nested &lt;div&gt; elements. It might affect the styles of content inside as well.</li>
+						<li>Last but not least, the <a href="http://sdk.ckeditor.com/samples/autogrow.html">Auto Grow</a> feature is not fully supported &ndash;
+							<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-autoGrow_minHeight">config.autoGrow_minHeight</a></code> is not respected.
+						</li>
+					</ul>
+					<p>For Fixed UI experience with inline editor consider using <a href="http://sdk.ckeditor.com/samples/sharedspaces.html">Shared Spaces</a> instead, where these limitations do not
+						exist,</p>
+				</div>
+				<p>Reason: we definitely want to reduce the population of users using div area to minimum.</p>
+			</div>
+
+			<script>
+
+				CKEDITOR.replace( 'editor1', {
+					height: 250,
+					toolbarLocation: 'bottom',
+					removePlugins: 'elementspath'
+				} );
+				CKEDITOR.replace( 'editor2', {
+					height: 250,
+					extraPlugins: 'autogrow,divarea'
+				} );
+
+			</script>
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>

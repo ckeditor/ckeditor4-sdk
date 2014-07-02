@@ -33,7 +33,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li>The edited content is rendered in different locations of a website with possibly different styling, in such case it's more efficient to just focus on creating semantically correct
 					syntax.
 				</li>
-				<li>Providing an editor for variable environments (e.g. a themable CMS), where it's hard to predict how user themes are constructed.</li>
+				<li>Providing an editor for a variable environment (e.g. a themable CMS), where it's hard to predict how user themes are constructed.</li>
 			</ul>
 			<p>Due to the possible differences between the style of the content within editor and when its rendered on a page, such editors are sometimes called
 				<abbr title="What You See Is What You Mean">WYSIWYM</abbr> editors (What You See Is What You Mean)</p>
@@ -57,7 +57,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<h2 class="editor-title">Classic editor with custom styles</h2>
 
-			<p>It is possible to specify own precisely selected styles for edited content with <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a>. In the editor below the
+			<p>It is possible to specify own precisely selected styles for edited content with
+				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code>. In the editor below the
 				font size has been increased and the colors of links, headings and striked content have been changed.</p>
 			<textarea cols="80" id="editor2" name="editor1" rows="10">
 				<h1><img alt="Saturn V carrying Apollo 11" class="right" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
@@ -80,6 +81,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				} );
 				CKEDITOR.replace( 'editor2', {
 					height: 260,
+					/* We include the default CKEditor styles as well to not copy default styles */
 					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/classic.css' ]
 				} );
 
@@ -92,12 +94,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="saving.html">Saving data &ndash; CKEditor as textarea</a></li>
 			</ul>
 
-			<div style="border:2px dotted #444; padding:10px;margin:60px 0 10px 0;">
-				<h4>TODO: write something like this in <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">Docs</a></h4>
+			<div class="todo">
+				<p>Write something like this in <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">Docs</a>:</p>
 
 				<p>"Milestone 1"</p>
 
-				<p>Classic editor is usually created with <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">CKEditor.replace()</a>. The other methods to create classic editor
+				<p>Classic editor is usually created with <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">CKEditor.replace()</a>. The other methods to create
+					classic editor
 					are:</p>
 				<ul>
 					<li><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-appendTo">CKEDITOR.appendTo()</a></li>

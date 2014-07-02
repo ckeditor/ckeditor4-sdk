@@ -355,6 +355,32 @@ body
 	font-style: italic;
 }
 
+.sdk-contents div.note
+{
+	background: url(../img/tip.png) no-repeat 10px 30px;
+	padding: 10px 10px 10px 53px;
+	border: 1px dotted #666;
+	margin-top: 20px;
+}
+
+.sdk-contents div.note li
+{
+	/*margin-left:20px;*/
+}
+
+/* Remove me some day */
+.sdk-contents div.todo:before {
+	content: "TODO";
+	font-weight: bold;
+}
+
+.sdk-contents div.todo
+{
+	border:2px dotted #444;
+	padding:10px;
+	margin:60px 0 10px 0;
+}
+
 .warning
 {
 	color: #ff0000;

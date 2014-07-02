@@ -17,6 +17,19 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
+	<style type="text/css">
+		#inline1 {
+			/* Just to make the sample a bit nicer */
+			padding: 20px 10px;
+			margin: -1px 0;
+			border: 1px solid #ccc;
+			border-right: 1px solid #ccc;
+			/* Auto Grow for inline editor using pure CSS */
+			min-height: 250px;
+			max-height: 800px;
+			overflow-y: auto;
+		}
+	</style>
 </head>
 <body>
 	<header class="sdk-header">
@@ -31,64 +44,71 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				The optional <a href="http://ckeditor.com/addon/sharedspace">Shared Space</a> plugin makes it possible to share the same editor toolbar and bottom bar among several CKEditor instances.
 			</p>
 
-			<p>
-				For each editor instance you can define the elements that will be shared. In the example below both editor types (<i>classic</i> and <i>inline</i>) are combined. Please note that the
-				second classic editor instance only uses the shared toolbar alongside its own bottom bar (with the elements path). This is possible thanks to the
-				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-sharedSpaces">CKEDITOR.config.sharedSpaces</a></code> configuration setting
-			</p>
+			<h2 class="editor-title">Classic editors sharing toolbar and bottom bar</h2>
 
 			<p>
-				Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">Shared Toolbar and Bottom Bar</a> article to learn more about this feature.
+				For each editor instance you can define the elements that will be shared. In the example below two classic editors are combined, sharing the same toolbar and bottom bar. This is
+				possible thanks to the
+				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-sharedSpaces">CKEDITOR.config.sharedSpaces</a></code> configuration setting.
 			</p>
 
 			<div id="top">
 				<!-- This div will handle all toolbars. -->
 			</div>
 
-			<div style="height: 300px; overflow: auto; border: 1px solid #afafaf; padding: 20px; margin: 20px;">
+			<div style="height: 460px; overflow: auto; border: 1px solid #afafaf; padding: 10px 10px;">
 
-				<div id="classic1" style="width: 49%; float: left; margin-bottom: 20px;"></div>
-				<div id="classic2" style="width: 49%; float: right; margin-bottom: 20px;"></div>
+				<div style="width: 69%; float: left;">
+					<textarea id="editor1">
+						<p><strong>Barcelona</strong> (
+							<small>English</small>
+							<a href="http://en.wikipedia.org/wiki/Help:IPA_for_English">/</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">b</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">ɑr</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">s</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">ɨ</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">ˈ</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">l</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">oʊ</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">n</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English#Key">ə</a><a href="http://en.wikipedia.org/wiki/Help:IPA_for_English">/</a>,
+							<small>Catalan:&nbsp;</small>
+							<a href="http://en.wikipedia.org/wiki/Help:IPA_for_Catalan">[bərsəˈɫonə]</a>,
+							<small>Spanish:&nbsp;</small>
+							<a href="http://en.wikipedia.org/wiki/Help:IPA_for_Spanish">[bar&theta;eˈlona]</a>) is the capital city of the
+							<a href="http://en.wikipedia.org/wiki/Autonomous_communities_of_Spain">autonomous community</a> of <a href="http://en.wikipedia.org/wiki/Catalonia">Catalonia</a> in
+							<a href="http://en.wikipedia.org/wiki/Spain">Spain</a> and the country&#39;s 2nd largest city, with a population of 1.6 million within its administrative limits.
+						</p>
 
-				<hr style="clear: both; margin: 20px 0;">
+						<p>Its <a href="http://en.wikipedia.org/wiki/Urban_area">urban area</a> extends beyond the administrative city limits with a population of around 4.5 million people, being the
+							<a href="http://en.wikipedia.org/wiki/Largest_urban_areas_of_the_European_Union">sixth-most populous urban area</a> in the
+							<a href="http://en.wikipedia.org/wiki/European_Union">European Union</a> after <a href="http://en.wikipedia.org/wiki/Paris">Paris</a>,
+							<a href="http://en.wikipedia.org/wiki/London">London</a>, <a href="http://en.wikipedia.org/wiki/Ruhr_area">the Ruhr</a>, <a href="http://en.wikipedia.org/wiki/Madrid">Madrid</a>
+							and <a href="http://en.wikipedia.org/wiki/Milan">Milan</a>. About five million people live in the <a href="http://en.wikipedia.org/wiki/Barcelona_metropolitan_area">Barcelona
+								metropolitan area</a>. It is the largest metropolis on the <a href="http://en.wikipedia.org/wiki/Mediterranean_Sea">Mediterranean Sea</a>, located on the coast between
+							the mouths of the rivers <a href="http://en.wikipedia.org/wiki/Llobregat">Llobregat</a> and <a href="http://en.wikipedia.org/wiki/Bes%C3%B2s_%28river%29">Bes&ograve;s</a>,
+							and bounded to the west by the <a href="http://en.wikipedia.org/wiki/Serra_de_Collserola">Serra de Collserola</a> mountain range, the tallest peak of which is 512 metres
+							(1,680&nbsp;ft) high.</p>
 
-				<div contenteditable="true" id="inline1" style="width: 49%; float: left;">
-					<h3>
-						Integer condimentum sit amet
-					</h3>
-
-					<p>
-						<strong>Aenean nonummy a, mattis varius. Cras aliquet.</strong> Praesent <a href="http://ckeditor.com/">magna non mattis ac, rhoncus nunc</a>, rhoncus eget, cursus pulvinar
-						mollis.
-					</p>
-
-					<p>
-						Proin id nibh. Sed eu libero posuere sed, lectus. Phasellus dui gravida gravida feugiat mattis ac, felis.
-					</p>
-
-					<p>
-						Integer condimentum sit amet, tempor elit odio, a dolor non ante at sapien. Sed ac lectus. Nulla ligula quis eleifend mi, id leo velit pede cursus arcu id nulla ac lectus.
-						Phasellus vestibulum. Nunc viverra enim quis diam.
-					</p>
+						<p>Founded as a Roman city, in the Middle Ages Barcelona became the capital of the <a href="http://en.wikipedia.org/wiki/Counts_of_Barcelona">County of Barcelona</a>. After
+							merging with the <a href="http://en.wikipedia.org/wiki/Kingdom_of_Aragon">Kingdom of Aragon</a>, Barcelona continued to be an important city in the
+							<a href="http://en.wikipedia.org/wiki/Crown_of_Aragon">Crown of Aragon</a>. Besieged several times during its history, Barcelona has a rich cultural heritage and is today
+							an important cultural centre and a major tourist destination.</p>
+					</textarea>
 				</div>
-				<div contenteditable="true" id="inline2" style="width: 49%; float: right;">
-					<h3>
-						Praesent wisi accumsan sit amet nibh
-					</h3>
+				<div style="width: 29%; float: right;">
+					<textarea id="editor2">
+						<p>Country: <a href="http://en.wikipedia.org/wiki/Spain">Spain</a><br/>
+							Area</p>
 
-					<p>
-						Donec ullamcorper, risus tortor, pretium porttitor. Morbi quam quis lectus non leo.
-					</p>
+						<ul>
+							<li><a href="http://en.wikipedia.org/wiki/Municipalities_of_Spain">Municipality:</a> 101.9&nbsp;km2</li>
+							<li>Urban: 803&nbsp;km2</li>
+						</ul>
 
-					<p style="margin-left: 40px; ">
-						Integer faucibus scelerisque. Proin faucibus at, aliquet vulputate, odio at eros. Fusce <a href="http://ckeditor.com/">gravida, erat vitae augue</a>. Fusce urna fringilla
-						gravida.
-					</p>
+						<p>Population (2011)</p>
 
-					<p>
-						In hac habitasse platea dictumst. Praesent wisi accumsan sit amet nibh. Maecenas orci luctus a, lacinia quam sem, posuere commodo, odio condimentum tempor, pede semper risus.
-						Suspendisse pede. In hac habitasse platea dictumst. Nam sed laoreet sit amet erat. Integer.
-					</p>
+						<ul>
+							<li><a href="http://en.wikipedia.org/wiki/Municipalities_of_Spain">Municipality</a>:
+								1,620,943 (city limits)<br/>
+								3,218,071 (<a href="http://en.wikipedia.org/wiki/Greater_Barcelona">Greater<br/> Barcelona</a>)
+							</li>
+							<li>Density: 15,991/km2</li>
+							<li><a href="http://en.wikipedia.org/wiki/Urban_area">Urban</a>: 4,604,000</li>
+							<li><a href="http://en.wikipedia.org/wiki/Metropolitan_area">Metro</a>: 5,375,774</li>
+						</ul>
+					</textarea>
 				</div>
 			</div>
 
@@ -96,55 +116,104 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<!-- This div will handle all bottom bars. -->
 			</div>
 
+			<h2 class="editor-title">Inline editor with shared spaces</h2>
+
+			<p>Inline editors also can be configured to share toolbar and bottom bar (it is in fact possible to use a mix of classic and inline editors together). One of most interesting use cases of
+				Shared Space plugin is the possibility of providing an improved <a href="fixedui.html">Fixed User Interface</a> for inline editor:</p>
+
+			<div id="top2">
+				<!-- This div will handle all toolbars. -->
+			</div>
+
+			<div id="inline1" contenteditable="true">
+				<h1><img alt="Saturn V carrying Apollo 11" style="float:right;margin:10px" src="http://c.cksource.com/a/1/img/sample.jpg"/> Apollo 11</h1>
+
+				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
+					<a href="http://en.wikipedia.org/wiki/Buzz_Aldrin">Buzz Aldrin</a>, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+					later on July 21 at 02:56 UTC.</p>
+
+				<p>Armstrong spent about <s>three and a half</s> two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&nbsp;kg) of lunar
+					material for return to Earth. A third member of the mission, <a href="http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)">Michael Collins</a>, piloted the
+					<a href="http://en.wikipedia.org/wiki/Apollo_Command/Service_Module">command</a> spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+					Earth.</p>
+			</div>
+
+			<div id="bottom2">
+				<!-- This div will handle all bottom bars. -->
+			</div>
+
+			<p>There are a few <strong>important benefits</strong> of using Shared Spaces to provide inline editor with Fixed UI instead of using <a href="http://ckeditor.com/addon/divarea">Div
+				Editing Area</a>:</p>
+			<ul>
+				<li>There are no additional nested &lt;div&gt; elements surrounding the editing area. The original element that holds the content is used for editing, thus the styles after loading
+					content into editor are exactly the same, providing real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience with no surprises.
+				</li>
+				<li>The <a href="autogrow.html">Auto Grow</a> feature is not really needed, as the size of container can be easily controlled with CSS.</li>
+			</ul>
+
+			<h3>Related samples</h3>
+
+			<ul>
+				<li><a href="fixedui.html">Editor UI &ndash; Fixed toolbar</a></li>
+				<li><a href="floatingui.html">Editor UI &ndash; Floating toolbar</a></li>
+			</ul>
+
+			<div class="todo">
+				<p>When checking <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">docs for sharedspaces</a> I noticed that I got confused by suggestion at the bottom to try the "Toolbar
+					Location" feature. This feature would not work together with shared spaces, thus anyone trying to combine shared spaces and toolbar location will be surprised. We should make it as clear as
+					possible when redirecting user to the other feature.</p>
+
+				<p>Create a single documentation page for different UI types (fixed and floating). Make sure it refers to Shared Toolbar and Bottom Bar documentation page as these features are
+					strictly related.</p>
+			</div>
 			<script>
 
 				// Turn off automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
 
+				CKEDITOR.replace( 'editor1', {
+					// To enable source code editing in a dialog window, inline editors require sourcedialog
+					extraPlugins: 'sharedspace',
+					removePlugins: 'floatingspace,resize',
+					height: 410,
+					sharedSpaces: {
+						top: 'top',
+						bottom: 'bottom'
+					}
+				} );
+
+				CKEDITOR.replace( 'editor2', {
+					// To enable source code editing in a dialog window, inline editors require sourcedialog
+					extraPlugins: 'sharedspace',
+					removePlugins: 'floatingspace,resize',
+					height: 410,
+					sharedSpaces: {
+						top: 'top',
+						bottom: 'bottom'
+					}
+				} );
+
 				CKEDITOR.inline( 'inline1', {
-					extraPlugins: 'sharedspace',
+					// To enable source code editing in a dialog window, inline editors require sourcedialog
+					extraPlugins: 'sharedspace,sourcedialog',
 					removePlugins: 'floatingspace,resize',
+					height: 410,
 					sharedSpaces: {
-						top: 'top',
-						bottom: 'bottom'
+						top: 'top2',
+						bottom: 'bottom2'
 					}
 				} );
-
-				CKEDITOR.inline( 'inline2', {
-					extraPlugins: 'sharedspace',
-					removePlugins: 'floatingspace,resize',
-					sharedSpaces: {
-						top: 'top',
-						bottom: 'bottom'
-					}
-				} );
-
-				CKEDITOR.appendTo( 'classic1', {
-							extraPlugins: 'sharedspace',
-							removePlugins: 'maximize,resize',
-							sharedSpaces: {
-								top: 'top',
-								bottom: 'bottom'
-							}
-						},
-						document.getElementById( 'inline1' ).innerHTML
-				);
-
-				CKEDITOR.appendTo( 'classic2', {
-							extraPlugins: 'sharedspace',
-							removePlugins: 'maximize,resize',
-							sharedSpaces: {
-								top: 'top',
-								bottom: ''
-							}
-						},
-						document.getElementById( 'inline2' ).innerHTML
-				);
 
 			</script>
 		</section>
 	</section>
 
+	<style>
+
+		body.cke_editable {
+			margin: 0;
+		}
+	</style>
 	<footer class="sdk-footer">
 	</footer>
 </body>
