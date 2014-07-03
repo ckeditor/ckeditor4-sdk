@@ -14,7 +14,6 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
-	<script src="assets/sample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -26,10 +25,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Styles and Stylesheet Parser <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_stylesheetparser">Documentation</a></h1>
+			<h1>Applying Styles to Editor Content <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_styles">Documentation</a></h1>
 
 			<p>
-				The <strong>Styles</strong> drop-down list contains styles that you can <strong>apply to editor content in order to assign semantic value</strong> to the text you are creating in CKEditor. The drop-down list is provided by the <a href="http://ckeditor.com/addon/stylescombo">Styles Combo</a> plugin which by default is available in the Standard and Full distributions. Additionally, you can also install an optional <a href="http://ckeditor.com/addon/stylesheetparser">Stylesheet Parser</a> plugin that fills the <strong>Styles</strong> drop-down list based on CSS rules available in the document stylesheet.
+				The <strong>Styles</strong> drop-down list contains styles that you can <strong>apply to editor content in order to assign semantic value</strong> to the text you are creating in CKEditor. The drop-down list is provided by the <a href="http://ckeditor.com/addon/stylescombo">Styles Combo</a> plugin which by default is available in the Standard and Full distributions.
 			</p>
 			
 			<h2>Default Styles Combo Plugin Implementation</h2>
@@ -37,7 +36,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				When the Styles Combo plugin is enabled, the <img src="assets/stylesheetparser/stylesheetparser_01.png" title="Styles"> button is automatically added to the toolbar. Once clicked, it opens the drop-down list with styles that can be applied to your content. The styles are <a href="http://docs.ckeditor.com/#!/guide/dev_styles-section-style-types">categorized into groups</a>, depending on their target, so you can use block, inline, and object styles for the content that you are creating.
 			</p>
 			<p>
-				Please note that the default styles that are available in the drop-down list are defined in the <code>styles.js</code> file and are just examples which will not work without the matching <code>contents.css</code> file. They will also not work in the inline editor which uses page stylesheets instead of the <code>contents.css</code> file. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_styles">Applying Styles to Editor Content</a> article to learn more about this feature.
+				Please note that the default styles which are available in the drop-down list are defined in the <code>styles.js</code> file and are just examples which will not work without the matching <code>contents.css</code> file. They will also not work in the inline editor which uses page stylesheets instead of the <code>contents.css</code> file. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_styles">Applying Styles to Editor Content</a> article to learn more about this feature.
 			</p>
 
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
@@ -72,7 +71,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			
 			<h2>Stylesheet Parser Plugin</h2>
 			<p>
-				The optional <a href="http://ckeditor.com/addon/stylesheetparser">Stylesheet Parser</a> plugin fills the <strong>Styles</strong> drop-down list based on the CSS rules available in the document stylesheet and defined in the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code> option. This helps maintain editor content styles consistent with the document stylesheet.
+				The optional <a href="http://ckeditor.com/addon/stylesheetparser">Stylesheet Parser</a> plugin fills the <strong>Styles</strong> drop-down list based on the CSS rules available in the stylesheet defined in the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code> option.
 			</p>
 			<p>
 				A few configuration options are available to fine-tune this feature, including using regular expressions to <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-stylesheetParser_validSelectors">choose</a> or <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-stylesheetParser_skipSelectors">limit CSS selectors</a> that will be available for editor content. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_styles-section-the-stylesheet-parser-plugin">Stylesheet Parser</a> documentation to learn more about this feature.
