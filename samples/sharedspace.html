@@ -44,7 +44,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				The optional <a href="http://ckeditor.com/addon/sharedspace">Shared Space</a> plugin makes it possible to share the same editor toolbar and bottom bar among several CKEditor instances.
 			</p>
 
-			<h2 class="editor-title">Classic editors sharing toolbar and bottom bar</h2>
+			<h2 class="editor-title">Classic Editors Sharing Toolbar and Bottom Bar</h2>
 
 			<p>
 				For each editor instance you can define the elements that will be shared. In the example below two classic editors are combined, sharing the same toolbar and bottom bar. This is
@@ -116,10 +116,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<!-- This div will handle all bottom bars. -->
 			</div>
 
-			<h2 class="editor-title">Inline editor with shared spaces</h2>
+			<h2 class="editor-title">Inline Editor with Shared Toolbar and Bottom Bar</h2>
 
-			<p>Inline editors also can be configured to share toolbar and bottom bar (it is in fact possible to use a mix of classic and inline editors together). One of most interesting use cases of
-				Shared Space plugin is the possibility of providing an improved <a href="fixedui.html">Fixed User Interface</a> for inline editor:</p>
+			<p>Inline editors can also be configured to share the toolbar and bottom bar (it is in fact possible to use a mix of classic and inline editors together as well). One of most interesting use cases for the Shared Space plugin is the possibility of providing an improved <a href="fixedui.html">Fixed User Interface</a> for the inline editor:</p>
 
 			<div id="top2">
 				<!-- This div will handle all toolbars. -->
@@ -142,43 +141,26 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<!-- This div will handle all bottom bars. -->
 			</div>
 
-			<p>There are a few <strong>important benefits</strong> of using Shared Spaces to provide inline editor with Fixed UI instead of using <a href="http://ckeditor.com/addon/divarea">Div
-				Editing Area</a>:</p>
+			<p>There are a few <strong>important benefits</strong> of using the Shared Spaces plugin to provide inline editor with fixed UI instead of using the <a href="http://ckeditor.com/addon/divarea">Div Editing Area</a> plugin for the same purpose:</p>
 			<ul>
-				<li>There are no additional nested &lt;div&gt; elements surrounding the editing area. The original element that holds the content is used for editing, thus the styles after loading
-					content into editor are exactly the same, providing real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience with no surprises.
+				<li>No additional nested <code>&lt;div&gt;</code> elements surrounding the editing area are needed &mdash; the original element that stores the content is used for editing. This means that styles applied to content after it is loaded into the editor stay exactly the same, providing real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience with no surprises.
 				</li>
 				<li>The <a href="autogrow.html">Auto Grow</a> feature is not really needed, as the size of container can be easily controlled with CSS.</li>
 			</ul>
 
-			<h3>Related samples</h3>
+			<h2>Related Features</h2>
 
 			<ul>
 				<li><a href="fixedui.html">Editor UI &ndash; Fixed toolbar</a></li>
 				<li><a href="floatingui.html">Editor UI &ndash; Floating toolbar</a></li>
 			</ul>
 
-			<div class="todo">
-				<p>When checking <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">docs for sharedspaces</a> I noticed that I got confused by suggestion at the bottom to try the "Toolbar
-					Location" feature. This feature would not work together with shared spaces, thus anyone trying to combine shared spaces and toolbar location will be surprised. We should make it as clear as
-					possible when redirecting user to the other feature.</p>
-
-				<p>Create a single documentation page for different UI types (fixed and floating). Make sure it refers to Shared Toolbar and Bottom Bar documentation page as these features are
-					strictly related.</p>
-
-				<p>Mention in <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">docs for sharedspaces</a> some tricky gotchas for which we provide workarounds in our existing samples:</p>
-				<ul>
-					<li>The resize plugin should be disabled because the resize handle would not work anyway.</li>
-					<li>The maximize plugin should be disabled. It disables itself automatically where inline editor is detected.</li>
-				</ul>
-			</div>
 			<script>
 
 				// Turn off automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
 
 				CKEDITOR.replace( 'editor1', {
-					// To enable source code editing in a dialog window, inline editors require sourcedialog
 					extraPlugins: 'sharedspace',
 					removePlugins: 'maximize,resize',
 					height: 410,
@@ -189,7 +171,6 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				} );
 
 				CKEDITOR.replace( 'editor2', {
-					// To enable source code editing in a dialog window, inline editors require sourcedialog
 					extraPlugins: 'sharedspace',
 					removePlugins: 'maximize,resize',
 					height: 410,
@@ -200,7 +181,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				} );
 
 				CKEDITOR.inline( 'inline1', {
-					// To enable source code editing in a dialog window, inline editors require sourcedialog
+					// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
 					extraPlugins: 'sharedspace,sourcedialog',
 					removePlugins: 'floatingspace,resize',
 					sharedSpaces: {
