@@ -9,7 +9,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-category" content="Integration">
 	<meta name="sdk-subcategory" content="Editor Types">
 	<meta name="description" content="Classic editing with CKEditor. Easy integration with administration backends.">
-	<meta name="keywords" content="TODO">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, wysiwym, classic, framed, iframe, ui, interface, styles">
 	<title>Classic Editor</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -27,21 +27,29 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<section class="sdk-contents">
 			<h1>Classic Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_frame">Documentation</a></h1>
 
-			<p><strong>Classic editor</strong> is an editing solution where the styles of the content are separated from the surrounding page. It is particularly useful when:</p>
+			<p>
+				<strong>Classic editor</strong> is what most users learnt to associate with a WYSIWYG editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. In this editing solution <strong>the styles of the editor content are separated from the styles of the surrounding page</strong>. It is particularly useful when:
+			</p>
 			<ul>
-				<li>Admininistration and frontend themes in a CMS are different, in such case inheriting styles from backend theme would make no sense.</li>
-				<li>The edited content is rendered in different locations of a website with possibly different styling, in such case it's more efficient to just focus on creating semantically correct
-					syntax.
+				<li>
+					Admininistration and frontend themes in a CMS are different &mdash; as in such case inheriting styles from the backend theme would make no sense.
 				</li>
-				<li>Providing an editor for a variable environment (e.g. a themable CMS), where it's hard to predict how user themes are constructed.</li>
+				<li>
+					Edited content is rendered in different locations of a website that may have different styling &mdash; as in such case it is more efficient to just focus on creating semantically correct syntax.
+				</li>
+				<li>
+					You need to provide an editor for a changing environment (e.g. a themable CMS) &mdash; where it is hard to predict how user themes will be constructed.
+				</li>
 			</ul>
-			<p>Due to the possible differences between the style of the content within editor and when its rendered on a page, such editors are sometimes called
-				<abbr title="What You See Is What You Mean">WYSIWYM</abbr> editors (What You See Is What You Mean)</p>
+			<p>
+				Due to focus on semantic markup and possible differences between the styles of content within the editor and the styles used when the content is rendered on a page, such editors are sometimes called <abbr title="What You See Is What You Mean">WYSIWYM</abbr> editors ("What You See Is What You Mean").
+			</p>
 
-			<h2 class="editor-title">Classic editor with default styles</h2>
+			<h2 class="editor-title">Classic Editor with Default Styles</h2>
 
-			<p>Classic editor uses its own, sane default styles for edited content. Note that the font style, size and colors on this sample page and inside CKEditor editing area are different (e.g.
-				the "Apollo 11" header is black, not green).</p>
+			<p>
+				Classic editor uses its own set of default styles for edited content. In the editor instance below you can see that the font style, size, and colors on this page and inside the CKEditor editing area are different (e.g. the "Apollo 11" header is black, not green).
+			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;http://c.cksource.com/a/1/img/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
@@ -55,11 +63,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Earth.&lt;/p&gt;
 			</textarea>
 
-			<h2 class="editor-title">Classic editor with custom styles</h2>
+			<h2 class="editor-title">Classic Editor with Custom Styles</h2>
 
-			<p>It is possible to specify own precisely selected styles for edited content with
-				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code>. In the editor below the
-				font size has been increased and the colors of links, headings and striked content have been changed.</p>
+			<p>
+				It is possible to specify custom styles for edited content with the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">CKEDITOR.config.contentsCss</a></code> option. In the editor instance below font size was increased and the colors of links, headers, and struck-through content were changed.
+			</p>
 			<textarea cols="80" id="editor2" name="editor1" rows="10">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;http://c.cksource.com/a/1/img/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
@@ -73,7 +81,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Earth.&lt;/p&gt;
 			</textarea>
 
-			<p>By fine-tuning a stylesheet for CKEditor it is in fact possible to make the content look exactly the same both on the page and inside editor.</p>
+			<p>
+				By fine-tuning a stylesheet for CKEditor you can make your content look exactly the same both on the page and inside the editor.
+			</p>
 			<script>
 
 				CKEDITOR.replace( 'editor1', {
@@ -81,37 +91,18 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				} );
 				CKEDITOR.replace( 'editor2', {
 					height: 260,
-					/* We include the default CKEditor styles as well to not copy default styles */
+					/* We include the default CKEditor styles as well not to copy default styles. */
 					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/classic.css' ]
 				} );
 
 			</script>
 
-			<h3>Related samples</h3>
+			<h2>Related Samples</h2>
 
 			<ul>
 				<li><a href="inline.html">Editor Types &ndash; Inline editor</a></li>
 				<li><a href="saving.html">Saving data &ndash; CKEditor as textarea</a></li>
 			</ul>
-
-			<div class="todo">
-				<p>Write something like this in <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">Docs</a>:</p>
-
-				<p>"Milestone 1"</p>
-
-				<p>Classic editor is usually created with <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-creating-a-classic-editor">CKEditor.replace()</a>. The other methods to create
-					classic editor
-					are:</p>
-				<ul>
-					<li><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-appendTo">CKEDITOR.appendTo()</a></li>
-					<li><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-replaceAll">CKEDITOR.replaceAll()</a></li>
-					<li>Using automatic replacement of all elements with class "ckeditor" (and explain how it works)</li>
-				</ul>
-				<p>"Milestone 2"</p>
-
-				<p>To keep "Classic editing" documentation short in CKEditor guides, I suggest providing simple, fully working samples in CKEditor API documentation for appendTo() and replaceAll()
-					methods. Use "Quick example" from http://cdn.ckeditor.com/ as an inspiration on how to provide a quick fully working example.</p>
-			</div>
 
 		</section>
 	</section>
