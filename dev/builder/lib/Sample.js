@@ -67,10 +67,13 @@ Sample.prototype = {
         var that = this;
 
         this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
-            if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
+            var result = Sample.validateLink( this.attribs.href, errors );
+
+            if ( result instanceof Error ) {
                 errors.push( {
                     sample: that.name,
-                    link: this.attribs.href
+                    link: this.attribs.href,
+                    message: result.message
                 } );
             }
         } );
@@ -96,6 +99,14 @@ Sample.fixLink = function( href, prefix ) {
 };
 
 Sample.validateLink = function( href, errors ) {
+    if ( typeof href != 'string' ) {
+        return new Error( 'Anchor does not have href attribute. ' );
+    }
+
+    if ( href.length == 0 ) {
+        return new Error( 'Href attribute is empty.' );
+    }
+
     if ( href.indexOf( '/docs/' ) !== -1 ) {
         return new Error( 'Invalid link "/docs/" use "http://docs.ckeditor.com" instead.' );
     }

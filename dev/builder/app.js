@@ -29,6 +29,10 @@ var fs = require( 'fs' ),
     index = null,
     categories = {},
 
+    REGEXP = {
+        LINK_FONT: /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g
+    },
+
     DEBUG = false;
 
 require( 'when/monitor/console' );
@@ -328,21 +332,26 @@ function validateLinks( elements ) {
         } );
 
         $( '.sdk-main-navigation a' ).each( function( index, element ) {
-            if ( Sample.validateLink( this.attribs.href, errors ) instanceof Error ) {
+            var result = Sample.validateLink( this.attribs.href, errors );
+            if ( result instanceof Error ) {
                 errors.push( {
                     sample: 'index.html',
-                    link: this.attribs.href
+                    link: this.attribs.href,
+                    message: result.message
                 } );
             }
         } );
     } );
 
     if ( errors.length ) {
-        console.log( 'Errors found:' );
+        console.log( 'Found errors in samples:' );
         console.log( JSON.stringify( errors, null, '  ' ) );
     }
 
-    return elements;
+    return {
+        elements: elements,
+        errors: errors
+    };
 }
 
 function done() {
@@ -350,7 +359,7 @@ function done() {
 }
 
 function fail( e ) {
-    console.log( e );
+    e && console.log( e );
     process.exit( 1 );
 }
 
@@ -384,6 +393,13 @@ function build( opts ) {
         .then( readFiles )
         .then( setupSamplesSync )
         .then( validateLinks )
+        .then( function ( result ) {
+            if ( result.errors.length ) {
+                fail();
+            }
+
+            return result.elements;
+        } )
         .then( parseCategoriesSync )
         .then( prepareSamplesDir )
         .then( prepareSamplesFilesSync )
@@ -519,7 +535,7 @@ function fixFontsLinks() {
 
         replacer = ( sampleDir ? ( '$1../' + replacer ) : ( '$1' + replacer ) );
 
-        return result.content.replace( /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g, replacer );
+        return result.content.replace( REGEXP.LINK_FONT, replacer );
     } );
 }
 
