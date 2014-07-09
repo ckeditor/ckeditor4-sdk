@@ -132,19 +132,27 @@ function copyFiles() {
     var options = {};
 
     options.filter = function ( name ) {
-        var currPath = new Path( name );
+        var currPath = new Path( name ),
+            blacklist = [
+                !!path.basename( name ).match( /^\./i ),
+                currPath.matchLeft( new Path( BASE_PATH + '/dev' ) ),
+                currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
+                currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
+                currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
+            ];
 
-        var blackList = _.some( [
-            !!path.basename( name ).match( /^\./i ),
-            currPath.matchLeft( new Path( BASE_PATH + '/dev' ) ),
-            currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
-            currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
-            currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
-        ] );
+        if ( opts.version === 'online' ) {
+            blacklist = blacklist.concat( [
+                currPath.matchLeft( new Path( BASE_PATH + '/theme/fonts' ) ),
+                currPath.matchLeft( new Path( BASE_PATH + '/theme/css/fonts.css' ) )
+            ] );
+        }
 
-        var whiteList = false;
+        var existOnBlacklist = _.some( blacklist );
 
-        var preventCopy = !whiteList && blackList;
+        var existOnWhitelist = false;
+
+        var preventCopy = !existOnWhitelist && existOnBlacklist;
         if ( DEBUG && preventCopy ) {
             console.log( name );
         }
@@ -218,15 +226,19 @@ function prepareSamplesDir() {
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
         sample.setSidebar( categories );
-        if ( opts.version === 'offline' )
+        if ( opts.version === 'offline' ) {
             sample.fixLinks();
+            sample.fixFonts();
+        }
 
         fs.writeFileSync( RELEASE_PATH + '/samples/' + sample.name + '.html', sample.$.html(), 'utf8' );
     } );
 
     index.setSidebar( categories );
-    if ( opts.version === 'offline' )
+    if ( opts.version === 'offline' ) {
         index.fixLinks();
+        index.fixFonts();
+    }
 
     fs.writeFileSync( RELEASE_PATH + '/samples/index.html', index.$.html(), 'utf8' );
 }
@@ -387,6 +399,8 @@ function build( opts ) {
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
                     .then( saveFiles )
+                    .then( fixFontsLinks )
+                    .then( saveFiles )
                     .then( buildDocumentation )
                     .then( curryExec( 'mv', [ '../../docs/build', '../release/docs' ] ) )
                     .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
@@ -473,6 +487,39 @@ function fixGuidesLinks( urls ) {
 
     return whenKeys.map( filesReadPromises, function mapper( content ) {
         return content.replace( /(\[.*?\])\((?:http:\/\/sdk\.ckeditor\.com([^)]*?))\)/, '$1(..$2)' );
+    } );
+}
+
+function fixFontsLinks() {
+    var urls = [
+        path.resolve( RELEASE_PATH + '/index.html' ),
+        path.resolve( RELEASE_PATH + '/samples/index.html' )
+    ];
+
+    var filesReadPromises = _.map( urls, function( url ) {
+
+        // Used when.promise here to resolve with customised and more sophisticated value
+        // which is literal object with file content and url of this file.
+        var promise = when.promise( function( resolve, reject ) {
+            return whenFs.readFile( url, 'utf8' )
+                .then( function( content ) {
+                    resolve( { content: content, url: url } );
+                } )
+                .catch( reject );
+        } );
+
+        return [ url, promise ];
+    } );
+    filesReadPromises = _.object( filesReadPromises );
+
+    // And here mappper use url to properly map value.
+    return whenKeys.map( filesReadPromises, function mapper( result ) {
+        var sampleDir = result.url.indexOf( 'samples' ) != -1,
+            replacer = 'theme/css/fonts.css$3';
+
+        replacer = ( sampleDir ? ( '$1../' + replacer ) : ( '$1' + replacer ) );
+
+        return result.content.replace( /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g, replacer );
     } );
 }
 

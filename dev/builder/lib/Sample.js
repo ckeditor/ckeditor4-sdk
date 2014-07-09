@@ -74,6 +74,14 @@ Sample.prototype = {
                 } );
             }
         } );
+    },
+
+    fixFonts: function() {
+        var that = this;
+
+        this.$( 'link[href*="fonts.googleapis.com"]' ).each( function ( index, element ) {
+            that.$( element ).attr( 'href', '../theme/css/fonts.css' );
+        } );
     }
 };
 
