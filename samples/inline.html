@@ -8,8 +8,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta charset="utf-8">
 	<meta name="sdk-category" content="Integration">
 	<meta name="sdk-subcategory" content="Editor Types">
-	<meta name="description" content="Inline editing with CKEditor. Fast and light editor for AJAX applications, real WYSIWYG thanks to style inheritance.">
-	<meta name="keywords" content="TODO">
+	<meta name="description" content="Inline editing with CKEditor. Fast and lightweight editor for Ajax applications, real WYSIWYG experience thanks to style inheritance.">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, inline, contenteditable, ui, interface, styles">
 	<title>Inline Editor</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -20,9 +20,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="sample.css" rel="stylesheet">
 
 	<style>
-		/* The following styles are just to make the "Massive inline editing" sample look nice. */
+		/* The following styles are here just to make the "Massive Inline Editing" sample look nice. */
 
-		/* Workaround to show Arial Black in Firefox. */
+		/* A workaround to show Arial Black font in Firefox. */
 		@font-face {
 			font-family: 'arial-black';
 			src: local('Arial Black');
@@ -138,24 +138,28 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<div id="introduction">
 			<h1>Inline Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_inline">Documentation</a></h1>
 
-			<p><strong>Inline Editing</strong> allows you to edit it in-place any element on the page. Inline editor provides a real <abbr title="What You See is What You Get">WYSIWYG</abbr>
-				experience "out of the box", because unlike in <a href="classic.html">classic editor</a>, there is no <code>&lt;iframe&gt;</code> element surrounding the editing area. The CSS styles
-				while editing content are exactly the same as on the final page!</p>
+			<p>
+				<strong>Inline Editing</strong> allows you to edit any element on the page in-place. Inline editor provides a real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience "out of the box", because unlike in <a href="classic.html">classic editor</a>, there is no <code>&lt;iframe&gt;</code> element surrounding the editing area. The CSS styles used for editor content are exactly the same as on the target page where this content is rendered!
+			</p>
 
-			<h2 class="editor-title">Inline editing by code</h2>
+			<h2 class="editor-title">Inline Editing Enabled by Code</h2>
 
-			<p>Press "Start editing" - an editor will be created using <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">CKEDITOR.inline()</a></code> method with
-				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus">config.startupFocus</a></code> set to true.</p>
+			<p>
+				Press the "Start editing" button below. An editor will be created using the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">CKEDITOR.inline()</a></code> method with <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus">CKEDITOR.config.startupFocus</a></code> set to <code>true</code>.
+			</p>
 		</div>
 		<button id="toggle">Start editing</button>
 		<button id="reset" style="display:none">Reset content</button>
-		<h2 class="editor-title">Massive inline editing</h2>
+		<h2 class="editor-title">Massive Inline Editing</h2>
 
-		<p>Inline editor is a perfect candidate for modern applications where user can seamlessly switch between viewing and editing a page and where the data is saved on the fly. It is really
-			light, so you are free to use as many instances of it as you need, without worrying about the performance.</p>
+		<p>
+			Inline editor is a perfect candidate for modern applications where the user can seamlessly switch between viewing and a page and editing it and where the data is saved on the fly. It is really lightweight, so you can use as many editor instances as you need without worrying about the performance.
+		</p>
 
-		<p>Click inside of any element below to start editing.</p>
-		<!-- massive inline editing start -->
+		<p>
+			Click inside any of the elements below to start editing it in-place!
+		</p>
+		<!-- Massive inline editing start. -->
 		<div id="header">
 			<div id="headerLeft">
 				<h2 id="sampleTitle" contenteditable="true">
@@ -187,14 +191,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					</h3>
 
 					<p>
-						<strong>
-							Lorem ipsum dolor sit amet dolor. Duis blandit vestibulum faucibus a, tortor.
-						</strong>
+						<strong>Lorem ipsum dolor sit amet dolor. Duis blandit vestibulum faucibus a, tortor.</strong>
 					</p>
 
 					<p>
-						Proin nunc justo felis mollis tincidunt, risus risus pede, posuere cubilia Curae, Nullam euismod, enim. Etiam nibh ultricies dolor ac dignissim erat volutpat. Vivamus fermentum
-						<a href="http://ckeditor.com/">nisl nulla sem in</a> metus. Maecenas wisi. Donec nec erat volutpat.
+						Proin nunc justo felis mollis tincidunt, risus risus pede, posuere cubilia Curae, Nullam euismod, enim. Etiam nibh ultricies dolor ac dignissim erat volutpat. Vivamus fermentum <a href="http://ckeditor.com/">nisl nulla sem in</a> metus. Maecenas wisi. Donec nec erat volutpat.
 					</p>
 					<blockquote>
 						<p>
@@ -220,36 +221,44 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 					<p>
 						<strong>Aenean nonummy a, mattis varius. Cras aliquet.</strong>
-						Praesent <a href="http://ckeditor.com/">magna non mattis ac, rhoncus nunc</a>, rhoncus eget, cursus pulvinar mollis.</p>
+						Praesent <a href="http://ckeditor.com/">magna non mattis ac, rhoncus nunc</a>, rhoncus eget, cursus pulvinar mollis.
+					</p>
 
-					<p>Proin id nibh. Sed eu libero posuere sed, lectus. Phasellus dui gravida gravida feugiat mattis ac, felis.</p>
+					<p>
+						Proin id nibh. Sed eu libero posuere sed, lectus. Phasellus dui gravida gravida feugiat mattis ac, felis.
+					</p>
 
-					<p>Integer condimentum sit amet, tempor elit odio, a dolor non ante at sapien. Sed ac lectus. Nulla ligula quis eleifend mi, id leo velit pede cursus arcu id nulla ac lectus.
-						Phasellus vestibulum. Nunc viverra enim quis diam.</p>
+					<p>
+						Integer condimentum sit amet, tempor elit odio, a dolor non ante at sapien. Sed ac lectus. Nulla ligula quis eleifend mi, id leo velit pede cursus arcu id nulla ac lectus. Phasellus vestibulum. Nunc viverra enim quis diam.
+					</p>
 				</div>
 				<div contenteditable="true">
 					<h3>
 						Praesent wisi accumsan sit amet nibh
 					</h3>
 
-					<p>Donec ullamcorper, risus tortor, pretium porttitor. Morbi quam quis lectus non leo.</p>
+					<p>
+						Donec ullamcorper, risus tortor, pretium porttitor. Morbi quam quis lectus non leo.
+					</p>
 
-					<p style="margin-left: 40px; ">Integer faucibus scelerisque. Proin faucibus at, aliquet vulputate, odio at eros. Fusce <a href="http://ckeditor.com/">gravida, erat vitae augue</a>.
-						Fusce urna fringilla gravida.</p>
+					<p style="margin-left: 40px; ">
+						Integer faucibus scelerisque. Proin faucibus at, aliquet vulputate, odio at eros. Fusce <a href="http://ckeditor.com/">gravida, erat vitae augue</a>. Fusce urna fringilla gravida.
+					</p>
 
-					<p>In hac habitasse platea dictumst. Praesent wisi accumsan sit amet nibh. Maecenas orci luctus a, lacinia quam sem, posuere commodo, odio condimentum tempor, pede semper risus.
-						Suspendisse pede. In hac habitasse platea dictumst. Nam sed laoreet sit amet erat. Integer.</p>
+					<p>
+						In hac habitasse platea dictumst. Praesent wisi accumsan sit amet nibh. Maecenas orci luctus a, lacinia quam sem, posuere commodo, odio condimentum tempor, pede semper risus. Suspendisse pede. In hac habitasse platea dictumst. Nam sed laoreet sit amet erat. Integer.
+					</p>
 				</div>
 			</div>
 			<div id="column3">
 				<div contenteditable="true">
 					<p>
-						<img src="assets/inlineall/logo.png" alt="CKEditor logo" style="float:left">
+						<img src="assets/inline/logo.png" alt="CKEditor logo" style="float:left">
 					</p>
 
-					<p>Quisque justo neque, mattis sed, fermentum ultrices <strong>posuere cubilia Curae</strong>, Vestibulum elit metus, quis placerat ut, lectus. Ut sagittis, nunc libero, egestas
-						consequat lobortis velit rutrum ut, faucibus turpis. Fusce porttitor, nulla quis turpis. Nullam laoreet vel, consectetuer tellus suscipit ultricies, hendrerit wisi. Donec odio
-						nec velit ac nunc sit amet, accumsan cursus aliquet. Vestibulum ante sit amet sagittis mi.</p>
+					<p>
+						Quisque justo neque, mattis sed, fermentum ultrices <strong>posuere cubilia Curae</strong>, Vestibulum elit metus, quis placerat ut, lectus. Ut sagittis, nunc libero, egestas consequat lobortis velit rutrum ut, faucibus turpis. Fusce porttitor, nulla quis turpis. Nullam laoreet vel, consectetuer tellus suscipit ultricies, hendrerit wisi. Donec odio nec velit ac nunc sit amet, accumsan cursus aliquet. Vestibulum ante sit amet sagittis mi.
+					</p>
 
 					<h3>
 						Nullam laoreet vel consectetuer tellus suscipit
@@ -259,36 +268,31 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 						<li>Fusce porttitor, nulla quis turpis. Nullam laoreet vel, consectetuer tellus suscipit ultricies, hendrerit wisi.</li>
 						<li>Mauris eget tellus. Donec non felis. Nam eget dolor. Vestibulum enim. Donec.</li>
 					</ul>
-					<p>Quisque justo neque, mattis sed, <a href="http://ckeditor.com/">fermentum ultrices posuere cubilia</a> Curae, Vestibulum elit metus, quis placerat ut, lectus.</p>
+					<p>
+						Quisque justo neque, mattis sed, <a href="http://ckeditor.com/">fermentum ultrices posuere cubilia</a> Curae, Vestibulum elit metus, quis placerat ut, lectus.
+					</p>
 
-					<p>Nullam laoreet vel, consectetuer tellus suscipit ultricies, hendrerit wisi. Ut sagittis, nunc libero, egestas consequat lobortis velit rutrum ut, faucibus turpis. Fusce
-						porttitor, nulla quis turpis.</p>
+					<p>
+						Nullam laoreet vel, consectetuer tellus suscipit ultricies, hendrerit wisi. Ut sagittis, nunc libero, egestas consequat lobortis velit rutrum ut, faucibus turpis. Fusce porttitor, nulla quis turpis.
+					</p>
 
-					<p>Donec odio nec velit ac nunc sit amet, accumsan cursus aliquet. Vestibulum ante sit amet sagittis mi. Sed in nonummy faucibus turpis. Mauris eget tellus. Donec non felis. Nam
-						eget dolor. Vestibulum enim. Donec.</p>
+					<p>
+						Donec odio nec velit ac nunc sit amet, accumsan cursus aliquet. Vestibulum ante sit amet sagittis mi. Sed in nonummy faucibus turpis. Mauris eget tellus. Donec non felis. Nam eget dolor. Vestibulum enim. Donec.
+					</p>
 				</div>
 			</div>
 		</div>
-		<!-- massive inline editing end -->
-		<h3>Related links</h3>
+		<!-- Massive inline editing end. -->
+		<h3>Related Features</h3>
 
 		<ul>
 			<li>
-				<a href="classic.html">Editor Types &ndash; Classic editor</a>
+				<a href="classic.html">Editor Types &ndash; Classic Editor</a>
 			</li>
 			<li>
 				<a href="TODO">Saving data &ndash; CKEditor in AJAX applications</a>
 			</li>
 		</ul>
-
-		<div class="todo">
-			<p>Update <a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline</a>
-				with an information that if the replaced element does not have &ldquo;contenteditable&rdquo; attribute set to true, the editor will start in read-only mode. Mention this also in
-				<a href="http://docs.ckeditor.com/#!/guide/dev_inline">Inline ediing article @ docs</a> as it's really annoying.</p>
-
-			<p>Update documentation for <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a> - add an information that it is not respected by inline editor.
-			</p>
-		</div>
 
 	</section>
 </section>
@@ -296,7 +300,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <footer class="sdk-footer">
 </footer>
 <script>
-	// Sample: Inline editing by code
+	// Sample: Inline Editing Enabled by Code
 	(function () {
 		var isEditingEnabled,
 				toggle = document.getElementById( 'toggle' ),
@@ -358,12 +362,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	})();
 </script>
 <script>
-	// Sample: Massive inline editing
+	// Sample: Massive Inline Editing
 
 	// This code is generally not necessary, but it is here to demonstrate
-	// how to customize specific editor instances on the fly. This fits well
-	// this demo because we have editable elements (like headers) that
-	// require less features.
+	// how to customize specific editor instances on the fly. This fits this
+	// demo well because some editable elements (like headers) may
+	// require a smaller number of features.
 
 	// The "instanceCreated" event is fired for every editor instance created.
 	CKEDITOR.on( 'instanceCreated', function ( event ) {
@@ -371,20 +375,20 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				element = editor.element;
 
 		// Customize editors for headers and tag list.
-		// These editors don't need features like smileys, templates, iframes etc.
+		// These editors do not need features like smileys, templates, iframes etc.
 		if ( element.is( 'h1', 'h2', 'h3' ) || element.getAttribute( 'id' ) == 'taglist' ) {
-			// Customize the editor configurations on "configLoaded" event,
+			// Customize the editor configuration on "configLoaded" event,
 			// which is fired after the configuration file loading and
 			// execution. This makes it possible to change the
-			// configurations before the editor initialization takes place.
+			// configuration before the editor initialization takes place.
 			editor.on( 'configLoaded', function () {
 
-				// Remove unnecessary plugins to make the editor simpler.
+				// Remove redundant plugins to make the editor simpler.
 				editor.config.removePlugins = 'colorbutton,find,flash,font,' +
 						'forms,iframe,image,newpage,removeformat,' +
 						'smiley,specialchar,stylescombo,templates';
 
-				// Rearrange the layout of the toolbar.
+				// Rearrange the toolbar layout.
 				editor.config.toolbarGroups = [
 					{ name: 'editing', groups: [ 'basicstyles', 'links' ] },
 					{ name: 'undo' },
