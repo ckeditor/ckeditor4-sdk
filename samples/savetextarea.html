@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="sdk-category" content="Integration">
+	<meta name="sdk-subcategory" content="Saving Data">
+	<meta name="description" content="CKEditor Read-Only Mode">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, readonly, read-only, noneditable, ineditable, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<title>CKEditor as textarea</title>
+	<!--<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">-->
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<style type="text/css">
+		.cke_textarea_inline {
+			border: 1px solid #ccc;
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>CKEditor as Textarea <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_readonly">Documentation</a></h1>
+
+			<p>
+				When CKEditor is set to replace a &lt;textarea&gt; element, the integration with the parent &lt;form&gt; is automatic. CKEditor automatically updates the replaced &lt;textarea&gt; when
+				the form is submitted, so there is no need to change the server side code handling form submission after enabling CKEditor on exisiting form element.
+			</p>
+
+			<p>Note: the examples below will submit content to a remote server.</p>
+
+			<h2 class="editor-title">Classic editor replacing a textarea</h2>
+
+			<p>A &lt;textarea&gt; element is replaced with classic editor using <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-replace">CKEDITOR.replace()</a></code></p>
+
+			<form action="savetextarea.php" method="post">
+				<textarea cols="80" id="editor1" name="editor1" rows="10">
+					&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
+
+					&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil
+					Armstrong&lt;/a&gt; and
+					&lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the
+					lunar surface 6 hours
+					later on July 21 at 02:56 UTC.&lt;/p&gt;
+
+					&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg)
+					of lunar
+					material for return to Earth. A third member of the mission, &lt;a href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, piloted
+					the
+					&lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for
+					the trip back to
+					Earth.&lt;/p&gt;
+				</textarea>
+
+				<p><input type="submit" value="Submit"></p>
+			</form>
+
+
+			<h2 class="editor-title">Inline editor replacing a textarea</h2>
+
+			<p>A &lt;textarea&gt; element is replaced with inline editor using <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">CKEDITOR.inline()</a></code></p>
+
+			<form action="savetextarea.php" method="post">
+				<textarea cols="80" id="editor2" name="editor2" rows="10">
+					&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; style=&quot;float:right;margin:10px&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
+
+					&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil
+					Armstrong&lt;/a&gt; and
+					&lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the
+					lunar surface 6 hours
+					later on July 21 at 02:56 UTC.&lt;/p&gt;
+
+					&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg)
+					of lunar
+					material for return to Earth. A third member of the mission, &lt;a href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, piloted
+					the
+					&lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for
+					the trip back to
+					Earth.&lt;/p&gt;
+				</textarea>
+
+				<p><input type="submit" value="Submit"></p>
+			</form>
+			<div class="todo">
+				<p>1. Write a single documentation page about saving data. Nothing fancy, just things that are written in SDK samples already (savetextarea and saveajax) and move there the bit of information we have in <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-saving-the-editor-data">saving the editor data</a> section for classic editor.</p>
+				<p>2. Write this warning there as well:</p>
+				<div class="note">
+					<p>Please note that the replaced &lt;textarea&gt; element is updated automatically by CKEditor straight before submission.
+						If you need to access the &lt;textarea&gt; value programatically with JavaScript (e.g. in onsubmit handler to validate the entered data), there is a chance that the &lt;textarea&gt;
+						element would still hold the original data.
+						In order to update the value of replaced &lt;textarea&gt; use <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-updateElement">editor.updateElement()</a></code>.
+						In rare cases it may happen that the server or application configuration will reject submitted HTML content if it's not encoded first (e.g. ASP.NET ValidateRequest), in such case check <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-htmlEncodeOutput">config.htmlEncodeOutput</a>.
+						If you need to get the actual data from CKEditor at any moment using JavaScript, use <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getData">editor.getData()</a></code>.</p>
+				</div>
+				<p>3. Once the online version of SDK is available, change the form action attribute to remote savetextarea.php, so that the local version did not have any PHP file.</p>
+			</div>
+
+			<script>
+				CKEDITOR.replace( 'editor1' );
+				CKEDITOR.inline( 'editor2' );
+			</script>
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
