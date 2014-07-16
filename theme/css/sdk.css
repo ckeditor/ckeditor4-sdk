@@ -389,3 +389,21 @@ body
 	padding: 15px 10px;
 	margin: 10px 0;
 }
+
+blockquote
+{
+	font-style: italic;
+	font-family: Georgia, Times, "Times New Roman", serif;
+	padding: 2px 0;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	border-left-width: 5px;
+	padding-left: 20px;
+	padding-right: 8px;
+}
+
+.marker
+{
+	background-color: Yellow;
+}
