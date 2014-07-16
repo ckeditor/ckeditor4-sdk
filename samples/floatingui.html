@@ -9,7 +9,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-category" content="Integration">
 	<meta name="sdk-subcategory" content="Editor UI">
 	<meta name="description" content="Floating User Interface. Dynamic toolbar that is always there where you need it.">
-	<meta name="keywords" content="TODO">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, inline, contenteditable, ui, interface, floating, dynamic, toolbar">
 	<title>Floating User Interface</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -31,20 +31,26 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Floating User Interface <a class="documentation" href="http://docs.ckeditor.com/#!/guide/TODO">Documentation</a></h1>
+			<h1>Floating User Interface <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_uitypes">Documentation</a></h1>
 
-			<p>Floating user interface is the <strong>default UI for inline editor</strong>. The basic features of floating UI are:</p>
+			<p>
+				<i>Floating user interface</i> is the <strong>default UI for <a href="inline.html">inline editor</a></strong>. The basic floating UI features are:
+			</p>
 			<ul>
-				<li>Toolbar is shown only when the editor is focused.</li>
-				<li>The location of a toolbar changes dynamically to ensure that the toolbar is always available.</li>
-				<li>The size of the editing area is determined by the size of the content inside of it.</li>
+				<li>The editor toolbar is only shown when the editor is focused.</li>
+				<li>The toolbar location changes dynamically to ensure that the toolbar is always available.</li>
+				<li>The size of the editing area is determined by the size of the content inside.</li>
 			</ul>
 
-			<p>Floating UI for classic editor is not available.</p>
+			<p>
+				Floating UI is not available for <a href="classic.html">classic editor, which uses <a href="fixedui.html">fixed UI</a> instead.</a>.
+			</p>
 
-			<h2 class="editor-title">Inline editor with floating UI</h2>
+			<h2 class="editor-title">Inline Editor with Floating UI</h2>
 
-			<p>Click below to start using CKEditor with floating UI. Scroll down the page to see toolbar moving.</p>
+			<p>
+				Click below to start using inline editor with floating UI. Scroll down the page to see the toolbar move.
+			</p>
 
 			<div id="editor1" contenteditable="true">
 				<h1><img alt="Saturn V carrying Apollo 11" src="http://c.cksource.com/a/1/img/sample.jpg" style="float:right"/> Apollo 11</h1>
@@ -121,49 +127,24 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</div>
 
 			<div class="note">
-				<p>Due to the nature of floating UI, some features are unavailable:</p>
+				<p>
+					Due to the dynamic nature of floating UI, some editor features are unavailable:
+				</p>
 				<ul>
-					<li><a href="http://ckeditor.com/addon/elementspath">Elements Path</a> is not available &ndash; to use inline editor with elements path check <a href="fixedui.html">Fixed UI</a>
-						and <a href="sharedspaces.html">Shared Spaces</a>.
+					<li><a href="http://ckeditor.com/addon/elementspath">Elements Path</a> is not available &mdash; to use it in an inline editor refer to the <a href="fixedui.html">Fixed UI</a> and <a href="sharedspace.html">Shared Toolbar and Bottom Bar</a> samples.
 					</li>
-					<li><a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> is not available, and alternative solution using dialog window for source code editing should be used:
-						<a href="http://ckeditor.com/addon/sourcedialog">Source
-							Dialog</a>. See <a href="sourcearea.html">Source Code Editing</a>.
+					<li><a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> is not available &mdash; an alternative solution using a <a href="http://ckeditor.com/addon/sourcedialog">dialog window for source code editing</a> should be used. Refer to the <a href="sourcearea.html">Source Code Editing</a> sample.
 					</li>
-					<li>Configuration options that control the size of editor are not respected: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-height">config.height</a></code> and
-						<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-width">config.width</a></code></li>
+					<li>The following configuration options that control the size of the editor are ignored: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-height">config.height</a></code> and
+						<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-width">config.width</a></code>.</li>
 				</ul>
 			</div>
 
-			<h2>Related samples</h2>
+			<h2>Related Features</h2>
 			<ul>
-				<li><a href="http://sdk.ckeditor.com/samples/fixedui.html">Editor UI &ndash; Fixed toolbar</a></li>
-				<li><a href="http://sdk.ckeditor.com/samples/sharedspaces.html">Editor UI &ndash; Shared spaces</a></li>
+				<li><a href="fixedui.html">Editor UI &ndash; Fixed User Interface</a></li>
+				<li><a href="sharedspace.html">Editor UI &ndash; Shared Toolbar and Bottom Bar</a></li>
 			</ul>
-
-			<div class="todo">
-				<p>Create a single documentation page for different UI types (fixed and floating). Make sure it is located nearby <a href="http://docs.ckeditor.com/#!/guide/dev_sharedspaces">Shared
-					Toolbar and Bottom Bar</a> documentation page.</p>
-
-				<p>Add a screenshot for <a href="http://ckeditor.com/addon/elementspath">Elements Path</a> as we refer to it.</p>
-
-				<p>Repeat the following in section about floating UI:</p>
-
-				<div class="note">
-					<p>Due to the nature of floating UI, some features are unavailable:</p>
-					<ul>
-						<li><a href="http://ckeditor.com/addon/elementspath">Elements Path</a> is not available.</li>
-						<li><a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> is not available, and alternative solution using dialog window for source code editing should be
-							used: <a href="http://ckeditor.com/addon/sourcedialog">Source
-								Dialog</a>. See <a href="http://sdk.ckeditor.com/samples/sourcearea.html">Source Code Editing</a>.
-						</li>
-						<li>Configuration options that control the size of editor are not respected: <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-height">config.height</a> and
-							<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-width">config.width</a></li>
-					</ul>
-				</div>
-
-				<p>Update the API documentation for configuration options that they are not available when floating UI is used.</p>
-			</div>
 
 			<script>
 
