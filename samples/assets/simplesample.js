@@ -60,6 +60,7 @@
 			}
 			resourcesString = templatePre.join( '\n' ) + resourcesString + templatePost.join( '\n' );
 			resourcesString = resourcesString.replace( /\</g, '&lt;' );
+			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1http://sdk.ckeditor.dev/samples/$2' );
 
 			var myWindow = window.open( '', '', 'width=800, height=600' );
 
