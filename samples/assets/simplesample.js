@@ -22,6 +22,14 @@
 		}
 	}
 
+	// Please note: assume that there is only one element in HTML
+	function createFromHtml( html ) {
+		var div = document.createElement('div');
+		div.innerHTML = html;
+
+		return div.firstChild;
+	}
+
 	attachEvent( window, 'load', onLoad );
 
 	function onLoad() {
@@ -37,28 +45,43 @@
 		} );
 
 		function showSampleSource( name ) {
-			var templatePre = [
+			var templatePre, templatePost,
+				sampleResources = resources[ name ],
+				resourcesString = '',
+				sdkOnlineURL = 'http://sdk.ckeditor.dev',
+				headResources = [];
+
+			var i = 0,
+				max = sampleResources.length;
+			for ( ; i < max; i++ ) {
+				var resource = sampleResources[ i ],
+					isHeadResource = ( resource.name == 'LINK' );
+
+				if ( isHeadResource ) {
+					headResources.push( resource.node.outerHTML );
+				} else {
+					resourcesString = resourcesString + '\n' + sampleResources[ i ].node.outerHTML;
+				}
+			}
+			headResources = headResources.join( '\n' );
+
+			templatePre = [
 				'<!DOCTYPE html>',
 				'<html>',
 				'\t<head>',
 				'\t\t<meta charset="utf-8">',
 				'\t\t<title>Some title&lt;/title>',
 				'\t\t<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
+				'\t\t', headResources,
 				'\t</head>',
 				'\t<body>'
-			], templatePost = [
+			];
+
+			templatePost = [
 				'\t</body>',
 				'</html>'
-			],
-			sampleResources = resources[ name ],
-			resourcesString = '',
-			sdkOnlineURL = 'http://sdk.ckeditor.dev';
+			];
 
-			var i = 0,
-				max = sampleResources.length;
-			for ( ; i < max; i++ ) {
-				resourcesString = resourcesString + '\n' + sampleResources[ i ].node.outerHTML;
-			}
 			resourcesString = templatePre.join( '\n' ) + resourcesString + templatePost.join( '\n' );
 			resourcesString = resourcesString.replace( /\</g, '&lt;' );
 			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1' + sdkOnlineURL + '/samples/$2' );
@@ -78,9 +101,15 @@
 				sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null;
 
 				if ( sample ) {
+					var typeAttr = attrs.getNamedItem( 'type' );
+					if ( typeAttr && typeAttr.value == 'template' ) {
+						node = createFromHtml( node.innerHTML.trim() );
+					}
+
 					exampleBlocks.push( {
 						node: node,
-						usedIn: sample.value.split( ',' )
+						usedIn: sample.value.split( ',' ),
+						name: node.nodeName
 					} );
 				}
 			} );
