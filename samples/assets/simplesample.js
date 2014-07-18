@@ -43,7 +43,7 @@
 				'\t<head>',
 				'\t\t<meta charset="utf-8">',
 				'\t\t<title>Some title&lt;/title>',
-				'\t\t<script src="http://cdn.ckeditor.com/4.4.3/standard/ckeditor.js"></script>',
+				'\t\t<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
 				'\t</head>',
 				'\t<body>'
 			], templatePost = [
