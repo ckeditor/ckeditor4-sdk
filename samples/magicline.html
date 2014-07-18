@@ -14,6 +14,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -43,7 +44,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				A few configuration options are available to fine-tune this feature, including adjusting the magic line color, setting custom keyboard shortcuts, or adjusting which elements should
 				trigger the appearance of the magic line. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_magicline">Magic Line</a> article to learn more about this feature.
 			</p>
-			<textarea cols="80" id="editor1" name="editor1" rows="10">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
 				&lt;table border=&quot;1&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; style=&quot;width: 100%; &quot;&gt;
 				&lt;tbody&gt;
 				&lt;tr&gt;
@@ -97,7 +99,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				&lt;/div&gt;
 			</textarea>
 
-			<script>
+			<script data-sample="one">
 
 				CKEDITOR.replace( 'editor1', {
 					height: '500',

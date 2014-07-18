@@ -15,6 +15,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
 	<script src="assets/sample.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -44,7 +45,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</p>
 
 			<h2 class="editor-title">Classic editor with default source editing area</h2>
-			<textarea cols="80" id="editor1" name="editor1" rows="10">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
 				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source
 				Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
 
@@ -59,7 +61,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<h2 class="editor-title">Inline editor with source dialog</h2>
 
-			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor">
+			<button data-sample-name="two" class="sdk-get-source">Get source</button>
+			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor" data-sample="two">
 				<p>
 					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
 					for source editing.
@@ -86,7 +89,8 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 
 			</div>
 			<h2 class="editor-title">Classic editor with source dialog</h2>
-			<textarea cols="80" id="editor3" name="editor3" rows="10">
+			<button data-sample-name="three" class="sdk-get-source">Get source</button>
+			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="three">
 				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source
 				Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
 
@@ -102,17 +106,32 @@ config.extraPlugins = &amp;#39;sourcedialog&amp;#39;;
 config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 			</textarea>
 
-			<script>
+			<script data-sample="one">
+
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
 
 				CKEDITOR.replace( 'editor1' );
+
+			</script>
+
+			<script data-sample="two">
+
+				// We need to turn off the automatic editor creation first.
+				CKEDITOR.disableAutoInline = true;
 
 				CKEDITOR.inline( 'editor2', {
 					extraPlugins: 'sourcedialog',
 					removePlugins: 'sourcearea',
 					startupFocus: true
 				} );
+
+			</script>
+
+			<script data-sample="three">
+
+				// We need to turn off the automatic editor creation first.
+				CKEDITOR.disableAutoInline = true;
 
 				CKEDITOR.replace( 'editor3', {
 					extraPlugins: 'sourcedialog',

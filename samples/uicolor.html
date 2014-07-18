@@ -14,6 +14,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -50,7 +51,8 @@ config.uiColor = '#CCEAEE';
 			<p>
 				Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_uicolor">Adjusting Editor UI Color</a> article to learn more about this feature.
 			</p>
-			<textarea cols="80" id="editor1" name="editor1" rows="10">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
 				was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot; title=&quot;Neil Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt;
 				and &lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot; title=&quot;Buzz Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became
@@ -80,7 +82,7 @@ config.uiColor = '#CCEAEE';
 				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
 
-			<script>
+			<script data-sample="one">
 
 				CKEDITOR.replace( 'editor1', {
 					uiColor: '#CCEAEE'

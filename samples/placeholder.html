@@ -15,6 +15,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
 	<script src="assets/sample.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -35,7 +36,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				When the Placeholder plugin is enabled, the <span class="button_icon" data-icon="placeholder" title="Placeholder">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Placeholder Properties</strong> dialog window that lets you add the placeholder text. After the placeholder is inserted into the document, the user will only be able to edit its text through the plugin dialog window. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_placeholder">Using Placeholders</a> article to learn more about this feature.
 			</p>
 
-			<textarea id="editor1" cols="10" rows="10">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<textarea id="editor1" cols="10" rows="10" data-sample="one">
 				&lt;p&gt;Dear&amp;nbsp;[[Customer Name]],&lt;/p&gt;
 
 				&lt;p&gt;thank you for contacting us.&amp;nbsp;Your case was logged as&amp;nbsp;[[Case ID]]&amp;nbsp;and is assigned to&amp;nbsp;[[Technician Name]]. We will attempt to resolve your issue within the next&amp;nbsp;[[Time]]&amp;nbsp;hours.&lt;/p&gt;
@@ -47,7 +49,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Customer Support Team&lt;/p&gt;
 			</textarea>
 
-			<script>
+			<script data-sample="one">
+
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'placeholder',
 					height: 220
