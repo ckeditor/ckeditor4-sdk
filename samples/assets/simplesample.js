@@ -51,7 +51,8 @@
 				'</html>'
 			],
 			sampleResources = resources[ name ],
-			resourcesString = '';
+			resourcesString = '',
+			sdkOnlineURL = 'http://sdk.ckeditor.dev';
 
 			var i = 0,
 				max = sampleResources.length;
@@ -60,7 +61,8 @@
 			}
 			resourcesString = templatePre.join( '\n' ) + resourcesString + templatePost.join( '\n' );
 			resourcesString = resourcesString.replace( /\</g, '&lt;' );
-			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1http://sdk.ckeditor.dev/samples/$2' );
+			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1' + sdkOnlineURL + '/samples/$2' );
+			resourcesString = resourcesString.replace( /(contentsCss.*?)(\'|\")(?:\.\.)(\/vendor)/g, '$1$2' + sdkOnlineURL + '$3' );
 
 			var myWindow = window.open( '', '', 'width=800, height=600' );
 
