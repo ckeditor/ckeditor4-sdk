@@ -14,6 +14,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -42,7 +43,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				The following sample presents a classic editor instance with fixed UI and with toolbar location set to <code>bottom</code>.
 			</p>
-			<textarea cols="80" id="editor1" name="editor1" rows="10">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
 				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and
@@ -60,8 +62,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				By default, inline editor comes with <a href="floatingui.html">floating UI</a>. The following sample presents an inline editor instance with fixed UI instead.
 			</p>
-
-			<div id="editor2">
+			<button data-sample-name="two" class="sdk-get-source">Get source</button>
+			<div id="editor2" data-sample="two">
 				<h1><img alt="Saturn V carrying Apollo 11" style="float:right" src="assets/sample.jpg"/> Apollo 11</h1>
 
 				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
@@ -100,7 +102,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="toolbarlocation.html">Editor UI &ndash; Toolbar Location</a></li>
 			</ul>
 
-			<script>
+			<script data-sample="one" >
 
 				CKEDITOR.replace( 'editor1', {
 					height: 250,
@@ -108,6 +110,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					// Remove Elements Path to avoid cluttering the interface.
 					removePlugins: 'elementspath'
 				} );
+
+			</script>
+
+			<script data-sample="two" >
+
 				CKEDITOR.replace( 'editor2', {
 					height: 250,
 					extraPlugins: 'divarea'
