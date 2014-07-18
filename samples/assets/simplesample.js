@@ -86,6 +86,7 @@
 			resourcesString = resourcesString.replace( /\</g, '&lt;' );
 			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1' + sdkOnlineURL + '/samples/$2' );
 			resourcesString = resourcesString.replace( /(contentsCss.*?)(\'|\")(?:\.\.)(\/vendor)/g, '$1$2' + sdkOnlineURL + '$3' );
+			resourcesString = resourcesString.replace( /(href\=\"|\')(?:\.\.)/g, '$1' + sdkOnlineURL );
 
 			var myWindow = window.open( '', '', 'width=800, height=600' );
 

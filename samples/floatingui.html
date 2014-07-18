@@ -13,7 +13,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<title>Floating User Interface</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script type="template" data-sample="one">
+		<link href="../theme/css/sdk-inline.css" rel="stylesheet" />
+	</script>
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -51,8 +55,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				Click below to start using inline editor with floating UI. Scroll down the page to see the toolbar move.
 			</p>
-
-			<div id="editor1" contenteditable="true">
+			<button data-sample-name="one" class="sdk-get-source">Get source</button>
+			<div id="editor1" contenteditable="true" data-sample="one">
 				<h1><img alt="Saturn V carrying Apollo 11" src="assets/sample.jpg" style="float:right"/> Apollo 11</h1>
 
 				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
@@ -146,7 +150,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="sharedspace.html">Editor UI &ndash; Shared Toolbar and Bottom Bar</a></li>
 			</ul>
 
-			<script>
+			<script data-sample="one">
 
 				CKEDITOR.disableAutoInline = true;
 				CKEDITOR.inline( 'editor1', {
