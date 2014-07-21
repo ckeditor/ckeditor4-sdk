@@ -14,12 +14,17 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<script type="template" data-sample="one,two">
+		<link href="../theme/css/sdk-inline.css" rel="stylesheet" />
+	</script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
 	<link href="sample.css" rel="stylesheet">
 
-	<style>
+	<style data-sample="two">
 		/* The following styles are here just to make the "Massive Inline Editing" sample look nice. */
 
 		/* A workaround to show Arial Black font in Firefox. */
@@ -135,21 +140,22 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<nav class="sdk-sidebar">
 	</nav>
 	<section class="sdk-contents">
-		<div id="introduction">
+		<button data-sample-name="one" class="sdk-get-source">Get source</button>
+		<div data-sample="one" id="introduction">
 			<h1>Inline Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_inline">Documentation</a></h1>
 
 			<p>
-				<strong>Inline Editing</strong> allows you to edit any element on the page in-place. Inline editor provides a real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience "out of the box", because unlike in <a href="classic.html">classic editor</a>, there is no <code>&lt;iframe&gt;</code> element surrounding the editing area. The CSS styles used for editor content are exactly the same as on the target page where this content is rendered!
+				<strong>Inline Editing</strong> allows you to edit any element on the page in-place. Inline editor provides a real <abbr title="What You See is What You Get">WYSIWYG</abbr> experience "out of the box", because unlike in <a href="./classic.html">classic editor</a>, there is no <code>&lt;iframe&gt;</code> element surrounding the editing area. The CSS styles used for editor content are exactly the same as on the target page where this content is rendered!
 			</p>
 
 			<h2 class="editor-title">Inline Editing Enabled by Code</h2>
 
 			<p>
-				Press the "Start editing" button below. An editor will be created using the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">CKEDITOR.inline()</a></code> method with <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus">CKEDITOR.config.startupFocus</a></code> set to <code>true</code>.
+				Press the "Start editing" button below. An editor will be created using the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline"><code>CKEDITOR.inline()</code></a> method with <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus"><code>CKEDITOR.config.startupFocus</code></a> set to <code>true</code>.
 			</p>
 		</div>
-		<button id="toggle">Start editing</button>
-		<button id="reset" style="display:none">Reset content</button>
+		<button data-sample="one" id="toggle">Start editing</button>
+		<button data-sample="one" id="reset" style="display:none">Reset content</button>
 		<h2 class="editor-title">Massive Inline Editing</h2>
 
 		<p>
@@ -159,8 +165,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<p>
 			Click inside any of the elements below to start editing it in-place!
 		</p>
+		<button data-sample-name="two" class="sdk-get-source">Get source</button>
 		<!-- Massive inline editing start. -->
-		<div id="header">
+		<div data-sample="two" id="header">
 			<div id="headerLeft">
 				<h2 id="sampleTitle" contenteditable="true">
 					CKEditor<br> Goes Inline!
@@ -183,7 +190,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				</div>
 			</div>
 		</div>
-		<div id="columns">
+		<div data-sample="two" id="columns">
 			<div id="column1">
 				<div contenteditable="true">
 					<h3>
@@ -287,7 +294,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 		<ul>
 			<li>
-				<a href="classic.html">Editor Types &ndash; Classic Editor</a>
+				<a href="./classic.html">Editor Types &ndash; Classic Editor</a>
 			</li>
 			<li>
 				<a href="TODO">Saving data &ndash; CKEditor in Ajax Applications</a>
@@ -299,7 +306,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 <footer class="sdk-footer">
 </footer>
-<script>
+<script data-sample="one">
 	// Sample: Inline Editing Enabled by Code
 	(function () {
 		var isEditingEnabled,
@@ -361,7 +368,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 	})();
 </script>
-<script>
+<script data-sample="two">
 	// Sample: Massive Inline Editing
 
 	// This code is generally not necessary, but it is here to demonstrate

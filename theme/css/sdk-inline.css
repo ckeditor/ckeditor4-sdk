@@ -50,7 +50,8 @@ body .inline-editor
 	margin-top:85px;
 }
 
-body a:not(.cke_path_item)
+body a:not(.cke_path_item),
+body a:not(.cke_dialog)
 {
 	color: #cf5d4e;
 	text-decoration: none;

@@ -48,7 +48,7 @@
 			var templatePre, templatePost,
 				sampleResources = resources[ name ],
 				resourcesString = '',
-				sdkOnlineURL = 'http://sdk.ckeditor.dev',
+				sdkOnlineURL = 'http://sdk.ckeditor.dev/',
 				headResources = [];
 
 			var i = 0,
@@ -60,33 +60,43 @@
 				if ( isHeadResource ) {
 					headResources.push( resource.node.outerHTML );
 				} else {
-					resourcesString = resourcesString + '\n' + sampleResources[ i ].node.outerHTML;
+					resourcesString = resourcesString + sampleResources[ i ].node.outerHTML;
 				}
 			}
-			headResources = headResources.join( '\n' );
+			headResources = headResources.join( '' );
 
 			templatePre = [
 				'<!DOCTYPE html>',
 				'<html>',
-				'\t<head>',
-				'\t\t<meta charset="utf-8">',
-				'\t\t<title>Some title&lt;/title>',
-				'\t\t<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
-				'\t\t', headResources,
-				'\t</head>',
-				'\t<body>'
+				'<head>',
+					'<meta charset="utf-8">',
+					'<title>Some title</title>',
+					'<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
+					headResources,
+				'</head>',
+				'<body>'
 			];
 
 			templatePost = [
-				'\t</body>',
+				'</body>',
 				'</html>'
 			];
 
-			resourcesString = templatePre.join( '\n' ) + resourcesString + templatePost.join( '\n' );
+			resourcesString = templatePre.join( '' ) + resourcesString + templatePost.join( '' );
+			resourcesString = resourcesString
+				.replace( /(\&lt;)/g, '<' )
+				.replace( /(\&gt;)/g, '>' )
+				.replace( /\.\.\//g, sdkOnlineURL )
+				.replace( /(")(:?\.\/)(.*?\.html)/g, '$1' + sdkOnlineURL + 'samples/$3' )
+				.replace( /(assets\/)/g, sdkOnlineURL + 'samples/$1' )
+				.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
+
+			resourcesString = html_beautify( resourcesString );
+
+			resourcesString = resourcesString.replace( /(\<code\>)(.*?)(\<\/code\>)/g, function( match, preCode, inner, postCode ) {
+				return preCode + inner.replace( /\</g, '&amp;lt;' ) + postCode;
+			} );
 			resourcesString = resourcesString.replace( /\</g, '&lt;' );
-			resourcesString = resourcesString.replace( /(src\=\"|\')(assets)/g, '$1' + sdkOnlineURL + '/samples/$2' );
-			resourcesString = resourcesString.replace( /(contentsCss.*?)(\'|\")(?:\.\.)(\/vendor)/g, '$1$2' + sdkOnlineURL + '$3' );
-			resourcesString = resourcesString.replace( /(href\=\"|\')(?:\.\.)/g, '$1' + sdkOnlineURL );
 
 			var myWindow = window.open( '', '', 'width=800, height=600' );
 
