@@ -1,6 +1,13 @@
 ( function() {
 	'use strict';
 
+	// IE8...
+	if(typeof String.prototype.trim !== 'function') {
+		String.prototype.trim = function() {
+			return this.replace(/^\s+|\s+$/g, '');
+		}
+	}
+
 	function attachEvent( elem, evtName, callback ) {
 		if ( elem.addEventListener ) {
 			elem.addEventListener( evtName, callback, false );
@@ -51,14 +58,23 @@
 		return sdkMeta.content.split( '|' );
 	}
 
-	attachEvent( document, 'DOMContentLoaded', onLoad );
+	contentLoaded( window, onLoad );
 
 	function onLoad() {
 		var resources = prepareSampleResources(),
 			body = document.getElementsByTagName( 'body' )[ 0 ],
-			sdkContents = document.getElementsByClassName( 'sdk-contents' )[ 0 ],
+			sections = document.getElementsByTagName( 'section' ),
+			sdkContents,
 			metaNames = prepareSamplesNames(),
 			samplesList = createFromHtml( prepareSamplesList( resources, metaNames ) );
+
+		accept( sections, function( element ) {
+			var classAttr = element.attributes && element.attributes.getNamedItem( 'class' );
+
+			if ( classAttr && classAttr.value == 'sdk-contents' ) {
+				sdkContents = element;
+			}
+		} );
 
 		sdkContents.appendChild( samplesList );
 
