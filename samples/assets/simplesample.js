@@ -83,14 +83,17 @@
 				relLi,
 				sampleId;
 
+			e.preventDefault();
+
 			if ( clicked instanceof HTMLAnchorElement) {
 				relLi = clicked.parentNode;
-			}
-			if ( clicked instanceof HTMLLIElement ) {
-				relLi = clicked;
+			} else {
+				return false;
 			}
 			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value;
 			showSampleSource( sampleId, metaNames );
+
+			return false;
 		} );
 
 		function showSampleSource( id, metaNames ) {
@@ -140,7 +143,10 @@
 				.replace( /(assets\/)/g, sdkOnlineURL + 'samples/$1' )
 				.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
 
-			resourcesString = html_beautify( resourcesString );
+			resourcesString = html_beautify( resourcesString, {
+				'indent_size': 1,
+				'indent_char': '\t'
+			} );
 
 			resourcesString = resourcesString.replace( /(\<code\>)(.*?)(\<\/code\>)/g, function( match, preCode, inner, postCode ) {
 				return preCode + inner.replace( /\</g, '&amp;lt;' ) + postCode;
@@ -196,7 +202,7 @@
 		var template = '<div><h2>Runnable examples</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a>' + names[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="' + id + '"><a href="' + id + '">' + names[ id - 1 ] + '</a></li>';
 		}
 		template += '</ul></div>';
 
