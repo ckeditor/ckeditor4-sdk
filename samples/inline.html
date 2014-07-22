@@ -10,13 +10,14 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Editor Types">
 	<meta name="description" content="Inline editing with CKEditor. Fast and lightweight editor for Ajax applications, real WYSIWYG experience thanks to style inheritance.">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, inline, contenteditable, ui, interface, styles, Ajax">
+	<meta name="sdk-samples" content="Inline Editing Enabled by Code|Massive Inline Editing">
 	<title>Inline Editor</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
-	<script type="template" data-sample="one,two">
+	<script type="template" data-sample="1,2">
 		<link href="../theme/css/sdk-inline.css" rel="stylesheet" />
 	</script>
 	<!--[if lt IE 9]>
@@ -24,7 +25,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<![endif]-->
 	<link href="sample.css" rel="stylesheet">
 
-	<style data-sample="two">
+	<style data-sample="2">
 		/* The following styles are here just to make the "Massive Inline Editing" sample look nice. */
 
 		/* A workaround to show Arial Black font in Firefox. */
@@ -140,8 +141,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<nav class="sdk-sidebar">
 	</nav>
 	<section class="sdk-contents">
-		<button data-sample-name="one" class="sdk-get-source">Get source</button>
-		<div data-sample="one" id="introduction">
+		<div data-sample="1" id="introduction">
 			<h1>Inline Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_inline">Documentation</a></h1>
 
 			<p>
@@ -154,8 +154,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Press the "Start editing" button below. An editor will be created using the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline"><code>CKEDITOR.inline()</code></a> method with <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus"><code>CKEDITOR.config.startupFocus</code></a> set to <code>true</code>.
 			</p>
 		</div>
-		<button data-sample="one" id="toggle">Start editing</button>
-		<button data-sample="one" id="reset" style="display:none">Reset content</button>
+		<button data-sample="1" id="toggle">Start editing</button>
+		<button data-sample="1" id="reset" style="display:none">Reset content</button>
 		<h2 class="editor-title">Massive Inline Editing</h2>
 
 		<p>
@@ -165,9 +165,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<p>
 			Click inside any of the elements below to start editing it in-place!
 		</p>
-		<button data-sample-name="two" class="sdk-get-source">Get source</button>
+		<button data-sample-name="2" class="sdk-get-source">Get source</button>
 		<!-- Massive inline editing start. -->
-		<div data-sample="two" id="header">
+		<div data-sample="2" id="header">
 			<div id="headerLeft">
 				<h2 id="sampleTitle" contenteditable="true">
 					CKEditor<br> Goes Inline!
@@ -190,7 +190,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				</div>
 			</div>
 		</div>
-		<div data-sample="two" id="columns">
+		<div data-sample="2" id="columns">
 			<div id="column1">
 				<div contenteditable="true">
 					<h3>
@@ -306,7 +306,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 <footer class="sdk-footer">
 </footer>
-<script data-sample="one">
+<script data-sample="1">
 	// Sample: Inline Editing Enabled by Code
 	(function () {
 		var isEditingEnabled,
@@ -368,7 +368,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 	})();
 </script>
-<script data-sample="two">
+<script data-sample="2">
 	// Sample: Massive Inline Editing
 
 	// This code is generally not necessary, but it is here to demonstrate

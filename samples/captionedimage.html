@@ -10,6 +10,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Inserting Content">
 	<meta name="description" content="Captioned Image">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, image, caption, widget, drag, drop, image2, enhanced, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Creating Captioned Images">
 	<title>Captioned Image</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -58,8 +59,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				A few configuration options are available to fine-tune this feature, including adjusting the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-image2_alignClasses">alignment style</a> to use classes instead of inline styles or setting a <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-image2_captionedClass">custom CSS class</a> for the captioned image. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_captionedimage">Creating Captioned Images</a> article to learn more about this feature.
 			</p>
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one" >
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" >
 				&lt;figure class=&quot;image&quot; style=&quot;float:left&quot;&gt;&lt;img alt=&quot;Saturn V&quot; src=&quot;assets/captionedimage/image1.jpg&quot; width=&quot;200&quot; /&gt;
 				&lt;figcaption&gt;Roll out of Saturn V on launch pad&lt;/figcaption&gt;
 				&lt;/figure&gt;
@@ -108,7 +108,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			</textarea>
 
-			<script data-sample="one" >
+			<script data-sample="1" >
 
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'image2',

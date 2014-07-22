@@ -10,11 +10,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Editor UI">
 	<meta name="description" content="CKEditor with Fixed User Interface. Common solution for static administration backends.">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, classic, ui, interface, fixed, static, toolbar">
+	<meta name="sdk-samples" content="Classic Editor with Fixed UI|Inline Editor with Fixed UI">
 	<title>Fixed User Interface</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
 	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -43,8 +45,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				The following sample presents a classic editor instance with fixed UI and with toolbar location set to <code>bottom</code>.
 			</p>
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
 				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and
@@ -62,8 +63,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				By default, inline editor comes with <a href="./floatingui.html">floating UI</a>. The following sample presents an inline editor instance with fixed UI instead.
 			</p>
-			<button data-sample-name="two" class="sdk-get-source">Get source</button>
-			<div id="editor2" data-sample="two">
+			<div id="editor2" data-sample="2">
 				<h1><img alt="Saturn V carrying Apollo 11" style="float:right" src="assets/sample.jpg"/> Apollo 11</h1>
 
 				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
@@ -102,7 +102,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="./toolbarlocation.html">Editor UI &ndash; Toolbar Location</a></li>
 			</ul>
 
-			<script data-sample="one" >
+			<script data-sample="1" >
 
 				CKEDITOR.replace( 'editor1', {
 					height: 250,
@@ -113,7 +113,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			</script>
 
-			<script data-sample="two" >
+			<script data-sample="2" >
 
 				CKEDITOR.replace( 'editor2', {
 					height: 250,

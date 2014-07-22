@@ -12,9 +12,16 @@
 	}
 
 	function accept( node, visitator ) {
-		var children = node.children;
+		var children;
 
-		visitator( node );
+		// Handling node as a node and array
+		if ( node.children ) {
+			children = node.children;
+
+			visitator( node );
+		} else if ( typeof node.length == 'number' ) {
+			children = node;
+		}
 
 		var i = children.length;
 		while( i-- ) {
@@ -30,23 +37,49 @@
 		return div.firstChild;
 	}
 
-	attachEvent( window, 'load', onLoad );
+	function prepareSamplesNames() {
+		var meta = document.getElementsByTagName( 'meta' ),
+			sdkMeta = null,
+			metaNames;
 
-	function onLoad() {
-		var resources = prepareSampleResources();
-
-		attachEvent( document.getElementsByTagName( 'body' )[ 0 ], 'click', function( e ) {
-			var clicked = e.target || e.srcElement,
-				classAttr = clicked.attributes.getNamedItem( 'class' );
-
-			if ( classAttr && classAttr.value === 'sdk-get-source' ) {
-				showSampleSource( clicked.attributes.getNamedItem( 'data-sample-name' ).value );
+		accept( meta, function( element ) {
+			if ( element.name == 'sdk-samples' ) {
+				sdkMeta = element;
 			}
 		} );
 
-		function showSampleSource( name ) {
+		return sdkMeta.content.split( '|' );
+	}
+
+	attachEvent( document, 'DOMContentLoaded', onLoad );
+
+	function onLoad() {
+		var resources = prepareSampleResources(),
+			body = document.getElementsByTagName( 'body' )[ 0 ],
+			sdkContents = document.getElementsByClassName( 'sdk-contents' )[ 0 ],
+			metaNames = prepareSamplesNames(),
+			samplesList = createFromHtml( prepareSamplesList( resources, metaNames ) );
+
+		sdkContents.appendChild( samplesList );
+
+		attachEvent( samplesList, 'click', function( e ) {
+			var clicked = e.target || e.srcElement,
+				relLi,
+				sampleId;
+
+			if ( clicked instanceof HTMLAnchorElement) {
+				relLi = clicked.parentNode;
+			}
+			if ( clicked instanceof HTMLLIElement ) {
+				relLi = clicked;
+			}
+			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value;
+			showSampleSource( sampleId, metaNames );
+		} );
+
+		function showSampleSource( id, metaNames ) {
 			var templatePre, templatePost,
-				sampleResources = resources[ name ],
+				sampleResources = resources[ id ],
 				resourcesString = '',
 				sdkOnlineURL = 'http://sdk.ckeditor.dev/',
 				headResources = [];
@@ -58,9 +91,9 @@
 					isHeadResource = ( resource.name == 'LINK' );
 
 				if ( isHeadResource ) {
-					headResources.push( resource.node.outerHTML );
+					headResources.push( resource.html );
 				} else {
-					resourcesString = resourcesString + sampleResources[ i ].node.outerHTML;
+					resourcesString = resourcesString + sampleResources[ i ].html;
 				}
 			}
 			headResources = headResources.join( '' );
@@ -70,7 +103,7 @@
 				'<html>',
 				'<head>',
 					'<meta charset="utf-8">',
-					'<title>Some title</title>',
+					'<title>' + metaNames[ id - 1 ] + '</title>',
 					'<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
 					headResources,
 				'</head>',
@@ -119,6 +152,7 @@
 
 					exampleBlocks.push( {
 						node: node,
+						html: node.outerHTML.trim(),
 						usedIn: sample.value.split( ',' ),
 						name: node.nodeName
 					} );
@@ -142,4 +176,14 @@
 		}
 	}
 
+	function prepareSamplesList( examples, names ) {
+		var template = '<div><h2>Runnable examples</h2>' + '<ul>';
+
+		for ( var id in examples ) {
+			template += '<li data-sample="' + id + '"><a>' + names[ id - 1 ] + '</a></li>';
+		}
+		template += '</ul></div>';
+
+		return template;
+	}
 }() );

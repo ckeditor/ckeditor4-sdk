@@ -10,6 +10,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Saving Data">
 	<meta name="description" content="Getting data from CKEditor in Ajax applications. .">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, readonly, read-only, noneditable, ineditable, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Creating and destroying CKEditor on the fly|Events: change">
 	<title>CKEditor in AJAX applications</title>
 	<!--<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">-->
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -19,7 +20,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
-	<script data-sample="one">
+	<script data-sample="1">
 
 			var editor1, html = '';
 
@@ -80,32 +81,30 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<p>In this sample CKEditor is created dynamically after pressing "Create Editor" button. After pressing "Remove Editor" the content from CKEditor will be passed to a <code>&lt;div&gt;</code> element and CKEditor will be removed.</p>
 			<p>This functionality is achieved using just three simple methods: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-appendTo">CKEDITOR.appendTo()</a></code>, <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getData">editor.getData()</a></code> and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-destroy">editor.destroy()</a></code></p>
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
-			<p data-sample="one">
+			<p data-sample="1">
 				<input onclick="createEditor();" type="button" value="Create Editor" id="create">
 				<input onclick="removeEditor();" type="button" value="Remove Editor" id="remove" style="display:none">
 			</p>
 
 			<!-- This div will hold the editor. -->
-			<div id="editor1" data-sample="one">
+			<div id="editor1" data-sample="2">
 			</div>
-			<div id="contents1" style="display: none" data-sample="one">
+			<div id="contents1" style="display: none" data-sample="2">
 				<h3>
 					Edited Contents
 				</h3>
 				<!-- This div will be used to display the editor contents. -->
-				<div data-sample="one" id="editorcontents1">
+				<div data-sample="1" id="editorcontents1">
 				</div>
 			</div>
 
 			<h2 class="editor-title">Events: <code>change</code></h2>
 
 			<p>Whenever a change is made in the editor, CKEditor fires a <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-change">change</a></code> event making it possible to auto-save data on the fly. In the sample below, the <code>change</code> event is used to mirror entered content below the editor. To see it in action, start typing in the editing area.</p>
-			<button data-sample-name="two" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="two">
+			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2">
 			</textarea>
 
-			<div id="contents2" style="display: none" data-sample="two">
+			<div id="contents2" style="display: none" data-sample="2">
 				<p>Number of change events: <span id="changes"></span>.</p>
 				<h3>
 					Mirrored Contents
@@ -124,7 +123,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 				<p>Repeat there the warning about the Save plugin, explain how to enable it for inline editors or editors that are not wrapped by a &lt;form&gt; element. The plugin is generally stupid right now so we need to explain it: <a href="http://dev.ckeditor.com/ticket/12167">http://dev.ckeditor.com/ticket/12167</a></p>
 			</div>
-			<script data-sample="two">
+			<script data-sample="2">
 				(function () {
 					var changesCount = 0;
 					var editor2 = CKEDITOR.replace( 'editor2', {

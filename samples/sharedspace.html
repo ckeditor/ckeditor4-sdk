@@ -10,10 +10,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Appearance">
 	<meta name="description" content="CKEditor Shared Toolbar and Bottom Bar">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, shared, common, spaces, toolbar, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Classic Editors Sharing Toolbar and Bottom Bar|Inline Editor with Shared Toolbar and Bottom Bar">
 	<title>Shared Toolbar and Bottom Bar</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -52,11 +55,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-sharedSpaces">CKEDITOR.config.sharedSpaces</a></code> configuration setting.
 			</p>
 
-			<div id="top">
+			<div data-sample="1" id="top" class="dfjksdfsdfjkl">
 				<!-- This div will handle all toolbars. -->
 			</div>
 
-			<div style="height: 460px; overflow: auto; border: 1px solid #afafaf; padding: 10px 10px;">
+			<div data-sample="1" style="height: 460px; overflow: auto; border: 1px solid #afafaf; padding: 10px 10px;">
 
 				<div style="width: 69%; float: left;">
 					<textarea id="editor1">
@@ -112,7 +115,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				</div>
 			</div>
 
-			<div id="bottom">
+			<div data-sample="1" id="bottom">
 				<!-- This div will handle all bottom bars. -->
 			</div>
 
@@ -120,11 +123,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<p>Inline editors can also be configured to share the toolbar and bottom bar (it is in fact possible to use a mix of classic and inline editors together as well). One of most interesting use cases for the Shared Space plugin is the possibility of providing an improved <a href="./fixedui.html">Fixed User Interface</a> for the inline editor:</p>
 
-			<div id="top2">
+			<div data-sample="2" id="top2">
 				<!-- This div will handle all toolbars. -->
 			</div>
 
-			<div id="inline1" contenteditable="true">
+			<div data-sample="2" id="inline1" contenteditable="true">
 				<h1><img alt="Saturn V carrying Apollo 11" style="float:right;margin:10px" src="assets/sample.jpg"/> Apollo 11</h1>
 
 				<p><strong>Apollo 11</strong> was the spaceflight that landed the first humans, Americans <a href="http://en.wikipedia.org/wiki/Neil_Armstrong">Neil Armstrong</a> and
@@ -137,7 +140,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					Earth.</p>
 			</div>
 
-			<div id="bottom2">
+			<div data-sample="2" id="bottom2">
 				<!-- This div will handle all bottom bars. -->
 			</div>
 
@@ -154,8 +157,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="./fixedui.html">Editor UI &ndash; Fixed User Interface</a></li>
 				<li><a href="./floatingui.html">Editor UI &ndash; Floating User Interface</a></li>
 			</ul>
-
-			<script>
+			<script data-sample="1">
 
 				// Turn off automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
@@ -179,6 +181,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 						bottom: 'bottom'
 					}
 				} );
+
+			</script>
+
+			<script data-sample="2">
+				// Turn off automatic editor creation first.
+				CKEDITOR.disableAutoInline = true;
 
 				CKEDITOR.inline( 'inline1', {
 					// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.

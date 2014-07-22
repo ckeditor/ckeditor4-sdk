@@ -10,6 +10,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Size Control">
 	<meta name="description" content="CKEditor Auto Grow">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, size, autogrow, width, height, ui, interface, expand, grow, shrink, autogrow, auto, adjustment, adjust, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Automatic Editor Height Adjustment to Content">
 	<title>CKEditor Auto Grow</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -54,14 +55,13 @@ config.autoGrow_bottomSpace = 50;
 				<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-autoGrow_minHeight">minimum defined height</a> (<code>200</code> pixels). An
 				<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-autoGrow_bottomSpace">additional bottom space</a> of 50 pixels will also separate the content from the editor bottom bar.
 			</p>
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one" >
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" >
 				&lt;p&gt;This editor instance was configured to &lt;strong&gt;automatically adjust its height to content&lt;/strong&gt; that is added to it.&lt;/p&gt;
 
 				&lt;p&gt;&lt;strong&gt;Add some content here &lt;/strong&gt;to see &lt;strong&gt;how the editor expands&lt;/strong&gt; in order to fit it in.&lt;/p&gt;
 			</textarea>
 
-			<script data-sample="one" >
+			<script data-sample="1" >
 
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'autogrow',

@@ -10,6 +10,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Working with Document">
 	<meta name="description" content="Source Editing">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, source, code, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Classic editor with default source editing area|Inline editor with source dialog|Classic editor with source dialog">
 	<title>Source Code Editing</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -17,7 +18,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<script src="assets/sample.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
-	<script type="template" data-sample="two">
+	<script type="template" data-sample="2">
 		<link href="../theme/css/sdk-inline.css" rel="stylesheet" />
 	</script>
 	<!--[if lt IE 9]>
@@ -49,8 +50,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</p>
 
 			<h2 class="editor-title">Classic editor with default source editing area</h2>
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source
 				Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
 
@@ -64,9 +64,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</textarea>
 
 			<h2 class="editor-title">Inline editor with source dialog</h2>
-
-			<button data-sample-name="two" class="sdk-get-source">Get source</button>
-			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor" data-sample="two">
+			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor" data-sample="2">
 				<p>
 					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
 					for source editing.
@@ -93,8 +91,7 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 
 			</div>
 			<h2 class="editor-title">Classic editor with source dialog</h2>
-			<button data-sample-name="three" class="sdk-get-source">Get source</button>
-			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="three">
+			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3">
 				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source
 				Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
 
@@ -110,7 +107,7 @@ config.extraPlugins = &amp;#39;sourcedialog&amp;#39;;
 config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 			</textarea>
 
-			<script data-sample="one">
+			<script data-sample="1">
 
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
@@ -119,7 +116,7 @@ config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 
 			</script>
 
-			<script data-sample="two">
+			<script data-sample="2">
 
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;
@@ -132,7 +129,7 @@ config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 
 			</script>
 
-			<script data-sample="three">
+			<script data-sample="3">
 
 				// We need to turn off the automatic editor creation first.
 				CKEDITOR.disableAutoInline = true;

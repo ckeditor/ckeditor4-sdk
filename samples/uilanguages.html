@@ -10,11 +10,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Appearance">
 	<meta name="description" content="CKEditor UI Language Adjustment">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, language, localization, localisation, translation, internationalization, locale, colour, ui, interface, skin, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="User Interface Languages">
 	<title>UI Languages</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
-	<script data-sample="one" src="assets/uilanguages/languages.js"></script>
+	<script data-sample="1" src="assets/uilanguages/languages.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
 	<!--[if lt IE 9]>
@@ -60,10 +61,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				would like to help with translating CKEditor into your native language or correct an existing localization, do not hesitate to join us!
 			</p>
 
-			<button data-sample-name="one" class="sdk-get-source">Get source</button>
 			<p>
 				Localizations available in CKEditor (<span id="count"> </span> languages!):<br>
-				<script data-sample="one">
+				<script data-sample="1">
 
 					document.write( '<select disabled="disabled" id="languages" onchange="createEditor( this.value );">' );
 
@@ -83,7 +83,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					(You may see strange characters if your system does not support the selected language.)
 				</span>
 			</p>
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="one">
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
 				was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot; title=&quot;Neil Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt;
 				and &lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot; title=&quot;Buzz Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became
@@ -113,7 +113,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
 
-			<script data-sample="one">
+			<script data-sample="1">
 
 				// Set the number of languages.
 				var count = document.getElementById( 'count' );
