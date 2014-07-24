@@ -8,7 +8,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Sample &mdash; CKEditor</title>
+	<title>Saving Data in CKEditor Replacing a Textarea</title>
 	<link rel="stylesheet" href="../theme/css/sdk.css">
 	<link rel="stylesheet" href="highlight/styles/googlecode.css">
 	<style>
@@ -22,9 +22,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <body>
 	<section class="sdk-container">
 	<section class="sdk-contents">
-		<h1>CKEditor &ndash; Posted Data </h1>
+		<h1>CKEditor &mdash; Data Posted to the Server</h1>
 
-		<p>The following data has been submitted via POST request:</p>
+		<p>The following data was submitted with a POST request:</p>
 		<table border="1" cellspacing="0" id="outputSample">
 		<colgroup>
 			<col width="120">
