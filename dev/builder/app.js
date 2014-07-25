@@ -3,7 +3,7 @@ var fs = require( 'fs' ),
     StringDecoder = require('string_decoder' ).StringDecoder,
     exec = require( 'child_process' ).exec,
     spawn = require( 'child_process' ).spawn,
-    archiver = require( 'archiver' )
+    archiver = require( 'archiver' ),
     nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
     path = require( 'path' ),
@@ -141,7 +141,6 @@ function copyFiles() {
             blacklist = [
                 !!path.basename( name ).match( /^\./i ),
                 currPath.matchLeft( new Path( BASE_PATH + '/dev' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/samples' ) ),
                 currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
                 currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
             ];
@@ -222,9 +221,7 @@ function copyMathjaxFiles() {
 
 // return promise
 function prepareSamplesDir() {
-    fs.mkdirSync( RELEASE_PATH + '/samples' );
-
-    return call( ncp, '../../samples/assets', RELEASE_PATH + '/samples/assets' );
+    return whenRimraf( RELEASE_PATH + '/samples/_index.html' );
 }
 
 // sync method
