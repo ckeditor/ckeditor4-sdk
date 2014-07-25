@@ -10,10 +10,14 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Saving Data">
 	<meta name="description" content="Saving data in CKEditor replacing a textarea element.">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, save, saving, submitting, submit, data, textarea, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Classic Editor Replacing a Textarea|Inline Editor Replacing a Textarea">
 	<title>CKEditor as Textarea</title>
 	<!--<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">-->
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -44,7 +48,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<p>A <code>&lt;textarea&gt;</code> element is replaced with <a href="./classic.html">classic editor</a> using the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-replace">CKEDITOR.replace()</a></code> method.</p>
 
-			<form action="savetextarea.php" method="post">
+			<form data-sample="1" action="./savetextarea.php" method="post">
 				<textarea cols="80" id="editor1" name="editor1" rows="10">
 					&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
@@ -71,7 +75,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<p>A <code>&lt;textarea&gt;</code> element is replaced with <a href="./inline.html">inline editor</a> using the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline">CKEDITOR.inline()</a></code> method.</p>
 
-			<form action="savetextarea.php" method="post">
+			<form data-sample="2" action="./savetextarea.php" method="post">
 				<textarea cols="80" id="editor2" name="editor2" rows="10">
 					&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; style=&quot;float:right;margin:10px&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
@@ -115,8 +119,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<p>3. Once the online version of SDK is available, change the form action attribute to remote savetextarea.php, so that the local version did not have any PHP file.</p>
 			</div>
 
-			<script>
+			<script data-sample="1">
 				CKEDITOR.replace( 'editor1' );
+			</script>
+			<script data-sample="2">
 				CKEDITOR.inline( 'editor2' );
 			</script>
 		</section>
