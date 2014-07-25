@@ -1,6 +1,14 @@
 ( function() {
-	var SDK_ONLINE_URL = 'http://sdk.ckeditor.dev/';
 	'use strict';
+
+	window.onbeforeunload = function() {
+		if (popup) {
+			popup.close();
+		}
+	};
+
+	var SDK_ONLINE_URL = 'http://sdk.ckeditor.dev/',
+		popup;
 
 	// IE8...
 	if(typeof String.prototype.trim !== 'function') {
@@ -163,9 +171,13 @@
 
 			resourcesString = fixUrls( resourcesString );
 
-			var myWindow = window.open( '', '', 'width=800, height=600' );
+			if (popup) {
+				popup.close();
+			}
 
-			myWindow.document.write( '<code><pre>' + resourcesString + '</pre></code>' );
+			popup = window.open( '', '', 'width=800, height=600' );
+
+			popup.document.write( '<code><pre>' + resourcesString + '</pre></code>' );
 		}
 
 		function fixUrls( str ) {
