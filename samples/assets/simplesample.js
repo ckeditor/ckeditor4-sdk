@@ -7,7 +7,7 @@
 		}
 	};
 
-	var SDK_ONLINE_URL = 'http://sdk.ckeditor.dev/',
+	var SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
 		popup;
 
 	// IE8...
