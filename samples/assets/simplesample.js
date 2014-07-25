@@ -1,4 +1,5 @@
 ( function() {
+	var SDK_ONLINE_URL = 'http://sdk.ckeditor.dev/';
 	'use strict';
 
 	// IE8...
@@ -100,7 +101,6 @@
 			var templatePre, templatePost,
 				sampleResources = resources[ id ],
 				resourcesString = '',
-				sdkOnlineURL = 'http://sdk.ckeditor.dev/',
 				headResources = [];
 
 			var i = 0,
@@ -112,7 +112,12 @@
 				if ( isHeadResource ) {
 					headResources.push( resource.html );
 				} else {
-					resourcesString = resourcesString + sampleResources[ i ].html;
+					if ( resource.name === 'TEXTAREA' ) {
+						// Want to prevent from beautifying, so put placeholder here for a while
+						resourcesString = ( resourcesString + resource.openingTag + '[' + i + ']PLACEHOLDER' + resource.closingTag );
+					} else {
+						resourcesString = ( resourcesString + resource.html );
+					}
 				}
 			}
 			headResources = headResources.join( '' );
@@ -135,13 +140,9 @@
 			];
 
 			resourcesString = templatePre.join( '' ) + resourcesString + templatePost.join( '' );
-			resourcesString = resourcesString
-				.replace( /(\&lt;)/g, '<' )
-				.replace( /(\&gt;)/g, '>' )
-				.replace( /\.\.\//g, sdkOnlineURL )
-				.replace( /(")(:?\.\/)(.*?\.html)/g, '$1' + sdkOnlineURL + 'samples/$3' )
-				.replace( /(assets\/)/g, sdkOnlineURL + 'samples/$1' )
-				.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
+
+			// Removing data-sample attribute.
+			resourcesString = resourcesString.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
 
 			resourcesString = html_beautify( resourcesString, {
 				'indent_size': 1,
@@ -149,13 +150,29 @@
 			} );
 
 			resourcesString = resourcesString.replace( /(\<code\>)(.*?)(\<\/code\>)/g, function( match, preCode, inner, postCode ) {
-				return preCode + inner.replace( /\</g, '&amp;lt;' ) + postCode;
+				return preCode + inner.replace( /\&/g, '&amp;' ) + postCode;
 			} );
-			resourcesString = resourcesString.replace( /\</g, '&lt;' );
+
+			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
+
+			resourcesString = resourcesString.replace( /\[(\d)\]PLACEHOLDER/g, function( match, id ) {
+				var result = sampleResources[ id ].innerHTML.replace( /\&/g, '&amp;' );
+
+				return result;
+			} );
+
+			resourcesString = fixUrls( resourcesString );
 
 			var myWindow = window.open( '', '', 'width=800, height=600' );
 
 			myWindow.document.write( '<code><pre>' + resourcesString + '</pre></code>' );
+		}
+
+		function fixUrls( str ) {
+			return str
+				.replace( /\.\.\//g, SDK_ONLINE_URL )
+				.replace( /(")(:?\.\/)(.*?\.html)/g, '$1' + SDK_ONLINE_URL + 'samples/$3' )
+				.replace( /(assets\/)/g, SDK_ONLINE_URL + 'samples/$1' );
 		}
 
 		function prepareSampleResources() {
@@ -172,12 +189,27 @@
 						node = createFromHtml( node.innerHTML.trim() );
 					}
 
-					exampleBlocks.push( {
+					var example = {
 						node: node,
 						html: node.outerHTML.trim(),
 						usedIn: sample.value.split( ',' ),
 						name: node.nodeName
-					} );
+					};
+
+					example.innerHTML = node.innerHTML;
+
+					// Here we determine opening and closing tags HTML.
+					var elementTags = example.html.replace( example.innerHTML, '' );
+					var parsedElementTags = /(<.*>)(<.*>)/g.exec( elementTags );
+
+					if ( !parsedElementTags ) {
+						example.openingTag = elementTags;
+						example.closingTag = null;
+					} else {
+						example.openingTag = parsedElementTags[ 1 ];
+						example.closingTag = parsedElementTags[ 2 ];
+					}
+					exampleBlocks.push( example );
 				}
 			} );
 
