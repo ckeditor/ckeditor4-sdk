@@ -358,10 +358,32 @@ body
 .sdk-contents div.note
 {
 	background: url(../img/tip.png) no-repeat 10px 30px;
+	background-color: #f6fff7;
 	padding: 10px 10px 10px 53px;
-	border: 1px dotted #666;
+	border: 7px solid #79CC71;
 	margin-top: 20px;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+
+	-moz-box-shadow: 0 0 3px rgba(0,0,0,.15);
+	-webkit-box-shadow: 0 0 3px rgba(0,0,0,.15);
+	box-shadow: 0 0 3px rgba(0,0,0,.15);
 }
+/*.sdk-contents div.note*/
+/*{*/
+	/*border: 1px solid #aaa;*/
+	/*padding: 12px 15px 12px 65px !important;*/
+	/*background: #eee;*/
+
+	/*-moz-box-shadow: 2px 2px 0 0 #ccc;*/
+	/*-webkit-box-shadow: 2px 2px 0 0 #ccc;*/
+	/*box-shadow: 2px 2px 0 0 #ccc;*/
+
+	/*overflow: hidden;*/
+/*}*/
+
 
 .sdk-contents div.note li
 {
