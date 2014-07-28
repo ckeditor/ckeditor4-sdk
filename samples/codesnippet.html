@@ -8,8 +8,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta charset="utf-8">
 	<meta name="sdk-category" content="End-user Features">
 	<meta name="sdk-subcategory" content="Inserting Content">
-	<meta name="description" content="Code Snippets">
-	<meta name="keywords" content="ckeditor, editor, wysiwyg, code, snippet, snippets, pre, syntax, highlighting, highlighter, coloring, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="description" content="Code Snippets. Syntax highlighting for code snippets inserted into CKEditor content.">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, code, snippet, snippets, pre, syntax, highlighting, highlighter, coloring, source, raw, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 	<meta name="sdk-samples" content="Using Syntax Highlighting">
 	<title>Code Snippets</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
@@ -74,18 +74,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Please note that this plugin is not compatible with Internet Explorer 8.
 			</p>
 
-			<h2>Server-side Highlighting and Custom Highlighting Engines</h2>
+			<h2>GeSHi &mdash; Custom Highlighting Engine Example</h2>
 
 			<p>
-				The <a href="http://ckeditor.com/addon/codesnippetgeshi"><strong>Code Snippet GeSHi</strong></a> plugin is an
-				extension of the <strong>Code Snippet</strong> plugin. It implements the well-known <a href="http://qbnz.com/highlighter/">GeSHi</a> library with a server-side highlighter. See the
+				The <a href="http://ckeditor.com/addon/codesnippetgeshi">Code Snippet GeSHi</a> plugin is an
+				extension of the Code Snippet plugin. It implements the well-known <a href="http://qbnz.com/highlighter/">GeSHi</a> library with a server-side highlighter. See the
 				<a href="http://docs.ckeditor.com/#!/guide/dev_codesnippetgeshi">Inserting Code Snippets Using GeSHi</a> article for implementation details.
-			</p>
-
-			<p>
-				It also is possible to replace the default highlighter with any library using the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.codesnippet.highlighter">Highlighter API</a> and the
-				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.plugins.codesnippet-method-setHighlighter">editor.plugins.codesnippet.setHighlighter()</a></code> method. Refer to the
-				<a href="http://docs.ckeditor.com/#!/guide/dev_codesnippet">Inserting Code Snippets</a> article for more information.
 			</p>
 
 			<script data-sample="1">
