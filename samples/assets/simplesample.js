@@ -179,7 +179,7 @@
 		function fixUrls( str ) {
 			return str
 				.replace( /\.\.\//g, SDK_ONLINE_URL )
-				.replace( /(")(:?\.\/)(.*?\.html)/g, '$1' + SDK_ONLINE_URL + 'samples/$3' )
+				.replace( /(")(:?\.\/)(.*?\.(?:html|php))/g, '$1' + SDK_ONLINE_URL + 'samples/$3' )
 				.replace( /(assets\/)/g, SDK_ONLINE_URL + 'samples/$1' );
 		}
 
@@ -190,13 +190,26 @@
 			var k = 0;
 			accept( document.getElementsByTagName( 'html' )[ 0 ], function( node ) {
 				var attrs = node.attributes,
-				sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null;
+					sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null;
 
 				if ( sample ) {
 					var typeAttr = attrs.getNamedItem( 'type' );
+
 					if ( typeAttr && typeAttr.value == 'template' ) {
 						node = createFromHtml( node.innerHTML.trim() );
+					} else {
+						node = createFromHtml( node.outerHTML.trim() );
 					}
+
+					// We are going to remove unwanted container which was created dynamically.
+					accept( node, function ( node ) {
+						var attrs = node.attributes,
+						className = attrs ? attrs.getNamedItem( 'class' ) : null;
+
+						if ( className && className.value === 'cke_textarea_inline' ) {
+							node.parentNode.removeChild( node );
+						}
+					} );
 
 					var example = {
 						node: node,
@@ -207,8 +220,8 @@
 
 					example.innerHTML = node.innerHTML;
 
+					// Setting placeholder for textareas and keeping reference to content in global array.
 					var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
-
 					example.html = example.html.replace( regexp, function(text, $1, $2, $3) {
 						placeholders.push( $2 );
 						return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
@@ -218,6 +231,7 @@
 				}
 			} );
 
+			// Sorting resources by usage.
 			var i = exampleBlocks.length;
 			while( i-- ) {
 				var block = exampleBlocks[ i ],
