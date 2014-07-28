@@ -8,12 +8,13 @@
 	};
 
 	var SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
-		popup;
+		popup,
+		placeholders = [];
 
 	// IE8...
 	if(typeof String.prototype.trim !== 'function') {
 		String.prototype.trim = function() {
-			return this.replace(/^\s+|\s+$/g, '');
+			return this.replace( /^\s+|\s+$/g, '' );
 		}
 	}
 
@@ -47,7 +48,7 @@
 
 	// Please note: assume that there is only one element in HTML
 	function createFromHtml( html ) {
-		var div = document.createElement('div');
+		var div = document.createElement( 'div' );
 		div.innerHTML = html;
 
 		return div.firstChild;
@@ -115,17 +116,12 @@
 				max = sampleResources.length;
 			for ( ; i < max; i++ ) {
 				var resource = sampleResources[ i ],
-					isHeadResource = ( resource.name == 'LINK' );
+					isHeadResource = ( resource.name == 'LINK' || resource.name == 'STYLE' );
 
 				if ( isHeadResource ) {
 					headResources.push( resource.html );
 				} else {
-					if ( resource.name === 'TEXTAREA' ) {
-						// Want to prevent from beautifying, so put placeholder here for a while
-						resourcesString = ( resourcesString + resource.openingTag + '[' + i + ']PLACEHOLDER' + resource.closingTag );
-					} else {
-						resourcesString = ( resourcesString + resource.html );
-					}
+					resourcesString += resource.html;
 				}
 			}
 			headResources = headResources.join( '' );
@@ -164,7 +160,7 @@
 			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
 			resourcesString = resourcesString.replace( /\[(\d)\]PLACEHOLDER/g, function( match, id ) {
-				var result = sampleResources[ id ].innerHTML.replace( /\&/g, '&amp;' );
+				var result = placeholders[ id ].replace( /\&/g, '&amp;' );
 
 				return result;
 			} );
@@ -191,6 +187,7 @@
 			var exampleBlocks = [],
 				examples = {};
 
+			var k = 0;
 			accept( document.getElementsByTagName( 'html' )[ 0 ], function( node ) {
 				var attrs = node.attributes,
 				sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null;
@@ -210,26 +207,22 @@
 
 					example.innerHTML = node.innerHTML;
 
-					// Here we determine opening and closing tags HTML.
-					var elementTags = example.html.replace( example.innerHTML, '' );
-					var parsedElementTags = /(<.*>)(<.*>)/g.exec( elementTags );
+					var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
 
-					if ( !parsedElementTags ) {
-						example.openingTag = elementTags;
-						example.closingTag = null;
-					} else {
-						example.openingTag = parsedElementTags[ 1 ];
-						example.closingTag = parsedElementTags[ 2 ];
-					}
+					example.html = example.html.replace( regexp, function(text, $1, $2, $3) {
+						placeholders.push( $2 );
+						return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
+					} );
+
 					exampleBlocks.push( example );
 				}
 			} );
 
 			var i = exampleBlocks.length;
 			while( i-- ) {
-				var block = exampleBlocks[ i ];
+				var block = exampleBlocks[ i ],
+					j = block.usedIn.length;
 
-				var j = block.usedIn.length;
 				while( j-- ) {
 					var usageName = block.usedIn[ j ];
 
