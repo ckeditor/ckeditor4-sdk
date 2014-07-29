@@ -8,8 +8,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta charset="utf-8">
 	<meta name="sdk-category" content="End-user Features">
 	<meta name="sdk-subcategory" content="Working with Document">
-	<meta name="description" content="Source Editing">
-	<meta name="keywords" content="ckeditor, editor, wysiwyg, source, code, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="description" content="Source Code Editing. Working directly with HTML source code in CKEditor.">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, source, code, HTML, raw, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 	<meta name="sdk-samples" content="Classic editor with default source editing area|Inline editor with source dialog|Classic editor with source dialog">
 	<title>Source Code Editing</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
@@ -36,13 +36,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h1>Source Code Editing <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_sourcearea">Documentation</a></h1>
 
 			<p>
-				The main CKEditor strength is WYSIWYG editing, but the underlying format of the editor content is HTML. However, working directly with HTML code is also possible thanks to the source
+				Although CKEditor strength lies in WYSIWYG editing, the underlying format of the editor content is usually HTML. However, working directly with HTML code is also possible thanks to the source
 				code editing feature provided by the <a href="http://ckeditor.com/addon/sourcearea">Source Editing Area</a> and <a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>
 				plugins.
 			</p>
 
 			<p>
-				Both plugins introduce the <span class="button_icon" data-icon="source" title="Source">&nbsp;</span> toolbar button. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_sourcearea">Source Code
+				Both plugins introduce the <span class="button_icon" data-icon="source" title="Source">&nbsp;</span> <strong>Source</strong> toolbar button. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_sourcearea">Source Code
 				Editing</a> article to learn more about this feature as well as the functional differences between the plugins.
 			</p>
 
@@ -50,7 +50,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				The following editor instances show how both plugins can be combined with classic and inline editor.
 			</p>
 
-			<h2 class="editor-title">Classic editor with default source editing area</h2>
+			<h2 class="editor-title">Classic Editor with Default Source Editing Area</h2>
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;p&gt;This is the &lt;strong&gt;default &lt;/strong&gt;CKEditor installation. Source editing is provided by the &lt;a href=&quot;http://ckeditor.com/addon/sourcearea&quot;&gt;Source
 				Editing Area&lt;/a&gt;&amp;nbsp;plugin.&lt;/p&gt;
@@ -64,7 +64,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			</textarea>
 
-			<h2 class="editor-title">Inline editor with source dialog</h2>
+			<h2 class="editor-title">Inline Editor with Source Dialog</h2>
 			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor" data-sample="2">
 				<p>
 					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
@@ -91,7 +91,7 @@ config.extraPlugins = &#39;sourcedialog&#39;;
 </pre>
 
 			</div>
-			<h2 class="editor-title">Classic editor with source dialog</h2>
+			<h2 class="editor-title">Classic Editor with Source Dialog</h2>
 			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3">
 				&lt;p&gt;This &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_framed&quot;&gt;classic editor&lt;/a&gt; is using the &lt;a href=&quot;http://ckeditor.com/addon/sourcedialog&quot;&gt;Source
 				Dialog&lt;/a&gt; plugin for source editing.&amp;nbsp;Follow the steps below to try it out:&lt;/p&gt;
