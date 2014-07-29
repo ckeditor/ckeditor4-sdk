@@ -32,20 +32,20 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h1>Classic Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_frame">Documentation</a></h1>
 
 			<p>
-				<strong>Classic editor</strong> is what most users traditionally learnt to associate with a rich text editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. Sometimes it is also called "framed editing", because in this case the editor creates a temporary <code>&lt;iframe&gt;</code> element for itself.
+				<strong>Classic editor</strong> is what most users traditionally learnt to associate with a rich text editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. Sometimes it is also called "framed editing", because in this scenario the editor creates a temporary <code>&lt;iframe&gt;</code> element for itself.
 			</p>
 			<p>
 				In this editing solution <strong>the styles of the editor content are separated from the styles of the surrounding page</strong>. It is particularly useful when:
 			</p>
 			<ul>
 				<li>
-					Admininistration and frontend themes in a CMS are different &mdash; as in such case inheriting styles from the backend theme would make no sense.
+					Admininistration and frontend themes in a CMS are different &mdash; as inheriting styles from the backend theme would make no sense here.
 				</li>
 				<li>
 					Edited content is rendered in different locations of a website that may have different styling &mdash; as in such case it is more efficient to just focus on creating semantically correct syntax.
 				</li>
 				<li>
-					You need to provide an editor for a changing environment (e.g. a themable CMS) &mdash; where it is hard to predict how user themes will be constructed.
+					The editor works in a changeable environment (e.g. a themable CMS) &mdash; where it is hard to predict how user themes will be constructed.
 				</li>
 			</ul>
 			<p>
