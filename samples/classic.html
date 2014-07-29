@@ -32,7 +32,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h1>Classic Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_frame">Documentation</a></h1>
 
 			<p>
-				<strong>Classic editor</strong> is what most users learnt to associate with a WYSIWYG editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. In this editing solution <strong>the styles of the editor content are separated from the styles of the surrounding page</strong>. It is particularly useful when:
+				<strong>Classic editor</strong> is what most users traditionally learnt to associate with a rich text editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. Sometimes it is also called "framed editing", because in this case the editor creates a temporary <code>&lt;iframe&gt;</code> element for itself.
+			</p>
+			<p>
+				In this editing solution <strong>the styles of the editor content are separated from the styles of the surrounding page</strong>. It is particularly useful when:
 			</p>
 			<ul>
 				<li>
@@ -47,6 +50,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</ul>
 			<p>
 				Due to focus on semantic markup and possible differences between the styles of content within the editor and the styles used when the content is rendered on a page, such editors are sometimes called <abbr title="What You See Is What You Mean">WYSIWYM</abbr> editors ("What You See Is What You Mean").
+			</p>
+			
+			<p>
+				Classic editor is usually implemented with <a href="./fixedui.html">fixed user interface</a> to replace a standard <code>&lt;textarea&gt;</code> element in an HTML form on the web page.
 			</p>
 
 			<h2 class="editor-title">Classic Editor with Default Styles</h2>
@@ -70,7 +77,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<h2 class="editor-title">Classic Editor with Custom Styles</h2>
 
 			<p>
-				It is possible to specify custom styles for edited content with the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">CKEDITOR.config.contentsCss</a></code> option. In the editor instance below font size was increased and the colors of links, headers, and struck-through content were changed.
+				It is possible to specify custom styles for edited content with the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code> option. In the editor instance below font size was increased and the colors of links, headers, and struck-through content were changed.
 			</p>
 			<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
@@ -98,7 +105,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<script data-sample="2">
 				CKEDITOR.replace( 'editor2', {
 					height: 260,
-					/* We include the default CKEditor styles as well not to copy default styles. */
+					/* Default CKEditor styles are included as well to avoid copying default styles. */
 					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/classic.css' ]
 				} );
 
