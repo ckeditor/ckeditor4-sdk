@@ -201,11 +201,18 @@
 						node = createFromHtml( node.outerHTML.trim() );
 					}
 
-					// We are going to remove unwanted container which was created dynamically.
+					// Removing dynamically created content from nodes.
 					accept( node, function ( node ) {
 						var attrs = node.attributes,
-						className = attrs ? attrs.getNamedItem( 'class' ) : null;
+						className = attrs ? attrs.getNamedItem( 'class' ) : null,
+						style = attrs ? attrs.getNamedItem( 'style' ) : null;
 
+						// Unwanted style attribute in textarea.
+						if ( node.nodeName == 'TEXTAREA' && style && style.value ) {
+							attrs.removeNamedItem( 'style' );
+						}
+
+						// Unwanted container "cke_textarea_inline".
 						if ( className && className.value === 'cke_textarea_inline' ) {
 							node.parentNode.removeChild( node );
 						}
@@ -222,6 +229,7 @@
 
 					// Setting placeholder for textareas and keeping reference to content in global array.
 					var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
+
 					example.html = example.html.replace( regexp, function(text, $1, $2, $3) {
 						placeholders.push( $2 );
 						return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
