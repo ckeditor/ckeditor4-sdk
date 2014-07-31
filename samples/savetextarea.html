@@ -46,7 +46,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				the form is submitted, so there is no need to change any server-side code handling form submission after enabling CKEditor on an exisiting form element.
 			</p>
 
-			<p>Note: The examples below will submit content to a remote server.</p>
+			<p><strong>Note:</strong> The examples below will submit content to a remote server.</p>
 
 			<h2 class="editor-title">Classic Editor Replacing a Textarea</h2>
 
@@ -108,20 +108,6 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li><a href="./inline.html">Editor Types &ndash; Inline Editor</a></li>
 				<li><a href="./saveajax.html">Saving Data &ndash; CKEditor in Ajax Applications</a></li>
 			</ul>
-			
-			<div class="todo">
-				<p>1. Write a single documentation page about saving data. Nothing fancy, just things that are written in SDK samples already (savetextarea and saveajax) and move there the bit of information we have in <a href="http://docs.ckeditor.com/#!/guide/dev_framed-section-saving-the-editor-data">saving the editor data</a> section for classic editor.</p>
-				<p>2. Write this warning there as well:</p>
-				<div class="note">
-					<p>Please note that the replaced &lt;textarea&gt; element is updated automatically by CKEditor straight before submission.
-						If you need to access the &lt;textarea&gt; value programatically with JavaScript (e.g. in onsubmit handler to validate the entered data), there is a chance that the &lt;textarea&gt;
-						element would still hold the original data.
-						In order to update the value of replaced &lt;textarea&gt; use <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-updateElement">editor.updateElement()</a></code>.
-						In rare cases it may happen that the server or application configuration will reject submitted HTML content if it's not encoded first (e.g. ASP.NET ValidateRequest), in such case check <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-htmlEncodeOutput">config.htmlEncodeOutput</a>.
-						If you need to get the actual data from CKEditor at any moment using JavaScript, use <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getData">editor.getData()</a></code>.</p>
-				</div>
-				<p>3. Once the online version of SDK is available, change the form action attribute to remote savetextarea.php, so that the local version did not have any PHP file.</p>
-			</div>
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1' );
