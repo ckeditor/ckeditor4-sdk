@@ -49,9 +49,15 @@
 	// Please note: assume that there is only one element in HTML
 	function createFromHtml( html ) {
 		var div = document.createElement( 'div' );
-		div.innerHTML = html;
 
+		setInnerHTML( div, html );
 		return div.firstChild;
+	}
+
+	// http://allofetechnical.wordpress.com/2010/05/21/ies-innerhtml-method-with-script-and-style-tags/
+	function setInnerHTML( inDOMNode, inHTML ) {
+		inDOMNode.innerHTML = '_' + inHTML;
+		inDOMNode.removeChild( inDOMNode.firstChild );
 	}
 
 	function prepareSamplesNames() {
@@ -93,7 +99,8 @@
 				relLi,
 				sampleId;
 
-			e.preventDefault();
+			e.returnValue = false;
+			e.preventDefault && e.preventDefault();
 
 			if ( clicked instanceof HTMLAnchorElement) {
 				relLi = clicked.parentNode;
