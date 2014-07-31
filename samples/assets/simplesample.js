@@ -107,8 +107,7 @@
 		} );
 
 		function showSampleSource( id, metaNames ) {
-			var templatePre, templatePost,
-				sampleResources = resources[ id ],
+			var sampleResources = resources[ id ],
 				resourcesString = '',
 				headResources = [];
 
@@ -124,26 +123,31 @@
 					resourcesString += resource.html;
 				}
 			}
+
+			headResources.unshift( '<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>' );
 			headResources = headResources.join( '' );
 
-			templatePre = [
-				'<!DOCTYPE html>',
-				'<html>',
-				'<head>',
+			function getTemplatePre( headResources, title ) {
+				return [
+					'<!DOCTYPE html>',
+					'<html>',
+					'<head>',
 					'<meta charset="utf-8">',
-					'<title>' + metaNames[ id - 1 ] + '</title>',
-					'<script src="http://cdn.ckeditor.com/4.4.3/standard-all/ckeditor.js"></script>',
+					'<title>' + title + '</title>',
 					headResources,
-				'</head>',
-				'<body>'
-			];
+					'</head>',
+					'<body>'
+				];
+			}
 
-			templatePost = [
-				'</body>',
-				'</html>'
-			];
+			function getTemplatePost() {
+				return [
+					'</body>',
+					'</html>'
+				];
+			}
 
-			resourcesString = templatePre.join( '' ) + resourcesString + templatePost.join( '' );
+			resourcesString = getTemplatePre( headResources, metaNames[ id - 1 ] ).join( '' ) + resourcesString + getTemplatePost().join( '' );
 
 			// Removing data-sample attribute.
 			resourcesString = resourcesString.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
@@ -173,7 +177,7 @@
 
 			popup = window.open( '', '', 'width=800, height=600' );
 
-			popup.document.write( '<code><pre>' + resourcesString + '</pre></code>' );
+			popup.document.write( getTemplatePre( [], metaNames[ id - 1 ] ).join( '' ) + '<code><pre>' + resourcesString + '</pre></code>' + getTemplatePost().join( '' ) );
 		}
 
 		function fixUrls( str ) {
