@@ -7,10 +7,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <head>
 	<meta charset="utf-8">
 	<meta name="sdk-category" content="Integration">
-	<meta name="sdk-subcategory" content="HTML Output control">
+	<meta name="sdk-subcategory" content="HTML Output Control">
 	<meta name="description" content="Configuring HTML output formatting in CKEditor.">
-	<meta name="keywords" content="TODO">
-	<meta name="sdk-samples" content="CKEditor with custom HTML Formatting">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, source, code, HTML, raw, output, writer, dataprocessor, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="CKEditor with custom HTML formatting">
 	<title>HTML Output Formatting</title>
 	<!--<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">-->
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -31,16 +31,16 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<section class="sdk-contents">
 			<h1>HTML Output Formatting <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_output_format">Documentation</a></h1>
 
-			<p>CKEditor offers a flexible output formatting system, giving developers full control over how the HTML code produced by editor will look like. It is possible to define:</p>
+			<p>CKEditor offers a flexible output formatting system that gives developers full control over what the HTML code produced by the editor will look like. It is possible to define:</p>
 			<ul>
-				<li>When to indent tags (each tag may have different configuration) and what type of indentation to use (tabs, spaces).</li>
-				<li>When to use line breaks in source code, including setting precisely if line breaks should be set before/after opening/closing tags, for each tag.</li>
-				<li>The character sequence to be used for line breaks.</li>
-				<li>How to treat self closing tags.</li>
-				<li>How HTML entities should be handled.</li>
+				<li>When to indent tags (each tag may have a different configuration) and which indentation method to use (tabs, spaces).</li>
+				<li>When to use line breaks in source code, including setting if line breaks should be used before/after opening/closing tags, for each tag.</li>
+				<li>Which character sequence to use for line breaks.</li>
+				<li>How to treat self-closing tags.</li>
+				<li>How to handle HTML entities.</li>
 			</ul>
-			<h2 class="editor-title">CKEditor with custom HTML Formatting</h2>
-			<p>In the sample below CKEditor was configured to use more new lines than by default for block elements, lists and tables: before the tag is opened or closed and after the tag is opened or closed.</p>
+			<h2 class="editor-title">CKEditor with Custom HTML Formatting</h2>
+			<p>In the example below CKEditor was configured to use more new lines for block elements, lists and tables than in default settings. New lines are thus added before the tag is opened or closed and after the tag is opened or closed. Additionally, indentation was added to descendant elements.</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
 				was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot; title=&quot;Neil Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt;
@@ -68,10 +68,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				in the &lt;a href=&quot;http://en.wikipedia.org/wiki/Pacific_Ocean&quot; title=&quot;Pacific Ocean&quot;&gt;Pacific Ocean&lt;/a&gt; on July 24.&lt;/p&gt; &lt;hr/&gt; &lt;p style=&quot;text-align:
 				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
-			<p>For more information on how to modify HTML Writer rules and produce the source code you wish, check dedicated <a href="http://docs.ckeditor.com/#!/guide/dev_output_format">documentation page</a>.</p>
+			
+			<p>
+				Refer to <a href="http://docs.ckeditor.com/#!/guide/dev_output_format">Output Formatting</a> documentation for more details on modifying <a href="http://ckeditor.com/addon/htmlwriter">HTML Output Writer</a> rules and producing desired source code format.
+			</p>
 
 			<div class="note">
-				<p>Note that there are also many other configuration options which control what HTML markup (tags, attributes, styles) should be produced by specific CKEditor features (e.g. <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-coreStyles_bold">config.coreStyles_bold</a> for the Bold button) or what HTML code is allowed at all (see <a href="./acf.html">Advanced Content Filter</a>). Features mentioned in this sample are strictly associated with generic HTML source code formatting. Going carefully through the list of <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config">all configuration options of CKEditor</a> might help you with getting familiar with what's possible with CKEditor.</p>
+				<p>Numerous configuration options are available to control the HTML markup (tags, attributes, styles) produced by specific CKEditor features (e.g. <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-coreStyles_bold">config.coreStyles_bold</a></code> for the <strong>Bold</strong> button) or the sort of HTML code that is allowed in the editor (see <a href="./acf.html">Advanced Content Filter</a>). Features mentioned in this sample are strictly associated with generic HTML source code formatting. Going carefully through the list of <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config">all CKEditor configuration options</a> might help you get familiar with what is possible with CKEditor.</p>
 			</div>
 			<script data-sample="1">
 
@@ -82,10 +85,10 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				editor1.on('instanceReady', function() {
 					// Output paragraphs as <p>Text</p>.
 
-					// Out self closing tags the HTML4 way, like <br>.
+					// Output self-closing tags the HTML4 way, like <br>.
 					this.dataProcessor.writer.selfClosingEnd = '>';
 
-					// Use line breaks for block elements, tables and lists.
+					// Use line breaks for block elements, tables, and lists.
 					var dtd = CKEDITOR.dtd;
 					for ( var e in CKEDITOR.tools.extend( {}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent ) ) {
 						this.dataProcessor.writer.setRules( e, {
@@ -96,17 +99,17 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 							breakAfterClose: true
 						});
 					}
-					// Start in source mode
+					// Start in source mode.
 					this.setMode('source');
 				});
 
 
 			</script>
 
-			<h3>Related samples</h3>
+			<h3>Related Features</h3>
 
 			<ul>
-				<li><a href="./sourcearea.html">Source code editing</a></li>
+				<li><a href="./sourcearea.html">Working with Document &ndash; Source Code Editing</a></li>
 			</ul>
 
 			<div class="todo">
