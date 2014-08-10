@@ -10,7 +10,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta name="sdk-subcategory" content="Inserting Content">
 	<meta name="description" content="Table Support with Column Resizing">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, table, tables, column, columns, resize, resizing, drag, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
-	<meta name="sdk-samles" content="Table Support with Column Resizing">
+	<meta name="sdk-samples" content="Table support with column resizing">
 	<title>Table Support with Column Resizing</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -40,6 +40,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				These features are provided by the <a href="http://ckeditor.com/addon/table">Table</a> and <a href="http://ckeditor.com/addon/tabletools">Table Tools</a> plugins which by default are
 				available in the Standard and Full installation packages.
+			</p>
+			
+			<p>
+				Additionally, you can also add an optional <a href="http://ckeditor.com/addon/colordialog">Color Dialog</a>
+				plugin which provides a user-friendly way to select the cell background and border color through
+				a dedicated dialog window.
 			</p>
 
 			<p>
@@ -156,7 +162,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<script data-sample="1">
 
 				CKEDITOR.replace( 'editor1', {
-					extraPlugins: 'table,tabletools,tableresize',
+					extraPlugins: 'colordialog,tableresize',
 					height: 470
 				} );
 
