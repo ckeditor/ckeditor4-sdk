@@ -148,7 +148,8 @@ function copyFiles() {
         if ( opts.version === 'online' ) {
             blacklist = blacklist.concat( [
                 currPath.matchLeft( new Path( BASE_PATH + '/theme/fonts' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/theme/css/fonts.css' ) )
+                currPath.matchLeft( new Path( BASE_PATH + '/theme/css/fonts.css' ) ),
+                currPath.matchLeft( new Path( BASE_PATH + '/robots.txt' ) )
             ] );
         }
 
@@ -232,6 +233,7 @@ function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
         sample.setSidebar( categories );
         if ( opts.version === 'offline' ) {
+            sample.preventSearchEngineRobots();
             sample.fixLinks();
             sample.fixFonts();
         }
@@ -241,6 +243,7 @@ function prepareSamplesFilesSync() {
 
     index.setSidebar( categories );
     if ( opts.version === 'offline' ) {
+        index.preventSearchEngineRobots();
         index.fixLinks();
         index.fixFonts();
     }
@@ -560,6 +563,7 @@ function fixIndexSync() {
         }
 
         if ( opts.version === 'offline' ) {
+            $( 'head' ).append( '<meta name="robots" content="noindex, nofollow">' );
             $( '.sdk-main-navigation a' ).each( function( index, element ) {
                 $( element ).attr( 'href', Sample.fixLink( this.attribs.href, '' ) );
             } );

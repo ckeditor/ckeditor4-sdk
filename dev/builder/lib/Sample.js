@@ -14,6 +14,7 @@ function Sample( name, content, index, zipFilename, opts ) {
     this.title = this.$title.html();
     this.$title.text( TITLE_PREFIX + this.title );
 
+    this.$head = this.$( 'head' );
     this.$header = this.$( 'header' );
     this.$footer = this.$( 'footer' );
 
@@ -89,6 +90,10 @@ Sample.prototype = {
         this.$( 'link[href*="fonts.googleapis.com"]' ).each( function ( index, element ) {
             that.$( element ).attr( 'href', '../theme/css/fonts.css' );
         } );
+    },
+
+    preventSearchEngineRobots: function() {
+        this.$head.append( '<meta name="robots" content="noindex, nofollow">' );
     }
 };
 

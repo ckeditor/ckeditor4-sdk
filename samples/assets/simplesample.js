@@ -140,6 +140,7 @@
 					'<html>',
 					'<head>',
 					'<meta charset="utf-8">',
+					'<meta name="robots" content="noindex, nofollow">',
 					'<title>' + title + '</title>',
 					headResources,
 					'</head>',
