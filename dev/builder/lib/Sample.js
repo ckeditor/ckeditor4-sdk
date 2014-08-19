@@ -61,6 +61,10 @@ Sample.prototype = {
         this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
             that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href, prefix ) );
         } );
+
+        this.$( '.sdk-contents form' ).each( function( index, element ) {
+            that.$( element ).attr( 'action', Sample.fixFormAction( this.attribs.action ) );
+        } );
     },
 
     validateLinks: function( errors ) {
@@ -96,6 +100,14 @@ Sample.fixLink = function( href, prefix ) {
     }
 
     return href;
+};
+
+Sample.fixFormAction = function( href ) {
+    var regExp = /\.\/(\S*)/;
+
+    return href.replace( /\.\/(\S*)/, function( a, $1 ) {
+        return 'http://sdk.ckeditor.com/samples/' + $1;
+    } );
 };
 
 Sample.validateLink = function( href, errors ) {

@@ -152,6 +152,9 @@ function copyFiles() {
             ] );
         }
 
+        if ( opts.version === 'offline' ) {
+            blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/samples/*.php' ) ) );
+        }
         var existOnBlacklist = _.some( blacklist );
 
         var existOnWhitelist = false;

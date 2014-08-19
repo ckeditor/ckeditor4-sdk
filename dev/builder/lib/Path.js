@@ -38,6 +38,20 @@ Path.prototype = {
                 continue;
             }
 
+            // Check file with any name and specific extenstion
+            // *.php ==> something.php
+            var regExp = /^\*\.(\w+)$/,
+                result = regExp.exec( last );
+
+            if ( result ) {
+                var extension = result[ 1 ],
+                    compareResult = /^\S*\.(\w+)$/.exec( this.parts[ i ] );
+                if ( compareResult && compareResult[ 1 ] == extension ) {
+                    // Assume that we are checking last element.
+                    return true;
+                }
+            }
+
             // Doesn't match
             if ( this.parts[ i ] !== last ) {
                 return false;
