@@ -6,206 +6,109 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="sdk-category" content="End-user Features">
-	<meta name="sdk-subcategory" content="Appearance">
-	<meta name="description" content="CKEditor Advanced Content Filter">
-	<meta name="keywords" content="ckeditor, editor, wysiwyg, acf, filter, content, filtering, advanced, rules, rule, allow, allowed, whitelist, blacklist">
-	<meta name="sdk-samples" content="Sample configurations">
-	<title>Advanced Content Filter</title>
+	<meta name="sdk-category" content="Integration">
+	<meta name="sdk-subcategory" content="Advanced Content Filter">
+	<meta name="description" content="Advanced Content Filtering. Configuring allowed and disallowed tags.">
+	<meta name="keywords" content="ACF, advanced content filter, content filtering, removing tags, deleting tags, html lost, elements removed">
+	<meta name="sdk-samples" content="Automatic mode|Automatic mode with extra allowed content|Disabling ACF">
+	<title>ACF - Automatic Mode</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/sample.js"></script>
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
-	<script src="assets/sample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
 </head>
 <body>
-	<header class="sdk-header">
-	</header>
-	<section class="sdk-container">
-		<nav class="sdk-sidebar">
-		</nav>
-		<section class="sdk-contents">
-			<h1>Data Filtering and Features Activation</h1>
+<header class="sdk-header">
+</header>
+<section class="sdk-container">
+	<nav class="sdk-sidebar">
+	</nav>
+	<section class="sdk-contents">
+		<h1>Advanced Content Filter<a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">Documentation</a></h1>
+		<p>Advanced Content Filter (ACF) is an important CKEditor core feature that <strong>filters incoming HTML content</strong>, by transforming and deleting disallowed elements, attributes, classes and styles.
+			By default is is enabled and works in <strong><a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">automatic mode</a></strong>, which means that CKEditor will only accept content that was defined as allowed by enabled CKEditor features (such as plugins, buttons).
+		</p>
+		<p>ACF is highly configurable and powerful, thus comes with an extensive documentation, basics are explained in the <a href="http://docs.ckeditor.com/#!/guide/dev_acf">Configuration</a> part and thourough guide is available in the <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">Deep Dive</a> section.</p>
+		<p style="margin-top: 20px">The following text will be used in each sample to show different filtering options:</p>
+		<div style="padding: 0px 20px 10px; border: 1px dotted #bbb;">
+			<p>A sample <u>heavily formatted text</u>, using <strong><span style="font-family: 'Comic Sans MS';font-size:16px">different fonts</span></strong> and <span style="font-size:18px;color:#00FF00;background-color: #FFFF00">text colors</span>. </p>
+			<label for="samplehmtl">Source code:</label>
+			<textarea cols="110" rows="3" class="disabled" id="samplehmtl">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		</div>
+		<script data-sample="1,2,3">
+			// ACF is enabled by default regardless whether toolbar configuration is provided or not.
+			// By having less features enabled in the toolbar it should be easier to understand how ACF works.
+			CKEDITOR.config.toolbar = [
+				{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+				{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+				{ name: 'links', items: [ 'Link', 'Unlink' ] },
+				{ name: 'insert', items: [ 'Image' ] },
+				{ name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+				{ name: 'about', items: [ 'About' ] }
+			];
+			CKEDITOR.config.height = 150;
+			// Autogrow has nothing to do with ACF.
+			// However, to make users comfortable while pasting content into a tiny editing area, we would let it grow.
+			CKEDITOR.config.extraPlugins = 'autogrow';
+			CKEDITOR.config.autoGrow_maxHeight = 500;
+			CKEDITOR.config.autoGrow_minHeight = 150;
+		</script>
+		<h2>Automatic mode</h2>
+		<p>In the sample below CKEditor works in automatic mode (default behavior, requires no configuration):</p>
+		<ul>
+			<li>Color buttons are not available, also there are no buttons to set font size or family. As a result CKEditor will not accept such content.</li>
+			<li>Bold button is enabled, so the bold formatting (via <code>&lt;strong&gt;</code> element) is preserved.</li>
+		</ul>
+		<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		<script data-sample="1">
 
-			<p>
-				This sample page demonstrates the idea of Advanced Content Filter
-				(<abbr title="Advanced Content Filter">ACF</abbr>), a sophisticated
-				tool that takes control over what kind of data is accepted by the editor and what
-				kind of output is produced.
-			</p>
+			CKEDITOR.replace( 'editor1' );
 
-			<h2>When and what is being filtered?</h2>
+		</script>
+		<h2>Adjusting automatic mode</h2>
+		<p>It is possible to allow or disallow additional elements or properties in CKEditor by passing special configuration options: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent">config.extraAllowedContent</a></code> and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-disallowedContent">config.disallowedContent</a></code>.</p>
+		<p>In this example <code>config.extraAllowedContent = 'u;span{color}'</code> has the following consequences:</p>
+		<ul>
+			<li><code>&lt;u&gt;</code> element is allowed, so the underlined text is left, although the Underline button is not available.</code></li>
+			<li><code>&lt;span style="color:..."&gt;</code> is allowed, so the green text is left.</li>
+		</ul>
+		<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		<script data-sample="3">
 
-			<p>
-				<abbr title="Advanced Content Filter">ACF</abbr> controls
-				<strong>every single source of data</strong> that comes to the editor.
-				It process both HTML that is inserted manually (i.e. pasted by the user)
-				and programmatically like:
-			</p>
-<pre>
-editor.setData( '&lt;p&gt;Hello world!&lt;/p&gt;' );
-</pre>
-			<p>
-				<abbr title="Advanced Content Filter">ACF</abbr> discards invalid,
-				useless HTML tags and attributes so the editor remains "clean" during
-				runtime. <abbr title="Advanced Content Filter">ACF</abbr> behaviour
-				can be configured and adjusted for a particular case to prevent the
-				output HTML (i.e. in CMS systems) from being polluted.
+			CKEDITOR.replace( 'editor2', {
+				extraAllowedContent: 'u;span{color}'
+			} );
 
-				This kind of filtering is a first, client-side line of defense
-				against "<a href="http://en.wikipedia.org/wiki/Tag_soup">tag soups</a>",
-				the tool that precisely restricts which tags, attributes and styles
-				are allowed (desired). When properly configured, <abbr title="Advanced Content Filter">ACF</abbr>
-				is an easy and fast way to produce a high-quality, intentionally filtered HTML.
-			</p>
+		</script>
+		<h2>Disabling ACF</h2>
+		<p>Turning off ACF is very simple and requires setting a simple configuration option: <code>config.allowedContent = true</code>. As a consequence, CKEditor will not try to filter entered content, also during paste operation.</p>
+		<p>Experiment and try pasting content from various sources into the editor below and into the first one (with automatic mode). Compare the results.</p>
+		<textarea cols="80" id="editor3" name="editor1" rows="10" data-sample="3">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		<script data-sample="2">
 
-			<h3>How to configure or disable ACF?</h3>
+			CKEDITOR.replace( 'editor3', {
+				allowedContent: true
+			} );
 
-			<p>
-				Advanced Content Filter is enabled by default, working in "automatic mode", yet
-				it provides a set of easy rules that allow adjusting filtering rules
-				and disabling the entire feature when necessary. The config property
-				responsible for this feature is <code><a
-					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">config.allowedContent</a></code>.
-			</p>
+		</script>
 
-			<p>
-				By "automatic mode" is meant that loaded plugins decide which kind
-				of content is enabled and which is not. For example, if the link
-				plugin is loaded it implies that <code>&lt;a&gt;</code> tag is
-				automatically allowed. Each plugin is given a set
-				of predefined <abbr title="Advanced Content Filter">ACF</abbr> rules
-				that control the editor until <code><a
-					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">
-				config.allowedContent</a></code>
-				is defined manually.
-			</p>
-
-			<p>
-				Let's assume our intention is to restrict the editor to accept (produce) <strong>paragraphs
-				only: no attributes, no styles, no other tags</strong>.
-				With <abbr title="Advanced Content Filter">ACF</abbr>
-				this is very simple. Basically set <code><a
-					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">
-				config.allowedContent</a></code> to <code>'p'</code>:
-			</p>
-
-<pre>
-var editor = CKEDITOR.replace( <em>textarea_id</em>, {
-	<strong>allowedContent: 'p'</strong>
-} );
-</pre>
-
-			<p>
-				Now try to play with allowed content:
-			</p>
-
-<pre>
-// Trying to insert disallowed tag and attribute.
-editor.setData( '&lt;p <strong>style="color: red"</strong>&gt;Hello <strong>&lt;em&gt;world&lt;/em&gt;</strong>!&lt;/p&gt;' );
-alert( editor.getData() );
-
-// Filtered data is returned.
-"&lt;p&gt;Hello world!&lt;/p&gt;"
-</pre>
-			<p>
-				What happened? Since <code>config.allowedContent: 'p'</code> is set the editor assumes
-				that only plain <code>&lt;p&gt;</code> are accepted. Nothing more. This is why
-				<code>style</code> attribute and <code>&lt;em&gt;</code> tag are gone. The same
-				filtering would happen if we pasted disallowed HTML into this editor.
-			</p>
-
-			<p>
-				This is just a small sample of what <abbr title="Advanced Content Filter">ACF</abbr>
-				can do. To know more, please refer to the sample section below and
-				<a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">the official Advanced Content Filter guide</a>.
-			</p>
-
-			<p>
-				You may, of course, want CKEditor to avoid filtering of any kind.
-				To get rid of <abbr title="Advanced Content Filter">ACF</abbr>,
-				basically set <code><a
-					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">
-				config.allowedContent</a></code> to <code>true</code> like this:
-			</p>
-
-<pre>
-CKEDITOR.replace( <em>textarea_id</em>, {
-	<strong>allowedContent: true</strong>
-} );
-</pre>
-
-			<h2>Sample configurations</h2>
-
-			<p>
-				There are several editor instances below that present different
-				<abbr title="Advanced Content Filter">ACF</abbr> setups. <strong>All of them,
-				except the last inline instance, share the same HTML content</strong> to visualize
-				how different filtering rules affect the same input data.
-			</p>
-
-			<p>
-				This editor is using default configuration ("automatic mode"). It means that
-				<code><a
-						href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">
-					config.allowedContent</a></code> is defined by loaded plugins.
-				Each plugin extends filtering rules to make it's own associated content
-				available for the user.
-			</p>
-
-			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
-				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
-				was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot; title=&quot;Neil Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt;
-				and &lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot; title=&quot;Buzz Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became
-				the first to step onto the lunar surface 6 hours later on July 21 at 02:56 UTC.&lt;/p&gt; &lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a half hours
-				outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar material for return to Earth. A third member of the mission, &lt;a
-				href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot; title=&quot;Michael Collins (astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, piloted the &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;
-				title=&quot;Apollo Command/Service Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to Earth.&lt;/p&gt;
-				&lt;h2&gt;Broadcasting and &lt;em&gt;quotes&lt;/em&gt; &lt;a id=&quot;quotes&quot; name=&quot;quotes&quot;&gt;&lt;/a&gt;&lt;/h2&gt; &lt;p&gt;Broadcast on live TV to a world-wide
-				audience, Armstrong stepped onto the lunar surface and described the event as:&lt;/p&gt; &lt;blockquote&gt;&lt;p&gt;One small step for [a] man, one giant leap for mankind.&lt;/p&gt;&lt;/blockquote&gt;
-				&lt;p&gt;Apollo 11 effectively ended the &lt;a href=&quot;http://en.wikipedia.org/wiki/Space_Race&quot; title=&quot;Space Race&quot;&gt;Space Race&lt;/a&gt; and fulfilled a national
-				goal proposed in 1961 by the late U.S. President &lt;a href=&quot;http://en.wikipedia.org/wiki/John_F._Kennedy&quot; title=&quot;John F. Kennedy&quot;&gt;John F. Kennedy&lt;/a&gt; in a
-				speech before the United States Congress:&lt;/p&gt; &lt;blockquote&gt;&lt;p&gt;[...] before this decade is out, of landing a man on the Moon and returning him safely to the Earth.&lt;/p&gt;&lt;/blockquote&gt;
-				&lt;h2&gt;Technical details &lt;a id=&quot;tech-details&quot; name=&quot;tech-details&quot;&gt;&lt;/a&gt;&lt;/h2&gt; &lt;table align=&quot;right&quot; border=&quot;1&quot; bordercolor=&quot;#ccc&quot;
-				cellpadding=&quot;5&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;margin:10px 0 10px 15px;&quot;&gt; &lt;caption&gt;&lt;strong&gt;Mission crew&lt;/strong&gt;&lt;/caption&gt;
-				&lt;thead&gt; &lt;tr&gt; &lt;th scope=&quot;col&quot;&gt;Position&lt;/th&gt; &lt;th scope=&quot;col&quot;&gt;Astronaut&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt;
-				&lt;td&gt;Commander&lt;/td&gt; &lt;td&gt;Neil A. Armstrong&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Command Module Pilot&lt;/td&gt; &lt;td&gt;Michael Collins&lt;/td&gt; &lt;/tr&gt;
-				&lt;tr&gt; &lt;td&gt;Lunar Module Pilot&lt;/td&gt; &lt;td&gt;Edwin &amp;quot;Buzz&amp;quot; E. Aldrin, Jr.&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; &lt;p&gt;Launched by a
-				&lt;strong&gt;Saturn V&lt;/strong&gt; rocket from &lt;a href=&quot;http://en.wikipedia.org/wiki/Kennedy_Space_Center&quot; title=&quot;Kennedy Space Center&quot;&gt;Kennedy Space
-				Center&lt;/a&gt; in Merritt Island, Florida on July 16, Apollo 11 was the fifth manned mission of &lt;a href=&quot;http://en.wikipedia.org/wiki/NASA&quot; title=&quot;NASA&quot;&gt;NASA&lt;/a&gt;&amp;#39;s
-				Apollo program. The Apollo spacecraft had three parts:&lt;/p&gt; &lt;ol&gt; &lt;li&gt;&lt;strong&gt;Command Module&lt;/strong&gt; with a cabin for the three astronauts which was the
-				only part which landed back on Earth&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Service Module&lt;/strong&gt; which supported the Command Module with propulsion, electrical power, oxygen and
-				water&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Lunar Module&lt;/strong&gt; for landing on the Moon.&lt;/li&gt; &lt;/ol&gt; &lt;p&gt;After being sent to the Moon by the Saturn V&amp;#39;s
-				upper stage, the astronauts separated the spacecraft from it and travelled for three days until they entered into lunar orbit. Armstrong and Aldrin then moved into the Lunar Module and
-				landed in the &lt;a href=&quot;http://en.wikipedia.org/wiki/Mare_Tranquillitatis&quot; title=&quot;Mare Tranquillitatis&quot;&gt;Sea of Tranquility&lt;/a&gt;. They stayed a total of
-				about 21 and a half hours on the lunar surface. After lifting off in the upper part of the Lunar Module and rejoining Collins in the Command Module, they returned to Earth and landed
-				in the &lt;a href=&quot;http://en.wikipedia.org/wiki/Pacific_Ocean&quot; title=&quot;Pacific Ocean&quot;&gt;Pacific Ocean&lt;/a&gt; on July 24.&lt;/p&gt; &lt;hr/&gt; &lt;p style=&quot;text-align:
-				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
-			</textarea>
-
-			<script data-sample="1" >
-
-				CKEDITOR.replace( 'editor1' );
-
-			</script>
-
-			<p>
-				This editor is using default configuration ("automatic mode"). It means that
-				<code><a
-						href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">
-					config.allowedContent</a></code> is defined by loaded plugins.
-				Each plugin extends filtering rules to make it's own associated content
-				available for the user.
-			</p>
-		</section>
+		<div class="todo">
+			<ul>
+				<li>Ticket na wywalenie zależności od fonts.googleapis.com w samplach, które mają działać offline</li>
+				<li>Jsduck głupio skroluje podając mu link <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">do automatic mode</a> (nagłówka nie widać)</li>
+				<li>Docsy do ACF powinny być skorygowane z uwagi na przyszłe wyrzucenie przykładu datafiltering.html. Wyjaśnienie automatic i custom mode powinno być opisowe, bez linkowania do zewnętrznych przykładów. Sample SDK będę linkować do docsów wymieniając np. słowo "automatic mode", więc głupio jakby dokumentacja przekierowyała użytkownika z powrotem po wyjaśnienie. Da się opisać automatic mode i custom mode bez odnoszenia się do sampli - sample powinny być podlinkowane jedynie na zasadzie "see it in action", mając już pełne zrozumienie tematu.</li>
+			</ul>
+		</div>
 	</section>
+</section>
 
-	<footer class="sdk-footer">
-	</footer>
+<footer class="sdk-footer">
+</footer>
 </body>
 </html>

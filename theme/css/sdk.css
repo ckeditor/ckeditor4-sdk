@@ -324,7 +324,19 @@ body
 	float:right;
 	margin-top:0.8em
 }
-.sdk-contents p code
+
+.sdk-contents ul.spacious li
+{
+	margin: 10px;
+}
+
+.sdk-contents pre
+{
+	background: #f8f8f8;
+	padding:10px;
+}
+
+.sdk-contents p code, .sdk-contents li code
 {
 	background: #f8f8f8;
 	padding: 5px 7px;
@@ -428,4 +440,10 @@ blockquote
 .marker
 {
 	background-color: Yellow;
+}
+
+textarea.disabled
+{
+    background:#f0f0f0;
+    resize: none;
 }
