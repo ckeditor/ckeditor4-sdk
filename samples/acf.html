@@ -45,11 +45,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			// ACF is enabled by default regardless whether toolbar configuration is provided or not.
 			// By having less features enabled in the toolbar it should be easier to understand how ACF works.
 			CKEDITOR.config.toolbar = [
-				{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
-				{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+				{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
 				{ name: 'links', items: [ 'Link', 'Unlink' ] },
 				{ name: 'insert', items: [ 'Image' ] },
-				{ name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+				{ name: 'document', items: [ 'Source' ] },
 				{ name: 'about', items: [ 'About' ] }
 			];
 			CKEDITOR.config.height = 150;
