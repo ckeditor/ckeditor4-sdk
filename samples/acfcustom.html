@@ -7,11 +7,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <head>
 	<meta charset="utf-8">
 	<meta name="sdk-category" content="Integration">
-	<meta name="sdk-subcategory" content="Advanced Content Filter">
-	<meta name="description" content="Advanced Content Filtering. Configuring allowed and disallowed tags.">
+	<meta name="sdk-subcategory" content="Content Filtering">
+	<meta name="description" content="Advanced Content Filter. Configuring allowed and disallowed tags.">
 	<meta name="keywords" content="ACF, advanced content filter, content filtering, removing tags, deleting tags, html lost, elements removed">
 	<meta name="sdk-samples" content="Automatic mode|Custom mode">
-	<title>ACF - Custom Mode</title>
+	<title>ACF &ndash; Custom Mode</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
@@ -30,11 +30,17 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Advanced Content Filter - Custom Mode<a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">Documentation</a></h1>
-			<p>Advanced Content Filter, introduced in <a href="acf.html">previous sample</a> can work in automatic mode, can be disabled and can work in <strong><a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-custom-mode">custom mode</a>.</strong></p>
-			<p>Custom mode requires the developer to provide all tags, attributes, classes and styles through <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">config.allowedContent</a></code> setting. The provided configuration affects not only the HTML content that CKEditor will accept, but also influences the features (plugins, buttons, dialog fields) that will be available to the end user.</p>
-			<h2>Automatic mode</h2>
-			<p>In the sample below CKEditor works in automatic mode (default behavior, requires no configuration).</p>
+			<h1>Advanced Content Filter &ndash; Custom Mode<a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-custom-mode">Documentation</a></h1>
+			<p>
+				Advanced Content Filter can work in <a href="acf.html">automatic mode</a>, can be disabled, and can work in <strong><a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-custom-mode">custom mode</a></strong>.
+			</p>
+			<p>
+				Custom mode requires the developer to provide all tags, attributes, classes and styles through the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-allowedContent">config.allowedContent</a></code> setting. The provided configuration affects not only the HTML content that CKEditor will accept, but also influences the features (plugins, buttons, dialog window fields) that will be available to the end user.
+			</p>
+			<h2>Automatic Mode</h2>
+			<p>
+				In the sample below CKEditor works in automatic mode (default behavior, requires no configuration).
+			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				<ul>
 					<li>This is an <strong>unordered list</strong></li>
@@ -61,15 +67,25 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				CKEDITOR.replace( 'editor1' );
 
 			</script>
-			<h2>Custom mode</h2>
-			<p>In the sample below, the same editor is used, but <code>config.allowedContent</code> is manually set to:</p>
+			
+			<h2>Custom Mode</h2>
+			<p>
+				In the sample below, the same editor is used, but <code>config.allowedContent</code> is manually set to:
+			</p>
 <pre>
 h1 h2 h3 p blockquote strong em del ins table tr th td caption;
 a[!href];
 img(left,right)[!src,alt,width,height];
 span{!font-family};span{!color};span(!marker);
 </pre>
-			<p>Note how the lack of <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;hr&gt;</code> elements on the list affected the CKEditor configuration: Ordered List, Unordered List, Horizontal Rule buttons are missing. Another change is that the Table, Link or Image dialog windows have less options, as we did not allow as many attributes or styles as CKEditor does by default.</p>
+			<p>
+				Note how the lack of <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>,
+				<code>&lt;li&gt;</code>, <code>&lt;hr&gt;</code> elements on the list affected
+				the editor configuration: Numbered List, Bulleted List and Horizontal Rule buttons
+				are missing. Another change is that the Table, Link or Image dialog windows have a
+				smaller number of options, as the custom configuration did not allow as many attributes
+				or styles as CKEditor does by default.
+			</p>
 			<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2">
 			<ul>
 				<li>This is an <strong>unordered list</strong></li>
@@ -81,36 +97,41 @@ span{!font-family};span{!color};span(!marker);
 					<tr><td>A simple table </td><td>with two rows</td></tr>
 					<tr><td style="background-color:#ffdddd;">with background color</td><td style="background-color:#ffdddd;">for bottom cells</td></tr>
 				</table>
-
-
 			</textarea>
-			<p>The meaning of each rule is explained below:</p>
+			<p>
+				The meaning of each rule is explained below:
+			</p>
 			<ul class="spacious">
 				<li>
-					<code>h1 h2 h3 p blockquote strong em del ins table tr th td caption</code> - these tags
+					<code>h1 h2 h3 p blockquote strong em del ins table tr th td caption</code> &ndash; These tags
 					are accepted by the editor.
 				</li>
 				<li>
-					<code>a[!href]</code> - <code>&lt;a&gt;</code> tag is accepted, <code>href</code> attribute is obligatory. <code>&lt;a&gt;</code> tags without this attribute
-					are discarded.
+					<code>a[!href]</code> &ndash; The <code>&lt;a&gt;</code> tag is accepted, the <code>href</code>
+					attribute is obligatory. Any <code>&lt;a&gt;</code> tags without this attribute are discarded.
 				</li>
 				<li>
-					<code>img(left,right)[!src,alt,width,height]</code> - <code>src</code>
-					attribute is obligatory for <code>&lt;img&gt;</code> tag.
-					<code>alt</code>, <code>width</code>, <code>height</code>
-					and <code>class</code> attributes are accepted but
+					<code>img(left,right)[!src,alt,width,height]</code> &ndash; The <code>src</code>
+					attribute is obligatory for the <code>&lt;img&gt;</code> tag.
+					The <code>alt</code>, <code>width</code>, <code>height</code>
+					and <code>class</code> attributes are accepted, but
 					<code>class</code> must be either <code>class="left"</code>
-					or <code>class="right"</code>
+					or <code>class="right"</code>.
 				</li>
 				<li>
 					<code>span{!font-family}</code>, <code>span{!color}</code>,
-					<code>span(!marker)</code> - <code>&lt;span&gt;</code> tags
-					will be accepted if either <code>font-family</code> or
+					<code>span(!marker)</code> &ndash; The <code>&lt;span&gt;</code> tags
+					will be accepted if either the <code>font-family</code> or
 					<code>color</code> style is set or <code>class="marker"</code>
 					is present.
 				</li>
 			</ul>
-			<p>Any tags not present on this list will be discarded (list items were removed in the sample above). Attributes, styles and classes are rejected by default for each specified tag and must be enabled manually (<code>background-color</code> was not set as allowed for <code>&lt;td&gt;</code> tag so it was removed).</p>
+			<p>
+				Any tags not present on this list will be discarded (like the list items which were
+				removed in the sample above). By default, attributes, styles and classes are rejected
+				for each specified tag and must be enabled manually (<code>background-color</code> was
+				not set as allowed for <code>&lt;td&gt;</code> tag so it was removed).
+			</p>
 			<script data-sample="2">
 
 				CKEDITOR.replace( 'editor2', {
@@ -126,6 +147,12 @@ span{!font-family};span{!color};span(!marker);
 				} );
 
 			</script>
+			
+			<h2>Related Features</h2>
+
+			<ul>
+				<li><a href="./acf.html">Advanced Content Filter &ndash; Automatic Mode</a></li>
+			</ul>
 
 		</section>
 	</section>
