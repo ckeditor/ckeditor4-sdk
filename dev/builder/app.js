@@ -377,6 +377,12 @@ nomnom.command( 'build' )
 nomnom.command( 'validatelinks' )
     .callback( readFilesAndValidateLinks );
 
+nomnom.nocommand()
+    .callback( build )
+    .option( 'version', {
+        default: 'offline'
+    } );
+
 var opts = nomnom.parse();
 
 function packbuild() {

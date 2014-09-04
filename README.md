@@ -18,12 +18,12 @@ Then install all package dependencies:
 
 After that run the builder:
 
-        > build.sh build
+        > build.sh
 
 ### Available commands:
 
         > build
-When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+This command is default one, when no one provided. When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
 
 ##### options:
 
