@@ -202,7 +202,8 @@
 			var k = 0;
 			accept( document.getElementsByTagName( 'html' )[ 0 ], function( node ) {
 				var attrs = node.attributes,
-					sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null;
+					sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null,
+					sampleClear = attrs ? attrs.getNamedItem( 'data-sample-clear' ) : null;
 
 				if ( sample ) {
 					var typeAttr = attrs.getNamedItem( 'type' );
@@ -217,7 +218,8 @@
 					accept( node, function ( node ) {
 						var attrs = node.attributes,
 						className = attrs ? attrs.getNamedItem( 'class' ) : null,
-						style = attrs ? attrs.getNamedItem( 'style' ) : null;
+						style = attrs ? attrs.getNamedItem( 'style' ) : null,
+						sampleClear = attrs ? attrs.getNamedItem( 'data-sample-clear' ) : null;
 
 						// Unwanted style attribute in textarea.
 						if ( node.nodeName == 'TEXTAREA' && style && style.value ) {
@@ -227,6 +229,17 @@
 						// Unwanted container "cke_textarea_inline".
 						if ( className && className.value === 'cke_textarea_inline' ) {
 							node.parentNode.removeChild( node );
+						}
+
+						// Unwanted node content.
+						if ( sampleClear ) {
+							if ( typeof node.value === 'string' ) {
+								node.value = '';
+							}
+							if ( typeof node.innerHTML === 'string' ) {
+								node.innerHTML = '';
+							}
+							attrs.removeNamedItem( 'data-sample-clear' );
 						}
 					} );
 
@@ -239,13 +252,16 @@
 
 					example.innerHTML = node.innerHTML;
 
-					// Setting placeholder for textareas and keeping reference to content in global array.
-					var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
+					// When attribute is present we don't want replace content with placeholder.
+					if ( !sampleClear ) {
+						// Setting placeholder for textareas and keeping reference to content in global array.
+						var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
 
-					example.html = example.html.replace( regexp, function(text, $1, $2, $3) {
-						placeholders.push( $2 );
-						return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
-					} );
+						example.html = example.html.replace( regexp, function( text, $1, $2, $3 ) {
+							placeholders.push( $2 );
+							return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
+						} );
+					}
 
 					exampleBlocks.push( example );
 				}
