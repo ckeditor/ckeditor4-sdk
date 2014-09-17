@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="sdk-category" content="Integration">
+	<meta name="sdk-subcategory" content="Tutorials">
+	<meta name="description" content="Timestamp Plugin">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, plugin, plugins, addon, add-on, timestamp, sdk, custom, development, tutorial, example, sample">
+	<meta name="sdk-samples" content="Timestamp plugin">
+	<title>Timestamp Plugin</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/sample.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Creating a Most Basic CKEditor Plugin <a class="documentation" href="http://docs.ckeditor.com/#!/guide/plugin_sdk_sample">Documentation</a></h1>
+
+			<p>
+				This sample demonstrates the <strong>Timestamp</strong> plugin that was built in the
+				<a href="http://docs.ckeditor.com/#!/guide/plugin_sdk_sample">Creating a CKEditor Plugin in 20 Lines of Code</a>
+				tutorial from the Plugin SDK section of the <a href="http://docs.ckeditor.com/#!/guide">CKEditor Developer's Guide</a>.
+			</p>
+
+			<p>
+				The custom plugin created in the tutorial inserts current date and time into the editing
+				area at the caret position after clicking the new <span class="button_icon" data-icon="timestamp" title="Insert Timestamp">&nbsp;</span> button. This is an example of a most basic CKEditor plugin that you can create
+				in 20 lines of code.
+			</p>
+			
+			<p>
+				<strong>Note:</strong> Timestamp is a proof-of-concept plugin that can be 
+				<a href="https://github.com/ckeditor/ckeditor-docs-samples/tree/master/tutorial-timestamp">downloaded</a>
+				from the repository or created by following the step-by-step tutorial.
+			</p>
+
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
+				&lt;p&gt;This is some sample text. You are using &lt;a href=&quot;http://ckeditor.com&quot;&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;
+			</textarea>
+			
+			<h2>Related Features</h2>
+			<ul>
+				<li><a href="./abbr.html">Tutorials &ndash; Abbreviation Plugin</a></li>
+			</ul>
+
+			<script data-sample="1">
+				CKEDITOR.plugins.addExternal( 'timestamp', '../../samples/assets/plugins/timestamp/', 'plugin.js' );
+
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'timestamp'
+				} );
+
+			</script>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
