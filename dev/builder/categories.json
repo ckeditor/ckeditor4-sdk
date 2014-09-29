@@ -3,27 +3,28 @@
         {
             "name": "End-user Features",
             "subcategories": [
-                "Appearance",
-                "Size Control",
+                "User Interface",
+                "Editor Resizing",
                 "Inserting Content",
-                "Content Creation",
+                "Authoring Content",
                 "Working with Document",
-                "Content Filtering",
-                "Content Cleanup",
-                "Accessibility"
+                "Pasting and Clipboard",
+                "Accessibility Support"
             ]
         },
         {
-            "name": "Integration",
+            "name": "Integration Features",
             "subcategories": [
                 "Editor Types",
                 "Editor UI",
+				"Toolbar",
+				"Content Filtering",
                 "Saving Data",
                 "API Usage",
-                "HTML Output Control",
+                "Output Control",
                 "Content Filtering",
-                "jQuery",
-                "Tools",
+                "jQuery Integration",
+                "Utilities",
                 "Tutorials",
                 "File Management"
             ]
