@@ -581,18 +581,31 @@ function fixIndexSync() {
     handleFileSync( path, handler );
 }
 
+/**
+ * This function look up guides config and prepare flat structure
+ * of all guides README.md URLs.
+ */
 function getGuidesFromConfig( guidesCfgPath ) {
     var guideCfg = JSON.parse( fs.readFileSync( guidesCfgPath, 'utf8' ) ),
-        devSectionCfg = _.find( guideCfg, function ( section ) {
-            return section.title === 'CKEditor 4 Developer\'s Guide';
-        } ),
-        functionalityOverviewSectionCfgItems = _.find( devSectionCfg.items, function( subSection ) {
-            return subSection.title === 'Functionality Overview';
-        } ).items;
+        guidesURLs = [];
 
-    return _.map( functionalityOverviewSectionCfgItems, function( item ) {
-        return item.url + '/README.md';
+    _.each( guideCfg, function( category ) {
+        getGuidesFromCategory( category, guidesURLs );
     } );
+
+    return _.map( guidesURLs, function( url ) {
+        return url + '/README.md';
+    } );
+}
+
+function getGuidesFromCategory( category, guides ) {
+    if ( category.items ) {
+        _.each( category.items, function( category ) {
+            getGuidesFromCategory( category, guides );
+        } );
+    } else {
+        guides.push( category.url );
+    }
 }
 
 function fixdocs() {
