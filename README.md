@@ -30,6 +30,11 @@ This command is default one, when no one provided. When the build process is fin
         > --version online|offline
 Determines whether build offline or online version (default is offline one).
 
+##### flags:
+
+        > --pack
+Determines whether pack build into Zip file.
+
 ---
 
         > validatelinks

@@ -372,6 +372,9 @@ nomnom.command( 'build' )
     .help( 'Building release version of sdk.' )
     .option( 'version', {
         default: 'offline'
+    } )
+    .option( 'pack', {
+        flag: true
     } );
 
 nomnom.command( 'validatelinks' )
@@ -432,10 +435,17 @@ function build( opts ) {
                     .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
                     .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
-                    .then( packbuild );
+                    .then( function() {
+                        if ( opts.pack ) {
+                            return packbuild();
+                        }
+                    } );
 
             } else {
                 fixIndexSync();
+                if ( opts.pack ) {
+                    return packbuild();
+                }
             }
         } )
         .then( done )
