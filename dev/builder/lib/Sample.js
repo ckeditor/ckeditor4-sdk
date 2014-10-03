@@ -28,12 +28,6 @@ function Sample( name, content, index, zipFilename, opts ) {
     }
 
     this.$nav = this.$( 'nav.sdk-sidebar' );
-
-    if ( this.name != 'index' ) {
-        this.parseMeta( 'category' );
-        this.parseMeta( 'subcategory' );
-        this.parseMeta( 'weight', function( element ) { return element.length > 1;  } );
-    }
 }
 
 Sample.prototype = {

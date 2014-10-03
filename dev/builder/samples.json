@@ -1,0 +1,136 @@
+{
+    "categories": [
+        {
+            "name": "Integration Features",
+            "subcategories": [
+                {
+                    "name": "Content Filtering",
+                    "samples": [
+                        "ACF &ndash; Automatic Mode",
+                        "ACF &ndash; Custom Mode"
+                    ]
+                },
+                {
+                    "name": "Output Control",
+                    "samples": [
+                        "BBCode Editing",
+                        "Enter Key Configuration",
+                        "Editing Complete HTML Pages",
+                        "HTML Output Formatting"
+                    ]
+                },
+                {
+                    "name": "Editor Types",
+                    "samples": [
+                        "Classic Editor",
+                        "Inline Editor"
+                    ]
+                },
+                {
+                    "name": "Utilities",
+                    "samples": [
+                        "Developer Tools",
+                        "UI Color Picker"
+                    ]
+                },
+                {
+                    "name": "Editor UI",
+                    "samples": [
+                        "Fixed User Interface",
+                        "Floating User Interface",
+                        "Shared User Interface"
+                    ]
+                },
+                {
+                    "name": "API Usage",
+                    "samples": [
+                        "Read-Only Mode"
+                    ]
+                },
+                {
+                    "name": "Saving Data",
+                    "samples": [
+                        "Saving in Ajax Applications",
+                        "Saving Textarea Data"
+                    ]
+                },
+                {
+                    "name": "Tutorials",
+                    "samples": [
+                        "Abbreviation Plugin",
+                        "Timestamp Plugin",
+                        "Custom Widget"
+                    ]
+                },
+                {
+                    "name": "Toolbar",
+                    "samples": [
+                        "Toolbar Location",
+                        "Custom Toolbar"
+                    ]
+                },
+                {
+                    "name": "jQuery Integration",
+                    "samples": []
+                },
+                {
+                    "name": "File Management",
+                    "samples": []
+                }
+            ]
+        },
+        {
+            "name": "End-user Features",
+            "subcategories": [
+                {
+                    "name": "Editor Resizing",
+                    "samples": [
+                        "Editor Auto Grow",
+                        "Resizing Customization",
+                        "Editor Size"
+                    ]
+                },
+                {
+                    "name": "Inserting Content",
+                    "samples": [
+                        "Captioned Images",
+                        "Code Snippets",
+                        "Mathematical Formulas",
+                        "Placeholders",
+                        "Tables with Column Resizing"
+                    ]
+                },
+                {
+                    "name": "Working with Document",
+                    "samples": [
+                        "Magic Line",
+                        "Source Code Editing"
+                    ]
+                },
+                {
+                    "name": "Accessibility Support",
+                    "samples": [
+                        "\"Tab\" Key Navigation"
+                    ]
+                },
+                {
+                    "name": "User Interface",
+                    "samples": [
+                        "UI Color",
+                        "UI Language"
+                    ]
+                },
+                {
+                    "name": "Authoring Content",
+                    "samples": [
+                        "Styles and Stylesheet Parser"
+                    ]
+                },
+                {
+                    "name": "Pasting and Clipboard",
+                    "samples": []
+                }
+            ]
+        }
+    ]
+}

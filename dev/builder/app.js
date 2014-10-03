@@ -24,7 +24,7 @@ var fs = require( 'fs' ),
     BASE_PATH = path.resolve('../..'),
     VENDORMATHJAX_PATH = path.resolve(BASE_PATH + '/vendor/mathjax'),
 
-    validCategories = JSON.parse( fs.readFileSync( './categories.json', 'utf8' ) ).categories,
+    validCategories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories,
     samples = [],
     index = null,
     categories = {},
@@ -83,51 +83,42 @@ function setupSamplesSync( _samples ) {
 
 // return array of categories
 function parseCategoriesSync( elements ) {
-    var samples = elements.samples;
     console.log( 'Parsing categories.' );
+    categories = JSON.parse( JSON.stringify( validCategories ) );
 
-    _.each( samples, function( sample ) {
-        var category, subcategory;
+    _.each( elements.samples, function( sample ) {
+        var found, foundCounter = 0;
 
-        category = categories[ sample.category ] = categories[ sample.category ] || {
-            name: sample.category,
-            subcategories: {}
-        };
-
-        subcategory = category.subcategories[ sample.subcategory ] = category.subcategories[ sample.subcategory ] || {
-            name: sample.subcategory,
-            samples: []
-        };
-
-        var foundPredefinedCategory = _.find( validCategories, function( category ) {
-            return category.name == sample.category;
+        // Looking for sample location in group and subgroup.
+        _.each( categories, function( category ) {
+            _.each( category.subcategories, function( subcategory ) {
+                _.each( subcategory.samples, function( _sample, index ) {
+                    if ( _sample === sample.title ) {
+                        subcategory.samples[ index ] = sample;
+                        found = sample;
+                    }
+                } );
+            } );
         } );
-        if ( !foundPredefinedCategory )
-            throw 'Could not find predefined category "' + sample.category + '" in sample: ' + sample.name;
 
-        var foundPredefinedSubcategory = _.find( foundPredefinedCategory.subcategories, function( subcategory ) {
-            return subcategory == sample.subcategory;
-        } );
-        if ( !foundPredefinedSubcategory )
-            throw 'Could not find predefined subcategory "' + sample.subcategory + '" in sample: ' + sample.name;
-
-        subcategory.samples.push( sample );
+        // Couldn't be found sample in config.
+        if ( !found ) {
+            throw new Error( 'Sample not found in "samples.json": "' + sample.title + '".' );
+        }
     } );
 
-    // Sorting each subcategory elements by their weights.
-    sortSamplesByWeight( categories );
-
-    return categories;
-}
-
-function sortSamplesByWeight( categories ) {
+    // Looking for misaligned sample files to defined ones in config.
     _.each( categories, function( category ) {
         _.each( category.subcategories, function( subcategory ) {
-            subcategory.samples.sort( function( a, b ) {
-                return b.weight - a.weight;
+            _.each( subcategory.samples, function( _sample ) {
+                if (typeof _sample === 'string') {
+                    throw new Error( 'Sample defined in config, but .html file not found for: "' + _sample + '".' );
+                }
             } );
         } );
     } );
+
+    return categories;
 }
 
 // return promise
