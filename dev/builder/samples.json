@@ -58,8 +58,8 @@
                 {
                     "name": "Tutorials",
                     "samples": [
-                        "Abbreviation Plugin",
                         "Timestamp Plugin",
+                        "Abbreviation Plugin",
                         "Custom Widget"
                     ]
                 },
