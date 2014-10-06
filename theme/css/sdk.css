@@ -444,6 +444,13 @@ blockquote
 
 textarea.disabled
 {
-    background:#f0f0f0;
-    resize: none;
+	background:#f0f0f0;
+	resize: none;
+}
+
+#eMessage
+{
+	border: 1px dotted #000;
+	padding:10px;
+	margin-top:0;
 }

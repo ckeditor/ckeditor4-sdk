@@ -44,6 +44,7 @@
                 {
                     "name": "API Usage",
                     "samples": [
+                        "Using CKEditor API",
                         "Read-Only Mode"
                     ]
                 },
