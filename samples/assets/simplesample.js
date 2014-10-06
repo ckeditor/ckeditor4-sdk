@@ -1,6 +1,5 @@
 ( function() {
 	'use strict';
-
 	window.onbeforeunload = function() {
 		if (popup) {
 			popup.close();
@@ -12,7 +11,7 @@
 		placeholders = [];
 
 	// IE8...
-	if(typeof String.prototype.trim !== 'function') {
+	if ( typeof String.prototype.trim !== 'function' ) {
 		String.prototype.trim = function() {
 			return this.replace( /^\s+|\s+$/g, '' );
 		}
@@ -190,9 +189,26 @@
 
 		function fixUrls( str ) {
 			return str
-				.replace( /\.\.\//g, SDK_ONLINE_URL )
-				.replace( /(")(:?\.\/)(.*?\.(?:html|php))/g, '$1' + SDK_ONLINE_URL + 'samples/$3' )
-				.replace( /(assets\/)/g, SDK_ONLINE_URL + 'samples/$1' );
+
+				// "../../something.html" ==> "http://sdk.ckeditor.com/something.html"
+				.replace( /\.\.\/\.\.\//g, function() {
+					return SDK_ONLINE_URL;
+				} )
+
+				// "../something.html"    ==> "http://sdk.ckeditor.com/something.html"
+				.replace( /\.\.\//g, function() {
+					return SDK_ONLINE_URL;
+				} )
+
+				// "./example.php"        ==> "http://sdk.ckeditor.com/samples/example.php"
+				.replace( /("|')(:?\.\/)(.*?\.(?:html|php))/g, function( match, p1, p2, p3 ) {
+					return p1 + SDK_ONLINE_URL + 'samples/' + p3;
+				}, '$1' + SDK_ONLINE_URL + 'samples/$3' )
+
+				// "assets/some.php"      ==> "http://sdk.ckeditor.com/samples/assets/some.php"
+				.replace( /("|')(assets\/)/g, function( match, p1, p2 ) {
+					return p1 + SDK_ONLINE_URL + 'samples/' + p2;
+				} );
 		}
 
 		function prepareSampleResources() {
