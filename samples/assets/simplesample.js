@@ -323,7 +323,7 @@
 					// When attribute is present we don't want replace content with placeholder.
 					if ( !sampleClear ) {
 						// Setting placeholder for textareas and keeping reference to content in global array.
-						var regexp = /(\<textarea.*\>)([\s\S]*?)(\<\/textarea>)/g;
+						var regexp = /(\<textarea.*?\>)([\s\S]*?)(\<\/textarea>)/g;
 
 						example.html = example.html.replace( regexp, function( text, $1, $2, $3 ) {
 							placeholders.push( $2 );
