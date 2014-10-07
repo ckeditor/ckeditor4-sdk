@@ -1,9 +1,9 @@
 [submodule "ckeditor"]
 	path = vendor/ckeditor
-	url = git@github.com:ckeditor/ckeditor-releases.git
+	url = https://github.com/ckeditor/ckeditor-releases.git
 [submodule "vendor/mathjax"]
 	path = vendor/mathjax
-	url = git@github.com:mathjax/MathJax.git
+	url = https://github.com/mathjax/MathJax.git
 [submodule "docs"]
 	path = docs
-	url = git@github.com:ckeditor/ckeditor-docs.git
+	url = https://github.com/ckeditor/ckeditor-docs.git
