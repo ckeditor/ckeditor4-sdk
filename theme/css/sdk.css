@@ -468,16 +468,21 @@ textarea.disabled
 	position: relative;
 }
 
+.pico-content.source-code > div > div.textarea-wrapper
+{
+	position: absolute;
+	top: 31px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
 .pico-content.source-code textarea
 {
 	width: 100%;
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	top: 31px;
+	height: 100%;
 	margin: 0;
+	padding: 0;
 	resize: none;
 	outline: none;
-	padding: 0;
 }

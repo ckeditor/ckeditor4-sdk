@@ -17,6 +17,23 @@
 		}
 	}
 
+	if ( !Object.keys ) {
+		Object.keys = function( o ) {
+			if ( o !== Object( o ) ) {
+				throw new TypeError( 'Object.keys called on a non-object' );
+			}
+
+			var k = [], p;
+			for ( p in o ) {
+				if ( Object.prototype.hasOwnProperty.call( o, p ) ) {
+					k.push( p );
+				}
+			}
+
+			return k;
+		}
+	}
+
 	function attachEvent( elem, evtName, callback ) {
 		if ( elem.addEventListener ) {
 			elem.addEventListener( evtName, callback, false );
@@ -193,8 +210,7 @@
 		}
 
 		var showSampleSource;
-		// Does not work well yet in IE.
-		if ( !picoModal || ( CKEDITOR.env.ie /*&& CKEDITOR.env.version < 9*/ ) ) {
+		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
 			showSampleSource = function( sampleId, metaNames ) {
 				var code = createSampleSourceCode( sampleId, metaNames );
 				if ( popup ) {
@@ -207,7 +223,7 @@
 			};
 		} else {
 			showSampleSource = function( sampleId, metaNames ) {
-				var code = '<div><button>Select code</button><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div>',
+				var code = '<div><button>Select code</button><div class="textarea-wrapper"><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div></div>',
 				modal = picoModal( {
 					content: code,
 					modalClass: 'source-code'
