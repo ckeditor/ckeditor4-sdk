@@ -8,6 +8,11 @@ It will be used for building online CKEditor SDK and you will also be able to do
 
 ### Building a release SDK
 
+First things first, initialize and update Git submodules:
+
+		> git submodule init
+		> git submodule update
+
 To build SDK you need to have [node.js](http://nodejs.org) installed. Once you have it, open the command line and navigate to the `dev/builder` directory:
 
         > cd dev/builder
