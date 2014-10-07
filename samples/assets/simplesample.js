@@ -112,10 +112,14 @@
 			return false;
 		} );
 
-		function showSampleSource( id, metaNames ) {
+		function createSampleSourceCode( id, metaNames, wrapInHtmlStructure, wrapInCodePre ) {
 			var sampleResources = resources[ id ],
 				resourcesString = '',
-				headResources = [];
+				headResources = [],
+				result;
+
+			wrapInHtmlStructure = ( wrapInHtmlStructure === false ? false : true );
+			wrapInCodePre = ( wrapInCodePre === false ? false : true );
 
 			var i = 0,
 				max = sampleResources.length;
@@ -179,13 +183,44 @@
 
 			resourcesString = fixUrls( resourcesString );
 
-			if (popup) {
-				popup.close();
-			}
+			return [
+				wrapInHtmlStructure ? getTemplatePre( [], metaNames[ id - 1 ] ).join( '' ) : '',
+				wrapInCodePre ? '<code><pre>' : '',
+				resourcesString,
+				wrapInCodePre ? '</pre></code>' : '',
+				wrapInHtmlStructure ? getTemplatePost().join( '' ) : ''
+			].join( '' );
+		}
 
-			popup = window.open( '', '', 'width=800, height=600' );
+		var showSampleSource;
+		// Does not work well yet in IE.
+		if ( !picoModal || ( CKEDITOR.env.ie /*&& CKEDITOR.env.version < 9*/ ) ) {
+			showSampleSource = function( sampleId, metaNames ) {
+				var code = createSampleSourceCode( sampleId, metaNames );
+				if ( popup ) {
+					popup.close();
+				}
 
-			popup.document.write( getTemplatePre( [], metaNames[ id - 1 ] ).join( '' ) + '<code><pre>' + resourcesString + '</pre></code>' + getTemplatePost().join( '' ) );
+				popup = window.open( '', '', 'width=800, height=600' );
+
+				popup.document.write( code );
+			};
+		} else {
+			showSampleSource = function( sampleId, metaNames ) {
+				var code = '<div><button>Select code</button><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div>',
+				modal = picoModal( {
+					content: code,
+					modalClass: 'source-code'
+				} ),
+				modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
+				selectButton = modalElem.findOne( 'button' ),
+				textarea = modalElem.findOne( 'textarea' );
+
+				selectButton.on( 'click', function() {
+					textarea.$.select();
+				} );
+				modal.show();
+			};
 		}
 
 		function fixUrls( str ) {
