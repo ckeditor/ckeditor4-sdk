@@ -33,7 +33,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				CKEditor toolbar is highly flexible and can be easily adjusted to your needs. You can influence such toolbar aspects as:
 			</p>
-			
+
 			<ul>
 				<li>The number of buttons available to your users.</li>
 				<li>How the available buttons are grouped.</li>
@@ -41,23 +41,23 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				<li>The sequence of buttons within a group.</li>
 				<li>The number of toolbar rows.</li>
 			</ul>
-			
-			<div class="note">
+
+			<div class="tip">
 				The <strong>most recommended approach to adjusting the editor</strong> to your needs is to start from creating a
 				<a href="http://ckeditor.com/builder">custom build</a>, removing unwanted features before they even
-				make it to your toolbar. It is a bad practice to download the Full package and then 
+				make it to your toolbar. It is a bad practice to download the Full package and then
 				<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-removePlugins">remove plugins</a> or
 				<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-removeButtons">buttons</a> in your configuration.
 				You will only be loading unnecessary stuff without any good reason.
 			</div>
-			
+
 			<h2>Toolbar Configuration</h2>
-			
+
 			<p>
 				The simplest way to configure the toolbar is to use the dedicated <strong>Toolbar Tool</strong> that is available
 				in each editor installation package starting from <strong>CKEditor 4.5</strong>.
 			</p>
-			
+
 			<p>
 				Alternatively, you can manually create your desired toolbar as explained in the
 				<a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">documentation</a>. The editor instance below
@@ -66,7 +66,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				configuration option.
 			</p>
 
-			
+
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; src=&quot;assets/sample.jpg&quot; style=&quot;float:right&quot; /&gt; Apollo 11&lt;/h1&gt;
 
@@ -128,13 +128,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				&lt;p&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/p&gt;
 
 			</textarea>
-			
-			<div class="note">
+
+			<div class="tip">
 				When <a href="./acf.html">content filtering is working in automatic mode</a>, toolbar configuration affects
 				what is allowed in the editor. In other words, CKEditor will only allow the type of content that
 				can be created using the available toolbar buttons and will remove disallowed elements.
 			</div>
-			
+
 			<h2>Related Features</h2>
 			<ul>
 				<li><a href="./toolbarlocation.html">Toolbar &ndash; Toolbar Location</a></li>

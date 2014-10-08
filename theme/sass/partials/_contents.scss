@@ -113,34 +113,38 @@
 		font-style: italic;
 	}
 
-	div.note
+	.tip
 	{
-		@include background( image-url("tip.png") no-repeat 10px 30px );
 		@include border-radius( 3px );
-		@include box-shadow( 0 0 3px rgba( 0,0,0,.15 ) );
+		@include box-shadow( 2px 2px 0 0 #ccc );
 
-		background-color: #f6fff7;
-		padding: 10px 10px 10px 53px;
-		border: 7px solid #79CC71;
-		margin-top: 20px;
+		border: 1px solid #aaa;
+		padding: 15px 15px 15px 65px;
+		margin: 1em 0;
+		background: #eee;
+		overflow: hidden;
+		position: relative;
 
-		li
+		&:before
 		{
-			/*margin-left:20px;*/
+			content: image-url("tip.png");
+			position: absolute;
+			top: 50%;
+			margin-top: -16px;
+			left: 15px;
+		}
+
+		&.alert
+		{
+			background: #FFDB67;
+
+			&:before
+			{
+				content: image-url("alert.png");
+				margin-top: -18px;
+			}
 		}
 	}
-	/*div.note*/
-	/*{*/
-		/*border: 1px solid #aaa;*/
-		/*padding: 12px 15px 12px 65px !important;*/
-		/*background: $sdk-box-border-color;*/
-
-		/*-moz-box-shadow: 2px 2px 0 0 #ccc;*/
-		/*-webkit-box-shadow: 2px 2px 0 0 #ccc;*/
-		/*box-shadow: 2px 2px 0 0 #ccc;*/
-
-		/*overflow: hidden;*/
-	/*}*/
 
 	div.todo
 	{
