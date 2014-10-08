@@ -63,6 +63,10 @@ module.exports = function( grunt ) {
 		'shell:sdk-build'
 	] );
 
+	grunt.registerTask( 'build-css', [
+		'compass:sdk-build-css',
+	] );
+
 	grunt.registerTask( 'validatelinks', [
 		'shell:sdk-validatelinks'
 	] );
