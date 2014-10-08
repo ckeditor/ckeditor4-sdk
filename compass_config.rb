@@ -4,10 +4,6 @@ sass_dir = "/theme/sass"
 images_dir = "/theme/img"
 fonts_dir = "/theme/fonts"
 
-# output_style = :expanded
 output_style = :compressed
-
 asset_cache_buster :none
 relative_assets = true
-
-# sourcemap = !( environment == :production );
