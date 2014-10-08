@@ -5,5 +5,6 @@ images_dir = "/theme/img"
 fonts_dir = "/theme/fonts"
 
 output_style = :compressed
+# output_style = :expanded
 asset_cache_buster :none
 relative_assets = true

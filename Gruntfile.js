@@ -50,6 +50,12 @@ module.exports = function( grunt ) {
 					config: 'compass_config.rb'
 				}
 			},
+			'sdk-watch-css': {
+				options: {
+					watch: true,
+					config: 'compass_config.rb'
+				}
+			},
 		}
 	} );
 
@@ -65,6 +71,10 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build-css', [
 		'compass:sdk-build-css',
+	] );
+
+	grunt.registerTask( 'watch-css', [
+		'compass:sdk-watch-css',
 	] );
 
 	grunt.registerTask( 'validatelinks', [
