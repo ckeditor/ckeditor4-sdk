@@ -73,6 +73,17 @@
 			font-size: 13px;
 			font-size: .813rem;
 		}
+
+		kbd {
+			@include border-radius( 2px );
+			@include box-shadow( 1px 2px 2px #ddd );
+			border: 1px solid #aaa;
+			background-color: #f9f9f9;
+			padding: 1px 3px;
+
+			font-size: 13px;
+			font-size: .813rem;
+		}
 	}
 
 	a {
