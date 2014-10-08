@@ -1,0 +1,28 @@
+/* --- Footer ------------------------ */
+
+.sdk-footer
+{
+	overflow: hidden;
+	border-top: 1px solid $sdk-box-border-color;
+	padding: 20px;
+	font-size: 13px;
+	font-size: .8125rem;
+	color: #888;
+
+	p
+	{
+		margin: 0;
+		display: inline-block;
+	}
+
+	p.right
+	{
+		float: right;
+	}
+
+	a
+	{
+		color: $sdk-link-color;
+		text-decoration: none;
+	}
+}

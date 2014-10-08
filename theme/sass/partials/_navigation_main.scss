@@ -1,0 +1,39 @@
+/* --- Main navigation ------------------------ */
+
+.sdk-main-navigation
+{
+	position: absolute;
+	right: 40px;
+	top: 60px;
+	font-size: 16px;
+	font-size: 1rem;
+
+	li
+	{
+		margin-left: 10px;
+	}
+
+	a
+	{
+		color: #6b6b6b;
+		text-decoration: none;
+		padding: 0 15px;
+		height: 33px;
+		line-height: 33px;
+		display: inline-block;
+		font-family: $sdk-font-maven;
+
+		&:hover, &.active
+		{
+			color: $sdk-link-color;
+			background: #C9E3E6;
+
+			@include border-radius( 100px );
+			@include box-shadow(
+				0 -1px 3px rgba(0,0,0,0.2) inset,
+				0 0 1px rgba(255,255,255,0.5),
+				0 1px 3px rgba(0,0,0,0.1) inset
+			);
+		}
+	}
+}

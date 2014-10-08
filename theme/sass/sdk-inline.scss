@@ -1,0 +1,104 @@
+/*!
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+@import "partials/base";
+
+/* This file is not required to example work, but it make look the same as original one. */
+body
+{
+	overflow: hidden;
+	display: table-cell;
+	padding: 0 40px 20px;
+	font-family: $sdk-font-stack;
+	font-size: 14px;
+	font-size: .875rem;
+	line-height: 1.8;
+
+	h1, h2, h3,
+	{
+		font-family: $sdk-font-maven;
+		color: #000;
+	}
+
+	h1
+	{
+		font-size: 27px;
+		font-size: 1.6875rem;
+		color: #66ab16;
+		font-weight: normal;
+	}
+
+	h2
+	{
+		font-size: 24px;
+		font-size: 1.5rem;
+		font-weight: normal;
+
+		&.editor-title
+		{
+			margin-bottom:10px;
+		}
+	}
+
+	h3
+	{
+		font-size: 21px;
+		font-size: 1.3125rem;
+		font-weight: normal;
+	}
+
+	.inline-editor
+	{
+		margin-top:85px;
+	}
+
+	a {
+		&:not(.cke_path_item),
+		&:not(.cke_dialog)
+		{
+			color: $sdk-link-color;
+			text-decoration: none;
+		}
+
+		&:hover:not(.cke_path_item)
+		{
+			color: $sdk-link-color-hover;
+		}
+	}
+
+	h1 > a.documentation {
+		@include background( image-url("documentation.png") no-repeat 0 50% );
+		padding-left: 25px;
+		font-size: 0.6em;
+		float: right;
+		margin-top: 0.8em
+	}
+
+	code
+	{
+		background: $sdk-box-background-color;
+		padding: 5px 7px;
+		border-bottom: 1px solid $sdk-box-border-color;
+	}
+
+	pre
+	{
+		background: $sdk-box-background-color;
+		padding: 20px;
+		border-bottom: 1px solid $sdk-box-border-color;
+		margin: 30px 0;
+	}
+
+	abbr
+	{
+		border-bottom: 1px dotted #666;
+		cursor: pointer;
+	}
+
+	em
+	{
+		font-style: italic;
+	}
+}

@@ -1,0 +1,151 @@
+/* --- Contents ------------------------ */
+
+.sdk-contents
+{
+	overflow: hidden;
+	display: table-cell;
+	padding: 0 40px 20px;
+	font-size: 14px;
+	font-size: .875rem;
+	line-height: 1.8;
+
+	h1, h2, h3,
+	{
+		font-family: $sdk-font-maven;
+		color: #000;
+	}
+
+	h1
+	{
+		font-size: 27px;
+		font-size: 1.6875rem;
+		color: #66ab16;
+		font-weight: normal;
+
+		& > a.documentation {
+			@include background( image-url("documentation.png") no-repeat 0 50% );
+			padding-left: 25px;
+			font-size: 0.6em;
+			float: right;
+			margin-top: 0.8em
+		}
+	}
+
+	h2
+	{
+		font-size: 24px;
+		font-size: 1.5rem;
+		font-weight: normal;
+
+		&.editor-title
+		{
+			margin-bottom:10px;
+		}
+	}
+
+	h3
+	{
+		font-size: 21px;
+		font-size: 1.3125rem;
+		font-weight: normal;
+	}
+
+	.inline-editor
+	{
+		margin-top:85px;
+	}
+
+	ul.spacious li
+	{
+		margin: 10px;
+	}
+
+	p, li
+	{
+		code {
+			background: $sdk-box-background-color;
+			padding: 5px 7px;
+			border-bottom: 1px solid $sdk-box-border-color;
+		}
+	}
+
+	a {
+		&:not(.cke_path_item)
+		{
+			color: $sdk-link-color;
+			text-decoration: none;
+
+			&:hover
+			{
+				color: $sdk-link-color-hover;
+			}
+		}
+	}
+
+	pre
+	{
+		background: $sdk-box-background-color;
+		padding:10px;
+	}
+
+	p pre
+	{
+		background: $sdk-box-background-color;
+		padding: 20px;
+		border-bottom: 1px solid $sdk-box-border-color;
+		margin: 30px 0;
+	}
+
+	abbr
+	{
+		border-bottom: 1px dotted #666;
+		cursor: pointer;
+	}
+
+	em
+	{
+		font-style: italic;
+	}
+
+	div.note
+	{
+		@include background( image-url("tip.png") no-repeat 10px 30px );
+		@include border-radius( 3px );
+		@include box-shadow( 0 0 3px rgba( 0,0,0,.15 ) );
+
+		background-color: #f6fff7;
+		padding: 10px 10px 10px 53px;
+		border: 7px solid #79CC71;
+		margin-top: 20px;
+
+		li
+		{
+			/*margin-left:20px;*/
+		}
+	}
+	/*div.note*/
+	/*{*/
+		/*border: 1px solid #aaa;*/
+		/*padding: 12px 15px 12px 65px !important;*/
+		/*background: $sdk-box-border-color;*/
+
+		/*-moz-box-shadow: 2px 2px 0 0 #ccc;*/
+		/*-webkit-box-shadow: 2px 2px 0 0 #ccc;*/
+		/*box-shadow: 2px 2px 0 0 #ccc;*/
+
+		/*overflow: hidden;*/
+	/*}*/
+
+	div.todo
+	{
+		border: 2px dotted #444;
+		padding: 10px;
+		margin: 60px 0 10px 0;
+
+		/* Remove me some day */
+		&:before {
+			content: "TODO";
+			font-weight: bold;
+		}
+	}
+}

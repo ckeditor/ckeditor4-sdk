@@ -1,0 +1,126 @@
+/* HTML5 display-role reset for older browsers */
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section
+{
+	display: block;
+}
+
+html
+{
+	font-size: 16px;
+}
+
+body, html
+{
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	color: $sdk-text-color;
+}
+
+body
+{
+	font-family: $sdk-font-stack;
+}
+
+/* --- Various elements ------------------------ */
+
+.sdk-header
+{
+	height: 130px;
+	background: $sdk-ckeditor-color;
+	overflow: hidden;
+
+	a
+	{
+		outline: none;
+	}
+}
+
+.sdk-logo
+{
+	position: absolute;
+	left: 40px;
+	top: 50px;
+	margin: 0;
+
+	img
+	{
+		border: transparent;
+	}
+}
+
+/* --- Container ------------------------ */
+
+.sdk-container
+{
+	overflow: hidden;
+	width: 100%;
+	display: table;
+	max-width: 1280px;
+}
+
+/* --- Navigations ------------------------ */
+
+.sdk-top-navigation,
+.sdk-main-navigation
+{
+	display: block;
+	overflow: hidden;
+
+	ul
+	{
+		float: left;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li
+		{
+			display: inline-block;
+		}
+	}
+}
+
+/* --- Other styles and classes ------------------------ */
+
+.warning
+{
+	color: #ff0000;
+	background-color: #FFCCBA;
+	border: 2px dotted #ff0000;
+	padding: 15px 10px;
+	margin: 10px 0;
+}
+
+blockquote
+{
+	font-style: italic;
+	font-family: $sdk-font-stack-serif;
+	padding: 2px 0;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	border-left-width: 5px;
+	padding-left: 20px;
+	padding-right: 8px;
+}
+
+.marker
+{
+	background-color: Yellow;
+}
+
+textarea.disabled
+{
+	background:#f0f0f0;
+	resize: none;
+}
+
+#eMessage
+{
+	border: 1px dotted #000;
+	padding:10px;
+	margin-top:0;
+}

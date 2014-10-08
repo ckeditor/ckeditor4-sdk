@@ -1,0 +1,49 @@
+/* --- Top navigation ------------------------ */
+
+.sdk-top-navigation
+{
+	height: 26px;
+	background: #454545;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	padding: 0 40px;
+
+	ul, li, a
+	{
+		height: 23px;
+		line-height: 23px;
+	}
+
+	ul.right
+	{
+		float: right;
+	}
+
+	ul li
+	{
+		display: inline-block;
+
+		& + li
+		{
+			margin-left: 23px;
+		}
+	}
+
+	a
+	{
+		color: #c3c3c3;
+		font-weight: bold;
+		text-decoration: none;
+		font-size: 9px;
+		font-size: .5625rem;
+		text-transform: uppercase;
+
+		&:hover
+		{
+			cursor: pointer;
+			color: #fff;
+		}
+	}
+}

@@ -1,0 +1,50 @@
+/* --- Sidebar ------------------------ */
+
+.sdk-sidebar
+{
+	width: 220px;
+	background: $sdk-box-background-color;
+	border-right: 1px solid $sdk-box-border-color;
+	display: table-cell;
+	padding: 30px;
+
+	h2, h3
+	{
+		font-family: $sdk-font-maven;
+		font-weight: normal;
+		color: #000;
+	}
+
+	h2
+	{
+		font-size: 19px;
+		font-size: 1.1875rem;
+		font-weight: bold;
+		margin-top: 35px;
+	}
+
+	h3
+	{
+		font-size: 16px;
+		font-size: 1rem;
+	}
+
+	li
+	{
+		color: $sdk-link-sidebar-color;
+		list-style-type: none;
+		margin: 6px inherit;
+
+		a
+		{
+			color: $sdk-link-sidebar-color;
+			text-decoration: none;
+		}
+
+		&.active a
+		{
+			color: $sdk-link-color;
+			font-weight: 500;
+		}
+	}
+}
