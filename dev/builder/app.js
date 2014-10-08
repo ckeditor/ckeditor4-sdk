@@ -148,9 +148,14 @@ function copyFiles() {
             ] );
         }
 
-        if ( opts.version === 'offline' ) {
-            blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/samples/*.php' ) ) );
-        }
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/samples/*.php' ) ) );
+
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/Gruntfile.js' ) ) );
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/compass_config.rb' ) ) );
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/package.json' ) ) );
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/node_modules' ) ) );
+        blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/README.md' ) ) );
+
         var existOnBlacklist = _.some( blacklist );
 
         var existOnWhitelist = false;
