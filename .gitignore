@@ -1,3 +1,4 @@
 dev/release
 dev/builder/node_modules
 .idea
+node_modules
