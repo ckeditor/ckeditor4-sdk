@@ -4,3 +4,5 @@ theme/css
 .idea
 .sass*
 node_modules
+*.sublime-workspace
+*.sublime-project
