@@ -17,16 +17,14 @@
 
 	h2
 	{
-		font-size: 19px;
-		font-size: 1.1875rem;
+		@include adjust-font-size-to( 1.1875rem );
 		font-weight: bold;
 		margin-top: 35px;
 	}
 
 	h3
 	{
-		font-size: 16px;
-		font-size: 1rem;
+		@include adjust-font-size-to( 1rem );
 	}
 
 	li

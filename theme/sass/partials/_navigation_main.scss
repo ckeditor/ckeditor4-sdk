@@ -2,11 +2,10 @@
 
 .sdk-main-navigation
 {
+	@include adjust-font-size-to( 1rem );
 	position: absolute;
 	right: 40px;
 	top: 60px;
-	font-size: 16px;
-	font-size: 1rem;
 
 	li
 	{

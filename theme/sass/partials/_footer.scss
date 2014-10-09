@@ -2,11 +2,10 @@
 
 .sdk-footer
 {
+	@include adjust-font-size-to( .8125rem );
 	overflow: hidden;
 	border-top: 1px solid $sdk-box-border-color;
 	padding: 20px;
-	font-size: 13px;
-	font-size: .8125rem;
 	color: #888;
 
 	p

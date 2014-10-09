@@ -1,5 +1,10 @@
 @import "compass";
 
+$base-font-size: 				16px;
+$base-line-height: 				24px;
+$rhythm-unit: 					"rem";
+$rem-with-px-fallback: 			true;
+
 $sdk-font-stack:				Arial, Helvetica, sans-serif;
 $sdk-font-stack-serif:			Georgia, Times, "Times New Roman", serif;
 $sdk-font-stack-monospace:		Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;

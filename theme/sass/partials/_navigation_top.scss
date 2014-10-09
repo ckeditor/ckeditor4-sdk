@@ -33,11 +33,10 @@
 
 	a
 	{
+		@include adjust-font-size-to( .5625rem );
 		color: #c3c3c3;
 		font-weight: bold;
 		text-decoration: none;
-		font-size: 9px;
-		font-size: .5625rem;
 		text-transform: uppercase;
 
 		&:hover
