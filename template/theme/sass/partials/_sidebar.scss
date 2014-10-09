@@ -1,18 +1,21 @@
 /* --- Sidebar ------------------------ */
 
+$sdk-sidebar-selected-bg: 				#eee;
+
 .sdk-sidebar
 {
-	width: 220px;
+	width: 280px;
 	background: $sdk-box-background-color;
 	border-right: 1px solid $sdk-box-border-color;
 	display: table-cell;
-	padding: 30px;
+	padding-bottom: 30px;
 
 	h2, h3
 	{
 		font-family: $sdk-font-maven;
 		font-weight: normal;
 		color: #000;
+		padding-left: 30px;
 	}
 
 	h2
@@ -25,24 +28,40 @@
 	h3
 	{
 		@include adjust-font-size-to( 1rem );
+		font-weight: bold;
 	}
 
-	li
-	{
-		color: $sdk-link-sidebar-color;
-		list-style-type: none;
-		margin: 6px inherit;
+	ul {
+		margin: 0;
+		padding: 0;
 
-		a
+		li
 		{
+			margin: 0;
+			padding: 0;
 			color: $sdk-link-sidebar-color;
-			text-decoration: none;
-		}
+			list-style-type: none;
 
-		&.active a
-		{
-			color: $sdk-link-color;
-			font-weight: 500;
+			a
+			{
+				@include adjust-font-size-to( .875rem );
+				color: $sdk-link-sidebar-color;
+				text-decoration: none;
+				display: block;
+
+				padding: 4px 30px 4px 50px;
+
+				&:hover {
+					color: $sdk-link-sidebar-color-hover;
+					background: $sdk-sidebar-selected-bg;
+				}
+			}
+
+			&.active a
+			{
+				color: $sdk-link-color;
+				background: $sdk-sidebar-selected-bg;
+			}
 		}
 	}
 }
