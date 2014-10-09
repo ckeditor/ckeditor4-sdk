@@ -1,0 +1,172 @@
+/* --- Contents ------------------------ */
+
+.sdk-contents
+{
+	@include adjust-font-size-to( .875rem );
+	overflow: hidden;
+	display: table-cell;
+	padding: 0 40px 20px;
+
+	h1, h2, h3,
+	{
+		font-family: $sdk-font-maven;
+		color: #000;
+	}
+
+	h1
+	{
+		@include adjust-font-size-to( 1.6875rem );
+		color: #66ab16;
+		font-weight: normal;
+
+		& > a.documentation {
+			@include background( image-url("documentation.png") no-repeat 0 50% );
+			@include adjust-font-size-to( 1rem );
+			padding-left: 25px;
+			float: right;
+			margin-top: 0.8em
+		}
+	}
+
+	h2
+	{
+		@include adjust-font-size-to( 1.5rem );
+		font-weight: normal;
+
+		&.editor-title
+		{
+			margin-bottom:10px;
+		}
+	}
+
+	h3
+	{
+		@include adjust-font-size-to( 1.3125rem );
+		font-weight: normal;
+	}
+
+	.inline-editor
+	{
+		margin-top: 85px;
+	}
+
+	ul.spacious li
+	{
+		margin: 10px;
+	}
+
+	pre, code, kbd
+	{
+		@include border-radius( 3px );
+		background: $sdk-box-background-color;
+		border: 1px solid $sdk-box-border-color;
+		padding: 3px 4px;
+	}
+
+	pre, code
+	{
+		// (#40, #37)
+		@include adjust-font-size-to( .813rem );
+		font-family: $sdk-font-stack-monospace;
+	}
+
+	// (#10)
+	kbd
+	{
+		@include adjust-font-size-to( .75rem );
+		font-family: $sdk-font-stack;
+
+		@include box-shadow(
+			0 0 4px #fff inset,
+			0 2px 0 $sdk-box-border-color
+		);
+	}
+
+	pre
+	{
+		padding: 10px;
+	}
+
+	p
+	{
+		img {
+			vertical-align: middle;
+		}
+
+		pre
+		{
+			padding: 20px;
+			margin: 30px 0;
+		}
+	}
+
+	a {
+		&:not(.cke_path_item)
+		{
+			color: $sdk-link-color;
+			text-decoration: none;
+
+			&:hover
+			{
+				color: $sdk-link-color-hover;
+			}
+		}
+	}
+
+	abbr
+	{
+		border-bottom: 1px dotted #666;
+		cursor: pointer;
+	}
+
+	em
+	{
+		font-style: italic;
+	}
+
+	.tip
+	{
+		@include border-radius( 3px );
+		@include box-shadow( 2px 2px 0 0 #ccc );
+
+		border: 1px solid #aaa;
+		padding: 15px 15px 15px 65px;
+		margin: 1em 0;
+		background: #eee;
+		overflow: hidden;
+		position: relative;
+
+		&:before
+		{
+			content: image-url("tip.png");
+			position: absolute;
+			top: 50%;
+			margin-top: -16px;
+			left: 15px;
+		}
+
+		&.alert
+		{
+			background: #FFDB67;
+
+			&:before
+			{
+				content: image-url("alert.png");
+				margin-top: -18px;
+			}
+		}
+	}
+
+	div.todo
+	{
+		border: 2px dotted #444;
+		padding: 10px;
+		margin: 60px 0 10px 0;
+
+		/* Remove me some day */
+		&:before {
+			content: "TODO";
+			font-weight: bold;
+		}
+	}
+}

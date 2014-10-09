@@ -1,21 +1,28 @@
-body {
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+body
+{
+	font-family: Georgia, Times, "Times New Roman", serif;
+	color: #333;
 }
 
 .cke_editable
 {
-	font-size: 15px;
-	line-height: 1.8;
+	font-size: 16px;
+	line-height: 24px;
 }
 
-h1, h2, h3, h4 {
-	color: #ff0714;
+h1, h2, h3, h4
+{
+	color: #000;
 }
 
-a {
-	color: #ff0714;
+a
+{
+	color: #cf5d4e;
+	text-decoration: none;
+	border-bottom: 1px dashed #cf5d4e;
 }
 
-s {
-	color: #aaaaaa;
+s
+{
+	color: #aaa;
 }

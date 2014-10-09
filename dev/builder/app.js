@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+'use strict';
+
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
     StringDecoder = require('string_decoder' ).StringDecoder,
@@ -121,45 +125,82 @@ function parseCategoriesSync( elements ) {
     return categories;
 }
 
+// return function, option.filter of ncp.
+function createNcpBlacklistFilter( blacklist ) {
+    return function( name ) {
+        var currPath = new Path( name );
+
+        return !_.some( blacklist, function( path ) {
+            var match = currPath.matchLeft( new Path( path ) );
+
+            if ( match ) {
+                console.log( '  Omitting ' + name );
+            }
+
+            return match;
+        } );
+    };
+}
+
 // return promise
-function copyFiles() {
-    console.log('Copying new release files');
+function copyTemplate() {
+    console.log( 'Copying template files' );
 
-    var options = {};
+    var blacklist = [
+        // Omit SASS files.
+        path.join( BASE_PATH, 'template/theme/sass' )
+    ];
 
-    options.filter = function ( name ) {
-        var currPath = new Path( name ),
-            blacklist = [
-                !!path.basename( name ).match( /^\./i ),
-                currPath.matchLeft( new Path( BASE_PATH + '/dev' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/vendor/mathjax' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/docs' ) )
-            ];
+    if ( opts.version === 'online' ) {
+        blacklist.push(
+            // Omit fonts.
+            path.join( BASE_PATH, 'template/theme/fonts' ),
+            path.join( BASE_PATH, 'template/theme/css/fonts.css' ),
 
-        if ( opts.version === 'online' ) {
-            blacklist = blacklist.concat( [
-                currPath.matchLeft( new Path( BASE_PATH + '/theme/fonts' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/theme/css/fonts.css' ) ),
-                currPath.matchLeft( new Path( BASE_PATH + '/robots.txt' ) )
-            ] );
-        }
+            // Omit robots.
+            path.join( BASE_PATH, 'template/robots.txt' )
+        );
+    }
 
-        if ( opts.version === 'offline' ) {
-            blacklist.push( currPath.matchLeft( new Path( BASE_PATH + '/samples/*.php' ) ) );
-        }
-        var existOnBlacklist = _.some( blacklist );
-
-        var existOnWhitelist = false;
-
-        var preventCopy = !existOnWhitelist && existOnBlacklist;
-        if ( DEBUG && preventCopy ) {
-            console.log( name );
-        }
-
-        return !preventCopy;
+    var options = {
+        filter: createNcpBlacklistFilter( blacklist )
     };
 
-    return call( ncp, '../../', RELEASE_PATH, options );
+    return call( ncp, '../../template', RELEASE_PATH, options );
+}
+
+// return promise
+function copySamples() {
+    console.log( 'Copying sample files' );
+
+    var blacklist = [
+        // Omit PHP files.
+        path.join( BASE_PATH, 'samples/*.php' )
+    ];
+
+    var options = {
+        filter: createNcpBlacklistFilter( blacklist )
+    };
+
+    return call( ncp, '../../samples', path.join( RELEASE_PATH, 'samples' ), options );
+}
+
+// return promise
+function copyVendor() {
+    console.log( 'Copying vendor files' );
+
+    fs.mkdirSync( path.join( RELEASE_PATH, 'vendor' ) );
+
+    var blacklist = [
+        // Omit Mathjax files.
+        path.join( BASE_PATH, 'vendor/mathjax' )
+    ];
+
+    var options = {
+        filter: createNcpBlacklistFilter( blacklist )
+    };
+
+    return call( ncp, '../../vendor', path.join( RELEASE_PATH, 'vendor' ), options );
 }
 
 function copyGuides( urls ) {
@@ -321,7 +362,7 @@ function validateLinks( elements ) {
     } );
     elements.index.validateLinks( errors );
 
-    handleFileSync( BASE_PATH + '/index.html', function ( content ) {
+    handleFileSync( BASE_PATH + '/template/index.html', function ( content ) {
         var $ = cheerio.load( content, {
             decodeEntities: false
         } );
@@ -390,7 +431,10 @@ function build( opts ) {
     console.log( 'Removing old release directory', RELEASE_PATH );
 
     whenRimraf( RELEASE_PATH )
-        .then( copyFiles )
+        .then( copyTemplate )
+        .then( copySamples )
+        .then( copyVendor )
+        // .then( copyFiles )
         .then( copyMathjaxFiles )
         .then( readSamplesDir )
         .then( selectFilesSync )

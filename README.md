@@ -6,41 +6,83 @@ It will be used for building online CKEditor SDK and you will also be able to do
 
 **Note:** The development of the SDK has only just started, so it should not really be used by anyone yet. When the SDK is ready, it will be officially announced on the <http://ckeditor.com> website.
 
+---
+
 ### Building a release SDK
 
-First things first, initialize and update Git submodules:
+#### Pre-Requirements
 
-		> git submodule init
-		> git submodule update
+1. Get [Node.js](http://nodejs.org/).
 
-To build SDK you need to have [node.js](http://nodejs.org) installed. Once you have it, open the command line and navigate to the `dev/builder` directory:
+1. Get [Ruby](http://www.ruby-lang.org/en/).
 
-        > cd dev/builder
+1. Follow instructions in [ckeditor-docs](https://github.com/ckeditor/ckeditor-docs) in order to 
+setup working documentation dev environment.
 
-Then install all package dependencies:
+1. Install [Compass](http://compass-style.org/):
 
-        > npm install
+        gem update --system
+        gem install compass
 
-After that run the builder:
+#### Installation
 
-        > build.sh
+1. First things first, install all package dependencies:
 
-### Available commands:
+        npm install
 
-        > build
-This command is default one, when no one provided. When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+1. Initialize and update Git submodules:
 
-##### options:
+        git submodule update --init --recursive
 
-        > --version online|offline
-Determines whether build offline or online version (default is offline one).
+1. Call Grunt `setup` task to setup SDK builder:
 
-##### flags:
+        grunt setup
 
-        > --pack
-Determines whether pack build into Zip file.
+1. Run Grunt `build` task to build documentation:
+
+        grunt build
 
 ---
 
-        > validatelinks
-Validate links in samples and main index file.
+### Available Grunt commands:
+
+1. #### setup
+
+        grunt setup
+    
+    Initializes SDK builder.
+
+1. #### build
+
+        grunt build [OPTIONS] [FLAGS]
+    
+    When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+
+    ##### OPTIONS:
+    
+        --sdk-version=VERSION
+    
+    Determines whether build offline or online version. `VERSION` may be: `offline` (default) or `online`. 
+    
+    ##### FLAGS:
+    
+        --sdk-pack
+    
+    Determines whether pack build into Zip file.
+
+1. #### watch-css
+
+        grunt watch-css
+    
+    Utilizes `compass watch` and outputs CSS directly into `dev/release/theme/css` instead of `template/theme/css`. Useful for developing styles
+    for working SDK.
+    
+    **Note#1**: Call `grunt build` first. Developing CSS does not make much sense if there's no HTML.
+    
+    **Note#2**: Produced styles are uncompressed. Also CSS<->SASS map are built.
+
+1. #### validatelinks
+    
+        grunt validatelinks
+    
+    Validate links in samples and main index file.
