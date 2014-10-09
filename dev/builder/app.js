@@ -395,7 +395,7 @@ function done() {
 }
 
 function fail( e ) {
-    e && console.log( 'Error:', e );
+    e && console.log( e );
     process.exit( 1 );
 }
 
@@ -489,7 +489,7 @@ function build( opts ) {
 
 function buildDocumentation() {
     console.log( 'Building documentation.' );
-    return curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], false )();
+    return curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
 }
 
 function curryExec( command, args, silent ) {
