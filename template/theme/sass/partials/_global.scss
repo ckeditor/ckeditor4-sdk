@@ -105,3 +105,35 @@ textarea.disabled
 	padding:10px;
 	margin-top:0;
 }
+
+/* --- Modal with source code ------------------------ */
+.pico-content.source-code
+{
+	bottom: 50px;
+}
+
+.pico-content.source-code > div
+{
+	width: 800px;
+	height: 100%;
+	position: relative;
+}
+
+.pico-content.source-code > div > div.textarea-wrapper
+{
+	position: absolute;
+	top: 31px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.pico-content.source-code textarea
+{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	resize: none;
+	outline: none;
+}
