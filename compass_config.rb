@@ -1,8 +1,8 @@
-http_path = "/"
-css_dir = "/theme/css"
-sass_dir = "/theme/sass"
-images_dir = "/theme/img"
-fonts_dir = "/theme/fonts"
+http_path = "/template"
+css_dir = "/template/theme/css"
+sass_dir = "/template/theme/sass"
+images_dir = "/template/theme/img"
+fonts_dir = "/template/theme/fonts"
 
 output_style = :compressed
 # output_style = :expanded

@@ -1,6 +1,6 @@
 dev/release
 dev/builder/node_modules
-theme/css
+template/theme/css
 .idea
 .sass*
 node_modules
