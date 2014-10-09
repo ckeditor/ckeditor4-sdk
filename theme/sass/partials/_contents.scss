@@ -62,27 +62,32 @@
 
 	p, li
 	{
-		code {
-			@include box-shadow( 0 0 2px rgba(0,0,0,.2) );
-			font-family: $sdk-font-stack-monospace;
+		code, kbd {
+			@include border-radius( 3px );
 			background: $sdk-box-background-color;
-			border-bottom: 1px solid $sdk-box-border-color;
-			padding: 2px 4px;
+			border: 1px solid $sdk-box-border-color;
+			padding: 3px 4px;
+		}
+
+		code {
+			font-family: $sdk-font-stack-monospace;
 
 			// (#40, #37)
 			font-size: 13px;
 			font-size: .813rem;
 		}
 
+		// (#10)
 		kbd {
-			@include border-radius( 2px );
-			@include box-shadow( 1px 2px 2px #ddd );
-			border: 1px solid #aaa;
-			background-color: #f9f9f9;
-			padding: 1px 3px;
+			font-family: $sdk-font-stack;
 
-			font-size: 13px;
-			font-size: .813rem;
+			@include box-shadow(
+				0 0 4px #fff inset,
+				0 2px 0 $sdk-box-border-color
+			);
+
+			font-size: 12px;
+			font-size: .75rem;
 		}
 	}
 
