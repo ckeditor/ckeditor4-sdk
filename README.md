@@ -32,8 +32,7 @@ setup working documentation dev environment.
 
 1. Initialize and update Git submodules:
 
-        git submodule init
-        git submodule update
+        git submodule update --init --recursive
 
 1. Call Grunt `setup` task to setup SDK builder:
 
@@ -45,35 +44,45 @@ setup working documentation dev environment.
 
 ---
 
-### Available commands:
+### Available Grunt commands:
 
-#### Build
+1. #### setup
 
-    grunt build [OPTIONS] [FLAGS]
+        grunt setup
+    
+    Initializes SDK builder.
 
-When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
+1. #### build
 
+        grunt build [OPTIONS] [FLAGS]
+    
+    When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/release` directory.
 
-##### OPTIONS:
+    ##### OPTIONS:
+    
+        --sdk-version=VERSION
+    
+    Determines whether build offline or online version. `VERSION` may be: `offline` (default) or `online`. 
+    
+    ##### FLAGS:
+    
+        --sdk-pack
+    
+    Determines whether pack build into Zip file.
 
-    --sdk-version=VERSION
+1. #### watch-css
 
-Determines whether build offline or online version. `VERSION` may be: `offline` (default) or `online`. 
+        grunt watch-css
+    
+    Utilizes `compass watch` and outputs CSS directly into `dev/release/theme/css` instead of `template/theme/css`. Useful for developing styles
+    for working SDK.
+    
+    **Note#1**: Call `grunt build` first. Developing CSS does not make much sense if there's no HTML.
+    
+    **Note#2**: Produced styles are uncompressed. Also CSS<->SASS map are built.
 
-##### FLAGS:
-
-    --sdk-pack
-
-Determines whether pack build into Zip file.
-
-#### Build-css
-
-    grunt build-css
-
-Converts SASS files (`theme/sass`) into CSS (`theme/css`) using Compass.
-
-#### Validatelinks
-
-    grunt validatelinks
-
-Validate links in samples and main index file.
+1. #### validatelinks
+    
+        grunt validatelinks
+    
+    Validate links in samples and main index file.
