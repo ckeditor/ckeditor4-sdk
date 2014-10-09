@@ -55,30 +55,48 @@
 		margin: 10px;
 	}
 
-	p, li
+	pre, code, kbd
 	{
-		code, kbd {
-			@include border-radius( 3px );
-			background: $sdk-box-background-color;
-			border: 1px solid $sdk-box-border-color;
-			padding: 3px 4px;
+		@include border-radius( 3px );
+		background: $sdk-box-background-color;
+		border: 1px solid $sdk-box-border-color;
+		padding: 3px 4px;
+	}
+
+	pre, code
+	{
+		// (#40, #37)
+		@include adjust-font-size-to( .813rem );
+		font-family: $sdk-font-stack-monospace;
+	}
+
+	// (#10)
+	kbd
+	{
+		@include adjust-font-size-to( .75rem );
+		font-family: $sdk-font-stack;
+
+		@include box-shadow(
+			0 0 4px #fff inset,
+			0 2px 0 $sdk-box-border-color
+		);
+	}
+
+	pre
+	{
+		padding: 10px;
+	}
+
+	p
+	{
+		img {
+			vertical-align: middle;
 		}
 
-		code {
-			// (#40, #37)
-			@include adjust-font-size-to( .813rem );
-			font-family: $sdk-font-stack-monospace;
-		}
-
-		// (#10)
-		kbd {
-			@include adjust-font-size-to( .75rem );
-			font-family: $sdk-font-stack;
-
-			@include box-shadow(
-				0 0 4px #fff inset,
-				0 2px 0 $sdk-box-border-color
-			);
+		pre
+		{
+			padding: 20px;
+			margin: 30px 0;
 		}
 	}
 
@@ -93,20 +111,6 @@
 				color: $sdk-link-color-hover;
 			}
 		}
-	}
-
-	pre
-	{
-		background: $sdk-box-background-color;
-		padding: 10px;
-	}
-
-	p pre
-	{
-		background: $sdk-box-background-color;
-		padding: 20px;
-		border-bottom: 1px solid $sdk-box-border-color;
-		margin: 30px 0;
 	}
 
 	abbr
