@@ -33,7 +33,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				The optional <a href="http://ckeditor.com/addon/devtools">Developer Tools</a> plugin makes it possible to configure CKEditor to <strong>display information about dialog window elements</strong>, including the name of the dialog window and its tabs as well as the ID and type of each dialog window UI element.
 			</p>
-			
+
 			<p>
 				<strong>This feature is only useful in the development phase</strong> and should not be used in production environment. Note that it works with all CKEditor dialog windows, including the ones that were created by custom plugins, so you can use it both when customizing official CKEditor plugins and creating your own ones!
 			</p>
@@ -55,6 +55,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</textarea>
 
 			<script data-sample="1">
+
+				CKEDITOR.config.devtools_styles =
+					'#cke_tooltip { line-height: 20px; font-size: 12px; padding: 5px; border: 2px solid #333; background: #ffffff }' +
+					'#cke_tooltip h2 { font-size: 14px; border-bottom: 1px solid; margin: 0; padding: 1px; }' +
+					'#cke_tooltip ul { padding: 0pt; list-style-type: none; }';
 
 				CKEDITOR.replace( 'editor1', {
 					height: 250,
