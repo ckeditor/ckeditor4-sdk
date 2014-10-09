@@ -4,6 +4,7 @@ module.exports = function( grunt ) {
 	var BUILDER_DIR = 'dev/builder';
 
 	grunt.loadNpmTasks( 'grunt-shell' );
+	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 
 	grunt.initConfig( {
 		shell: {
@@ -41,6 +42,14 @@ module.exports = function( grunt ) {
 					'./app.js' + ' validatelinks'
 				].join( '&&' )
 			}
+		},
+
+		compass: {
+			'sdk-build-css': {
+				options: {
+					config: 'compass_config.rb'
+				}
+			},
 		}
 	} );
 
@@ -50,6 +59,7 @@ module.exports = function( grunt ) {
 	] );
 
 	grunt.registerTask( 'build', [
+		'compass:sdk-build-css',
 		'shell:sdk-build'
 	] );
 
