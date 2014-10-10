@@ -38,6 +38,7 @@
 				{
                     "name": "Working with Document",
                     "samples": [
+						"Spell Checking",
                         "Source Code Editing",
 						"Magic Line"
                     ]
