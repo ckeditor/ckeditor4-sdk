@@ -69,6 +69,10 @@ setup working documentation dev environment.
         --sdk-pack
     
     Determines whether pack build into Zip file.
+    
+        --sdk-verbose
+
+    Verbose mode of building process.
 
 1. #### watch-css
 
