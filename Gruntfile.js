@@ -30,9 +30,9 @@ module.exports = function( grunt ) {
 				command: [
 					'cd ' + BUILDER_DIR,
 					[
-						'./app.js',
+						'node ./app.js',
 						'--version=' + ( grunt.option( 'sdk-version' ) || 'offline' ),
-						grunt.option( 'sdk-pack' ) ? '--pack=true' : '',
+						grunt.option( 'sdk-pack' ) ? '--pack=true' : ''
 					].join( ' ' )
 				].join( '&&' )
 			},
@@ -58,7 +58,7 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded',
 					sourcemap: true
 				}
-			},
+			}
 		}
 	} );
 
@@ -73,7 +73,7 @@ module.exports = function( grunt ) {
 	] );
 
 	grunt.registerTask( 'watch-css', [
-		'compass:sdk-watch-css',
+		'compass:sdk-watch-css'
 	] );
 
 	grunt.registerTask( 'validatelinks', [
