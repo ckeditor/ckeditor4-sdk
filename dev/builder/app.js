@@ -238,6 +238,7 @@ function copyMathjaxFiles() {
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Latin-Modern' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Neo-Euler' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fontsHTML-CSS/STIX-Web' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/TeX/png' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/input/MathML' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/localization/*' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/test' ) ),
