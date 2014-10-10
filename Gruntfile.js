@@ -48,16 +48,33 @@ module.exports = function( grunt ) {
 		compass: {
 			'sdk-build-css': {
 				options: {
-					config: 'compass_config.rb'
+					httpPath: '/',
+					assetCacheBuster: false,
+					relativeAssets: true,
+
+					sassDir: 'template/theme/sass',
+					cssDir: 'template/theme/css',
+					imagesDir: 'template/theme/img',
+					fontsDir: 'template/theme/fonts',
+
+					outputStyle: 'compressed'
 				}
 			},
 			'sdk-watch-css': {
 				options: {
+					httpPath: '/',
+					assetCacheBuster: false,
+					relativeAssets: true,
+
 					watch: true,
-					config: 'compass_config.rb',
+					sourcemap: true,
+
+					sassDir: 'template/theme/sass',
 					cssDir: 'dev/release/theme/css',
-					outputStyle: 'expanded',
-					sourcemap: true
+					imagesDir: 'dev/release/theme/img',
+					fontsDir: 'dev/release/theme/fonts',
+
+					outputStyle: 'expanded'
 				}
 			}
 		}
