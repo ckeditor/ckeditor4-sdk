@@ -111,6 +111,23 @@
 				color: $sdk-link-color-hover;
 			}
 		}
+
+		&:not(.documentation) {
+			&[href^="../docs/index.html#!/api"]:after,
+			&[href^="../docs/index.html#!/guide"]:after {
+				margin-left: .3em;
+				margin-right: .1em;
+				margin-bottom: 3px;
+			}
+
+			&[href^="../docs/index.html#!/api"]:after {
+				content: image-url("gear.png");
+			}
+
+			&[href^="../docs/index.html#!/guide"]:after {
+				content: image-url("book.png");
+			}
+		}
 	}
 
 	abbr
