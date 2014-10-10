@@ -32,7 +32,8 @@ module.exports = function( grunt ) {
 					[
 						'node ./app.js',
 						'--version=' + ( grunt.option( 'sdk-version' ) || 'offline' ),
-						grunt.option( 'sdk-pack' ) ? '--pack=true' : ''
+						grunt.option( 'sdk-pack' ) ? '--pack=true' : '',
+						grunt.option( 'sdk-verbose' ) ? '--verbose=true' : ''
 					].join( ' ' )
 				].join( '&&' )
 			},

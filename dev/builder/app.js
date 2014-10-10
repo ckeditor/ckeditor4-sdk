@@ -38,7 +38,7 @@ var fs = require( 'fs' ),
         DOCUMENT_WRITE_ARG: /(document\.write\()(.*)(\))/
     },
 
-    DEBUG = false;
+    VERBOSE = false;
 
 require( 'when/monitor/console' );
 
@@ -134,7 +134,7 @@ function createNcpBlacklistFilter( blacklist ) {
             var match = currPath.matchLeft( new Path( path ) );
 
             if ( match ) {
-                console.log( '  Omitting ' + name );
+                VERBOSE && console.log( '  Omitting ' + name );
             }
 
             return match;
@@ -245,8 +245,8 @@ function copyMathjaxFiles() {
         ] );
 
         var preventCopy = !whiteList && blackList;
-        if ( DEBUG && preventCopy ) {
-            console.log( 'Ommited', name );
+        if ( VERBOSE && preventCopy ) {
+            console.log( '  Omitting ', name );
         }
 
         return !preventCopy;
@@ -263,6 +263,7 @@ function prepareSamplesDir() {
 // sync method
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
+        var path;
         sample.setSidebar( categories );
         if ( opts.version === 'offline' ) {
             sample.preventSearchEngineRobots();
@@ -270,7 +271,9 @@ function prepareSamplesFilesSync() {
             sample.fixFonts();
         }
 
-        fs.writeFileSync( RELEASE_PATH + '/samples/' + sample.name + '.html', sample.$.html(), 'utf8' );
+        path = RELEASE_PATH + '/samples/' + sample.name + '.html';
+        fs.writeFileSync( path, sample.$.html(), 'utf8' );
+        VERBOSE && console.log( 'Writing sample file: ', path.resolve( path ) );
     } );
 
     index.setSidebar( categories );
@@ -281,11 +284,12 @@ function prepareSamplesFilesSync() {
     }
 
     fs.writeFileSync( RELEASE_PATH + '/samples/index.html', index.$.html(), 'utf8' );
+    VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/samples/index.html' ) );
 }
 
 // return promise
 function readSamplesDir() {
-    console.log( 'Reading sample directory' );
+    console.log( 'Reading sample directory', path.resolve( SAMPLES_PATH ) );
     return whenFs.readdir( SAMPLES_PATH );
 }
 
@@ -419,6 +423,7 @@ nomnom.nocommand()
     } );
 
 var opts = nomnom.parse();
+VERBOSE = opts.verbose === true;
 
 function packbuild() {
     return zipBuild().then( function() {
@@ -428,7 +433,7 @@ function packbuild() {
 
 function build( opts ) {
     console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
-    console.log( 'Removing old release directory', RELEASE_PATH );
+    console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
 
     whenRimraf( RELEASE_PATH )
         .then( copyTemplate )
