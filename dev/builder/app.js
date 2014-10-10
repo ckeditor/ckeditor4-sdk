@@ -263,7 +263,7 @@ function prepareSamplesDir() {
 // sync method
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
-        var path;
+        var _path;
         sample.setSidebar( categories );
         if ( opts.version === 'offline' ) {
             sample.preventSearchEngineRobots();
@@ -271,9 +271,9 @@ function prepareSamplesFilesSync() {
             sample.fixFonts();
         }
 
-        path = RELEASE_PATH + '/samples/' + sample.name + '.html';
-        fs.writeFileSync( path, sample.$.html(), 'utf8' );
-        VERBOSE && console.log( 'Writing sample file: ', path.resolve( path ) );
+        _path = RELEASE_PATH + '/samples/' + sample.name + '.html';
+        fs.writeFileSync( _path, sample.$.html(), 'utf8' );
+        VERBOSE && console.log( 'Writing sample file: ', path.resolve( _path ) );
     } );
 
     index.setSidebar( categories );
@@ -503,6 +503,8 @@ function curryExec( command, args, silent ) {
     return function () {
         return when.promise( function( resolve, reject ) {
             var cmd = spawn( command, args );
+
+            VERBOSE && console.log( 'Executing: ', command, args.join( ' ' ) );
 
             if ( !silent ) {
                 cmd.stdout.on( 'data', consoleBuffer );
