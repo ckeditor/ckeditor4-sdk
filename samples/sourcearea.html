@@ -64,7 +64,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</textarea>
 
 			<h2 class="editor-title">Inline Editor with Source Dialog</h2>
-			<div id="editor2" contenteditable="true" style="padding: 5px 20px;" class="inline-editor" data-sample="2">
+			<div id="editor2" contenteditable="true" class="inline-editor" data-sample="2">
 				<p>
 					This <a href="http://docs.ckeditor.com/#!/guide/dev_inline">inline editor</a> instance is using the&nbsp;<a href="http://ckeditor.com/addon/sourcedialog">Source Dialog</a>&nbsp;plugin
 					for source editing.
@@ -123,8 +123,7 @@ config.removePlugins = &amp;#39;sourcearea&amp;#39;;&lt;/pre&gt;
 
 				CKEDITOR.inline( 'editor2', {
 					extraPlugins: 'sourcedialog',
-					removePlugins: 'sourcearea',
-					startupFocus: true
+					removePlugins: 'sourcearea'
 				} );
 
 			</script>
