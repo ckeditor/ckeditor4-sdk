@@ -294,7 +294,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 		<ul>
 			<li><a href="./classic.html">Editor Types &ndash; Classic Editor</a></li>
-			<li><a href="./floatingui.html">Editor UI &ndash; Floating UI</a></li>
+			<li><a href="./floatingui.html">Editor UI &ndash; Floating User Interface</a></li>
 			<li><a href="./saveajax.html">Saving Data &ndash; CKEditor in Ajax Applications</a></li>
 		</ul>
 
@@ -315,7 +315,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		function enableEditing() {
 			if ( !CKEDITOR.instances.introduction ) {
 				CKEDITOR.inline( 'introduction', {
-					extraAllowedContent: 'a(documentation);abbr;code',
+					extraAllowedContent: 'a(documentation);abbr[title];code',
 					removePlugins: 'stylescombo',
 					extraPlugins: 'sourcedialog',
 					startupFocus: true
