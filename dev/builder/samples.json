@@ -31,8 +31,8 @@
                 {
                     "name": "Authoring Content",
                     "samples": [
-                        "Text and Background Color",
 						"Styles and Stylesheet Parser",
+                        "Text and Background Color",
 						"Multilingual Content"
                     ]
                 },
