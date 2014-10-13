@@ -13,7 +13,10 @@
 		color: #000;
 
 		// Default vertical rhythm.
-		margin: .75*$std-standard-vgap 0;
+		margin: {
+			top: .75*$std-standard-vgap;
+			bottom: .25*$std-standard-vgap;
+		}
 	}
 
 	// Default vertical rhythm.
@@ -41,11 +44,6 @@
 	{
 		@include adjust-font-size-to( 1.5rem );
 		font-weight: normal;
-
-		&.editor-title
-		{
-			margin: $std-standard-vgap auto;
-		}
 	}
 
 	h3
