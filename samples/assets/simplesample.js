@@ -164,7 +164,6 @@
 					'<meta charset="utf-8">',
 					'<meta name="robots" content="noindex, nofollow">',
 					'<title>' + title + '</title>',
-					'<style type="text/css">pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }</style>',
 					headResources,
 					'<body>'
 				];
