@@ -18,6 +18,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		color: #000;
 	}
 	</style>
+	<link rel="icon" href="../theme/img/favicon.ico">
 </head>
 <body>
 	<section class="sdk-container">

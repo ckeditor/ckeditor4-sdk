@@ -21,6 +21,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
+	<link rel="icon" href="../theme/img/favicon.ico">
 </head>
 <body>
 	<header class="sdk-header">
@@ -42,9 +43,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				and <span class="button_icon" data-icon="bgcolor" title="Background Color">&nbsp;</span>
 				buttons are automatically added to the toolbar. You can use them to add some color to your content
 			</p>
-			
+
 			<h2>More Colors Option and Color Dialog</h2>
-			
+
 			<p>
 				Additionally, you can also add an optional <a href="http://ckeditor.com/addon/colordialog">Color Dialog</a>
 				plugin which provides the <strong>More Colors</strong> option and a user-friendly way to select the desired
@@ -67,15 +68,15 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 &lt;hr/&gt; &lt;p style=&quot;text-align:
 				right;&quot;&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
-			
+
 			<h2>Custom Color List</h2>
-			
+
 			<p>
 				Allowing your users to use any colors they wish might lead to undesired results, i.e. joyfully colorful content
 				that will make your page look like it was created in the early 1990s. You can prevent this situation by customizing the
 				color list to only include a limited number of colors that match your website style. The editor instance below
 				uses the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-colorButton_colors">config.colorButton_colors</a></code>
-				option to trim down the color list to a selected few. 
+				option to trim down the color list to a selected few.
 			</p>
 
 			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2">
@@ -109,7 +110,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				meaningful content. To create semantic content and also maintain consistent styling across your website,
 				including user-created content, consider configuring the <a href="./styles.html">Styles</a> drop-down list
 				to include some colored styles
-				that could be used by your users and would match your website design instead of enabling the 
+				that could be used by your users and would match your website design instead of enabling the
 				<strong>Text and Background Color</strong> buttons and dealing with a stylistic nightmare later.
 			</div>
 
@@ -124,7 +125,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					extraPlugins: 'colorbutton,colordialog'
 				} );
 			</script>
-			
+
 			<script data-sample="2">
 				CKEDITOR.replace( 'editor2', {
 					height: 250,

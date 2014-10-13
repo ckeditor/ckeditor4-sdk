@@ -21,6 +21,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
+	<link rel="icon" href="../theme/img/favicon.ico">
 </head>
 <body>
 <header class="sdk-header">
@@ -44,11 +45,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<p>
 				A sample <u>heavily formatted text</u> using <strong><span style="font-family: 'Comic Sans MS';font-size:16px">different fonts</span></strong> and <span style="font-size:18px;color:#00FF00;background-color: #FFFF00">text colors</span>.
 			</p>
-			
+
 			<label for="samplehmtl">Source code:</label>
 			<textarea cols="110" rows="3" class="disabled" id="samplehmtl">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt; using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		</div>
-		
+
 		<script data-sample="1,2,3">
 			// ACF is enabled by default regardless whether toolbar configuration is provided or not.
 			// By having a smaller number of features enabled in the toolbar it should be easier to understand how ACF works.
@@ -67,7 +68,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			CKEDITOR.config.autoGrow_maxHeight = 500;
 			CKEDITOR.config.autoGrow_minHeight = 150;
 		</script>
-		
+
 		<h2>Automatic Mode</h2>
 		<p>
 			In the sample below CKEditor works in automatic mode (default behavior, requires no configuration):
@@ -76,14 +77,14 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<li>Underline and color buttons are unavailable and there are no buttons to set font size or family. As a result CKEditor will not accept such content.</li>
 			<li>Bold button is enabled, so the bold formatting (provided via the <code>&lt;strong&gt;</code> element) is preserved.</li>
 		</ul>
-		
+
 		<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt; using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		<script data-sample="1">
 
 			CKEDITOR.replace( 'editor1' );
 
 		</script>
-		
+
 		<h2>Adjusting Automatic Mode</h2>
 		<p>
 			It is possible to allow or disallow additional elements or properties in CKEditor by passing special configuration options: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent">config.extraAllowedContent</a></code> and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-disallowedContent">config.disallowedContent</a></code>.
@@ -96,7 +97,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<li><code>&lt;span style="color:..."&gt;</code> is allowed, so the green text is left untouched.</li>
 			<li>Since ACF is still in automatic mode and the font family and size buttons are not available, these text formats are removed again.</li>
 		</ul>
-		
+
 		<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt; using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		<script data-sample="2">
 
@@ -105,7 +106,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			} );
 
 		</script>
-		
+
 		<h2>Disabling ACF</h2>
 		<p>
 			Turning ACF off is very simple and requires setting a simple configuration option: <code>config.allowedContent = true</code>. As a consequence, CKEditor will not filter entered content, including during paste operations.
@@ -113,7 +114,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<p>
 			Experiment by pasting content from various sources into the editor below and into the first one (with automatic mode on). Compare the results.
 		</p>
-		
+
 		<textarea cols="80" id="editor3" name="editor1" rows="10" data-sample="3">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		<script data-sample="3">
 
@@ -128,7 +129,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<ul>
 			<li><a href="./acfcustom.html">Advanced Content Filter &ndash; Custom Mode</a></li>
 		</ul>
-	
+
 	</section>
 </section>
 

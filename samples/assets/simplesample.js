@@ -164,7 +164,8 @@
 					'<title>' + title + '</title>',
 					'<style type="text/css">pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }</style>',
 					headResources,
-					'</head>',
+					'	<link rel="icon" href="../theme/img/favicon.ico">
+</head>',
 					'<body>'
 				];
 			}
