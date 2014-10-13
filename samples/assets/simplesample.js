@@ -87,7 +87,7 @@
 			}
 		} );
 
-		return sdkMeta.content.split( '|' );
+		return sdkMeta ? sdkMeta.content.split( '|' ) : '';
 	}
 
 	contentLoaded( window, onLoad );
@@ -99,6 +99,8 @@
 			sdkContents,
 			metaNames = prepareSamplesNames(),
 			samplesList = createFromHtml( prepareSamplesList( resources, metaNames ) );
+
+		initSidebarAccordion( body );
 
 		accept( sections, function( element ) {
 			var classAttr = element.attributes && element.attributes.getNamedItem( 'class' );
@@ -164,8 +166,6 @@
 					'<title>' + title + '</title>',
 					'<style type="text/css">pre { -moz-tab-size:4; -o-tab-size:4; tab-size:4; }</style>',
 					headResources,
-					'	<link rel="icon" href="../theme/img/favicon.ico">
-</head>',
 					'<body>'
 				];
 			}
@@ -364,5 +364,26 @@
 		template += '</ul></div>';
 
 		return template;
+	}
+
+	function initSidebarAccordion( body ) {
+		var sidebar = body.querySelector( 'nav.sdk-sidebar' );
+
+		if ( sidebar.addEventListener ) {
+			sidebar.addEventListener( 'click', onClick );
+		} else {
+			sidebar.attachEvent( 'onclick', onClick );
+		}
+
+		function onClick( evt ) {
+			var target = evt.target || evt.srcElement;
+
+			if ( target.tagName == 'H3' ) {
+				target.className = target.className == 'active' ? '' : 'active';
+
+				// Force redraw on IE8.
+				target.parentElement.className = target.parentElement.className;
+			}
+		}
 	}
 }() );

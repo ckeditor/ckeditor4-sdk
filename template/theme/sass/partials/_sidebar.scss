@@ -28,12 +28,42 @@ $sdk-sidebar-selected-bg: 				#eee;
 	h3
 	{
 		@include adjust-font-size-to( 1rem );
+		@include user-select( none );
 		font-weight: bold;
+		cursor: pointer;
+
+		padding: {
+			top: 4px;
+			bottom: 4px;
+		};
+		margin: 0;
+
+		&:before {
+			content: "►";
+			font-size: .5em;
+			margin-right: .75em;
+		}
+
+		&:hover
+		{
+			background: $sdk-sidebar-selected-bg;
+		}
+
+		&.active {
+			&:before {
+				content: "▼";
+			}
+
+			& + ul {
+				display: block;
+			}
+		}
 	}
 
 	ul {
 		margin: 0;
 		padding: 0;
+		display: none;
 
 		li
 		{

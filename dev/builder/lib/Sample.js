@@ -125,7 +125,10 @@ Sample.validateLink = function( href, errors ) {
 
 // return sidebar HTML string
 Sample.createSidebar = function( categories, highlight ) {
-    var result = [];
+    var result = [],
+        list = [],
+
+    highlightMe, highlightSubcategory;
 
     _.each( categories, function( category ) {
         result.push( '<h2>' + category.name + '</h2>' );
@@ -134,20 +137,25 @@ Sample.createSidebar = function( categories, highlight ) {
             if ( !subcategory.samples.length )
                 return;
 
-            result.push( '<h3>' + subcategory.name + '</h3>' );
+            highlightSubcategory = false;
 
-            result.push( '<ul>' );
+            list = [ '<ul>' ];
             _.each( subcategory.samples, function( sample ) {
-                var highlightMe = (
+                highlightMe = (
                     highlight &&
                     sample.category == highlight.category &&
                     sample.subcategory == highlight.subcategory &&
                     sample.name == highlight.name
-                    );
+                );
 
-                result.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + sample.name + '.html">' + sample.title + '</a></li>' );
+                list.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + sample.name + '.html">' + sample.title + '</a></li>' );
+
+                highlightSubcategory |= highlightMe;
             } );
-            result.push( '</ul>' )
+            list.push( '</ul>' );
+
+            result.push( '<h3 ' + ( highlightSubcategory ? 'class="active"' : '' ) + '>' + subcategory.name + '</h3>' );
+            result = result.concat( list );
         } );
     } );
 
