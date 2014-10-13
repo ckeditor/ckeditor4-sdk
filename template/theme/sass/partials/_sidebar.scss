@@ -29,6 +29,7 @@ $sdk-sidebar-selected-bg: 				#eee;
 		@include adjust-font-size-to( 1rem );
 		@include user-select( none );
 		cursor: pointer;
+		font-weight: normal;
 
 		padding: {
 			top: 4px;
@@ -72,7 +73,7 @@ $sdk-sidebar-selected-bg: 				#eee;
 
 			a
 			{
-				@include adjust-font-size-to( .875rem );
+				@include adjust-font-size-to( .813rem );
 				color: $sdk-link-sidebar-color;
 				text-decoration: none;
 				display: block;
