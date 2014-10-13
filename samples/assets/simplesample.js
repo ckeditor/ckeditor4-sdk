@@ -192,8 +192,26 @@
 
 			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
-			resourcesString = resourcesString.replace( /\[(\d)\]PLACEHOLDER/g, function( match, id ) {
-				var result = placeholders[ id ].replace( /\&/g, '&amp;' );
+			resourcesString = resourcesString.replace( /(\n)(\s*)([^\n]*)\[(\d)\]PLACEHOLDER/g, function( match, $0, $1, $2, $3 ) {
+				var lines, result, resourcesString;
+
+				lines = placeholders[ $3 ].split( '\n' );
+
+				// Removing whitespaces in each line.
+				var i = 0,
+					max = lines.length;
+				for ( var i = 0; i < max; i++ ) {
+					lines[ i ] = lines[ i ].trim();
+				}
+
+				// Fake line to make indentation, because join make indentation only between lines - not at the beginning.
+				lines.unshift( '' );
+
+				// Indent one tab extra.
+				result = lines.join( '\n' + $1 + $1[ 0 ] );
+				result = $2 + result.replace( /\&/g, '&amp;' );
+
+				result = '\n' + $0 + $1[ 0 ] + result.trim() + $0 + '\n' + $1[ 0 ];
 
 				return result;
 			} );
