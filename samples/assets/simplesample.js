@@ -165,6 +165,7 @@
 					'<meta name="robots" content="noindex, nofollow">',
 					'<title>' + title + '</title>',
 					headResources,
+					'</head>',
 					'<body>'
 				];
 			}
@@ -198,7 +199,9 @@
 			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
 			resourcesString = resourcesString.replace( /(\n)(\s*)([^\n]*)\[(\d)\]PLACEHOLDER/g, function( match, $0, $1, $2, $3 ) {
-				var lines = placeholders[ $3 ].content.split( '\n' ), result = '';
+				var placeholder = placeholders[ $3 ],
+					lines = placeholder.content.split( '\n' ), result = '',
+					noEndLineChar = ( match.indexOf('textarea') != -1 && !placeholder.example.preserveWhitespace );
 
 				// Removing whitespaces in each line.
 				var max = lines.length;
@@ -207,11 +210,11 @@
 						indent, content;
 
 					// Don't want extra indent and set whole line (with whitespaces) as a content.
-					if ( placeholders[ $3 ].indent === false ) {
+					if ( placeholder.indent === false ) {
 						indent = false;
-						content = lines[ i ];
+						content = noEndLineChar ? lines[ i ].trim() : lines[ i ];
 					} else {
-						indent = lineData[ 1 ].length - placeholders[ $3 ].indent;
+						indent = lineData[ 1 ].length - placeholder.indent;
 						content = lineData[ 2 ];
 					}
 
@@ -237,7 +240,8 @@
 				var i = 0,
 					max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
-					result += getIndentChars( '\t', lines[ i ].indent ) + lines[ i ].content + '\n';
+					var line = lines[ i ];
+					result += getIndentChars( '\t', line.indent ) + line.content + ( noEndLineChar ? '' : '\n' );
 				}
 
 				result = $2 + result.replace( /\&/g, '&amp;' );
@@ -365,7 +369,8 @@
 						node: node,
 						html: node.outerHTML.trim(),
 						usedIn: sample.value.split( ',' ),
-						name: node.nodeName
+						name: node.nodeName,
+						preserveWhitespace: preserveWhitespace
 					};
 
 					example.innerHTML = node.innerHTML;
@@ -382,7 +387,8 @@
 
 							placeholders.push( {
 								indent: preserveWhitespace ? false : indent,
-								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2
+								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2,
+								example: example
 							} );
 							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
 						};
