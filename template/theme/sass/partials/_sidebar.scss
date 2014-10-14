@@ -1,12 +1,16 @@
 @charset "utf-8";
 /* --- Sidebar ------------------------ */
 
-$sdk-sidebar-selected-bg: 				#eee;
+$sdk-sidebar-bg-bright:					adjust-lightness( $sdk-box-background-color, 5% );
+$sdk-sidebar-bg-dark:					$sdk-box-background-color;
+$sdk-sidebar-bg:						linear-gradient( to right, $sdk-sidebar-bg-bright, $sdk-sidebar-bg-dark );
+$sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-sidebar-bg-bright, -3% ), adjust-lightness( $sdk-sidebar-bg-dark, -3% ) );
 
 .sdk-sidebar
 {
 	width: 280px;
-	background: $sdk-box-background-color;
+	@include background-image( $sdk-sidebar-bg );
+	@include box-shadow( -2px 0 2px rgba(0,0,0,.03) inset );
 	border-right: 1px solid $sdk-box-border-color;
 	display: table-cell;
 	padding-bottom: 30px;
@@ -14,15 +18,14 @@ $sdk-sidebar-selected-bg: 				#eee;
 	h2, h3
 	{
 		font-family: $sdk-font-maven;
-		font-weight: normal;
-		color: #000;
+		font-weight: bold;
 		padding-left: 30px;
+		color: #000;
 	}
 
 	h2
 	{
 		@include adjust-font-size-to( 1.1875rem );
-		font-weight: bold;
 		margin-top: 35px;
 	}
 
@@ -30,8 +33,8 @@ $sdk-sidebar-selected-bg: 				#eee;
 	{
 		@include adjust-font-size-to( 1rem );
 		@include user-select( none );
-		font-weight: bold;
 		cursor: pointer;
+		font-weight: normal;
 
 		padding: {
 			top: 4px;
@@ -40,9 +43,12 @@ $sdk-sidebar-selected-bg: 				#eee;
 		margin: 0;
 
 		&:before {
-			content: "►";
-			font-size: .5em;
-			margin-right: .75em;
+			font-family: $sdk-font-stack;
+			content: "+";
+			margin-right: .3em;
+			font-weight: normal;
+			min-width: 10px;
+			display: inline-block;
 		}
 
 		&:hover
@@ -52,7 +58,7 @@ $sdk-sidebar-selected-bg: 				#eee;
 
 		&.active {
 			&:before {
-				content: "▼";
+				content: "-";
 			}
 
 			& + ul {
@@ -75,12 +81,16 @@ $sdk-sidebar-selected-bg: 				#eee;
 
 			a
 			{
-				@include adjust-font-size-to( .875rem );
+				@include adjust-font-size-to( .813rem );
 				color: $sdk-link-sidebar-color;
 				text-decoration: none;
 				display: block;
+				padding: 4px 20px 4px 60px;
+				outline: none;
 
-				padding: 4px 30px 4px 50px;
+				border-style: solid;
+				border-color: transparent;
+				border-width: 1px 0;
 
 				&:hover {
 					color: $sdk-link-sidebar-color-hover;
@@ -90,8 +100,24 @@ $sdk-sidebar-selected-bg: 				#eee;
 
 			&.active a
 			{
+				border-color: $sdk-box-border-color;
+
+				@include border-image( linear-gradient( to right, $sdk-sidebar-bg-bright, $sdk-box-border-color ) 20 stretch );
+				@include background( $sdk-sidebar-bg );
+
 				color: $sdk-link-color;
-				background: $sdk-sidebar-selected-bg;
+				position: relative;
+
+				&:after {
+					content: image-url( "indicator.png" );
+					display: block;
+					width: 18px;
+					height: 35px;
+					position: absolute;
+					right: -18px;
+					top: 50%;
+					margin-top: -17px;
+				}
 			}
 		}
 	}
