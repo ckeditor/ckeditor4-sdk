@@ -47,6 +47,8 @@ $sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-
 			content: "+";
 			margin-right: .3em;
 			font-weight: normal;
+			min-width: 10px;
+			display: inline-block;
 		}
 
 		&:hover
@@ -83,8 +85,12 @@ $sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-
 				color: $sdk-link-sidebar-color;
 				text-decoration: none;
 				display: block;
-
 				padding: 4px 20px 4px 60px;
+				outline: none;
+
+				border-style: solid;
+				border-color: transparent;
+				border-width: 1px 0;
 
 				&:hover {
 					color: $sdk-link-sidebar-color-hover;
@@ -94,9 +100,7 @@ $sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-
 
 			&.active a
 			{
-				border-style: solid;
 				border-color: $sdk-box-border-color;
-				border-width: 1px 0;
 
 				@include border-image( linear-gradient( to right, $sdk-sidebar-bg-bright, $sdk-box-border-color ) 20 stretch );
 				@include background( $sdk-sidebar-bg );
