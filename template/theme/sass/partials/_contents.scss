@@ -7,6 +7,13 @@
 	display: table-cell;
 	padding: 0 2*$std-standard-vgap $std-standard-vgap;
 
+	// (#79)
+	input, select, textarea, button
+	{
+		font: inherit;
+		color: inherit;
+	}
+
 	h1, h2, h3,
 	{
 		font-family: $sdk-font-maven;
