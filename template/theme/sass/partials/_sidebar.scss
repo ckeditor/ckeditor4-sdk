@@ -43,7 +43,7 @@ $sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-
 		margin: 0;
 
 		&:before {
-			@include adjust-font-size-to( 1.375rem, 1 );
+			font-family: $sdk-font-stack;
 			content: "+";
 			margin-right: .3em;
 			font-weight: normal;
