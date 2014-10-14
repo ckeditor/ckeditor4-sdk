@@ -186,6 +186,11 @@
 				'indent_char': '\t'
 			} );
 
+			// Here we are going to remove extra new line characters and white spaces added by beautifier.
+			resourcesString = resourcesString.replace( /(<script>)(\n)([\s\S]*?)(\n)([\s\S]*?)(\<\/script\>)/g, function( match, $1, $2, $3, $4, $5, $6 ) {
+				return $1 + $3.trim() + $6;
+			} );
+
 			resourcesString = resourcesString.replace( /(\<code\>)(.*?)(\<\/code\>)/g, function( match, preCode, inner, postCode ) {
 				return preCode + inner.replace( /\&/g, '&amp;' ) + postCode;
 			} );
@@ -193,25 +198,32 @@
 			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
 			resourcesString = resourcesString.replace( /(\n)(\s*)([^\n]*)\[(\d)\]PLACEHOLDER/g, function( match, $0, $1, $2, $3 ) {
-				var lines, result, resourcesString;
-
-				lines = placeholders[ $3 ].split( '\n' );
+				var lines = placeholders[ $3 ].content.split( '\n' ), result = '';
 
 				// Removing whitespaces in each line.
-				var i = 0,
-					max = lines.length;
+			    var max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
-					lines[ i ] = lines[ i ].trim();
+					var lineData = lines[ i ].match( /(\s*)([\S\s]*)/ );
+
+					lines[ i ] = {
+						indent: lineData[ 1 ].replace( placeholders[ $3 ].indent, $1 ),
+						content: lineData[ 2 ]
+					};
 				}
 
 				// Fake line to make indentation, because join make indentation only between lines - not at the beginning.
-				lines.unshift( '' );
+				lines.unshift( { indent: '', content: '' } );
 
 				// Indent one tab extra.
-				result = lines.join( '\n' + $1 + $1[ 0 ] );
+				var i = 0,
+					max = lines.length;
+				for ( var i = 0; i < max; i++ ) {
+					result += lines[ i ].indent + lines[ i ].content + '\n';
+				}
+
 				result = $2 + result.replace( /\&/g, '&amp;' );
 
-				result = '\n' + $0 + $1[ 0 ] + result.trim() + $0 + '\n' + $1[ 0 ];
+				result = '\n' + $0 + $1[ 0 ] + result.trim() + $0 + $1[ 0 ];
 
 				return result;
 			} );
@@ -341,12 +353,20 @@
 					// When attribute is present we don't want replace content with placeholder.
 					if ( !sampleClear ) {
 						// Setting placeholder for textareas and keeping reference to content in global array.
-						var regexp = /(\<textarea.*?\>)([\s\S]*?)(\<\/textarea>)/g;
+						var regexpTextarea = /(\<textarea.*?\>)([\s\S]*?)\n(\s*)(\<\/textarea>)/g,
+							regexpScript = /(\<script.*?\>)([\s\S]*?)\n(\s*)(\<\/script>)/g;
 
-						example.html = example.html.replace( regexp, function( text, $1, $2, $3 ) {
-							placeholders.push( $2 );
-							return $1 + '[' + k++ + ']PLACEHOLDER' + $3;
-						} );
+						var pickPlaceholder = function( text, $1, $2, $3, $4 ) {
+							example;
+							placeholders.push( {
+								indent: $3.replace( '\n', '' ),
+								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2
+							} );
+							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
+						};
+
+						example.html = example.html.replace( regexpTextarea, pickPlaceholder );
+						example.html = example.html.replace( regexpScript, pickPlaceholder );
 					}
 
 					exampleBlocks.push( example );
