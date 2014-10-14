@@ -32,7 +32,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			// Create an editor instance again, with appropriate settings.
 			editor = CKEDITOR.replace( 'editor1', {
-				height: 200,
+				height: 120,
 				enterMode: Number( document.getElementById( 'xEnter' ).value ),
 				shiftEnterMode: Number( document.getElementById( 'xShiftEnter' ).value )
 			});
@@ -115,7 +115,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<script type="template" data-sample="1">
 			<script>
 				CKEDITOR.replace( 'editor1', {
+					// Pressing Enter will create a new <div> element.
 					enterMode: CKEDITOR.ENTER_DIV,
+					// Pressing Shift+Enter will create a new <p> element.
 					shiftEnterMode: CKEDITOR.ENTER_P
 				} );
 			</script>
