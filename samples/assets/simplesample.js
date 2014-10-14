@@ -201,24 +201,33 @@
 				var lines = placeholders[ $3 ].content.split( '\n' ), result = '';
 
 				// Removing whitespaces in each line.
-			    var max = lines.length;
+				var max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
 					var lineData = lines[ i ].match( /(\s*)([\S\s]*)/ );
 
 					lines[ i ] = {
-						indent: lineData[ 1 ].replace( placeholders[ $3 ].indent, $1 ),
+						indent: lineData[ 1 ].length - placeholders[ $3 ].indent,
 						content: lineData[ 2 ]
 					};
 				}
 
+				var getIndentChars = function( char, count ) {
+					count = count < 0 ? 0 : count;
+					var result = '';
+					while( count-- ) {
+						result += char;
+					}
+					return result;
+				};
+
 				// Fake line to make indentation, because join make indentation only between lines - not at the beginning.
-				lines.unshift( { indent: '', content: '' } );
+				lines.unshift( { indent: lines[ 0 ].indent, content: '' } );
 
 				// Indent one tab extra.
 				var i = 0,
 					max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
-					result += lines[ i ].indent + lines[ i ].content + '\n';
+					result += getIndentChars( '\t', lines[ i ].indent ) + lines[ i ].content + '\n';
 				}
 
 				result = $2 + result.replace( /\&/g, '&amp;' );
@@ -357,9 +366,11 @@
 							regexpScript = /(\<script.*?\>)([\s\S]*?)\n(\s*)(\<\/script>)/g;
 
 						var pickPlaceholder = function( text, $1, $2, $3, $4 ) {
-							example;
+							$3 = $3.replace( '\n', '' );
+							var indent = $3.length - 1 < 0 ? 0 : $3.length - 1 ;
+
 							placeholders.push( {
-								indent: $3.replace( '\n', '' ),
+								indent: indent,
 								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2
 							} );
 							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
