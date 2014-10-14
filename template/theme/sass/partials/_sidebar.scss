@@ -38,6 +38,8 @@ $sdk-sidebar-selected-bg: 				#eee;
 		margin: 0;
 
 		&:before {
+			@include adjust-font-size-to( 1.375rem, 1 );
+			vertical-align: bottom;
 			content: "+";
 			margin-right: .3em;
 			font-weight: normal;
