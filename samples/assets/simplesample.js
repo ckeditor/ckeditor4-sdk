@@ -354,8 +354,7 @@
 	}
 
 	function prepareSamplesList( examples, names ) {
-		var count = Object.keys( examples ).length,
-			template = '<div><h2>Get Sample' + ( count > 1 ? 's' : '' ) + ' Source Code</h2>' + '<ul>';
+		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
 			template += '<li data-sample="' + id + '"><a href="' + id + '">' + names[ id - 1 ] + '</a></li>';
