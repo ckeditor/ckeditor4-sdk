@@ -203,11 +203,21 @@
 				// Removing whitespaces in each line.
 				var max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
-					var lineData = lines[ i ].match( /(\s*)([\S\s]*)/ );
+					var lineData = lines[ i ].match( /(\s*)([\S\s]*)/ ),
+						indent, content;
+
+					// Don't want extra indent and set whole line (with whitespaces) as a content.
+					if ( placeholders[ $3 ].indent === false ) {
+						indent = false;
+						content = lines[ i ];
+					} else {
+						indent = lineData[ 1 ].length - placeholders[ $3 ].indent;
+						content = lineData[ 2 ];
+					}
 
 					lines[ i ] = {
-						indent: lineData[ 1 ].length - placeholders[ $3 ].indent,
-						content: lineData[ 2 ]
+						indent: indent,
+						content: content
 					};
 				}
 
@@ -310,7 +320,8 @@
 			accept( document.getElementsByTagName( 'html' )[ 0 ], function( node ) {
 				var attrs = node.attributes,
 					sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null,
-					sampleClear = attrs ? attrs.getNamedItem( 'data-sample-clear' ) : null;
+					sampleClear = attrs ? attrs.getNamedItem( 'data-sample-clear' ) : null,
+					preserveWhitespace = attrs ? attrs.getNamedItem( 'data-sample-preserveWhitespace' ) : null;
 
 				if ( sample ) {
 					var typeAttr = attrs.getNamedItem( 'type' );
@@ -370,7 +381,7 @@
 							var indent = $3.length - 1 < 0 ? 0 : $3.length - 1 ;
 
 							placeholders.push( {
-								indent: indent,
+								indent: preserveWhitespace ? false : indent,
 								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2
 							} );
 							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
