@@ -101,12 +101,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<h2>Related Features</h2>
 			<ul>
-				<li><a href="./uilanguages.html">User Interface &ndash; User Interface Language Adjustment</a></li>
+				<li><a href="./uilanguages.html">User Interface &ndash; Setting Editor UI Language</a></li>
 			</ul>
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'bidi',
+					// Setting default language direction to right-to-left.
 					contentsLangDirection: 'rtl',
 					height: 270
 				} );
@@ -115,6 +116,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<script data-sample="2">
 				CKEDITOR.replace( 'editor2', {
 					extraPlugins: 'language',
+					// Customizing list of languages available in the Language drop-down.
 					language_list: [ 'ar:Arabic:rtl', 'fr:French',  'he:Hebrew:rtl', 'es:Spanish' ],
 					height: 270
 				} );
