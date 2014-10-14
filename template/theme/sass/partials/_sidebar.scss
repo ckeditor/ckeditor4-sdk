@@ -94,9 +94,13 @@ $sdk-sidebar-selected-bg: 				linear-gradient( to right, adjust-lightness( $sdk-
 
 			&.active a
 			{
-				@include border-image( linear-gradient( to right, $sdk-sidebar-bg-bright, $sdk-box-border-color ) 10 10 stretch );
-				@include background( $sdk-sidebar-bg );
+				border-style: solid;
+				border-color: $sdk-box-border-color;
 				border-width: 1px 0;
+
+				@include border-image( linear-gradient( to right, $sdk-sidebar-bg-bright, $sdk-box-border-color ) 20 stretch );
+				@include background( $sdk-sidebar-bg );
+
 				color: $sdk-link-color;
 				position: relative;
 
