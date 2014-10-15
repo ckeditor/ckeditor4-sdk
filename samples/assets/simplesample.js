@@ -110,7 +110,9 @@
 			}
 		} );
 
-		sdkContents.appendChild( samplesList );
+		if ( Object.keys( resources ).length ) {
+			sdkContents.appendChild( samplesList );
+		}
 
 		attachEvent( samplesList, 'click', function( e ) {
 			var clicked = e.target || e.srcElement,
