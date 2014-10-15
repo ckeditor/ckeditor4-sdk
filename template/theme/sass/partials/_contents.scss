@@ -15,6 +15,10 @@
 		color: inherit;
 	}
 
+	input[type="button"] {
+		@include appearance( button );
+	}
+
 	h1, h2, h3,
 	{
 		font-family: $sdk-font-maven;
