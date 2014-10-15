@@ -8,8 +8,8 @@
 	display: table-cell;
 	padding: 0 2*$std-standard-vgap $std-standard-vgap;
 
-	// (#79)
-	input, select, textarea, button
+	// (#79, #86)
+	input, select, textarea:not( .cke_source ), button
 	{
 		font: inherit;
 		color: inherit;
