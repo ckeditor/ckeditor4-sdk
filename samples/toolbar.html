@@ -53,14 +53,14 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</div>
 
 			<h2>Toolbar Configuration</h2>
-
+			<!--
 			<p>
-				The simplest way to configure the toolbar is to use the dedicated <strong>Toolbar Tool</strong> that is available
+				The simplest way to configure the toolbar is to use the dedicated <strong>Toolbar Configurator</strong> that is available
 				in each editor installation package starting from <strong>CKEditor 4.5</strong>.
 			</p>
-
+			-->
 			<p>
-				Alternatively, you can manually create your desired toolbar as explained in the
+				You can manually create your desired toolbar as explained in the
 				<a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">documentation</a>. The editor instance below
 				was configured by using the accessible toolbar groups approach, with some unwanted buttons removed by setting
 				the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-removeButtons">config.removeButtons</a>
@@ -138,12 +138,13 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 			<h2>Related Features</h2>
 			<ul>
-				<li><a href="./toolbarlocation.html">Toolbar &ndash; Toolbar Location</a></li>
+				<li><a href="./toolbarlocation.html">Toolbar &ndash; Toolbar Location Adjustment</a></li>
 				<li><a href="./acf.html">Content Filtering &ndash; Advanced Content Filter &ndash; Automatic Mode</a></li>
 			</ul>
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
+					// Define the toolbar groups as it is a more accessible solution.
 					toolbarGroups: [
 						{"name":"basicstyles","groups":["basicstyles"]},
 						{"name":"links","groups":["links"]},
@@ -153,6 +154,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 						{"name":"styles","groups":["styles"]},
 						{"name":"about","groups":["about"]}
 					],
+					// Remove the redundant buttons from toolbar groups defined above.
 					removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor,Styles,Specialchar'
 				} );
 			</script>

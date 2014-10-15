@@ -8,13 +8,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta charset="utf-8">
 	<meta name="description" content="Advanced Content Filter. Configuring allowed and disallowed tags.">
 	<meta name="keywords" content="ACF, advanced content filter, content filtering, removing tags, deleting tags, html lost, elements removed">
-	<meta name="sdk-samples" content="Automatic mode|Automatic mode with extra allowed content|Disabling ACF">
+	<meta name="sdk-samples" content="Automatic ACF mode|Automatic ACF mode with extra allowed content|Disabling ACF">
 	<title>ACF &ndash; Automatic Mode</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
 	<script src="../vendor/ckeditor/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
-	<script src="assets/sample.js"></script>
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
@@ -62,16 +61,16 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				{ name: 'about', items: [ 'About' ] }
 			];
 			CKEDITOR.config.height = 150;
-			// Autogrow has nothing to do with ACF.
+			// Auto Grow has nothing to do with ACF.
 			// However, to make users comfortable while pasting content into a tiny editing area, we would let the editor grow.
 			CKEDITOR.config.extraPlugins = 'autogrow';
 			CKEDITOR.config.autoGrow_maxHeight = 500;
 			CKEDITOR.config.autoGrow_minHeight = 150;
 		</script>
 
-		<h2>Automatic Mode</h2>
+		<h2>Automatic ACF Mode</h2>
 		<p>
-			In the sample below CKEditor works in automatic mode (default behavior, requires no configuration):
+			In the sample below CKEditor works in automatic ACF mode (default behavior, requires no configuration):
 		</p>
 		<ul>
 			<li>Underline and color buttons are unavailable and there are no buttons to set font size or family. As a result CKEditor will not accept such content.</li>
@@ -83,7 +82,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			CKEDITOR.replace( 'editor1' );
 		</script>
 
-		<h2>Adjusting Automatic Mode</h2>
+		<h2>Adjusting Automatic ACF Mode</h2>
 		<p>
 			It is possible to allow or disallow additional elements or properties in CKEditor by passing special configuration options: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent">config.extraAllowedContent</a></code> and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-disallowedContent">config.disallowedContent</a></code>.
 		</p>
@@ -96,7 +95,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<li>Since ACF is still in automatic mode and the font family and size buttons are not available, these text formats are removed again.</li>
 		</ul>
 
-		<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt; using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt; using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		<script data-sample="2">
 
 			CKEDITOR.replace( 'editor2', {
@@ -113,7 +112,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			Experiment by pasting content from various sources into the editor below and into the first one (with automatic mode on). Compare the results.
 		</p>
 
-		<textarea cols="80" id="editor3" name="editor1" rows="10" data-sample="3">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
+		<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3">&lt;p&gt;A sample &lt;u&gt;heavily formatted text&lt;/u&gt;, using &lt;strong&gt;&lt;span style="font-family: 'Comic Sans MS';font-size:16px"&gt;different fonts&lt;/span&gt;&lt;/strong&gt; and &lt;span style="font-size:18px;color:#00FF00;background-color: #FFFF00"&gt;text colors&lt;/span&gt;. &lt;/p&gt;</textarea>
 		<script data-sample="3">
 			CKEDITOR.replace( 'editor3', {
 				allowedContent: true
@@ -123,7 +122,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		<h2>Related Features</h2>
 
 		<ul>
-			<li><a href="./acfcustom.html">Advanced Content Filter &ndash; Custom Mode</a></li>
+			<li><a href="./acfcustom.html">Content Filtering &ndash;Advanced Content Filter &ndash; Custom Mode</a></li>
+			<li><a href="./toolbar.html">Toolbar &ndash; Custom Editor Toolbar</a></li>
 		</ul>
 
 	</section>
