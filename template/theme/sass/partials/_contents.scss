@@ -29,6 +29,11 @@
 			top: .75*$std-standard-vgap;
 			bottom: .25*$std-standard-vgap;
 		}
+
+		// (#73)
+		code, kbd {
+			font-size: inherit;
+		}
 	}
 
 	// Default vertical rhythm.
