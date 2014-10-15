@@ -331,7 +331,7 @@
 					var typeAttr = attrs.getNamedItem( 'type' );
 
 					if ( typeAttr && typeAttr.value == 'template' ) {
-						node = createFromHtml( node.innerHTML.trim() );
+						node = createFromHtml( node.innerHTML.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ).trim() );
 					} else {
 						node = createFromHtml( node.outerHTML.trim() );
 					}
