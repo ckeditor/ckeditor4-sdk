@@ -6,9 +6,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="description" content="Spell Checker and SCAYT">
+	<meta name="description" content="Spell Checker and SCAYT. Using Native Browser Spell Checker.">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, spell, checker, spellchecker, spellchecking, check, scayt, wsc">
-	<meta name="sdk-samples" content="Spell Check As You Type (SCAYT)|Spell checker in a dialog window">
+	<meta name="sdk-samples" content="Spell Check As You Type (SCAYT)|Spell checker in a dialog window|Native browser spell checker">
 	<title>Spell Checking</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -44,6 +44,11 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				button is automatically added to the toolbar. Depending on which plugin you use, it may contain numerous SCAYT options
 				and open the Spell Check dialog window.
 			</p>
+
+			<div class="tip">
+				The out-of-the-box spell checking functionality is ad-supported. If you want to remove the
+				ads, you can <a href="http://cksource.com/ckeditor/services#spellCheck">purchase a license here</a>.
+			</div>
 
 			<h2>Spell Check As You Type (SCAYT)</h2>
 
@@ -85,25 +90,32 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				&lt;hr /&gt;
 				&lt;p&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
-
-			<h2>Customization Options</h2>
-
+			
+			<h2>Using Native Browser Spell Checker</h2>
+			
 			<p>
-				Both plugins include numerous configuration options that let you customize the default spell checking
-				language, number of SCAYT suggestions available or the content of the spell checker context menu and dialog window.
-				You can find them on the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config">CKEDITOR.config</a></code>
-				page, starting from <code>scayt_</code> and <code>wsc_</code>.
+				By default, browser spell check functionality is disabled. Set the 
+				<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-disableNativeSpellChecker">config.disableNativeSpellChecker</a>
+				configuration option to <code>false</code> to enable it. If the 
+				<a href="http://ckeditor.com/addon/contextmenu">Context Menu</a> plugin is enabled, it is necessary to hold the
+				<kbd>Ctrl</kbd> key when right-clicking misspelled words to see the suggested corrections.
 			</p>
+			
+			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3">
+				&lt;h1&gt;Apollo 11&lt;/h1&gt;
 
-			<div class="note">
-				Please note that the out-of-the-box spell checking functionality is ad-supported. If you want to remove the
-				ads, you can <a href="http://cksource.com/ckeditor/services#spellCheck">purchase a license here</a>.
-			</div>
+				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spacflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and &lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on july 20, 1969, at 20:18 UTC. Armstrong became the firrst to step onto the lunar surface 6 hours later on July 21 at 02:56 UTC.&lt;/p&gt;
+
+				&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a halfhours outside the spacecraft, Aldrin slightely less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar material for return to Earth. A third member of the mission, &lt;a href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, pilloted the &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to Earth.&lt;/p&gt;
+
+				&lt;hr /&gt;
+				&lt;p&gt;&lt;small&gt;Source: &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+			</textarea>
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					height: 250,
-					// Remove WebSpellChecker plugin.
+					// Remove the WebSpellChecker plugin.
 					removePlugins: 'wsc',
 					// Configure SCAYT to load on editor startup.
 					scayt_autoStartup: true,
@@ -117,6 +129,15 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 					height: 250,
 					// Remove the SpellCheckAsYouType (SCAYT) plugin.
 					removePlugins: 'scayt'
+				} );
+			</script>
+			
+			<script data-sample="3">
+				CKEDITOR.replace( 'editor3', {
+					height: 250,
+					// Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
+					removePlugins: 'scayt,wsc',
+					disableNativeSpellChecker: false
 				} );
 			</script>
 
