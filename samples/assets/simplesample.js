@@ -7,6 +7,7 @@
 	};
 
 	var SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
+		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
 		placeholders = [];
 
@@ -385,11 +386,19 @@
 
 						var pickPlaceholder = function( text, $1, $2, $3, $4 ) {
 							$3 = $3.replace( '\n', '' );
-							var indent = $3.length - 1 < 0 ? 0 : $3.length - 1 ;
+							var indent = $3.length - 1 < 0 ? 0 : $3.length - 1,
+								shortContent = $1.indexOf( 'data-sample-short' ) !== -1,
+								content;
+
+							if ( shortContent ) {
+								content = SHORT_EDITOR_CONTENT.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
+							} else {
+								content = $2[0] === '\n' ? $2.replace( '\n', '' ) : $2;
+							}
 
 							placeholders.push( {
 								indent: preserveWhitespace ? false : indent,
-								content: $2[0] === '\n' ? $2.replace( '\n', '' ) : $2,
+								content: content,
 								example: example
 							} );
 							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
