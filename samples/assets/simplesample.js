@@ -262,7 +262,7 @@
 				resourcesString,
 				wrapInCodePre ? '</pre></code>' : '',
 				wrapInHtmlStructure ? getTemplatePost().join( '' ) : ''
-			].join( '' );
+			].join( '' ).replace( /(data-sample[\s|\S]*?\"[\s|\S]*?\")/g, '' );
 		}
 
 		var showSampleSource;
@@ -364,7 +364,6 @@
 							if ( typeof node.innerHTML === 'string' ) {
 								node.innerHTML = '';
 							}
-							attrs.removeNamedItem( 'data-sample-clear' );
 						}
 					} );
 
