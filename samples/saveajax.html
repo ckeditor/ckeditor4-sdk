@@ -88,12 +88,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			</p>
 
 			<!-- This <div> will store the editor. -->
-			<div id="editor1" data-sample="2">
+			<div id="editor1" data-sample="1">
 			</div>
-			<div id="content1" style="display: none" data-sample="2">
+			<div id="content1" style="display: none" data-sample="1">
 				<h3>Edited Content</h3>
 				<!-- This <div> will be used to display the editor content. -->
-				<div data-sample="1" id="editorcontent1">
+				<div id="editorcontent1">
 				</div>
 			</div>
 
@@ -135,14 +135,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 						removePlugins: 'sourcearea'
 
 					} );
-					editor2.on( 'save', function ( ev ) {
-						changesCount = 0;
-						console.log( 'save', ev );
-						//document.getElementById('mirror');
-					} );
 					editor2.on( 'change', function ( ev ) {
 						changesCount++;
-						console.log( 'change', ev );
 						document.getElementById( 'content2' ).style.display = '';
 						document.getElementById( 'changes' ).innerHTML = changesCount.toString();
 						document.getElementById( 'editorcontent2' ).innerHTML = editor2.getData();
