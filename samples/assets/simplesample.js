@@ -244,7 +244,8 @@
 					max = lines.length;
 				for ( var i = 0; i < max; i++ ) {
 					var line = lines[ i ];
-					result += getIndentChars( '\t', line.indent ) + line.content + ( noEndLineChar ? '' : '\n' );
+					// For the first line we don't want to create indentation #93.
+					result += ( i == 0 ? '' : getIndentChars( '\t', line.indent ) ) + line.content + ( noEndLineChar ? '' : '\n' );
 				}
 
 				result = $2 + result.replace( /\&/g, '&amp;' );
