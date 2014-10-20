@@ -104,10 +104,12 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					height: '500',
-					extraPlugins: 'magicline',	// Ensure that the Magic Line plugin, which is required for
-					// this sample, is loaded.
-					allowedContent: true		// Switch off the ACF, so very complex content created to
-					// show Magic Line's power is not filtered.
+					// Ensure that the Magic Line plugin, which is required for this sample, is loaded.
+					extraPlugins: 'magicline',
+					// Magic Line does not require any additional ACF settings.
+					// We set config.extraAllowedContent because HTML code in this sample contains
+					// a <div> element with custom styles that we would like to allow.
+					extraAllowedContent: 'div{border,background,text-align}'
 				} );
 			</script>
 
