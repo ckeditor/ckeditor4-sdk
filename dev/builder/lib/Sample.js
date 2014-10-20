@@ -3,7 +3,7 @@ var cheerio = require( 'cheerio' ),
     _ = require( 'lodash-node' ),
     TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
-function Sample( name, content, index, zipFilename, opts ) {
+function Sample( name, content, indexObj, zipFilename, opts ) {
     this.$ = cheerio.load( content, {
         decodeEntities: false
     } );
@@ -18,9 +18,9 @@ function Sample( name, content, index, zipFilename, opts ) {
     this.$header = this.$( 'header' );
     this.$footer = this.$( 'footer' );
 
-    if ( index ) {
-        this.$header.html( index.$header.html() );
-        this.$footer.html( index.$footer.html() );
+    if ( indexObj ) {
+        this.$header.html( indexObj.$header.html() );
+        this.$footer.html( indexObj.$footer.html() );
     } else {
         if ( opts.version === 'online' ) {
             this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
@@ -44,14 +44,24 @@ Sample.prototype = {
     },
 
     setSidebar: function( categories ) {
-        if ( this.name != 'index' )
+        if ( this.name != 'index' ) {
             this.$nav.html( Sample.createSidebar( categories, _.pick( this, 'category', 'subcategory', 'name' ) ) );
-        else
-            this.$nav.html( Sample.createSidebar( categories ) );
+        } else {
+            this.$nav.html( Sample.createSidebar( categories, undefined, true ) );
+        }
     },
 
     fixLinks: function( prefix ) {
         var that = this;
+
+        if ( this.name == 'index' ) {
+            this.$( 'head link, head script, .sdk-header a, .sdk-header img' ).each( function( index, element ) {
+                var attrName = this.attribs.href ? 'href' : 'src',
+                    attrVal = this.attribs[ attrName ];
+
+                that.$( element ).attr( attrName, attrVal.replace( '../', '' ) );
+            } );
+        }
 
         this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
             that.$( element ).attr( 'href', Sample.fixLink( this.attribs.href, prefix ) );
@@ -82,7 +92,7 @@ Sample.prototype = {
         var that = this;
 
         this.$( 'link[href*="fonts.googleapis.com"]' ).each( function ( index, element ) {
-            that.$( element ).attr( 'href', '../theme/css/fonts.css' );
+            that.$( element ).attr( 'href', ( that.name == 'index' ? '' : '../' ) + 'theme/css/fonts.css' );
         } );
     },
 
@@ -124,7 +134,7 @@ Sample.validateLink = function( href, errors ) {
 };
 
 // return sidebar HTML string
-Sample.createSidebar = function( categories, highlight ) {
+Sample.createSidebar = function( categories, highlight, index ) {
     var result = [],
         list = [],
 
@@ -148,7 +158,7 @@ Sample.createSidebar = function( categories, highlight ) {
                     sample.name == highlight.name
                 );
 
-                list.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + sample.name + '.html">' + sample.title + '</a></li>' );
+                list.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + ( index ? 'samples/' : '' ) + sample.name + '.html">' + sample.title + '</a></li>' );
 
                 highlightSubcategory |= highlightMe;
             } );

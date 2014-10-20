@@ -59,6 +59,8 @@ function readFiles( filesArr ) {
 
     filesReadPromises = _.object( filesReadPromises );
 
+    filesReadPromises[ 'index.html' ] = whenFs.readFile( BASE_PATH + '/template/' + 'index.html', 'utf8' );
+
     return whenKeys.all( filesReadPromises );
 }
 
@@ -66,9 +68,9 @@ function readFiles( filesArr ) {
 function setupSamplesSync( _samples ) {
     var zipFilename = getZipFilename();
 
-    index = new Sample( 'index', _samples[ '_index.html' ], undefined, zipFilename, opts );
+    index = new Sample( 'index', _samples[ 'index.html' ], undefined, zipFilename, opts );
 
-    var removed = delete _samples[ '_index.html' ];
+    var removed = delete _samples[ 'index.html' ];
 
     samples = _.map( _samples, function( fileContent, fileName ) {
         var sample = new Sample( fileName.split( '.' )[ 0 ], fileContent, index, zipFilename, opts );
@@ -77,7 +79,7 @@ function setupSamplesSync( _samples ) {
     } );
 
     if ( !removed )
-        throw 'Could not found "_index.html" file in samples directory.';
+        throw 'Could not found "index.html" file in base directory.';
 
     return {
         samples: samples,
@@ -87,7 +89,7 @@ function setupSamplesSync( _samples ) {
 
 // return array of categories
 function parseCategoriesSync( elements ) {
-    console.log( 'Parsing categories.' );
+    console.log( 'Parsing categories' );
     categories = JSON.parse( JSON.stringify( validCategories ) );
 
     _.each( elements.samples, function( sample ) {
@@ -264,11 +266,6 @@ function copyMathjaxFiles() {
     return call( ncp, '../../vendor/mathjax', RELEASE_PATH + '/vendor/mathjax', options );
 }
 
-// return promise
-function prepareSamplesDir() {
-    return whenRimraf( RELEASE_PATH + '/samples/_index.html' );
-}
-
 // sync method
 function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
@@ -288,12 +285,12 @@ function prepareSamplesFilesSync() {
     index.setSidebar( categories );
     if ( opts.version === 'offline' ) {
         index.preventSearchEngineRobots();
-        index.fixLinks();
+        index.fixLinks( '' );
         index.fixFonts();
     }
 
-    fs.writeFileSync( RELEASE_PATH + '/samples/index.html', index.$.html(), 'utf8' );
-    VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/samples/index.html' ) );
+    fs.writeFileSync( RELEASE_PATH + '/index.html', index.$.html(), 'utf8' );
+    VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/index.html' ) );
 }
 
 // return promise
@@ -463,7 +460,6 @@ function build( opts ) {
             return result.elements;
         } )
         .then( parseCategoriesSync )
-        .then( prepareSamplesDir )
         .then( prepareSamplesFilesSync )
         .then( function() {
             if ( opts.version === 'offline' ) {
@@ -564,6 +560,7 @@ function saveFiles( data ) {
  * @returns {Promise}
  */
 function fixGuidesLinks( urls ) {
+    console.log( 'Fixing guides links' );
     var filesReadPromises = _.map( urls, function( url ) {
         url = path.resolve( '../guides/' + url );
         var promise = whenFs.readFile( url, 'utf8' );
@@ -579,8 +576,7 @@ function fixGuidesLinks( urls ) {
 
 function fixFontsLinks() {
     var urls = [
-        path.resolve( RELEASE_PATH + '/index.html' ),
-        path.resolve( RELEASE_PATH + '/samples/index.html' )
+        path.resolve( RELEASE_PATH + '/index.html' )
     ];
 
     var filesReadPromises = _.map( urls, function( url ) {
@@ -624,10 +620,6 @@ function fixIndexSync() {
         var $ = cheerio.load( content, {
             decodeEntities: false
         } );
-
-        if ( opts.version === 'online' ) {
-            $( '.sdk-main-navigation ul' ).append( '<li><a href="/' + getZipFilename() + '">Download SDK</a></li>' );
-        }
 
         if ( opts.version === 'offline' ) {
             $( 'head' ).append( '<meta name="robots" content="noindex, nofollow">' );

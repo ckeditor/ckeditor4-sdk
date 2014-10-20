@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--
 Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or http://ckeditor.com/license
@@ -8,16 +8,18 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 	<meta charset="utf-8">
 	<title>CKEditor SDK &ndash; Homepage</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
-	<link href="theme/css/sdk.css" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="samples/assets/contentloaded.js"></script>
+	<script src="samples/assets/simplesample.js"></script>
 	<!--[if lt IE 9]>
 	<script src="samples/assets/html5shiv.min.js"></script>
 	<![endif]-->
-	<link rel="icon" href="theme/img/favicon.ico">
+	<link rel="icon" href="../theme/img/favicon.ico">
 </head>
 <body>
 	<header class="sdk-header">
 		<h1 class="sdk-logo">
-			<a href="index.html"><img src="theme/img/logo.png" alt="CKEditor SDK - Homepage" /></a>
+			<a href="../index.html"><img src="../theme/img/logo.png" alt="CKEditor SDK - index"/></a>
 		</h1>
 		<nav class="sdk-top-navigation">
 			<ul>
@@ -31,12 +33,56 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 		</nav>
 		<nav class="sdk-main-navigation">
 			<ul>
-				<li><a href="samples/index.html">Samples</a></li>
 				<li><a href="http://docs.ckeditor.com/#!/guide">Documentation</a></li>
 				<li><a href="http://docs.ckeditor.com/#!/api">CKEditor API</a></li>
 			</ul>
 		</nav>
 	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Welcome to CKEditor SDK!</h1>
+			
+			<p>
+				CKEditor SDK is a collection of resources designed to help you get familiar with all editor features and make the process of implementing, configuring and integrating CKEditor with you website or application easier. It contains the following parts:
+			</p>
+			
+			<ul>
+				<li><a href="./index.html">Samples</a><br>
+					Dozens of <strong>live demos</strong> showcasing numerous CKEditor aspects and features, with source code ready to copy and implement in your own solution.
+				</li>
+				<li><a href="http://docs.ckeditor.com/#!/guide">Documentation</a><br>
+					Plenty of <strong>articles and tutorials</strong> that describe everything a CKEditor developer needs to know, from the installation process through the best practices and functionality overview to information on creating your own plugins.
+				</li>
+				<li><a href="http://docs.ckeditor.com/#!/api">CKEditor API</a><br>
+					The entire CKEditor <strong>API documentation</strong> &mdash; all methods, events, properties and configuration options explained in one place.
+				</li>
+			</ul>
+			
+			<h2>CKEditor Samples</h2>
+			
+			<p>All editor features were divided into two main categories, available in the sidebar on the left:</p>
+			
+			<ul>
+				<li><strong>End-user Features</strong> &ndash; functionality that your users will see and use.</li>
+				<li><strong>Integration Features</strong> &ndash; more advanced stuff that a CKEditor integrator needs to know.</li>
+			</ul>
+			
+			<p>
+				The samples are complemented by <a href="http://docs.ckeditor.com/#!/guide/dev_features">relevant documentation articles</a> which explain the features even more broadly &mdash; these are always available in the <strong>Documentation</strong> link next to the sample header. You can also find additional reading in the <strong>Related Features</strong> section down below the sample.
+			</p>
+			
+			<p>
+				Most importantly, though, you can view and copy the exact source code of each editor demo in the <strong>Get Sample Source Code</strong> section at the bottom of the sample pages.
+			</p>
+
+			<p style="color: #888888">
+				<strong>Note:</strong> CKEditor SDK is still work in progress. Any bugs and tips should be <a href="https://github.com/ckeditor/ckeditor-sdk/issues">reported here</a>. Thanks!
+			</p>
+			
+		</section>
+	</section>
 
 	<footer class="sdk-footer">
 		<p>
