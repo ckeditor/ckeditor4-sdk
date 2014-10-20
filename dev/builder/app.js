@@ -175,10 +175,11 @@ function copyTemplate() {
 function copySamples() {
     console.log( 'Copying sample files' );
 
-    var blacklist = [
-        // Omit PHP files.
-        path.join( BASE_PATH, 'samples/*.php' )
-    ];
+    var blacklist = [];
+
+    if ( opts.version === 'offline' ) {
+        blacklist.push( path.join( BASE_PATH, 'samples/*.php' ) );
+    }
 
     var options = {
         filter: createNcpBlacklistFilter( blacklist )
