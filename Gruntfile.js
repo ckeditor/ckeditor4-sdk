@@ -3,8 +3,9 @@
 module.exports = function( grunt ) {
 	var BUILDER_DIR = 'dev/builder';
 
-	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
+	grunt.loadNpmTasks( 'grunt-eol' );
+	grunt.loadNpmTasks( 'grunt-shell' );
 
 	grunt.initConfig( {
 		shell: {
@@ -77,6 +78,24 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
+		},
+
+		eol: {
+			'to-crlf': {
+				options: {
+					eol: 'crlf',
+					replace: true
+				},
+				files: {
+					src: [
+						'dev/release/index.html',
+						'dev/release/samples/**/*.css',
+						'dev/release/samples/**/*.html',
+						'dev/release/samples/**/*.js',
+						'dev/release/theme/**.css'
+					]
+				}
+			}
 		}
 	} );
 
@@ -87,7 +106,8 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
-		'shell:sdk-build'
+		'shell:sdk-build',
+		'eol:to-crlf'
 	] );
 
 	grunt.registerTask( 'watch-css', [
