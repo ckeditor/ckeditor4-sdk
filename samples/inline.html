@@ -154,8 +154,8 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				Press the "Start editing" button below. An editor will be created using the <a href="http://docs.ckeditor.com/#!/api/CKEDITOR-method-inline"><code>CKEDITOR.inline()</code></a> method with <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-startupFocus"><code>config.startupFocus</code></a> set to <code>true</code>.
 			</p>
 		</div>
-		<button data-sample="1" id="toggle">Start editing</button>
-		<button data-sample="1" id="reset" style="display:none">Reset content</button>
+		<button id="toggle">Start editing</button>
+		<button id="reset" style="display:none">Reset content</button>
 		<h2 class="editor-title">Massive Inline Editing</h2>
 
 		<p>
@@ -303,7 +303,24 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 
 <footer class="sdk-footer">
 </footer>
-<script data-sample="1">
+<script type="template" data-sample="1">
+	&lt;script&gt;
+		// The inline editor should be enabled on an element with "contenteditable" attribute set to "true".
+		// Otherwise CKEditor will start in read-only mode.
+		var introduction = document.getElementById( 'introduction' );
+		introduction.setAttribute( 'contenteditable', true );
+
+		CKEDITOR.inline( 'introduction', {
+			// Allow some non-standard markup that we used in the introduction.
+			extraAllowedContent: 'a(documentation);abbr[title];code',
+			removePlugins: 'stylescombo',
+			extraPlugins: 'sourcedialog',
+			// Show toolbar on startup (optional).
+			startupFocus: true
+		} );
+	&lt;/script&gt;
+</script>
+<script>
 	// Sample: Inline Editing Enabled by Code
 	(function () {
 		var isEditingEnabled,
