@@ -272,6 +272,7 @@ function prepareSamplesFilesSync() {
     _.each( samples, function( sample ) {
         var _path;
         sample.setSidebar( categories );
+        sample.activateSamplesButton();
         if ( opts.version === 'offline' ) {
             sample.preventSearchEngineRobots();
             sample.fixLinks();
@@ -284,6 +285,7 @@ function prepareSamplesFilesSync() {
     } );
 
     index.setSidebar( categories );
+    index.activateSamplesButton();
     if ( opts.version === 'offline' ) {
         index.preventSearchEngineRobots();
         index.fixLinks( '' );

@@ -51,6 +51,15 @@ Sample.prototype = {
         }
     },
 
+    activateSamplesButton: function() {
+        var that = this;
+        this.$( '.sdk-main-navigation a' ).each( function( index, element ) {
+            if ( this.attribs.href == '../index.html' ) {
+                that.$( element ).addClass( 'active' );
+            }
+        } );
+    },
+    
     fixLinks: function( prefix ) {
         var that = this;
 
