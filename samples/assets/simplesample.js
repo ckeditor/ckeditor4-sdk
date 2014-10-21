@@ -289,10 +289,21 @@
 				selectButton = modalElem.findOne( 'button' ),
 				textarea = modalElem.findOne( 'textarea' );
 
+				function escListener( evt ) {
+					if ( evt.keyCode == 27 ) {
+						modal.close();
+					}
+				}
+
 				selectButton.on( 'click', function() {
 					textarea.$.select();
 				} );
-				modal.show();
+
+				modal.afterShow( function() {
+					addEventListener( 'keydown', escListener );
+				} ).afterClose( function() {
+					removeEventListener( 'keydown', escListener );
+				} ).show();
 			};
 		}
 
