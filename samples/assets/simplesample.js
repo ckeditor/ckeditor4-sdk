@@ -283,7 +283,10 @@
 				var code = '<div><button>Select code</button><div class="textarea-wrapper"><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div></div>',
 				modal = picoModal( {
 					content: code,
-					modalClass: 'source-code'
+					modalClass: 'source-code',
+					modalStyles: null,
+					closeStyles: null,
+					closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
 				} ),
 				modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
 				selectButton = modalElem.findOne( 'button' ),

@@ -108,40 +108,64 @@ textarea.disabled
 }
 
 /* --- Modal with source code ------------------------ */
+
 .pico-content.source-code
 {
+	@include background( $sdk-box-background-color );
+	@include border-radius( 3px );
+	@include box-sizing( border-box );
 	bottom: 50px;
-}
+	padding: $std-standard-vgap;
 
-.pico-content.source-code > div
-{
-	width: 800px;
-	height: 100%;
-	position: relative;
-}
+	.pico-close
+	{
+		@include opacity( .8 );
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 16px;
+		height: 16px;
+		cursor: pointer;
 
-.pico-content.source-code > div > div.textarea-wrapper
-{
-	position: absolute;
-	top: 31px;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
+		&:hover
+		{
+			@include opacity( 1 );
+		}
+	}
 
-.pico-content.source-code textarea
-{
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	resize: none;
-	outline: none;
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-	white-space: pre;
-	word-wrap: normal;
-	overflow: auto;
-	font-family: $sdk-font-stack-monospace;
+	& > div
+	{
+		width: 800px;
+		height: 100%;
+		position: relative;
+
+		& > div.textarea-wrapper
+		{
+			position: absolute;
+			top: 31px;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+	}
+
+	textarea
+	{
+		@include adjust-font-size-to( .813rem, .8 );
+		@include box-sizing( border-box );
+		color: $sdk-text-color;
+		padding: 10px;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		resize: none;
+		outline: none;
+		-moz-tab-size: 4;
+		-o-tab-size: 4;
+		tab-size: 4;
+		white-space: pre;
+		word-wrap: normal;
+		overflow: auto;
+		font-family: $sdk-font-stack-monospace;
+	}
 }
