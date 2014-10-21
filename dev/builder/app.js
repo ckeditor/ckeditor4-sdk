@@ -500,7 +500,7 @@ function build( opts ) {
 
 function buildDocumentation() {
     console.log( 'Building documentation.' );
-    return curryExec( 'sh', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
+    return curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
 }
 
 function curryExec( command, args, silent ) {
