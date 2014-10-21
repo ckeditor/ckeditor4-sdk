@@ -122,16 +122,8 @@
 	}
 
 	a {
-		&:not(.cke_path_item)
-		{
-			color: $sdk-link-color;
-			text-decoration: none;
-
-			&:hover
-			{
-				color: $sdk-link-color-hover;
-			}
-		}
+		//(#96)
+		@include colorful-links;
 
 		&:not(.documentation) {
 			&[href^="../docs/index.html#!/api"]:after,

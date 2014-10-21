@@ -23,3 +23,17 @@ $sdk-box-border-color:			#ddd;
 $sdk-ckeditor-color:			#cceaee;
 
 $std-standard-vgap: 			1.2em;
+
+//(#96)
+@mixin colorful-links {
+	&:not([class^="cke"])
+	{
+		color: $sdk-link-color;
+		text-decoration: none;
+
+		&:hover
+		{
+			color: $sdk-link-color-hover;
+		}
+	}
+}

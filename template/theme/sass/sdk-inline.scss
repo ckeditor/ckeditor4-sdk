@@ -50,18 +50,10 @@ body
 		padding: 5px 20px;
 	}
 
-	a {
-		&:not(.cke_path_item),
-		&:not(.cke_dialog)
-		{
-			color: $sdk-link-color;
-			text-decoration: none;
-		}
-
-		&:hover:not(.cke_path_item)
-		{
-			color: $sdk-link-color-hover;
-		}
+	a
+	{
+		//(#96)
+		@include colorful-links;
 	}
 
 	h1 > a.documentation {
