@@ -1,4 +1,4 @@
-# CKEditor SDK #
+# CKEditor SDK
 
 This repository contains (future) CKEditor SDK that will include the [editor documentation](http://docs.ckeditor.com/) as well as samples.
 
@@ -90,3 +90,9 @@ setup working documentation dev environment.
         grunt validatelinks
     
     Validate links in samples and main index file.
+	
+---
+
+## License
+
+See `LICENSE.md` for licensing details.
