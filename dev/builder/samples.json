@@ -1,141 +1,141 @@
 {
-    "categories": [
-         {
-            "name": "End-user Features",
-            "subcategories": [
-                {
-                    "name": "User Interface",
-                    "samples": [
-                        "UI Color",
-                        "UI Language"
-                    ]
-                },
+	"categories": [
+		 {
+			"name": "End-user Features",
+			"subcategories": [
 				{
-                    "name": "Editor Resizing",
-                    "samples": [
-                        "Editor Size",
+					"name": "User Interface",
+					"samples": [
+						"UI Color",
+						"UI Language"
+					]
+				},
+				{
+					"name": "Editor Resizing",
+					"samples": [
+						"Editor Size",
 						"Editor Auto Grow",
-                        "Resizing Customization"
-                    ]
-                },
-                {
-                    "name": "Inserting Content",
-                    "samples": [
-                        "Captioned Images",
-                        "Tables with Column Resizing",
+						"Resizing Customization"
+					]
+				},
+				{
+					"name": "Inserting Content",
+					"samples": [
+						"Captioned Images",
+						"Tables with Column Resizing",
 						"Code Snippets",
-                        "Mathematical Formulas",
-                        "Placeholders"
-                    ]
-                },
-                {
-                    "name": "Authoring Content",
-                    "samples": [
+						"Mathematical Formulas",
+						"Placeholders"
+					]
+				},
+				{
+					"name": "Authoring Content",
+					"samples": [
 						"Styles and Stylesheet Parser",
-                        "Text and Background Color",
+						"Text and Background Color",
 						"Multilingual Content"
-                    ]
-                },
+					]
+				},
 				{
-                    "name": "Working with Document",
-                    "samples": [
+					"name": "Working with Document",
+					"samples": [
 						"Spell Checking",
-                        "Source Code Editing",
+						"Source Code Editing",
 						"Magic Line"
-                    ]
-                },
-                {
-                    "name": "Pasting and Clipboard",
-                    "samples": []
-                },
+					]
+				},
 				{
-                    "name": "Accessibility Support",
-                    "samples": [
-                        "Accessibility and Keyboard Shortcuts",
+					"name": "Pasting and Clipboard",
+					"samples": []
+				},
+				{
+					"name": "Accessibility Support",
+					"samples": [
+						"Accessibility and Keyboard Shortcuts",
 						"&quot;Tab&quot; Key Navigation"
-                    ]
-                }
-            ]
-        },
+					]
+				}
+			]
+		},
 		{
-            "name": "Integration Features",
-            "subcategories": [
-                {
-                    "name": "Editor Types",
-                    "samples": [
-                        "Classic Editor",
-                        "Inline Editor"
-                    ]
-                },
-                {
-                    "name": "Editor UI",
-                    "samples": [
-                        "Fixed User Interface",
-                        "Floating User Interface",
-                        "Shared User Interface"
-                    ]
-                },
-                {
-                    "name": "Toolbar",
-                    "samples": [
-                        "Custom Toolbar",
+			"name": "Integration Features",
+			"subcategories": [
+				{
+					"name": "Editor Types",
+					"samples": [
+						"Classic Editor",
+						"Inline Editor"
+					]
+				},
+				{
+					"name": "Editor UI",
+					"samples": [
+						"Fixed User Interface",
+						"Floating User Interface",
+						"Shared User Interface"
+					]
+				},
+				{
+					"name": "Toolbar",
+					"samples": [
+						"Custom Toolbar",
 						"Toolbar Location"
-                    ]
-                },
+					]
+				},
 				{
-                    "name": "Content Filtering",
-                    "samples": [
-                        "ACF &ndash; Automatic Mode",
-                        "ACF &ndash; Custom Mode"
-                    ]
-                },
-                {
-                    "name": "Saving Data",
-                    "samples": [
-                        "Saving Textarea Data",
+					"name": "Content Filtering",
+					"samples": [
+						"ACF &ndash; Automatic Mode",
+						"ACF &ndash; Custom Mode"
+					]
+				},
+				{
+					"name": "Saving Data",
+					"samples": [
+						"Saving Textarea Data",
 						"Saving in Ajax Applications"
-                    ]
-                },
+					]
+				},
 				{
-                    "name": "Output Control",
-                    "samples": [
-                        "HTML Output Formatting",
-                        "Editing Complete HTML Pages",
-                        "Enter Key Configuration",
+					"name": "Output Control",
+					"samples": [
+						"HTML Output Formatting",
+						"Editing Complete HTML Pages",
+						"Enter Key Configuration",
 						"BBCode Editing"
-                    ]
-                },
-                {
-                    "name": "API Usage",
-                    "samples": [
-                        "Using CKEditor API",
-                        "Read-Only Mode"
-                    ]
-                },
+					]
+				},
 				{
-                    "name": "Utilities",
-                    "samples": [
-                        "Developer Tools",
-                        "UI Color Picker"
-                    ]
-                },
-                {
-                    "name": "Tutorials",
-                    "samples": [
-                        "Timestamp Plugin",
-                        "Abbreviation Plugin",
-                        "Custom Widget"
-                    ]
-                },
-                {
-                    "name": "jQuery Integration",
-                    "samples": []
-                },
-                {
-                    "name": "File Management",
-                    "samples": []
-                }
-            ]
-        }
-    ]
+					"name": "API Usage",
+					"samples": [
+						"Using CKEditor API",
+						"Read-Only Mode"
+					]
+				},
+				{
+					"name": "Utilities",
+					"samples": [
+						"Developer Tools",
+						"UI Color Picker"
+					]
+				},
+				{
+					"name": "Tutorials",
+					"samples": [
+						"Timestamp Plugin",
+						"Abbreviation Plugin",
+						"Custom Widget"
+					]
+				},
+				{
+					"name": "jQuery Integration",
+					"samples": []
+				},
+				{
+					"name": "File Management",
+					"samples": []
+				}
+			]
+		}
+	]
 }
