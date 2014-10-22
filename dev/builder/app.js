@@ -298,6 +298,10 @@ function prepareSamplesFilesSync() {
 
     index.setSidebar( categories );
     index.activateSamplesButton();
+
+    license.setSidebar( categories );
+    license.activateSamplesButton();
+
     if ( opts.version === 'offline' ) {
         index.preventSearchEngineRobots();
         index.fixLinks( '' );

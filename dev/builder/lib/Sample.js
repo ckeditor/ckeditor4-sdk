@@ -49,7 +49,7 @@ Sample.prototype = {
     },
 
     setSidebar: function( categories ) {
-        if ( this.name != 'index' ) {
+        if ( this.name != 'index' && this.name != 'license' ) {
             this.$nav.html( Sample.createSidebar( categories, _.pick( this, 'category', 'subcategory', 'name' ) ) );
         } else {
             this.$nav.html( Sample.createSidebar( categories, undefined, true ) );
