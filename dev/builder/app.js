@@ -31,6 +31,7 @@ var fs = require( 'fs' ),
     validCategories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories,
     samples = [],
     index = null,
+    license = null,
     categories = {},
 
     REGEXP = {
@@ -60,6 +61,7 @@ function readFiles( filesArr ) {
     filesReadPromises = _.object( filesReadPromises );
 
     filesReadPromises[ 'index.html' ] = whenFs.readFile( BASE_PATH + '/template/' + 'index.html', 'utf8' );
+    filesReadPromises[ 'license.html' ] = whenFs.readFile( BASE_PATH + '/template/' + 'license.html', 'utf8' );
 
     return whenKeys.all( filesReadPromises );
 }
@@ -69,8 +71,15 @@ function setupSamplesSync( _samples ) {
     var zipFilename = getZipFilename();
 
     index = new Sample( 'index', _samples[ 'index.html' ], undefined, zipFilename, opts );
+    license = new Sample( 'license', _samples[ 'license.html' ], undefined, zipFilename, opts );
 
-    var removed = delete _samples[ 'index.html' ];
+    if ( !( delete _samples[ 'index.html' ] ) ) {
+        throw 'Could not found "index.html" file in base directory.';
+    }
+
+    if ( !( delete _samples[ 'license.html' ] ) ) {
+        throw 'Could not found "license.html" file in base directory.';
+    }
 
     samples = _.map( _samples, function( fileContent, fileName ) {
         var sample = new Sample( fileName.split( '.' )[ 0 ], fileContent, index, zipFilename, opts );
@@ -78,12 +87,10 @@ function setupSamplesSync( _samples ) {
         return sample;
     } );
 
-    if ( !removed )
-        throw 'Could not found "index.html" file in base directory.';
-
     return {
         samples: samples,
-        index: index
+        index: index,
+        license: license
     };
 }
 
@@ -290,10 +297,17 @@ function prepareSamplesFilesSync() {
         index.preventSearchEngineRobots();
         index.fixLinks( '' );
         index.fixFonts();
+
+        license.preventSearchEngineRobots();
+        license.fixLinks( '' );
+        license.fixFonts();
     }
 
     fs.writeFileSync( RELEASE_PATH + '/index.html', index.$.html(), 'utf8' );
     VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/index.html' ) );
+
+    fs.writeFileSync( RELEASE_PATH + '/license.html', license.$.html(), 'utf8' );
+    VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/license.html' ) );
 }
 
 // return promise

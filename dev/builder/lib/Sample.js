@@ -63,8 +63,8 @@ Sample.prototype = {
     fixLinks: function( prefix ) {
         var that = this;
 
-        if ( this.name == 'index' ) {
-            this.$( 'head link, head script, .sdk-header a, .sdk-header img' ).each( function( index, element ) {
+        if ( this.name == 'index' || this.name == 'license' ) {
+            this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) {
                 var attrName = this.attribs.href ? 'href' : 'src',
                     attrVal = this.attribs[ attrName ];
 
@@ -98,10 +98,11 @@ Sample.prototype = {
     },
 
     fixFonts: function() {
-        var that = this;
+        var that = this,
+            pathPrefix = ( that.name == 'index' || that.name == 'license' ? '' : '../' );
 
         this.$( 'link[href*="fonts.googleapis.com"]' ).each( function ( index, element ) {
-            that.$( element ).attr( 'href', ( that.name == 'index' ? '' : '../' ) + 'theme/css/fonts.css' );
+            that.$( element ).attr( 'href', pathPrefix + 'theme/css/fonts.css' );
         } );
     },
 
