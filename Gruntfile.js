@@ -1,3 +1,8 @@
+/**
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
+ */
+
 'use strict';
 
 module.exports = function( grunt ) {
