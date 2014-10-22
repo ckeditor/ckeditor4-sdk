@@ -1,3 +1,8 @@
+/**
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+ */
+
 ( function() {
 	'use strict';
 	window.onbeforeunload = function() {
@@ -21,7 +26,7 @@
 	if ( !Object.keys ) {
 		Object.keys = function( o ) {
 			if ( o !== Object( o ) ) {
-				throw new TypeError( 'Object.keys called on a non-object' );
+				throw new TypeError( 'Object.keys called on a non-object.' );
 			}
 
 			var k = [], p;
@@ -280,7 +285,7 @@
 			};
 		} else {
 			showSampleSource = function( sampleId, metaNames ) {
-				var code = '<div><button>Select code</button><div class="textarea-wrapper"><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div></div>',
+				var code = '<div><button>Select Code</button><div class="textarea-wrapper"><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div></div>',
 				modal = picoModal( {
 					content: code,
 					modalClass: 'source-code',

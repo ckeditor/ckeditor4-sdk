@@ -1,10 +1,10 @@
 /**
  * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md or http://ckeditor.com/license
+ * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
  */
 
-// Tool scripts for the sample pages.
-// This file can be ignored and is not required to make use of CKEditor.
+// Helper script for the sample pages inserting the toolbar button image into sample text.
+// This file can be ignored and is not required to use CKEditor.
 
 ( function() {
 	CKEDITOR.on( 'instanceReady', function( ev ) {
@@ -25,4 +25,3 @@
 		}
 	} );
 } )();
-// %LEAVE_UNMINIFIED% %REMOVE_LINE%
