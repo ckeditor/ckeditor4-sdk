@@ -1,5 +1,9 @@
 # License
 
+The following text describes the licensing of the CKEditor SDK and its components.
+
+## CKEditor SDK Source
+
 The source of the CKEditor SDK is licensed under the terms of the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html)
 (see Appendix A).
 
@@ -17,6 +21,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+## SDK Samples
+
+All CKEditor SDK samples are distributed under the following terms:
+
+* All textual content in the samples is licensed under the terms of the [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/) license.
+* All sample source code is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 ## SDK Components
 
