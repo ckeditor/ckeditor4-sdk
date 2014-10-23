@@ -1,8 +1,3 @@
-/**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
- * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
- */
-
 var cheerio = require( 'cheerio' ),
     url = require( 'url' ),
     _ = require( 'lodash-node' ),
@@ -64,14 +59,14 @@ Sample.prototype = {
             }
         } );
     },
-    
+
     fixLinks: function( prefix ) {
         var that = this;
 
-        if ( this.name == 'index' ) {
-            this.$( 'head link, head script, .sdk-header a, .sdk-header img' ).each( function( index, element ) {
+        if ( this.name == 'index' || this.name == 'license' ) {
+            this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) {
                 var attrName = this.attribs.href ? 'href' : 'src',
-                    attrVal = this.attribs[ attrName ];
+                attrVal = this.attribs[ attrName ];
 
                 that.$( element ).attr( attrName, attrVal.replace( '../', '' ) );
             } );
@@ -103,10 +98,11 @@ Sample.prototype = {
     },
 
     fixFonts: function() {
-        var that = this;
+        var that = this,
+            pathPrefix = ( that.name == 'index' || that.name == 'license' ? '' : '../' );
 
         this.$( 'link[href*="fonts.googleapis.com"]' ).each( function ( index, element ) {
-            that.$( element ).attr( 'href', ( that.name == 'index' ? '' : '../' ) + 'theme/css/fonts.css' );
+            that.$( element ).attr( 'href', pathPrefix + 'theme/css/fonts.css' );
         } );
     },
 
