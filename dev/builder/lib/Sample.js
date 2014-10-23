@@ -8,6 +8,7 @@ var cheerio = require( 'cheerio' ),
     TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
 function Sample( name, content, indexObj, zipFilename, opts ) {
+//    var that = this;
     this.$ = cheerio.load( content, {
         decodeEntities: false
     } );
@@ -25,6 +26,10 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
     if ( indexObj ) {
         this.$header.html( indexObj.$header.html() );
         this.$footer.html( indexObj.$footer.html() );
+//        indexObj.$( '[data-append]' ).each( function() {
+//            var selector = this.attribs[ 'data-append' ];
+//            that.$( selector ).append( this );
+//        } );
     } else {
         if ( opts.version === 'online' ) {
             this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
@@ -69,6 +74,11 @@ Sample.prototype = {
 
         if ( this.name == 'index' || this.name == 'license' ) {
             this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) {
+                // We want to manipulate only this attributes - when are not present then we are doing nothing.
+                if ( !this.attribs.href && !this.attribs.src ) {
+                    return;
+                }
+
                 var attrName = this.attribs.href ? 'href' : 'src',
                 attrVal = this.attribs[ attrName ];
 

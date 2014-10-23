@@ -432,6 +432,7 @@ function done() {
 
 function fail( e ) {
     e && console.log( e );
+    e && console.log( e.stack );
     process.exit( 1 );
 }
 
