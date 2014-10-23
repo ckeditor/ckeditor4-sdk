@@ -8,7 +8,7 @@ var cheerio = require( 'cheerio' ),
     TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
 function Sample( name, content, indexObj, zipFilename, opts ) {
-//    var that = this;
+    var that = this;
     this.$ = cheerio.load( content, {
         decodeEntities: false
     } );
@@ -26,10 +26,15 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
     if ( indexObj ) {
         this.$header.html( indexObj.$header.html() );
         this.$footer.html( indexObj.$footer.html() );
-//        indexObj.$( '[data-append]' ).each( function() {
-//            var selector = this.attribs[ 'data-append' ];
-//            that.$( selector ).append( this );
-//        } );
+
+        indexObj.$( '[data-append]' ).each( function() {
+            var element = indexObj.$( this ),
+                elementHtml = indexObj.$.html( element ),
+                selector = this.attribs[ 'data-append' ];
+
+            that.$( selector ).append( elementHtml );
+        } );
+
     } else {
         if ( opts.version === 'online' ) {
             this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
