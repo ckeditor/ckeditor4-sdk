@@ -7,3 +7,4 @@
 [submodule "docs"]
 	path = docs
 	url = https://github.com/ckeditor/ckeditor-docs.git
+	branch = master
