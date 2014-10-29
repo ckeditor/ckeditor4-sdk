@@ -132,18 +132,18 @@ It is forbidden to copy and distribute this file in its original or modified for
 		@include colorful-links;
 
 		&:not(.documentation) {
-			&[href^="../docs/index.html#!/api"]:after,
-			&[href^="../docs/index.html#!/guide"]:after {
+			&[href*="#!/api"]:after,
+			&[href*="#!/guide"]:after {
 				margin-left: .3em;
 				margin-right: .1em;
 				margin-bottom: 3px;
 			}
 
-			&[href^="../docs/index.html#!/api"]:after {
+			&[href*="#!/api"]:after {
 				content: image-url("gear.png");
 			}
 
-			&[href^="../docs/index.html#!/guide"]:after {
+			&[href*="#!/guide"]:after {
 				content: image-url("book.png");
 			}
 		}
