@@ -11,7 +11,10 @@
 		}
 	};
 
-	var SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
+	var HTML5 = {
+			downloadAttr: typeof document.createElement( 'a' ).download != 'undefined'
+		},
+		SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
 		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
 		placeholders = [];
@@ -128,7 +131,7 @@
 			e.returnValue = false;
 			e.preventDefault && e.preventDefault();
 
-			if ( clicked instanceof HTMLAnchorElement) {
+			if ( clicked instanceof HTMLAnchorElement ) {
 				relLi = clicked.parentNode;
 			} else {
 				return false;
@@ -285,17 +288,28 @@
 			};
 		} else {
 			showSampleSource = function( sampleId, metaNames ) {
-				var code = '<div><button>Select Code</button><div class="textarea-wrapper"><textarea>' + createSampleSourceCode( sampleId, metaNames, false, false ) + '</textarea></div></div>',
-				modal = picoModal( {
-					content: code,
-					modalClass: 'source-code',
-					modalStyles: null,
-					closeStyles: null,
-					closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
-				} ),
-				modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
-				selectButton = modalElem.findOne( 'button' ),
-				textarea = modalElem.findOne( 'textarea' );
+				var sampleSourceCode = createSampleSourceCode( sampleId, metaNames, false, false ),
+					code = [
+						'<div>',
+							'<button data-action="selectCode">Select Code</button>',
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="sample.html">download</a>' : '' ),
+							'<div class="textarea-wrapper">',
+								'<textarea>',
+									sampleSourceCode,
+								'</textarea>',
+							'</div>',
+						'</div>'
+					].join( '' ),
+					modal = picoModal( {
+						content: code,
+						modalClass: 'source-code',
+						modalStyles: null,
+						closeStyles: null,
+						closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
+					} ),
+					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
+					selectButton = modalElem.findOne( 'button' ),
+					textarea = modalElem.findOne( 'textarea' );
 
 				function escListener( evt ) {
 					if ( evt.keyCode == 27 ) {
