@@ -29,7 +29,7 @@ var fs = require( 'fs' ),
     Sample = require( './lib/Sample' ),
 
     SAMPLES_PATH = '../../samples',
-    RELEASE_PATH = '../release',
+    RELEASE_PATH = '../ckeditor_sdk',
     BASE_PATH = path.resolve('../..'),
     VENDORMATHJAX_PATH = path.resolve(BASE_PATH + '/vendor/mathjax'),
 
@@ -375,7 +375,7 @@ function zipBuild() {
 
         archive.pipe( output );
         archive.bulk( [
-            { expand: true, cwd: RELEASE_PATH, src: [ '**' ], dest: 'release' }
+            { expand: true, cwd: RELEASE_PATH, src: [ '**' ], dest: 'ckeditor_sdk' }
         ] );
         archive.finalize();
     } );
@@ -437,7 +437,7 @@ function fail( e ) {
 }
 
 nomnom.command( 'build' )
-    .callback( build )
+    .callback( wrapper( build ) )
     .help( 'Building release version of sdk.' )
     .option( 'version', {
         default: 'offline'
@@ -447,16 +447,24 @@ nomnom.command( 'build' )
     } );
 
 nomnom.command( 'validatelinks' )
-    .callback( readFilesAndValidateLinks );
+    .callback( wrapper( readFilesAndValidateLinks ) );
 
 nomnom.nocommand()
-    .callback( build )
+    .callback( wrapper( build ) )
     .option( 'version', {
         default: 'offline'
     } );
 
 var opts = nomnom.parse();
-VERBOSE = opts.verbose === true;
+
+// This wrapper is needed for setup some options based on other ones.
+function wrapper( cb ) {
+    return function( opts ) {
+        VERBOSE = ( opts.verbose === true );
+
+        cb( opts );
+    };
+}
 
 function packbuild() {
     return zipBuild().then( function() {
@@ -503,7 +511,7 @@ function build( opts ) {
                     .then( fixFontsLinks )
                     .then( saveFiles )
                     .then( buildDocumentation )
-                    .then( curryExec( 'mv', [ '../../docs/build', '../release/docs' ] ) )
+                    .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
                     .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
                     .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
