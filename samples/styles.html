@@ -32,15 +32,15 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h1>Applying Styles to Editor Content <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_styles">Documentation</a></h1>
 
 			<p>
-				The <strong>Styles</strong> drop-down list contains styles that you can <strong>apply to editor content in order to assign semantic value</strong> to the text you are creating in CKEditor. The drop-down list is provided by the <a href="http://ckeditor.com/addon/stylescombo">Styles Combo</a> plugin which by default is available in the Standard and Full distributions.
+				The <strong>Styles</strong> drop-down list contains styles that you can <strong>apply to editor content in order to assign semantic value</strong> to the text you are creating in CKEditor. It is provided by the <a href="http://ckeditor.com/addon/stylescombo">Styles Combo</a> plugin which by default is available in the Standard and Full distributions.
 			</p>
-
-			<h2>Default Styles Combo Plugin Implementation</h2>
 			<p>
 				When the Styles Combo plugin is enabled, the <img src="assets/stylesheetparser/stylesheetparser_01.png" title="Styles"> button is automatically added to the toolbar. Once clicked, it opens the drop-down list with styles that can be applied to your content. The styles are <a href="http://docs.ckeditor.com/#!/guide/dev_styles-section-style-types">categorized into groups</a>, depending on their target, so you can use block, inline, and object styles for the content that you are creating.
 			</p>
+			
+			<h2>Default Styles Combo Plugin Implementation</h2>
 			<p>
-				Please note that the default styles which are available in the drop-down list are defined in the <code>styles.js</code> file and are just examples which will not work without the matching <code>contents.css</code> file. They will also not work in the inline editor which uses page stylesheets instead of the <code>contents.css</code> file. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_styles">Applying Styles to Editor Content</a> article to learn more about this feature.
+				Please note that the default styles available in the drop-down list are defined in the <code>styles.js</code> file and are just examples which will not work without the matching <code>contents.css</code> file. They will also not work in the inline editor which uses page stylesheets instead of the <code>contents.css</code> file. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_styles">Applying Styles to Editor Content</a> article to learn more about this feature.
 			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt; &lt;p&gt;&lt;b&gt;Apollo 11&lt;/b&gt;
