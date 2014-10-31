@@ -124,7 +124,7 @@ Sample.prototype = {
                 return $1 + $2 + $3;
             } );
 
-            element.html( resultHtml );
+            element.text( resultHtml );
         } );
     },
     
