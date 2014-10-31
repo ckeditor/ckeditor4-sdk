@@ -31,6 +31,7 @@ var fs = require( 'fs' ),
     SAMPLES_PATH = '../../samples',
     RELEASE_PATH = '../ckeditor_sdk',
     BASE_PATH = path.resolve('../..'),
+    CKEDITOR_VERSION = determineCKEditorVersion(),
     VENDORMATHJAX_PATH = path.resolve(BASE_PATH + '/vendor/mathjax'),
 
     validCategories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories,
@@ -211,6 +212,10 @@ function copyVendor() {
         path.join( BASE_PATH, 'vendor/mathjax' )
     ];
 
+    if ( opts.version == 'online' ) {
+        blacklist.push( path.join( BASE_PATH, 'vendor/ckeditor' ) );
+    }
+
     var options = {
         filter: createNcpBlacklistFilter( blacklist )
     };
@@ -289,6 +294,8 @@ function prepareSamplesFilesSync() {
             sample.preventSearchEngineRobots();
             sample.fixLinks();
             sample.fixFonts();
+        } else {
+            sample.fixCKEDITORVendorLinks( CKEDITOR_VERSION );
         }
 
         _path = RELEASE_PATH + '/samples/' + sample.name + '.html';
@@ -348,7 +355,7 @@ function determineCKEditorVersion() {
 }
 
 function getZipFilename() {
-    return 'ckeditor_' + determineCKEditorVersion() +  '_sdk.zip';
+    return 'ckeditor_' + CKEDITOR_VERSION +  '_sdk.zip';
 }
 
 function zipBuild() {

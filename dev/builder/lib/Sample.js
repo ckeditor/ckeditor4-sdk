@@ -100,6 +100,34 @@ Sample.prototype = {
         } );
     },
 
+    fixCKEDITORVendorLinks: function( version ) {
+        var that = this,
+            cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
+        this.$( 'head script[src$="ckeditor.js"]' ).each( function( index, element ) {
+            that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
+        } );
+
+        this.$( 'script[data-sample]' ).each( function( index, element ) {
+            var element = that.$( element ),
+                html = element.html(),
+                resultHtml;
+
+            resultHtml = html.replace( /(\s{1})(['|"][\s\S]*?['|"])([\s\S]*?)/g, function( match, $1, $2, $3 ) {
+                if ( $2.indexOf( '../..' ) != -1 ) {
+                    return $1 + $2.replace( '../..', 'http://sdk.ckeditor.com' ) + $3;
+                }
+
+                if ( $2.indexOf( '../vendor/ckeditor/' ) != -1 ) {
+                    return $1 + $2.replace( '../vendor/ckeditor/', 'http:' + cdnEditorLink ) + $3;
+                }
+
+                return $1 + $2 + $3;
+            } );
+
+            element.html( resultHtml );
+        } );
+    },
+    
     validateLinks: function( errors ) {
         var that = this;
 
