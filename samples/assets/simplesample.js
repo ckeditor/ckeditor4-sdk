@@ -292,7 +292,7 @@
 					code = [
 						'<div>',
 							'<button data-action="selectCode">Select Code</button>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="sample.html">download</a>' : '' ),
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="sample.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
 									sampleSourceCode,

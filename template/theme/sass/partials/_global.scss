@@ -145,6 +145,20 @@ textarea.disabled
 		height: 100%;
 		position: relative;
 
+		& > button, & > a
+		{
+			@include border-radius( 3px );
+			font: #{$base-font-size}/#{$base-line-height} $sdk-font-stack;
+			border: 1px solid #dadada;
+			display: inline-block;
+			padding: 3px;
+			color: $sdk-link-color;
+			text-decoration: none;
+			background: #fefefe;
+			margin: 0 4px 0 0;
+			cursor: pointer;
+		}
+
 		& > div.textarea-wrapper
 		{
 			position: absolute;
