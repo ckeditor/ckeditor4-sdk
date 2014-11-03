@@ -142,7 +142,7 @@
 			return false;
 		} );
 
-		function createSampleSourceCode( id, metaNames, wrapInHtmlStructure, wrapInCodePre ) {
+		function createSampleSourceCode( id, metaNames, wrapInHtmlStructure, wrapInCodePre, doubleEscapeTextAreaContent ) {
 			var sampleResources = resources[ id ],
 				resourcesString = '',
 				headResources = [],
@@ -150,6 +150,7 @@
 
 			wrapInHtmlStructure = ( wrapInHtmlStructure === false ? false : true );
 			wrapInCodePre = ( wrapInCodePre === false ? false : true );
+			doubleEscapeTextAreaContent = ( doubleEscapeTextAreaContent === false ? false : true );
 
 			var i = 0,
 				max = sampleResources.length;
@@ -256,7 +257,7 @@
 					result += ( i == 0 ? '' : getIndentChars( '\t', line.indent ) ) + line.content + ( noEndLineChar ? '' : '\n' );
 				}
 
-				result = $2 + result.replace( /\&/g, '&amp;' );
+				result = $2 + ( doubleEscapeTextAreaContent ? result.replace( /\&/g, '&amp;' ) : result );
 
 				result = '\n' + $0 + $1[ 0 ] + result.trim() + $0 + $1[ 0 ];
 
@@ -288,14 +289,16 @@
 			};
 		} else {
 			showSampleSource = function( sampleId, metaNames ) {
-				var sampleSourceCode = createSampleSourceCode( sampleId, metaNames, false, false ),
+				var sampleSourceDialog = createSampleSourceCode( sampleId, metaNames, false, false ),
+					sampleSourceDownload = createSampleSourceCode( sampleId, metaNames, false, false, false ),
+					sampleName = metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
 					code = [
 						'<div>',
 							'<button data-action="selectCode">Select Code</button>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="sample.html">Download</a>' : '' ),
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="' + sampleName + '.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
-									sampleSourceCode,
+									sampleSourceDialog,
 								'</textarea>',
 							'</div>',
 						'</div>'
