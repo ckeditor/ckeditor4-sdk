@@ -8,7 +8,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta charset="utf-8">
 	<meta name="description" content="Basic Text Styles: Bold, Italic, Underline, Strikethrough, Subscript, Superscript">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, text, font, style, bold, italic, underline, strikethrough, subscript, superscript">
-	<meta name="sdk-samples" content="Default basic text styles|Custom basic text styles definitions">
+	<meta name="sdk-samples" content="Default basic text styles|Custom basic text styles definition">
 	<title>Basic Text Styles</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -46,8 +46,9 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				<span class="button_icon" data-icon="strike" title="Strikethrough">&nbsp;</span>, 
 				<span class="button_icon" data-icon="subscript" title="Subscript">&nbsp;</span> and 
 				<span class="button_icon" data-icon="superscript" title="Superscript">&nbsp;</span>
-				buttons are automatically added to the toolbar. You can use them to add some basic text formatting to
-				your document.
+				buttons are automatically added to the toolbar. You can use them to add some basic inline text formatting 
+				to your document. Basic text styles work on text selections; check the <a href="./format.html">Text Formats</a>
+				feature for block-level text formatting.  
 			</p>
 
 			<h2>Default Basic Text Styles</h2>
@@ -90,48 +91,45 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<p>
 				Basic text styles can be output in HTML in different ways. For example, the <strong>Bold</strong> feature can be
-				implemented as <code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code> or 
-				<code>&lt;span class=&quot;font-weight: bold;&quot;&gt;</code>. Refer to the 
+				implemented as <code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code>,  
+				<code>&lt;span style=&quot;font-weight: bold;&quot;&gt;</code> or 
+				<code>&lt;span class=&quot;Bold&quot;&gt;</code>. Refer to the 
 				<a href="http://docs.ckeditor.com/#!/guide/dev_basicstyles-section-custom-basic-text-styles-definition">Basic Text Styles: Bold, Italic and More</a> 
 				article for more information on how to customize the output of this feature.
 			</p>
 			
 			<p>
-				The editor instance below, for example, outputs bold with an inline CSS style, italic with the <code>&lt;i&gt;</code>
-				element, and subscript and superscript with classes defined in an external CSS file added to the editor configuration
-				with the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code>
-				option. Click the <span class="button_icon" data-icon="source" title="Source">&nbsp;</span> <strong>Source</strong> 
+				The editor instance below, for example, outputs bold with the <code>&lt;b&gt;</code> and italic with the 
+				<code>&lt;i&gt;</code> element. Click the 
+				<span class="button_icon" data-icon="source" title="Source">&nbsp;</span> <strong>Source</strong> 
 				buttons of both editor instances available on this page to compare the source code and see how the same text formatting
 				can be achieved with different style definitions.
 			</p>
 
 			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
 				&lt;h1&gt;Apollo 11&lt;/h1&gt;
-				&lt;p&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Apollo 11&lt;span
-				class=&quot;Superscript&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&amp;nbsp;was the spaceflight that landed the first
-				humans, Americans &lt;i&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Neil Armstrong&lt;/span&gt;&lt;/i&gt; and
-				&lt;i&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Buzz Aldrin&lt;/span&gt;&lt;/i&gt;, on the Moon on &lt;u&gt;July
-				20, 1969, at 20:18 UTC&lt;/u&gt;. Armstrong became the first to step onto the lunar surface 6 hours later on &lt;u&gt;July
-				21 at 02:56 UTC&lt;/u&gt;.&lt;/p&gt;
-				&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; &lt;u&gt;two and a half hours&lt;/u&gt; outside
-				the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar material
-				for return to Earth. A third member of the mission, &lt;i&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Michael
-				Collins&lt;/span&gt;&lt;/i&gt;, piloted the command spacecraft alone in lunar orbit until Armstrong and Aldrin returned
-				to it for the trip back to Earth.&lt;/p&gt;
+				&lt;p&gt;&lt;b&gt;Apollo 11&lt;sup&gt;1&lt;/sup&gt;&lt;/b&gt; was the spaceflight that landed the first humans, Americans
+				&lt;i&gt;&lt;b&gt;Neil Armstrong&lt;/b&gt;&lt;/i&gt; and &lt;i&gt;&lt;b&gt;Buzz Aldrin&lt;/b&gt;&lt;/i&gt;, on the Moon on
+				&lt;u&gt;July 20, 1969, at 20:18 UTC&lt;/u&gt;. Armstrong became the first to step onto the lunar surface 6 hours later on
+				&lt;u&gt;July 21 at 02:56 UTC&lt;/u&gt;.&lt;/p&gt;
+				&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; &lt;u&gt;two and a half hours&lt;/u&gt; outside the
+				spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar material for return to
+				Earth. A third member of the mission, &lt;i&gt;&lt;b&gt;Michael Collins&lt;/b&gt;&lt;/i&gt;, piloted the command spacecraft
+				alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to Earth.&lt;/p&gt;
 				&lt;h2&gt;Broadcasting and &lt;i&gt;quotes&lt;/i&gt; &lt;a id=&quot;quotes&quot; name=&quot;quotes&quot;&gt;&lt;/a&gt;&lt;/h2&gt;
-				&lt;p&gt;Broadcast on live TV to a world-wide audience, Armstrong stepped onto the lunar surface and described the
-				event as:&lt;/p&gt;
+				&lt;p&gt;Broadcast on live TV to a world-wide audience, Armstrong stepped onto the lunar surface and described the event
+				as:&lt;/p&gt;
 				&lt;blockquote&gt;
 				&lt;p&gt;One small step for [a] man, one giant leap for mankind.&lt;/p&gt;
 				&lt;/blockquote&gt;
-				&lt;p&gt;Apollo 11 effectively ended the &lt;i&gt;Space Race&lt;/i&gt; and fulfilled a national goal proposed in 1961
-				by the late U.S. President John F. Kennedy in a speech before the United States Congress:&lt;/p&gt;
+				&lt;p&gt;Apollo 11 effectively ended the &lt;i&gt;Space Race&lt;/i&gt; and fulfilled a national goal proposed in 1961 by
+				the late U.S. President John F. Kennedy in a speech before the United States Congress:&lt;/p&gt;
 				&lt;blockquote&gt;
 				&lt;p&gt;[...] before this decade is out, of landing a man on the Moon and returning him safely to the Earth.&lt;/p&gt;
 				&lt;/blockquote&gt;
 				&lt;hr /&gt;
-				&lt;p&gt;&lt;small&gt;&lt;span class=&quot;Superscript&quot;&gt;1&amp;nbsp;&lt;/span&gt;Source: &lt;a
-				href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;small&gt;&lt;sup&gt;1&amp;nbsp;&lt;/sup&gt;Source:
+				&lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_11&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
 			</textarea>
 
 			<h2>Related Features</h2>
@@ -155,29 +153,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// By default, some basic text styles buttons are removed in the Standard preset.
 					// The code below resets the default config.removeButtons setting.
 					removeButtons: '',
-					// Default CKEditor styles are included as well to avoid copying default styles.
-					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/basicstyles.css' ],
 					// Custom style definition for the Bold feature.
-					coreStyles_bold: {
-						element: 'span',
-						styles: { 'font-weight': 'bold' }
-					},
+					coreStyles_bold: { element: 'b', overrides: 'strong' },
 					// Custom style definition for the Italic feature.
-					coreStyles_italic: {
-						element: 'i', overrides: 'em'
-					},
-					// Custom style definition for the Superscript feature.
-					coreStyles_superscript: {
-						element: 'span',
-						attributes: { 'class': 'Superscript' },
-						overrides: 'sup'
-					},
-					// Custom style definition for the Subscript feature.
-					coreStyles_subscript: {
-						element: 'span',
-						attributes: { 'class': 'Subscript' },
-						overrides: 'sub'
-					}
+					coreStyles_italic: { element: 'i', overrides: 'em' }
 				} );
 			</script>
 
