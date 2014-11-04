@@ -217,4 +217,15 @@ It is forbidden to copy and distribute this file in its original or modified for
 			font-weight: bold;
 		}
 	}
+
+	/* Tabindex sample styles */
+	&.sdk-tabindex
+	{
+		*:focus,
+		.cke_focus
+		{
+			box-shadow: 0 0 5px 3px rgb(122, 185, 237);
+			outline: none !important;
+		}
+	}
 }
