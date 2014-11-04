@@ -133,7 +133,8 @@ It is forbidden to copy and distribute this file in its original or modified for
 
 		&:not(.documentation) {
 			&[href*="#!/api"]:after,
-			&[href*="#!/guide"]:after {
+			&[href*="#!/guide"]:after,
+			&[href^="./"]:after {
 				margin-left: .3em;
 				margin-right: .1em;
 				margin-bottom: 3px;
@@ -145,6 +146,10 @@ It is forbidden to copy and distribute this file in its original or modified for
 
 			&[href*="#!/guide"]:after {
 				content: image-url("book.png");
+			}
+
+			&[href^="./"]:after {
+				content: image-url("sample.png");
 			}
 		}
 	}
