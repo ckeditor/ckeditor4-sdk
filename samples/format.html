@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Applying Block-Level Text Formats">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, text, format, paragraph, heading, header, formatting">
+	<meta name="sdk-samples" content="Default text formats|Custom text format definitions">
+	<title>Text Formats</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../theme/css/sdk.css" rel="stylesheet">
+	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../theme/img/favicon.ico">
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Applying Block-Level Text Formats <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_format">Documentation</a></h1>
+
+			<p>
+				Block-level text formats are provided through the
+				<a href="http://ckeditor.com/addon/format">Format</a> plugin which by default is available in the Standard and Full
+				distributions.
+			</p>
+
+			<p>
+				When the plugin is enabled, the <img src="assets/format/format_01.png" title="Format"> button is automatically added
+				to the toolbar. Once clicked, it opens the drop-down list with text formats that can be applied to your document. The formats
+				work on block level which means that you do not need to select any text in order to apply them and entire
+				blocks will be affected by your choice. Read about <a href="./basicstyles.html">basic text styles</a> and the
+				<strong><a href="./styles.html">Styles</a></strong> drop-down list if you want to apply inline styles on selected
+				text fragments.
+			</p>
+
+			<h2>Default Text Formats</h2>
+
+			<p>
+				Some basic text formats like paragraph or headings are pre-defined in CKEditor, as visible in the editor instance below. 
+				The default collection is set in the 
+				<code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-format_tags">config.format_tags</a></code> option, although
+				normally in the Standard distribution a few of these formats are disabled. Refer to the 
+				<a href="http://docs.ckeditor.com/#!/guide/dev_format">Applying Block-Level Text Formats</a> documentation for more
+				information on how to enable them like in the instance below.
+			</p>
+
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+				&lt;h1&gt;Hey Diddle Diddle&lt;/h1&gt;
+
+				&lt;p&gt;&lt;strong&gt;&amp;quot;Hey Diddle Diddle&amp;quot;&lt;/strong&gt; (also &lt;strong&gt;&amp;quot;Hi Diddle
+				Diddle&amp;quot;&lt;/strong&gt;, &lt;strong&gt;&amp;quot;The Cat and the Fiddle&amp;quot;&lt;/strong&gt;, or
+				&lt;strong&gt;&amp;quot;The Cow Jumped Over the Moon&amp;quot;&lt;/strong&gt;) is an &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/English_culture&quot;&gt;English&lt;/a&gt; &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Nursery_rhyme&quot;&gt;nursery rhyme&lt;/a&gt;. It has a &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Roud_Folk_Song_Index&quot;&gt;Roud Folk Song Index&lt;/a&gt; number of
+				19478.&lt;/p&gt;
+&lt;pre&gt;
+&amp;nbsp;________________
+/ &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;\
+| How about moo? | &amp;nbsp;^__^
+\________________/ &amp;nbsp;(oo)\_______
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; \ (__)\ &amp;nbsp; &amp;nbsp; &amp;nbsp; )\/\
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; ||----w |
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; || &amp;nbsp; &amp;nbsp; ||&lt;/pre&gt;
+
+				&lt;h2&gt;Lyrics&lt;/h2&gt;
+				&lt;p&gt;One of the most commonly used modern versions of the rhyme is:&lt;/p&gt;
+				&lt;blockquote&gt;
+				&lt;p&gt;Hey diddle diddle,&lt;/p&gt;
+				&lt;p&gt;The Cat and the fiddle,&lt;br /&gt;
+				The Cow jumped over the moon.&lt;br /&gt;
+				The little Dog laughed,&lt;br /&gt;
+				To see such sport,&lt;/p&gt;
+				And the Dish ran away with the Spoon.&lt;/blockquote&gt;
+				&lt;h2&gt;Melody&lt;/h2&gt;
+				&lt;p&gt;The melody commonly associated with the rhyme was first recorded by the composer and nursery rhyme collector &lt;a href=&quot;http://en.wikipedia.org/wiki/James_William_Elliott&quot;&gt;James William Elliott&lt;/a&gt; in his &lt;em&gt;National Nursery Rhymes and Nursery Songs&lt;/em&gt; (1870).&lt;/p&gt;
+				&lt;hr /&gt;
+				&lt;p&gt;&lt;small&gt;Source: &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Hey_Diddle_Diddle&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+			</textarea>
+
+			<h2>Custom Text Format Definition</h2>
+
+			<p>
+				CKEditor allows you to both decide which of the default text formats will be available in the 
+				<strong>Format</strong> drop-down list and add your own formats. The format definition can also be
+				adjusted, for example by adding a custom class. Refer to the 
+				<a href="http://docs.ckeditor.com/#!/guide/dev_format">Applying Block-Level Text Formats</a> documentation for more
+				information on how to customize this feature.
+			</p>
+			
+			<p>
+				The editor instance below contains a reduced list of available text formats when compared to the first example.
+				Additionally, <strong>Heading 1</strong> and <strong>Formatted</strong> text format definitions now include a
+				custom class applying the joyfully green color.
+			</p>
+
+			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
+				&lt;h1 class=&quot;jollygreen&quot;&gt;Hey Diddle Diddle&lt;/h1&gt;
+
+				&lt;p&gt;&lt;strong&gt;&amp;quot;Hey Diddle Diddle&amp;quot;&lt;/strong&gt; (also &lt;strong&gt;&amp;quot;Hi Diddle
+				Diddle&amp;quot;&lt;/strong&gt;, &lt;strong&gt;&amp;quot;The Cat and the Fiddle&amp;quot;&lt;/strong&gt;, or
+				&lt;strong&gt;&amp;quot;The Cow Jumped Over the Moon&amp;quot;&lt;/strong&gt;) is an &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/English_culture&quot;&gt;English&lt;/a&gt; &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Nursery_rhyme&quot;&gt;nursery rhyme&lt;/a&gt;. It has a &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Roud_Folk_Song_Index&quot;&gt;Roud Folk Song Index&lt;/a&gt; number of
+				19478.&lt;/p&gt;
+
+&lt;pre class=&quot;jollygreen&quot;&gt;
+&amp;nbsp;________________
+/ &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;\
+| How about moo? | &amp;nbsp;^__^
+\________________/ &amp;nbsp;(oo)\_______
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; \ (__)\ &amp;nbsp; &amp;nbsp; &amp;nbsp; )\/\
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; ||----w |
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; || &amp;nbsp; &amp;nbsp; ||&lt;/pre&gt;
+
+				&lt;h2&gt;Lyrics&lt;/h2&gt;
+				&lt;p&gt;One of the most commonly used modern versions of the rhyme is:&lt;/p&gt;
+				&lt;blockquote&gt;
+				&lt;p&gt;Hey diddle diddle,&lt;/p&gt;
+				&lt;p&gt;The Cat and the fiddle,&lt;br /&gt;
+				The Cow jumped over the moon.&lt;br /&gt;
+				The little Dog laughed,&lt;br /&gt;
+				To see such sport,&lt;/p&gt;
+				And the Dish ran away with the Spoon.&lt;/blockquote&gt;
+				&lt;h2&gt;Melody&lt;/h2&gt;
+				&lt;p&gt;The melody commonly associated with the rhyme was first recorded by the composer and nursery rhyme collector&amp;nbsp;&lt;a href=&quot;http://en.wikipedia.org/wiki/James_William_Elliott&quot;&gt;James William Elliott&lt;/a&gt;&amp;nbsp;in his&amp;nbsp;&lt;em&gt;National Nursery Rhymes and Nursery Songs&lt;/em&gt;&amp;nbsp;(1870).&lt;/p&gt;
+				&lt;hr /&gt;
+				&lt;p&gt;&lt;small&gt;Source: &lt;a
+				href=&quot;http://en.wikipedia.org/wiki/Hey_Diddle_Diddle&quot;&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+			</textarea>
+			
+			<p class="tip">
+				The text format feature is automatically integrated with <a href="./acf.html">Advanced Content Filter</a>, 
+				so all custom format definitions are treated as allowed by the editor content filtering mechanism.
+			</p>
+
+			<h2>Related Features</h2>
+			<ul>
+				<li><a href="./basicstyles.html">Authoring Content &ndash; Basic Text Styles: Bold, Italic and More</a></li>
+				<li><a href="./styles.html">Authoring Content &ndash; Applying Styles to Editor Content</a></li>
+				<li><a href="./colorbutton.html">Authoring Content &ndash; Setting Text and Background Color</a></li>
+				<li><a href="./acf.html">Content Filtering &ndash; Advanced Content Filter &ndash; Automatic Mode</a></li>
+			</ul>
+
+			<script data-sample="1">
+				CKEDITOR.replace( 'editor1', {
+					height: 265,
+					// List of text formats available for this editor instance.
+					format_tags: 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
+				} );
+			</script>
+
+			<script data-sample="2">
+				CKEDITOR.replace( 'editor2', {
+					height: 265,
+					// Adding a custom stylesheet with some additional styles for text formats. 
+					// Default CKEditor styles are included as well to avoid copying default styles.
+					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/format.css' ],
+					// List of text formats available for this editor instance.
+					format_tags: 'p;h1;h2;h3;pre;div',
+					// Custom Heading 1 and Formatted format definitions.
+					format_h1: { element: 'h1', attributes: { 'class': 'jollygreen' } },
+					format_pre: { element: 'pre', attributes: { 'class': 'jollygreen' } }
+				} );
+			</script>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
