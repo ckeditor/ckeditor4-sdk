@@ -1,15 +1,15 @@
 {
-    "name": "ckeditor-sdk",
-    "version": "0.0.1",
-    "description": "A set of software development tools for CKEditor along with samples.",
-    "dependencies": {
-        "grunt": "~0.4.5",
-        "grunt-shell": "~0.5.0",
-        "grunt-contrib-compass": "~1.0.1"
-    },
-    "author": "CKSource (http://cksource.com/)",
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/ckeditor/ckeditor-sdk"
-    }
+	"name": "ckeditor-sdk",
+	"version": "0.0.1",
+	"description": "A set of software development tools for CKEditor along with samples.",
+	"dependencies": {
+		"grunt": "~0.4.5",
+		"grunt-shell": "~0.5.0",
+		"grunt-contrib-compass": "~1.0.1"
+	},
+	"author": "CKSource (http://cksource.com/)",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/ckeditor/ckeditor-sdk"
+	}
 }
