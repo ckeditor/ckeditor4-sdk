@@ -480,20 +480,20 @@
 	function initSidebarAccordion( body ) {
 		var sidebar = body.querySelector( 'nav.sdk-sidebar' );
 
-		if ( sidebar.addEventListener ) {
-			sidebar.addEventListener( 'click', onClick );
-		} else {
-			sidebar.attachEvent( 'onclick', onClick );
+		if ( document.title.indexOf( 'Homepage' ) != -1 ) {
+			activateGroup( sidebar.querySelector( 'h3' ) );
 		}
 
-		function onClick( evt ) {
-			var target = evt.target || evt.srcElement;
+		attachEvent( sidebar, 'click', function( evt ) {
+			activateGroup( evt.target || evt.srcElement );
+		} );
 
-			if ( target.tagName == 'H3' ) {
-				target.className = target.className == 'active' ? '' : 'active';
+		function activateGroup( header ) {
+			if ( header.tagName == 'H3' ) {
+				header.className = header.className == 'active' ? '' : 'active';
 
 				// Force redraw on IE8.
-				target.parentElement.className = target.parentElement.className;
+				header.parentElement.className = header.parentElement.className;
 			}
 		}
 	}
