@@ -27,34 +27,22 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<style data-sample="2">
 		/* The following styles are here just to make the "Massive Inline Editing" sample look nice. */
 
-		/* A workaround to show Arial Black font in Firefox. */
-		@font-face {
-			font-family: 'arial-black';
-			src: local('Arial Black');
-		}
-
-		#columns *[contenteditable="true"], #header *[contenteditable="true"] {
-			padding: 10px;
-		}
-
 		#header {
 			overflow: hidden;
-			padding: 0 0 30px;
+			padding: 10px 10px 30px;
 			border-bottom: 5px solid #05B2D2;
 			position: relative;
 			color: #333;
-			background-color: #f9f9f9;
 		}
 
 		#headerLeft,
 		#headerRight {
 			width: 49%;
-			overflow: hidden;
 		}
 
 		#headerLeft {
 			float: left;
-			padding: 10px 1px 1px;
+			padding: 1px 1px 1px;
 		}
 
 		#headerLeft h2,
@@ -104,9 +92,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		#columns {
 			color: #333;
 			overflow: hidden;
-			padding: 20px 0;
+			padding: 20px 10px;
 			font-size: 0.9em;
-			background-color: #f9f9f9;
 		}
 
 		#columns > div {
