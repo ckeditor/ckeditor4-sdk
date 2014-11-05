@@ -145,24 +145,10 @@ textarea.disabled
 		height: 100%;
 		position: relative;
 
-		& > button, & > a
-		{
-			@include border-radius( 3px );
-			font: #{$base-font-size}/#{$base-line-height} $sdk-font-stack;
-			border: 1px solid #dadada;
-			display: inline-block;
-			padding: 3px;
-			color: $sdk-link-color;
-			text-decoration: none;
-			background: #fefefe;
-			margin: 0 4px 0 0;
-			cursor: pointer;
-		}
-
 		& > div.textarea-wrapper
 		{
 			position: absolute;
-			top: 31px;
+			top: 45px;
 			right: 0;
 			bottom: 0;
 			left: 0;
@@ -187,5 +173,30 @@ textarea.disabled
 		word-wrap: normal;
 		overflow: auto;
 		font-family: $sdk-font-stack-monospace;
+	}
+
+	.source-code-tab
+	{
+		@include border-radius( 3px );
+		@include adjust-font-size-to( .813rem );
+		display: inline-block;
+		background: $sdk-link-color;
+		cursor: pointer;
+		text-decoration: none;
+		padding: 2px 10px 0;
+		color: #fff;
+		@include user-select( none );
+		@include box-shadow( 0 2px 0 adjust-lightness( $sdk-link-color, -10% ) );
+		@include text-shadow( 0 -1px $sdk-link-color-hover );
+
+		&:hover, &:active, &:focus
+		{
+			background: $sdk-link-color-hover;
+		}
+	}
+
+	.source-code-tab + .source-code-tab
+	{
+		margin-left: 15px;
 	}
 }
