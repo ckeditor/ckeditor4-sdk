@@ -165,11 +165,25 @@ It is forbidden to copy and distribute this file in its original or modified for
 		font-style: italic;
 	}
 
-	// Used in samples/sourcearea.html.
-	.inline-editor
+	.cke_editable_inline
 	{
-		border: 1px dotted #999;
-		padding: 5px 20px;
+		padding: 10px;
+		cursor: pointer;
+		outline: 1px dashed #eee;
+
+		&:hover
+		{
+			outline: 1px dashed #ccc;
+			background: #f4f4f4;
+		}
+
+		&.cke_focus
+		{
+			cursor: auto;
+			outline: 1px solid #ddd;
+			background: inherit;
+			@include focused-element;
+		}
 	}
 
 	.tip
