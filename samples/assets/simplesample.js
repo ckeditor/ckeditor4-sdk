@@ -294,8 +294,8 @@
 					sampleName = metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
 					code = [
 						'<div>',
-							'<button data-action="selectCode">Select Code</button>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" data-action="downloadCode" download="' + sampleName + '.html">Download</a>' : '' ),
+							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
 									sampleSourceDialog,
@@ -311,7 +311,7 @@
 						closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
 					} ),
 					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
-					selectButton = modalElem.findOne( 'button' ),
+					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
 					textarea = modalElem.findOne( 'textarea' );
 
 				function escListener( evt ) {
@@ -320,8 +320,9 @@
 					}
 				}
 
-				selectButton.on( 'click', function() {
+				selectButton.on( 'click', function( evt ) {
 					textarea.$.select();
+					evt.data.preventDefault();
 				} );
 
 				modal.afterShow( function() {
