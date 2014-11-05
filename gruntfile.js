@@ -75,9 +75,9 @@ module.exports = function( grunt ) {
 					sourcemap: true,
 
 					sassDir: 'template/theme/sass',
-					cssDir: 'dev/release/theme/css',
-					imagesDir: 'dev/release/theme/img',
-					fontsDir: 'dev/release/theme/fonts',
+					cssDir: 'dev/ckeditor_sdk/theme/css',
+					imagesDir: 'dev/ckeditor_sdk/theme/img',
+					fontsDir: 'dev/ckeditor_sdk/theme/fonts',
 
 					outputStyle: 'expanded'
 				}
