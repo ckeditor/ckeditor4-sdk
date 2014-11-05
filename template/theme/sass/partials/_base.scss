@@ -27,6 +27,11 @@ $sdk-box-background-color:		#f5f5f5;
 $sdk-box-border-color:			#ddd;
 
 $sdk-ckeditor-color:			#cceaee;
+$sdk-focused-color:				rgb(122, 185, 237);
+
+@mixin focused-element {
+	@include box-shadow( 0 0 5px 3px $sdk-focused-color )
+}
 
 $std-standard-vgap: 			1.2em;
 
