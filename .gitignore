@@ -6,3 +6,4 @@ template/theme/css
 node_modules
 *.sublime-workspace
 *.sublime-project
+.bender
