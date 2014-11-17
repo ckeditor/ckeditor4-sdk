@@ -11,7 +11,8 @@
 		}
 	};
 
-	var HTML5 = {
+	var simpleSample = {},
+		HTML5 = {
 			downloadAttr: typeof document.createElement( 'a' ).download != 'undefined'
 		},
 		SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
@@ -87,8 +88,7 @@
 
 	function prepareSamplesNames() {
 		var meta = document.getElementsByTagName( 'meta' ),
-			sdkMeta = null,
-			metaNames;
+			sdkMeta = null;
 
 		accept( meta, function( element ) {
 			if ( element.name == 'sdk-samples' ) {
@@ -105,9 +105,11 @@
 		var resources = prepareSampleResources(),
 			body = document.getElementsByTagName( 'body' )[ 0 ],
 			sections = document.getElementsByTagName( 'section' ),
-			sdkContents,
-			metaNames = prepareSamplesNames(),
-			samplesList = createFromHtml( prepareSamplesList( resources, metaNames ) );
+			sdkContents;
+
+		simpleSample.metaNames = prepareSamplesNames();
+
+		var samplesList = createFromHtml( prepareSamplesList( resources ) );
 
 		initSidebarAccordion( body );
 
@@ -137,12 +139,12 @@
 				return false;
 			}
 			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value;
-			showSampleSource( sampleId, metaNames );
+			showSampleSource( sampleId );
 
 			return false;
 		} );
 
-		function createSampleSourceCode( id, metaNames, wrapInHtmlStructure, wrapInCodePre, doubleEscapeTextAreaContent ) {
+		function createSampleSourceCode( id, wrapInHtmlStructure, wrapInCodePre, doubleEscapeTextAreaContent ) {
 			var sampleResources = resources[ id ],
 				resourcesString = '',
 				headResources = [],
@@ -189,7 +191,7 @@
 				];
 			}
 
-			resourcesString = getTemplatePre( headResources, metaNames[ id - 1 ] ).join( '' ) + resourcesString + getTemplatePost().join( '' );
+			resourcesString = getTemplatePre( headResources, simpleSample.metaNames[ id - 1 ] ).join( '' ) + resourcesString + getTemplatePost().join( '' );
 
 			// Removing data-sample attribute.
 			resourcesString = resourcesString.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
@@ -267,18 +269,19 @@
 			resourcesString = fixUrls( resourcesString );
 
 			return [
-				wrapInHtmlStructure ? getTemplatePre( [], metaNames[ id - 1 ] ).join( '' ) : '',
+				wrapInHtmlStructure ? getTemplatePre( [], simpleSample.metaNames[ id - 1 ] ).join( '' ) : '',
 				wrapInCodePre ? '<code><pre>' : '',
 				resourcesString,
 				wrapInCodePre ? '</pre></code>' : '',
 				wrapInHtmlStructure ? getTemplatePost().join( '' ) : ''
 			].join( '' ).replace( /(data-sample[\s|\S]*?\"[\s|\S]*?\")/g, '' );
 		}
+		simpleSample.createSampleSourceCode = createSampleSourceCode;
 
 		var showSampleSource;
 		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
-			showSampleSource = function( sampleId, metaNames ) {
-				var code = createSampleSourceCode( sampleId, metaNames );
+			showSampleSource = function( sampleId ) {
+				var code = createSampleSourceCode( sampleId );
 				if ( popup ) {
 					popup.close();
 				}
@@ -288,14 +291,14 @@
 				popup.document.write( code );
 			};
 		} else {
-			showSampleSource = function( sampleId, metaNames ) {
-				var sampleSourceDialog = createSampleSourceCode( sampleId, metaNames, false, false ),
-					sampleSourceDownload = createSampleSourceCode( sampleId, metaNames, false, false, false ),
-					sampleName = metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
+			showSampleSource = function( sampleId ) {
+				var sampleSourceDialog = createSampleSourceCode( sampleId, false, false );
+				var sampleSourceDownload = createSampleSourceCode( sampleId, false, false, true );
+				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
 					code = [
 						'<div>',
 							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ).replace( /&amp;lt/g, '&lt' ).replace( /&amp;gt/g, '&gt' ) ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
 									sampleSourceDialog,
@@ -467,11 +470,11 @@
 		}
 	}
 
-	function prepareSamplesList( examples, names ) {
+	function prepareSamplesList( examples ) {
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a href="' + id + '">' + names[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="' + id + '"><a href="' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
 		}
 		template += '</ul></div>';
 
@@ -483,6 +486,11 @@
 
 		if ( document.title.indexOf( 'Homepage' ) != -1 ) {
 			activateGroup( sidebar.querySelector( 'h3' ) );
+		}
+
+		if ( !sidebar ) {
+			console.warn( 'Couldn\'t find sidebar'  );
+			return;
 		}
 
 		attachEvent( sidebar, 'click', function( evt ) {
@@ -498,4 +506,6 @@
 			}
 		}
 	}
+
+	window.simpleSample = simpleSample;
 }() );

@@ -64,7 +64,7 @@
             var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
             var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
 
-            expect( textareaValue ).to.equal( '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>' );
+            expect( textareaValue ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
         } );
     } );
 
