@@ -4,11 +4,12 @@
 		var iframe = document.createElement( 'iframe' );
 		document.body.appendChild( iframe );
 
-		iframe.contentDocument.body.innerHTML = code;
+		iframe.contentDocument.body.innerHTML = code.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' );
 
 		return {
 			iframe: iframe,
-			body: iframe.contentDocument.body
+			body: iframe.contentDocument.body,
+			textareaValue: iframe.contentDocument.body.querySelector( 'textarea' ).value
 		}
 	}
 
@@ -16,27 +17,24 @@
 		var doubleEscapeTextarea = false;
 
 		it( 'which has data-sample-short attribute', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>' );
 		} );
 
 		it( 'which has not extra attributes', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '2', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '2', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '<p>Hello moto</p>' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '<p>Hello moto</p>' );
 		} );
 
 		it( 'which has data-sample-short attribute in nested textarea', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>' );
 		} );
 	} );
 
@@ -44,27 +42,24 @@
 		var doubleEscapeTextarea = true;
 
 		it( 'which has data-sample-short attribute', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 
 		it( 'which has not extra attributes', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '2', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '2', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '&lt;p&gt;Hello moto&lt;/p&gt;' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '&lt;p&gt;Hello moto&lt;/p&gt;' );
 		} );
 
 		it( 'which has data-sample-short attribute in nested textarea', function() {
-			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea );
-			var sandbox = createSandbox( downloadSampleCode.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ) );
-			var textareaValue = sandbox.body.querySelector( 'textarea' ).value.trim();
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
 
-			expect( textareaValue ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textareaValue.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 	} );
 
