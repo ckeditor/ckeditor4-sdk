@@ -421,8 +421,8 @@
 					// When attribute is present we don't want replace content with placeholder.
 					if ( !sampleClear ) {
 						// Setting placeholder for textareas and keeping reference to content in global array.
-						var regexpTextarea = /(\<textarea.*?\>)([\s\S]*?)\n(\s*)(\<\/textarea>)/g,
-							regexpScript = /(\<script.*?\>)([\s\S]*?)\n(\s*)(\<\/script>)/g;
+						var regexpTextarea = /(\<textarea.*?\>)([\s\S]*?)\n*(\s*)(\<\/textarea>)/g,
+							regexpScript = /(\<script.*?\>)([\s\S]*?)\n*(\s*)(\<\/script>)/g;
 
 						var pickPlaceholder = function( text, $1, $2, $3, $4 ) {
 							$3 = $3.replace( '\n', '' );

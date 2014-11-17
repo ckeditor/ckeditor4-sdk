@@ -61,6 +61,13 @@
 
 			expect( sandbox.textareaValue.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
+
+		it( 'which has textarea content in one line', function() {
+			var downloadSampleCode = simpleSample.createSampleSourceCode( '4', false, false, doubleEscapeTextarea ),
+				sandbox = createSandbox( downloadSampleCode );
+
+			expect( sandbox.textareaValue.trim() ).to.equal( '&lt;p&gt;Hello moto&lt;/p&gt;' );
+		} );
 	} );
 
 }() );
