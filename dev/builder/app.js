@@ -9,9 +9,7 @@
 
 var fs = require( 'fs' ),
     ncp = require( 'ncp' ),
-    StringDecoder = require('string_decoder' ).StringDecoder,
     exec = require( 'child_process' ).exec,
-    spawn = require( 'child_process' ).spawn,
     archiver = require( 'archiver' ),
     nomnom = require( 'nomnom' ),
     rimraf = require( 'rimraf' ),
@@ -25,6 +23,7 @@ var fs = require( 'fs' ),
     whenRimraf = nodefn.lift( rimraf ),
     whenKeys = require( 'when/keys' ),
     _ = require( 'lodash-node' ),
+    tools = require( './tools' ),
 
     Sample = require( './lib/Sample' ),
 
@@ -49,13 +48,6 @@ var fs = require( 'fs' ),
 
 require( 'when/monitor/console' );
 
-// sync
-function selectFilesSync( filesArr ) {
-    return _.filter( filesArr, function( fileName ) {
-        return fileName.match( /.html$/i ) != null;
-    } );
-}
-
 // return promise
 function readFiles( filesArr ) {
     var filesReadPromises = _.map( filesArr, function( fileName ) {
@@ -72,7 +64,7 @@ function readFiles( filesArr ) {
     return whenKeys.all( filesReadPromises );
 }
 
-// return array of Sample instances
+// eturn array of Sample instances
 function setupSamplesSync( _samples ) {
     var zipFilename = getZipFilename();
 
@@ -268,7 +260,7 @@ function copyMathjaxFiles() {
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Neo-Euler' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/STIX-Web' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/NativeMML' ) ),
- 	        currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/SVG' ) ),
+            currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/SVG' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/test' ) ),
             currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/unpacked' ) )
         ] );
@@ -390,7 +382,7 @@ function zipBuild() {
 
 function readFilesAndValidateLinks() {
     return readSamplesDir()
-        .then( selectFilesSync )
+        .then( tools.selectFilesSync )
         .then( readFiles )
         .then( setupSamplesSync )
         .then( validateLinks );
@@ -405,7 +397,7 @@ function validateLinks( elements ) {
     } );
     elements.index.validateLinks( errors );
 
-    handleFileSync( BASE_PATH + '/template/index.html', function ( content ) {
+    tools.handleFileSync( BASE_PATH + '/template/index.html', function ( content ) {
         var $ = cheerio.load( content, {
             decodeEntities: false
         } );
@@ -489,7 +481,7 @@ function build( opts ) {
         .then( copyVendor )
         .then( copyMathjaxFiles )
         .then( readSamplesDir )
-        .then( selectFilesSync )
+        .then( tools.selectFilesSync )
         .then( readFiles )
         .then( setupSamplesSync )
         .then( validateLinks )
@@ -513,14 +505,14 @@ function build( opts ) {
 
                 return copyGuides( urls )
                     .then( fixGuidesLinks )
-                    .then( saveFiles )
+                    .then( tools.saveFiles )
                     .then( fixFontsLinks )
-                    .then( saveFiles )
+                    .then( tools.saveFiles )
                     .then( buildDocumentation )
-                    .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
-                    .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
+                    .then( tools.curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
+                    .then( tools.curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
-                    .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
+                    .then( tools.curryExec( 'rm', [ '-rf', '../guides' ] ) )
                     .then( function() {
                         if ( opts.pack ) {
                             return packbuild();
@@ -540,57 +532,7 @@ function build( opts ) {
 
 function buildDocumentation() {
     console.log( 'Building documentation.' );
-    return curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
-}
-
-function curryExec( command, args, silent ) {
-    silent = ( silent === true );
-
-    return function () {
-        return when.promise( function( resolve, reject ) {
-            var cmd = spawn( command, args );
-
-            VERBOSE && console.log( 'Executing: ', command, args.join( ' ' ) );
-
-            if ( !silent ) {
-                cmd.stdout.on( 'data', consoleBuffer );
-                cmd.stderr.on( 'data', consoleBuffer );
-            }
-
-            function consoleBuffer( data ) {
-                var decoder = new StringDecoder( 'utf8' );
-                console.log( decoder.write( data ) );
-            }
-
-            cmd.on( 'exit', function( code ) {
-                cmd.stdin.end();
-
-                if ( code === 0 ) {
-                    resolve();
-                } else {
-                    reject( code );
-                }
-            } );
-        } );
-    }
-}
-
-/**
- * In first param key is a file name and value is file content.
- *
- * @param {Object} data
- * @returns {Promise}
- */
-function saveFiles( data ) {
-    var filesReadPromises = _.map( data, function( fileContent, fileName ) {
-        var promise = whenFs.writeFile( fileName, fileContent, 'utf8' );
-
-        return [ fileName, promise ];
-    } );
-
-    filesReadPromises = _.object( filesReadPromises );
-
-    return whenKeys.all( filesReadPromises );
+    return tools.curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
 }
 
 /**
@@ -647,13 +589,6 @@ function fixFontsLinks() {
     } );
 }
 
-function handleFileSync( path, handler ) {
-    var content = fs.readFileSync( path, 'utf8' ),
-        result = handler( content );
-
-    ( typeof result === 'string' ) && fs.writeFileSync( path, result, 'utf8' );
-}
-
 function fixIndexSync() {
     var path = RELEASE_PATH + '/index.html';
 
@@ -672,7 +607,7 @@ function fixIndexSync() {
         return $.html();
     }
 
-    handleFileSync( path, handler );
+    tools.handleFileSync( path, handler );
 }
 
 /**
@@ -726,7 +661,7 @@ function fixdocs() {
         return $.html();
     }
 
-    handleFileSync( path, handler );
+    tools.handleFileSync( path, handler );
 
     return call( ncp, 'assets', RELEASE_PATH + '/docs/resources' );
 }
