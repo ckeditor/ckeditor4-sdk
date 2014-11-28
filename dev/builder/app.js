@@ -487,7 +487,6 @@ function build( opts ) {
         .then( copyTemplate )
         .then( copySamples )
         .then( copyVendor )
-        // .then( copyFiles )
         .then( copyMathjaxFiles )
         .then( readSamplesDir )
         .then( selectFilesSync )

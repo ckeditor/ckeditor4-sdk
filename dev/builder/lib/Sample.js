@@ -23,16 +23,29 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
     this.$header = this.$( 'header' );
     this.$footer = this.$( 'footer' );
 
+    // Pick all data-append elements and store them in array.
+    if ( this.name == 'index' ) {
+        this.appendElements = [];
+
+        this.$( '[data-append]' ).each( function() {
+            var element = that.$( this ),
+                elementHtml = that.$.html( element ),
+                selector = this.attribs[ 'data-append' ];
+
+            that.appendElements.push( {
+                selector: selector,
+                html: elementHtml
+            } );
+        } );
+    }
+
     if ( indexObj ) {
         this.$header.html( indexObj.$header.html() );
         this.$footer.html( indexObj.$footer.html() );
 
-        indexObj.$( '[data-append]' ).each( function() {
-            var element = indexObj.$( this ),
-                elementHtml = indexObj.$.html( element ),
-                selector = this.attribs[ 'data-append' ];
-
-            that.$( selector ).append( elementHtml );
+        // Appending all data-append elements in proper position.
+        _.each( indexObj.appendElements, function( element ) {
+            that.$( element.selector ).append( element.html );
         } );
 
     } else {
@@ -40,6 +53,9 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
             this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
         }
     }
+
+    // Don't need data-append attributes because they are useless now.
+    this.$( '[data-append]' ).removeAttr( 'data-append' );
 
     this.$nav = this.$( 'nav.sdk-sidebar' );
 }
