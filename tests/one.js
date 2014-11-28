@@ -1,13 +1,15 @@
 ( function() {
 	var predefinedText = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
-		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt';
+		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
 
 	var samplesDescriptions = {
 		'1': 'has data-sample-short attribute',
 		'2': 'has not extra attributes',
 		'3': 'has data-sample-short attribute in nested textarea',
 		'4': 'has textarea content in one line',
-		'5': 'has &quot; characters'
+		'5': 'has &quot; characters',
+		'6': 'has &lt; and &gt; characters in div',
+		'7': 'has textarea with escaped code tag'
 	};
 
 	function createSandbox( code, forDownload ) {
@@ -19,6 +21,8 @@
 
 		if ( !forDownload ) {
 			code = code.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' );
+		} else {
+			code = code.replace( /&/g, '&amp;' );
 		}
 
 		iframe.contentDocument.body.innerHTML = code;
@@ -126,11 +130,24 @@
 		} );
 
 		it( 'which ' + samplesDescriptions[ 5 ], function() {
-			//debugger;
 			var sampleSourceCode = simpleSample.getSampleSourceCode( '5' ),
 				sandbox = createSandbox( sampleSourceCode.download, true );
 
-			expect( sandbox.body.querySelector('input').value ).to.equal( 'Execute the "bold" Command' );
+			expect( sandbox.body.querySelector('input').value ).to.equal( 'Execute the &quot;bold&quot; Command' );
+		} );
+
+		it( 'which ' + samplesDescriptions[ 6 ], function() {
+			var sampleSourceCode = simpleSample.getSampleSourceCode( '6' ),
+				sandbox = createSandbox( sampleSourceCode.download, true );
+
+			expect( sandbox.body.querySelector( 'code' ).innerText ).to.equal( '&lt;iframe&gt;' );
+		} );
+
+		it( 'which' + samplesDescriptions[ 7 ], function() {
+			var sampleSourceCode = simpleSample.getSampleSourceCode( '7' ),
+				sandbox = createSandbox( sampleSourceCode.download, true );
+
+			expect( sandbox.body.querySelector( 'textarea' ).value.trim() ).to.equal( '&amp;nbsp;&lt;code&gt;div&lt;/code&gt;&amp;nbsp;' );
 		} );
 	} );
 
