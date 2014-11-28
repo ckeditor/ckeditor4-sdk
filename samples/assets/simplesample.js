@@ -125,6 +125,27 @@
 			sdkContents.appendChild( samplesList );
 		}
 
+		// http://stackoverflow.com/questions/5796718/html-entity-decode
+		var decodeEntities = ( function() {
+			// this prevents any overhead from creating the object each time
+			var element = document.createElement( 'div' );
+
+			function decodeHTMLEntities ( str ) {
+				if( str && typeof str === 'string' ) {
+					// strip script/html tags
+					str = str.replace( /<script[^>]*>([\S\s]*?)<\/script>/gmi, '' );
+					str = str.replace( /<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '' );
+					element.innerHTML = str;
+					str = element.textContent;
+					element.textContent = '';
+				}
+
+				return str;
+			}
+
+			return decodeHTMLEntities;
+		} )();
+
 		attachEvent( samplesList, 'click', function( e ) {
 			var clicked = e.target || e.srcElement,
 				relLi,
@@ -143,6 +164,17 @@
 
 			return false;
 		} );
+
+		function getSampleSourceCode( sampleId ) {
+
+			var dialog = createSampleSourceCode( sampleId, false, false );
+
+			return {
+				dialog: dialog,
+				download: decodeEntities( dialog )
+			};
+		}
+		simpleSample.getSampleSourceCode = getSampleSourceCode;
 
 		function createSampleSourceCode( id, wrapInHtmlStructure, wrapInCodePre, doubleEscapeTextAreaContent ) {
 			var sampleResources = resources[ id ],
@@ -206,11 +238,7 @@
 				return $1 + $3.trim() + $6;
 			} );
 
-			resourcesString = resourcesString.replace( /(\<code\>)(.*?)(\<\/code\>)/g, function( match, preCode, inner, postCode ) {
-				return preCode + inner.replace( /\&/g, '&amp;' ) + postCode;
-			} );
-
-			resourcesString = resourcesString.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
+			resourcesString = resourcesString.replace( /&/g, '&amp;' ).replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
 			resourcesString = resourcesString.replace( /(\n)(\s*)([^\n]*)\[(\d)\]PLACEHOLDER/g, function( match, $0, $1, $2, $3 ) {
 				var placeholder = placeholders[ $3 ],
@@ -292,16 +320,15 @@
 			};
 		} else {
 			showSampleSource = function( sampleId ) {
-				var sampleSourceDialog = createSampleSourceCode( sampleId, false, false );
-				var sampleSourceDownload = createSampleSourceCode( sampleId, false, false, true );
+				var sampleSource = getSampleSourceCode( sampleId );
 				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
 					code = [
 						'<div>',
 							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSourceDownload.replace( /&lt;/g, '<' ).replace( /&gt;/g, '>' ).replace( /&amp;lt/g, '&lt' ).replace( /&amp;gt/g, '&gt' ) ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
-									sampleSourceDialog,
+									sampleSource.dialog,
 								'</textarea>',
 							'</div>',
 						'</div>'
