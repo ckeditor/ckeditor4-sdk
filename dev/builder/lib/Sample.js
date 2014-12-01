@@ -1,9 +1,10 @@
+/* jshint node: true */
+
 /**
  * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 var cheerio = require( 'cheerio' ),
-	url = require( 'url' ),
 	_ = require( 'lodash-node' ),
 	TITLE_PREFIX = 'CKEditor SDK » Samples » ';
 
@@ -94,7 +95,7 @@ Sample.prototype = {
 		var that = this;
 
 		if ( this.name == 'index' || this.name == 'license' ) {
-			this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) {
+			this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) { /* jshint node: true */
 				// We want to manipulate only this attributes - when are not present then we are doing nothing.
 				if ( !this.attribs.href && !this.attribs.src ) {
 					return;
@@ -124,8 +125,9 @@ Sample.prototype = {
 		} );
 
 		this.$( 'script[data-sample]' ).each( function( index, element ) {
-			var element = that.$( element ),
-				html = element.html(),
+			element = that.$( element );
+
+			var html = element.html(),
 				resultHtml;
 
 			resultHtml = html.replace( /(\s{1})(['|"][\s\S]*?['|"])([\s\S]*?)/g, function( match, $1, $2, $3 ) {
@@ -147,7 +149,7 @@ Sample.prototype = {
 	validateLinks: function( errors ) {
 		var that = this;
 
-		this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function( index, element ) {
+		this.$( '.sdk-main-navigation a, .sdk-contents a, nav.sdk-sidebar a' ).each( function() {
 			var result = Sample.validateLink( this.attribs.href, errors );
 
 			if ( result instanceof Error ) {
@@ -185,19 +187,17 @@ Sample.fixLink = function( href, prefix ) {
 };
 
 Sample.fixFormAction = function( href ) {
-	var regExp = /\.\/(\S*)/;
-
 	return href.replace( /\.\/(\S*)/, function( a, $1 ) {
 		return 'http://sdk.ckeditor.com/samples/' + $1;
 	} );
 };
 
-Sample.validateLink = function( href, errors ) {
+Sample.validateLink = function( href ) {
 	if ( typeof href != 'string' ) {
 		return new Error( 'Anchor does not have href attribute. ' );
 	}
 
-	if ( href.length == 0 ) {
+	if ( href.length === 0 ) {
 		return new Error( 'Href attribute is empty.' );
 	}
 

@@ -9,7 +9,6 @@
 
 var fs = require( 'fs' ),
 	ncp = require( 'ncp' ),
-	exec = require( 'child_process' ).exec,
 	archiver = require( 'archiver' ),
 	nomnom = require( 'nomnom' ),
 	rimraf = require( 'rimraf' ),
@@ -98,7 +97,7 @@ function parseCategoriesSync( elements ) {
 	categories = JSON.parse( JSON.stringify( validCategories ) );
 
 	_.each( elements.samples, function( sample ) {
-		var found, foundCounter = 0;
+		var found;
 
 		// Looking for sample location in group and subgroup.
 		_.each( categories, function( category ) {
@@ -402,7 +401,7 @@ function validateLinks( elements ) {
 			decodeEntities: false
 		} );
 
-		$( '.sdk-main-navigation a' ).each( function( index, element ) {
+		$( '.sdk-main-navigation a' ).each( function() {
 			var result = Sample.validateLink( this.attribs.href, errors );
 			if ( result instanceof Error ) {
 				errors.push( {
@@ -439,7 +438,7 @@ nomnom.command( 'build' )
 	.callback( wrapper( build ) )
 	.help( 'Building release version of sdk.' )
 	.option( 'version', {
-		default: 'offline'
+		'default': 'offline'
 	} )
 	.option( 'pack', {
 		flag: true
@@ -451,7 +450,7 @@ nomnom.command( 'validatelinks' )
 nomnom.nocommand()
 	.callback( wrapper( build ) )
 	.option( 'version', {
-		default: 'offline'
+		'default': 'offline'
 	} );
 
 var opts = nomnom.parse();
@@ -497,9 +496,12 @@ function build( opts ) {
 		.then( function() {
 			if ( opts.version === 'offline' ) {
 				// Have to crate artificial config with specific options for offline version.
-				var originalCfg = getOriginalDocsBuilderConfig(),
-					offlineCfg = prepareOfflineDocsBuilderConfig( originalCfg ),
-					urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
+				var originalCfg = getOriginalDocsBuilderConfig();
+
+				prepareOfflineDocsBuilderConfig( originalCfg );
+
+
+				var urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
 
 				fixIndexSync();
 
@@ -527,7 +529,7 @@ function build( opts ) {
 			}
 		} )
 		.then( done )
-		.catch( fail );
+		.catch( fail );// jshint ignore:line
 }
 
 function buildDocumentation() {
@@ -571,7 +573,7 @@ function fixFontsLinks() {
 				.then( function( content ) {
 					resolve( { content: content, url: url } );
 				} )
-				.catch( reject );
+				.catch( reject ); // jshint ignore:line
 		} );
 
 		return [ url, promise ];
