@@ -2,8 +2,8 @@ var fs = require( 'fs' ),
 	_ = require( 'lodash-node' ),
 	when = require( 'when' ),
 	spawn = require( 'child_process' ).spawn,
-	StringDecoder = require('string_decoder' ).StringDecoder,
-	nodefn = require('when/node'),
+	StringDecoder = require( 'string_decoder' ).StringDecoder,
+	nodefn = require( 'when/node' ),
 	whenFs = nodefn.liftAll( fs ),
 	whenKeys = require( 'when/keys' );
 
@@ -22,7 +22,7 @@ tools.selectFilesSync = function( filesArr ) {
 tools.curryExec = function( command, args, silent ) {
 	silent = ( silent === true );
 
-	return function () {
+	return function() {
 		return when.promise( function( resolve, reject ) {
 			var cmd = spawn( command, args );
 
