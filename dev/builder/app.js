@@ -24,7 +24,8 @@ var fs = require( 'fs' ),
 	whenRimraf = nodefn.lift( rimraf ),
 	whenKeys = require( 'when/keys' ),
 	_ = require( 'lodash-node' ),
-	tools = require( './tools' ),
+	tools = require( './utils/tools' ),
+	copy = require( './utils/copy' ),
 
 	Sample = require( './lib/Sample' ),
 
@@ -131,50 +132,6 @@ function parseCategoriesSync( elements ) {
 	return categories;
 }
 
-// return function, option.filter of ncp.
-function createNcpBlacklistFilter( blacklist ) {
-	return function( name ) {
-		var currPath = new Path( name );
-
-		return !_.some( blacklist, function( path ) {
-			var match = currPath.matchLeft( new Path( path ) );
-
-			if ( match ) {
-				VERBOSE && console.log( '  Omitting ' + name );
-			}
-
-			return match;
-		} );
-	};
-}
-
-// return promise
-function copyTemplate( PATHS, version ) {
-	console.log( 'Copying template files' );
-
-	var blacklist = [
-		// Omit SASS files.
-		path.join( PATHS.BASE, 'template/theme/sass' )
-	];
-
-	if ( version === 'online' ) {
-		blacklist.push(
-			// Omit fonts.
-			path.join( PATHS.BASE, 'template/theme/fonts' ),
-			path.join( PATHS.BASE, 'template/theme/css/fonts.css' ),
-
-			// Omit robots.
-			path.join( PATHS.BASE, 'template/robots.txt' )
-		);
-	}
-
-	var options = {
-		filter: createNcpBlacklistFilter( blacklist )
-	};
-
-	return call( ncp, '../../template', PATHS.RELEASE, options );
-}
-
 // return promise
 function copySamples( PATHS, version ) {
 	console.log( 'Copying sample files' );
@@ -186,7 +143,7 @@ function copySamples( PATHS, version ) {
 	}
 
 	var options = {
-		filter: createNcpBlacklistFilter( blacklist )
+		filter: copy.createNcpBlacklistFilter( blacklist )
 	};
 
 	return call( ncp, '../../samples', path.join( PATHS.RELEASE, 'samples' ), options );
@@ -208,7 +165,7 @@ function copyVendor( PATHS, version ) {
 	}
 
 	var options = {
-		filter: createNcpBlacklistFilter( blacklist )
+		filter: copy.createNcpBlacklistFilter( blacklist )
 	};
 
 	return call( ncp, '../../vendor', path.join( PATHS.RELEASE, 'vendor' ), options );
@@ -249,7 +206,7 @@ function copyMathjaxFiles( PATHS, verbose ) {
 			PATHS.MATHJAX + '/test',
 			PATHS.MATHJAX + '/unpacked'
 		],
-		blackListFilter = createNcpBlacklistFilter( blackFiles );
+		blackListFilter = copy.createNcpBlacklistFilter( blackFiles );
 
 	console.log( 'Copying Mathjax files' );
 
@@ -460,7 +417,7 @@ function removeAndCopyFiles() {
 		},
 
 		// Copying files
-		copyTemplate,
+		copy.copyTemplate,
 		copySamples,
 		copyVendor
 	];
