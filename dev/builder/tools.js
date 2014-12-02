@@ -7,14 +7,15 @@ var fs = require( 'fs' ),
 	//StringDecoder = require( 'string_decoder' ).StringDecoder,
 	nodefn = require( 'when/node' ),
 	whenFs = nodefn.liftAll( fs ),
-	whenKeys = require( 'when/keys' );
+	whenKeys = require( 'when/keys' ),
+	archiver = require( 'archiver' );
 
 var tools = {};
 
 // sync
 // Select files from array which have ".html" extension.
 // Location: tools.
-tools.selectFilesSync = function( filesArr ) {
+tools.selectHtmlFilesSync = function( filesArr ) {
 	return _.filter( filesArr, function( fileName ) {
 		return fileName.match( /.html$/i ) != null;
 	} );
@@ -77,6 +78,34 @@ tools.handleFileSync = function( path, handler ) {
 	result = handler( content );
 
 	( typeof result === 'string' ) && fs.writeFileSync( path, result, 'utf8' );
+};
+
+tools.zipDirectory = function( outputPath, workingDirectory, destination ) {
+	console.log( 'Packing directory into zip file...' );
+
+	return when.promise( function( resolve, reject ) {
+		var output,
+		archive = archiver( 'zip' );
+
+		if ( fs.existsSync( outputPath ) )
+			fs.unlinkSync( outputPath );
+
+		output = fs.createWriteStream( outputPath );
+		output.on( 'close', function() {
+			resolve();
+			console.log( 'Packing done. ' + archive.pointer() + ' total bytes.' );
+		} );
+
+		archive.on( 'error', function( err ) {
+			reject( err );
+		} );
+
+		archive.pipe( output );
+		archive.bulk( [
+			{ expand: true, cwd: workingDirectory, src: [ '**' ], dest: destination }
+		] );
+		archive.finalize();
+	} );
 };
 
 module.exports = tools;

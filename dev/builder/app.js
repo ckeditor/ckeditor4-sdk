@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* jshint node: true */
 
 /**
  * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
@@ -9,7 +10,6 @@
 
 var fs = require( 'fs' ),
 	ncp = require( 'ncp' ),
-	archiver = require( 'archiver' ),
 	nomnom = require( 'nomnom' ),
 	rimraf = require( 'rimraf' ),
 	path = require( 'path' ),
@@ -18,6 +18,8 @@ var fs = require( 'fs' ),
 	call = nodefn.call,
 	cheerio = require( 'cheerio' ),
 	when = require( 'when' ),
+	pipeline = require( 'when/pipeline' ),
+	sequence = require('when/sequence'),
 	whenFs = nodefn.liftAll( fs ),
 	whenRimraf = nodefn.lift( rimraf ),
 	whenKeys = require( 'when/keys' ),
@@ -26,17 +28,14 @@ var fs = require( 'fs' ),
 
 	Sample = require( './lib/Sample' ),
 
-	SAMPLES_PATH = '../../samples',
-	RELEASE_PATH = '../ckeditor_sdk',
-	BASE_PATH = path.resolve( '../..' ),
-	CKEDITOR_VERSION = determineCKEditorVersion(),
-	VENDORMATHJAX_PATH = path.resolve( BASE_PATH + '/vendor/mathjax' ),
+	PATHS = {
+		SAMPLES: '../../samples',
+		RELEASE: '../ckeditor_sdk',
+		BASE: path.resolve( '../..' ),
+		MATHJAX: path.resolve( path.resolve( '../..' ) + '/vendor/mathjax' )
+	},
 
-	validCategories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories,
-	samples = [],
-	index = null,
-	license = null,
-	categories = {},
+	CKEDITOR_VERSION = determineCKEditorVersion(),
 
 	REGEXP = {
 		LINK_FONT: /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g,
@@ -50,25 +49,26 @@ require( 'when/monitor/console' );
 // return promise
 function readFiles( filesArr ) {
 	var filesReadPromises = _.map( filesArr, function( fileName ) {
-		var promise = whenFs.readFile( SAMPLES_PATH + '/' + fileName, 'utf8' );
+		var promise = whenFs.readFile( PATHS.SAMPLES + '/' + fileName, 'utf8' );
 
 		return [ fileName, promise ];
 	} );
 
 	filesReadPromises = _.object( filesReadPromises );
 
-	filesReadPromises[ 'index.html' ] = whenFs.readFile( BASE_PATH + '/template/' + 'index.html', 'utf8' );
-	filesReadPromises[ 'license.html' ] = whenFs.readFile( BASE_PATH + '/template/' + 'license.html', 'utf8' );
+	filesReadPromises[ 'index.html' ] = whenFs.readFile( PATHS.BASE + '/template/' + 'index.html', 'utf8' );
+	filesReadPromises[ 'license.html' ] = whenFs.readFile( PATHS.BASE + '/template/' + 'license.html', 'utf8' );
 
 	return whenKeys.all( filesReadPromises );
 }
 
 // eturn array of Sample instances
 function setupSamplesSync( _samples ) {
-	var zipFilename = getZipFilename();
+	var samples,
+		zipFilename = getZipFilename();
 
-	index = new Sample( 'index', _samples[ 'index.html' ], undefined, zipFilename, opts );
-	license = new Sample( 'license', _samples[ 'license.html' ], undefined, zipFilename, opts );
+	var index = new Sample( 'index', _samples[ 'index.html' ], undefined, zipFilename, opts );
+	var license = new Sample( 'license', _samples[ 'license.html' ], undefined, zipFilename, opts );
 
 	if ( !( delete _samples[ 'index.html' ] ) ) {
 		throw 'Could not found "index.html" file in base directory.';
@@ -94,7 +94,7 @@ function setupSamplesSync( _samples ) {
 // return array of categories
 function parseCategoriesSync( elements ) {
 	console.log( 'Parsing categories' );
-	categories = JSON.parse( JSON.stringify( validCategories ) );
+	var categories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories;
 
 	_.each( elements.samples, function( sample ) {
 		var found;
@@ -149,22 +149,22 @@ function createNcpBlacklistFilter( blacklist ) {
 }
 
 // return promise
-function copyTemplate() {
+function copyTemplate( PATHS, version ) {
 	console.log( 'Copying template files' );
 
 	var blacklist = [
 		// Omit SASS files.
-		path.join( BASE_PATH, 'template/theme/sass' )
+		path.join( PATHS.BASE, 'template/theme/sass' )
 	];
 
-	if ( opts.version === 'online' ) {
+	if ( version === 'online' ) {
 		blacklist.push(
 			// Omit fonts.
-			path.join( BASE_PATH, 'template/theme/fonts' ),
-			path.join( BASE_PATH, 'template/theme/css/fonts.css' ),
+			path.join( PATHS.BASE, 'template/theme/fonts' ),
+			path.join( PATHS.BASE, 'template/theme/css/fonts.css' ),
 
 			// Omit robots.
-			path.join( BASE_PATH, 'template/robots.txt' )
+			path.join( PATHS.BASE, 'template/robots.txt' )
 		);
 	}
 
@@ -172,112 +172,116 @@ function copyTemplate() {
 		filter: createNcpBlacklistFilter( blacklist )
 	};
 
-	return call( ncp, '../../template', RELEASE_PATH, options );
+	return call( ncp, '../../template', PATHS.RELEASE, options );
 }
 
 // return promise
-function copySamples() {
+function copySamples( PATHS, version ) {
 	console.log( 'Copying sample files' );
 
 	var blacklist = [];
 
-	if ( opts.version === 'offline' ) {
-		blacklist.push( path.join( BASE_PATH, 'samples/*.php' ) );
+	if ( version === 'offline' ) {
+		blacklist.push( path.join( PATHS.BASE, 'samples/*.php' ) );
 	}
 
 	var options = {
 		filter: createNcpBlacklistFilter( blacklist )
 	};
 
-	return call( ncp, '../../samples', path.join( RELEASE_PATH, 'samples' ), options );
+	return call( ncp, '../../samples', path.join( PATHS.RELEASE, 'samples' ), options );
 }
 
 // return promise
-function copyVendor() {
+function copyVendor( PATHS, version ) {
 	console.log( 'Copying vendor files' );
 
-	fs.mkdirSync( path.join( RELEASE_PATH, 'vendor' ) );
+	fs.mkdirSync( path.join( PATHS.RELEASE, 'vendor' ) );
 
 	var blacklist = [
 		// Omit Mathjax files.
-		path.join( BASE_PATH, 'vendor/mathjax' )
+		path.join( PATHS.BASE, 'vendor/mathjax' )
 	];
 
-	if ( opts.version == 'online' ) {
-		blacklist.push( path.join( BASE_PATH, 'vendor/ckeditor' ) );
+	if ( version == 'online' ) {
+		blacklist.push( path.join( PATHS.BASE, 'vendor/ckeditor' ) );
 	}
 
 	var options = {
 		filter: createNcpBlacklistFilter( blacklist )
 	};
 
-	return call( ncp, '../../vendor', path.join( RELEASE_PATH, 'vendor' ), options );
+	return call( ncp, '../../vendor', path.join( PATHS.RELEASE, 'vendor' ), options );
 }
 
 function copyGuides( urls ) {
 	console.log( 'Copying guides' );
 
 	return when.promise( function( resolve, reject ) {
-		call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
+		call( ncp, '../../docs/guides', PATHS.RELEASE + '/../guides' ).done( function() {
 			resolve( urls );
 		}, reject );
 	} );
 }
 
-function copyMathjaxFiles() {
-	var options = {};
+function copyMathjaxFiles( PATHS, verbose ) {
+	var options = {},
+		blackFiles = [
+			PATHS.MATHJAX + '/docs',
+			PATHS.MATHJAX + '/extensions/MathML',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Asana-Math',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Gyre-Pagella',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Gyre-Termes',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Latin-Modern',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Neo-Euler',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/STIX-Web',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/TeX/png',
+			PATHS.MATHJAX + '/jax/input/MathML',
+			PATHS.MATHJAX + '/localization/*',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Asana-Math',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Gyre-Pagella',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Gyre-Termes',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Latin-Modern',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Neo-Euler',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/STIX-Web',
+			PATHS.MATHJAX + '/jax/output/NativeMML',
+			PATHS.MATHJAX + '/jax/output/SVG',
+			PATHS.MATHJAX + '/test',
+			PATHS.MATHJAX + '/unpacked'
+		],
+		blackListFilter = createNcpBlacklistFilter( blackFiles );
 
 	console.log( 'Copying Mathjax files' );
 
-	fs.mkdirSync( RELEASE_PATH + '/vendor/mathjax' );
+	fs.mkdirSync( PATHS.RELEASE + '/vendor/mathjax' );
 
 	options.filter = function( name ) {
 		var currPath = new Path( name );
 
 		var whiteList = _.some( [
 			( path.resolve( name ) === path.resolve( '../../vendor/mathjax' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/localization/en' ) )
+			currPath.matchLeft( new Path( PATHS.MATHJAX + '/localization/en' ) )
 		] );
 
 		var blackList = _.some( [
 			!!path.basename( name ).match( /^\./i ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/docs' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/extensions/MathML' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Asana-Math' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Gyre-Pagella' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Gyre-Termes' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Latin-Modern' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/Neo-Euler' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/STIX-Web' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/fonts/HTML-CSS/TeX/png' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/input/MathML' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/localization/*' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Asana-Math' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Gyre-Pagella' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Gyre-Termes' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Latin-Modern' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/Neo-Euler' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/HTML-CSS/fonts/STIX-Web' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/NativeMML' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/jax/output/SVG' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/test' ) ),
-			currPath.matchLeft( new Path( VENDORMATHJAX_PATH + '/unpacked' ) )
+			!blackListFilter( name )
 		] );
 
 		var preventCopy = !whiteList && blackList;
-		if ( VERBOSE && preventCopy ) {
+		if ( verbose && preventCopy ) {
 			console.log( '  Omitting ', name );
 		}
 
 		return !preventCopy;
 	};
 
-	return call( ncp, '../../vendor/mathjax', RELEASE_PATH + '/vendor/mathjax', options );
+	return call( ncp, '../../vendor/mathjax', PATHS.RELEASE + '/vendor/mathjax', options );
 }
 
 // sync method
-function prepareSamplesFilesSync() {
-	_.each( samples, function( sample ) {
+function prepareSamplesFilesSync( categories, files ) {
+	_.each( files.samples, function( sample ) {
 		var _path;
 		sample.setSidebar( categories );
 		sample.activateSamplesButton();
@@ -289,42 +293,42 @@ function prepareSamplesFilesSync() {
 			sample.fixCKEDITORVendorLinks( CKEDITOR_VERSION );
 		}
 
-		_path = RELEASE_PATH + '/samples/' + sample.name + '.html';
+		_path = PATHS.RELEASE + '/samples/' + sample.name + '.html';
 		fs.writeFileSync( _path, sample.$.html(), 'utf8' );
 		VERBOSE && console.log( 'Writing sample file: ', path.resolve( _path ) );
 	} );
 
-	index.setSidebar( categories );
-	index.activateSamplesButton();
+	files.index.setSidebar( categories );
+	files.index.activateSamplesButton();
 
-	license.setSidebar( categories );
-	license.activateSamplesButton();
+	files.license.setSidebar( categories );
+	files.license.activateSamplesButton();
 
 	if ( opts.version === 'offline' ) {
-		index.preventSearchEngineRobots();
-		index.fixLinks( '' );
-		index.fixFonts();
+		files.index.preventSearchEngineRobots();
+		files.index.fixLinks( '' );
+		files.index.fixFonts();
 
-		license.preventSearchEngineRobots();
-		license.fixLinks( '' );
-		license.fixFonts();
+		files.license.preventSearchEngineRobots();
+		files.license.fixLinks( '' );
+		files.license.fixFonts();
 	}
 
-	fs.writeFileSync( RELEASE_PATH + '/index.html', index.$.html(), 'utf8' );
-	VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/index.html' ) );
+	fs.writeFileSync( PATHS.RELEASE + '/index.html', files.index.$.html(), 'utf8' );
+	VERBOSE && console.log( 'Writing sample file: ', path.resolve( PATHS.RELEASE + '/index.html' ) );
 
-	fs.writeFileSync( RELEASE_PATH + '/license.html', license.$.html(), 'utf8' );
-	VERBOSE && console.log( 'Writing sample file: ', path.resolve( RELEASE_PATH + '/license.html' ) );
+	fs.writeFileSync( PATHS.RELEASE + '/license.html', files.license.$.html(), 'utf8' );
+	VERBOSE && console.log( 'Writing sample file: ', path.resolve( PATHS.RELEASE + '/license.html' ) );
 }
 
 // return promise
 function readSamplesDir() {
-	console.log( 'Reading sample directory', path.resolve( SAMPLES_PATH ) );
-	return whenFs.readdir( SAMPLES_PATH );
+	console.log( 'Reading sample directory', path.resolve( PATHS.SAMPLES ) );
+	return whenFs.readdir( PATHS.SAMPLES );
 }
 
 function getOriginalDocsBuilderConfig() {
-	return JSON.parse( fs.readFileSync( BASE_PATH + '/docs/config.json', 'utf8' ) );
+	return JSON.parse( fs.readFileSync( PATHS.BASE + '/docs/config.json', 'utf8' ) );
 }
 
 function prepareOfflineDocsBuilderConfig( cfg ) {
@@ -333,13 +337,13 @@ function prepareOfflineDocsBuilderConfig( cfg ) {
 	delete cfg[ '--seo' ];
 	cfg[ '--guides' ] = '../dev/guides/guides.json';
 
-	fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
+	fs.writeFileSync( PATHS.BASE + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
 
 	return cfg;
 }
 
 function determineCKEditorVersion() {
-	var content  = fs.readFileSync( BASE_PATH + '/vendor/ckeditor/ckeditor.js', 'utf8' );
+	var content  = fs.readFileSync( PATHS.BASE + '/vendor/ckeditor/ckeditor.js', 'utf8' );
 
 	// Replace white spaces with underscore sign, remove everything which is in brackets
 	return content.match( /version:"(.+?\s[a-zA-Z]*).+"/ )[ 1 ].trim().replace( '/\s/g', '_' );
@@ -349,42 +353,16 @@ function getZipFilename() {
 	return 'ckeditor_' + CKEDITOR_VERSION +  '_sdk.zip';
 }
 
-function zipBuild() {
-	console.log( 'Packing release into zip file...' );
-
-	return when.promise( function( resolve, reject ) {
-		var outputFile = getZipFilename(),
-			outputPath = path.resolve( RELEASE_PATH + '/../' + outputFile ),
-			output,
-			archive = archiver( 'zip' );
-
-		if ( fs.existsSync( outputPath ) )
-			fs.unlinkSync( outputPath );
-
-		output = fs.createWriteStream( outputPath );
-		output.on( 'close', function() {
-			resolve();
-			console.log( 'Packing done. ' + archive.pointer() + ' total bytes.' );
-		} );
-
-		archive.on( 'error', function( err ) {
-			reject( err );
-		} );
-
-		archive.pipe( output );
-		archive.bulk( [
-			{ expand: true, cwd: RELEASE_PATH, src: [ '**' ], dest: 'ckeditor_sdk' }
-		] );
-		archive.finalize();
-	} );
-}
-
 function readFilesAndValidateLinks() {
-	return readSamplesDir()
-		.then( tools.selectFilesSync )
-		.then( readFiles )
-		.then( setupSamplesSync )
-		.then( validateLinks );
+	var tasks = [
+		readSamplesDir,
+		tools.selectHtmlFilesSync,
+		readFiles,
+		setupSamplesSync,
+		validateLinks
+	];
+
+	return pipeline( tasks );
 }
 
 function validateLinks( elements ) {
@@ -396,7 +374,7 @@ function validateLinks( elements ) {
 	} );
 	elements.index.validateLinks( errors );
 
-	tools.handleFileSync( BASE_PATH + '/template/index.html', function( content ) {
+	tools.handleFileSync( PATHS.BASE + '/template/index.html', function( content ) {
 		var $ = cheerio.load( content, {
 			decodeEntities: false
 		} );
@@ -465,69 +443,103 @@ function wrapper( cb ) {
 }
 
 function packbuild() {
-	return zipBuild().then( function() {
-		return whenRimraf( RELEASE_PATH );
+	return tools.zipDirectory(
+		path.resolve( PATHS.RELEASE + '/../' + getZipFilename() ),
+		PATHS.RELEASE,
+		'ckeditor_sdk'
+	).then( function() {
+		return whenRimraf( PATHS.RELEASE );
+	} );
+}
+
+function removeAndCopyFiles() {
+	var tasks = [
+		// Removing old files
+		function( PATHS ) {
+			return whenRimraf( PATHS.RELEASE );
+		},
+
+		// Copying files
+		copyTemplate,
+		copySamples,
+		copyVendor
+	];
+
+	return sequence( tasks, PATHS, opts.version ).then( function() {
+		return copyMathjaxFiles( PATHS, VERBOSE );
+	} );
+}
+
+function parseSamplesFiles() {
+	var tasks = [
+		readSamplesDir,
+		tools.selectHtmlFilesSync,
+		readFiles,
+		setupSamplesSync
+	];
+
+	return pipeline( tasks ).catch( function() {
+		console.log( 'blad' );
 	} );
 }
 
 function build( opts ) {
+	var files;
 	console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
-	console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
+	console.log( 'Removing old release directory', path.resolve( PATHS.RELEASE ) );
 
-	whenRimraf( RELEASE_PATH )
-		.then( copyTemplate )
-		.then( copySamples )
-		.then( copyVendor )
-		.then( copyMathjaxFiles )
-		.then( readSamplesDir )
-		.then( tools.selectFilesSync )
-		.then( readFiles )
-		.then( setupSamplesSync )
-		.then( validateLinks )
-		.then( function( result ) {
+	var tasks = [
+		removeAndCopyFiles,
+		parseSamplesFiles,
+		function( _files ) {
+			return files = _files;
+		},
+		validateLinks,
+		function( result ) {
 			if ( result.errors.length ) {
 				fail();
 			}
 
 			return result.elements;
+		},
+		parseCategoriesSync,
+		function( categories ) {
+			return prepareSamplesFilesSync( categories, files );
+		},
+		fixIndexSync
+	];
+
+	if ( opts.version === 'offline' ) {
+		// Have to crate artificial config with specific options for offline version.
+		var originalCfg = getOriginalDocsBuilderConfig();
+
+		prepareOfflineDocsBuilderConfig( originalCfg );
+
+		tasks = tasks.concat( [
+			function () {
+				return getGuidesFromConfig( path.resolve( PATHS.BASE + '/docs/' + originalCfg[ '--guides' ] ) )
+			},
+			copyGuides,
+			fixGuidesLinks,
+			tools.saveFiles,
+			fixFontsLinks,
+			tools.saveFiles,
+			buildDocumentation,
+			tools.curryExec( 'mv', [ '../../docs/build', PATHS.RELEASE + '/docs' ] ),
+			tools.curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ),
+			fixdocs,
+			tools.curryExec( 'rm', [ '-rf', '../guides' ] )
+		] );
+
+	}
+
+	if ( opts.pack ) {
+		tasks.push( function () {
+			return packbuild();
 		} )
-		.then( parseCategoriesSync )
-		.then( prepareSamplesFilesSync )
-		.then( function() {
-			if ( opts.version === 'offline' ) {
-				// Have to crate artificial config with specific options for offline version.
-				var originalCfg = getOriginalDocsBuilderConfig();
+	}
 
-				prepareOfflineDocsBuilderConfig( originalCfg );
-
-
-				var urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
-
-				fixIndexSync();
-
-				return copyGuides( urls )
-					.then( fixGuidesLinks )
-					.then( tools.saveFiles )
-					.then( fixFontsLinks )
-					.then( tools.saveFiles )
-					.then( buildDocumentation )
-					.then( tools.curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
-					.then( tools.curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
-					.then( fixdocs )
-					.then( tools.curryExec( 'rm', [ '-rf', '../guides' ] ) )
-					.then( function() {
-						if ( opts.pack ) {
-							return packbuild();
-						}
-					} );
-
-			} else {
-				fixIndexSync();
-				if ( opts.pack ) {
-					return packbuild();
-				}
-			}
-		} )
+	pipeline( tasks )
 		.then( done )
 		.catch( fail );// jshint ignore:line
 }
@@ -561,7 +573,7 @@ function fixGuidesLinks( urls ) {
 
 function fixFontsLinks() {
 	var urls = [
-		path.resolve( RELEASE_PATH + '/index.html' )
+		path.resolve( PATHS.RELEASE + '/index.html' )
 	];
 
 	var filesReadPromises = _.map( urls, function( url ) {
@@ -592,7 +604,7 @@ function fixFontsLinks() {
 }
 
 function fixIndexSync() {
-	var path = RELEASE_PATH + '/index.html';
+	var path = PATHS.RELEASE + '/index.html';
 
 	function handler( content ) {
 		var $ = cheerio.load( content, {
@@ -640,7 +652,7 @@ function getGuidesFromCategory( category, guides ) {
 }
 
 function fixdocs() {
-	var path = RELEASE_PATH + '/docs/index.html';
+	var path = PATHS.RELEASE + '/docs/index.html';
 
 	function handler( content ) {
 		var $ = cheerio.load( content, {
@@ -665,5 +677,5 @@ function fixdocs() {
 
 	tools.handleFileSync( path, handler );
 
-	return call( ncp, 'assets', RELEASE_PATH + '/docs/resources' );
+	return call( ncp, 'assets', PATHS.RELEASE + '/docs/resources' );
 }
