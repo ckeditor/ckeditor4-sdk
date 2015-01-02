@@ -4,7 +4,7 @@ var fs = require( 'fs' ),
 	_ = require( 'lodash-node' ),
 	when = require( 'when' ),
 	spawn = require( 'child_process' ).spawn,
-	//StringDecoder = require( 'string_decoder' ).StringDecoder,
+	StringDecoder = require( 'string_decoder' ).StringDecoder,
 	nodefn = require( 'when/node' ),
 	whenFs = nodefn.liftAll( fs ),
 	whenKeys = require( 'when/keys' ),
@@ -32,14 +32,14 @@ tools.curryExec = function( command, args, silent ) {
 			//VERBOSE && console.log( 'Executing: ', command, args.join( ' ' ) );
 
 			if ( !silent ) {
-				//cmd.stdout.on( 'data', consoleBuffer );
-				//cmd.stderr.on( 'data', consoleBuffer );
+				cmd.stdout.on( 'data', consoleBuffer );
+				cmd.stderr.on( 'data', consoleBuffer );
 			}
 
-			//function consoleBuffer( data ) {
-			//	var decoder = new StringDecoder( 'utf8' );
-			//	console.log( decoder.write( data ) );
-			//}
+			function consoleBuffer( data ) {
+				var decoder = new StringDecoder( 'utf8' );
+				console.log( decoder.write( data ) );
+			}
 
 			cmd.on( 'exit', function( code ) {
 				cmd.stdin.end();

@@ -132,45 +132,6 @@ function parseCategoriesSync( elements ) {
 	return categories;
 }
 
-// return promise
-function copySamples( PATHS, version ) {
-	console.log( 'Copying sample files' );
-
-	var blacklist = [];
-
-	if ( version === 'offline' ) {
-		blacklist.push( path.join( PATHS.BASE, 'samples/*.php' ) );
-	}
-
-	var options = {
-		filter: copy.createNcpBlacklistFilter( blacklist )
-	};
-
-	return call( ncp, '../../samples', path.join( PATHS.RELEASE, 'samples' ), options );
-}
-
-// return promise
-function copyVendor( PATHS, version ) {
-	console.log( 'Copying vendor files' );
-
-	fs.mkdirSync( path.join( PATHS.RELEASE, 'vendor' ) );
-
-	var blacklist = [
-		// Omit Mathjax files.
-		path.join( PATHS.BASE, 'vendor/mathjax' )
-	];
-
-	if ( version == 'online' ) {
-		blacklist.push( path.join( PATHS.BASE, 'vendor/ckeditor' ) );
-	}
-
-	var options = {
-		filter: copy.createNcpBlacklistFilter( blacklist )
-	};
-
-	return call( ncp, '../../vendor', path.join( PATHS.RELEASE, 'vendor' ), options );
-}
-
 function copyGuides( urls ) {
 	console.log( 'Copying guides' );
 
@@ -204,7 +165,10 @@ function copyMathjaxFiles( PATHS, verbose ) {
 			PATHS.MATHJAX + '/jax/output/NativeMML',
 			PATHS.MATHJAX + '/jax/output/SVG',
 			PATHS.MATHJAX + '/test',
-			PATHS.MATHJAX + '/unpacked'
+			PATHS.MATHJAX + '/unpacked',
+			function( name ) {
+				return !!path.basename( name ).match( /^\./i );
+			}
 		],
 		blackListFilter = copy.createNcpBlacklistFilter( blackFiles );
 
@@ -220,10 +184,7 @@ function copyMathjaxFiles( PATHS, verbose ) {
 			currPath.matchLeft( new Path( PATHS.MATHJAX + '/localization/en' ) )
 		] );
 
-		var blackList = _.some( [
-			!!path.basename( name ).match( /^\./i ),
-			!blackListFilter( name )
-		] );
+		var blackList = !blackListFilter( name );
 
 		var preventCopy = !whiteList && blackList;
 		if ( verbose && preventCopy ) {
@@ -418,8 +379,8 @@ function removeAndCopyFiles() {
 
 		// Copying files
 		copy.copyTemplate,
-		copySamples,
-		copyVendor
+		copy.copySamples,
+		copy.copyVendor
 	];
 
 	return sequence( tasks, PATHS, opts.version ).then( function() {
@@ -502,8 +463,8 @@ function build( opts ) {
 }
 
 function buildDocumentation() {
-	console.log( 'Building documentation.' );
-	return tools.curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
+	console.log( 'Building documentation' );
+	return tools.curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], false )();
 }
 
 /**
