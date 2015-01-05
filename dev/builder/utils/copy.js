@@ -21,25 +21,25 @@ var copy = {};
 copy.BLACKLISTS = {
 	TEMPLATE: {
 		common: [
-			'template/theme/sass'
+			PATHS.BASE + '/template/theme/sass'
 		],
 		online: [
-			'template/theme/fonts',
-			'template/theme/css/fonts.css',
-			'template/robots.txt'
+			PATHS.BASE + '/template/theme/fonts',
+			PATHS.BASE + '/template/theme/css/fonts.css',
+			PATHS.BASE + '/template/robots.txt'
 		]
 	},
 	SAMPLES: {
 		offline: [
-			path.join( PATHS.BASE, 'samples/*.php' )
+			path.join( PATHS.BASE, '/samples/*.php' )
 		]
 	},
 	VENDOR: {
 		common: [
-			path.join( PATHS.BASE, 'vendor/mathjax' )
+			path.join( PATHS.BASE, '/vendor/mathjax' )
 		],
 		online: [
-			path.join( PATHS.BASE, 'vendor/ckeditor' )
+			path.join( PATHS.BASE, '/vendor/ckeditor' )
 		]
 	},
 	MATHJAX: {
@@ -80,24 +80,24 @@ copy.WHITELISTS = {
 			},
 			function ( name ) {
 				var currPath = new Path( name );
-				currPath.matchLeft( new Path( PATHS.MATHJAX + '/localization/en' ) );
+				return currPath.matchLeft( new Path( PATHS.MATHJAX + '/localization/en' ) );
 			}
 		]
 	}
 };
 
 copy.prepareFilterlist = function( list, version ) {
-	var list = ( list.common ? list.common.slice() : [] );
+	var _list = ( list.common ? list.common.slice() : [] );
 
 	if ( version === 'offline' ) {
-		list = list.concat( list.offline ? list.offline : [] );
+		_list = _list.concat( list.offline ? list.offline : [] );
 	}
 
 	if ( version === 'online' ) {
-		list = list.concat( list.online ? list.online : [] );
+		_list = _list.concat( list.online ? list.online : [] );
 	}
 
-	return list;
+	return _list;
 };
 
 // return function, option.filter of ncp.
@@ -109,7 +109,7 @@ copy.createNcpBlacklistFilter = function( blacklist ) {
 			var match;
 
 			if ( typeof path === 'string' ) {
-				match = currPath.matchLeft( new Path( path ) )
+				match = currPath.matchLeft( new Path( path ) );
 			} else if ( typeof path === 'function' ) {
 				match = path( name );
 			}
@@ -139,7 +139,6 @@ copy.createNcpListFilter = function( list, version ) {
 
 copy.curryCopy = function( list, source, destination, message, newDir ) {
 	return function( PATHS, version ) {
-		console.log( message );
 
 		if ( typeof newDir == 'string' ) {
 			fs.mkdirSync( newDir );
@@ -147,8 +146,7 @@ copy.curryCopy = function( list, source, destination, message, newDir ) {
 
 		var blacklist = copy.prepareFilterlist( list.black, version ),
 			options = {
-				filter: copy.createNcpListFilter( list )/*,
-				filter: copy.createNcpBlacklistFilter( blacklist )*/
+				filter: copy.createNcpListFilter( list, version )
 			};
 
 		return call( ncp, source, destination, options );
