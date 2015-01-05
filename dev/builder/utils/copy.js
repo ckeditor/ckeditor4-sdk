@@ -41,19 +41,52 @@ copy.BLACKLISTS = {
 		online: [
 			path.join( PATHS.BASE, 'vendor/ckeditor' )
 		]
+	},
+	MATHJAX: {
+		common: [
+			PATHS.MATHJAX + '/docs',
+			PATHS.MATHJAX + '/extensions/MathML',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Asana-Math',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Gyre-Pagella',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Gyre-Termes',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Latin-Modern',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/Neo-Euler',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/STIX-Web',
+			PATHS.MATHJAX + '/fonts/HTML-CSS/TeX/png',
+			PATHS.MATHJAX + '/jax/input/MathML',
+			PATHS.MATHJAX + '/localization/*',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Asana-Math',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Gyre-Pagella',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Gyre-Termes',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Latin-Modern',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/Neo-Euler',
+			PATHS.MATHJAX + '/jax/output/HTML-CSS/fonts/STIX-Web',
+			PATHS.MATHJAX + '/jax/output/NativeMML',
+			PATHS.MATHJAX + '/jax/output/SVG',
+			PATHS.MATHJAX + '/test',
+			PATHS.MATHJAX + '/unpacked',
+			function( name ) {
+				return !!path.basename( name ).match( /^\./i );
+			}
+		]
 	}
 };
 
 copy.WHITELISTS = {
 	MATHJAX: {
 		common: [
-
+			function ( name ) {
+				return ( path.resolve( name ) === path.resolve( '../../vendor/mathjax' ) );
+			},
+			function ( name ) {
+				var currPath = new Path( name );
+				currPath.matchLeft( new Path( PATHS.MATHJAX + '/localization/en' ) );
+			}
 		]
 	}
 };
 
 copy.prepareFilterlist = function( list, version ) {
-	debugger;
 	var list = ( list.common ? list.common.slice() : [] );
 
 	if ( version === 'offline' ) {
@@ -121,6 +154,17 @@ copy.curryCopy = function( list, source, destination, message, newDir ) {
 		return call( ncp, source, destination, options );
 	};
 };
+
+copy.copyMathjax = copy.curryCopy(
+	{
+		black: copy.BLACKLISTS.MATHJAX,
+		white: copy.WHITELISTS.MATHJAX
+	},
+	'../../vendor/mathjax',
+	PATHS.RELEASE + '/vendor/mathjax',
+	'Copying Mathjax files',
+	PATHS.RELEASE + '/vendor/mathjax'
+);
 
 copy.copyVendor = copy.curryCopy(
 	{

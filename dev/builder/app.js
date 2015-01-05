@@ -384,7 +384,7 @@ function removeAndCopyFiles() {
 	];
 
 	return sequence( tasks, PATHS, opts.version ).then( function() {
-		return copyMathjaxFiles( PATHS, VERBOSE );
+		return copy.copyMathjax( PATHS, opts.version );
 	} );
 }
 
