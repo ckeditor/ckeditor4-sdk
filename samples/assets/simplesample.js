@@ -199,7 +199,7 @@
 				}
 			}
 
-			headResources.unshift( '<script src="http://cdn.ckeditor.com/4.4.6/standard-all/ckeditor.js"></script>' );
+			headResources.unshift( '<script src="http://cdn.ckeditor.com/4.4.7/standard-all/ckeditor.js"></script>' );
 			headResources = headResources.join( '' );
 
 			function getTemplatePre( headResources, title ) {
