@@ -22,6 +22,12 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
 	<link rel="icon" href="../theme/img/favicon.ico">
+	<style>
+		.exampleResources input {
+			margin-bottom: 1px;
+			width: 500px;
+		}
+	</style>
 </head>
 <body>
 	<header class="sdk-header">
@@ -33,7 +39,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h1>Embedding Media <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_media_embed">Documentation</a></h1>
 
 			<p>
-				The optional <a href="http://ckeditor.com/addon/embed">Media Embed</a> and <a href="http://ckeditor.com/addon/embedsemantic">Semantic Media Embed</a> plugins allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor. They were introduced in CKEditor 4.5 together with an architecture which makes it possible to <a href="http://docs.ckeditor.com/#!/guide/dev_media_embed-section-implementing-a-new-embed-widget">implement a new media embed widgets</a>.
+				The optional <a href="http://ckeditor.com/addon/embed">Media Embed</a> and <a href="http://ckeditor.com/addon/embedsemantic">Semantic Media Embed</a> plugins allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor.
 			</p>
 
 			<p>
@@ -41,24 +47,20 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</p>
 
 			<p>
-				When either Media Embed or Semantic Media Embed plugin is enabled, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of a resource to be embedded. You can also paste that resource's URL into the contents and it will be automatically embedded if the optional <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> plugin is enabled.
-			</p>
-
-			<p>
-				The <a href="http://docs.ckeditor.com/#!/guide/dev_media_embed-section-media-embed-vs-semantic-media-embed">difference between Media Embed and Semantic Media Embed plugins</a> is purely in the data that they produce what opens various integration opportunities.
+				When either Media Embed or Semantic Media Embed plugin is enabled, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of a resource to be embedded. You can also <strong>paste</strong> that resource's URL into the contents and it will be automatically embedded if the optional <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> plugin is enabled.
 			</p>
 
 			<h2>Using Media Embed with Auto Embed</h2>
 
 			<p>The sample below uses the <a href="http://ckeditor.com/addon/embed">Media Embed</a> plugin together with the <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> and <a href="http://ckeditor.com/addon/image2">Enhanced Image</a> plugins. Additional <a href="http://docs.ckeditor.com/#!/guide/dev_styles-section-widget-styles">widget styles</a> are defined to control widget size and alignment.</p>
 
-			<p>Try embedding more resources like the following. You can either paste these URLs into the editor or use the MEdia Embed dialog.</p>
+			<p>Try embedding more resources like the following. You can either paste these URLs into the editor or use the Media Embed dialog.</p>
 
-			<ul>
-				<li><input type="text" style="width: 400px" value="https://www.google.pl/maps/place/Zygmunta+Słomińskiego+15,+Warszawa" /> &ndash; CKSource office location (Google Maps),</li>
-				<li><input type="text" style="width: 400px" value="https://www.youtube.com/watch?v=h9KV_VRvIG8" /> &ndash; CKEditor in Drupal 8 (YouTube),</li>
-				<li><input type="text" style="width: 400px" value="http://www.slideshare.net/ranelpadon/ckeditor-widgets-with-drupal" /> &ndash; CKEditor widgets with Drupal (SlideShare),</li>
-				<li><input type="text" style="width: 400px" value="https://twitter.com/reinmarpl/status/573118615274315776" /> &ndash; Coding session with Mr Carrot (Twitter).</li>
+			<ul class="exampleResources">
+				<li><input type="text" value="https://www.google.pl/maps/place/Zygmunta+Słomińskiego+15,+Warszawa" /></li>
+				<li><input type="text" value="https://www.youtube.com/watch?v=h9KV_VRvIG8" /></li>
+				<li><input type="text" value="http://www.slideshare.net/ranelpadon/ckeditor-widgets-with-drupal" /></li>
+				<li><input type="text" value="https://twitter.com/reinmarpl/status/573118615274315776" /></li>
 			</ul>
 
 			<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
