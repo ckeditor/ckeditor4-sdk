@@ -8,7 +8,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta charset="utf-8">
 	<meta name="description" content="Embedding Media">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, media, content, iframely, embedding, embed, video, youtube, vimeo, twitter, facebook">
-	<meta name="sdk-samples" content="Using Media Embed|Using Semantic Media Embed">
+	<meta name="sdk-samples" content="Using Media Embed">
 	<title>Embedding Media</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../theme/css/sdk.css" rel="stylesheet">
@@ -76,7 +76,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 <p>Rosetta was launched on 2 March 2004 on an <a href="http://en.wikipedia.org/wiki/Ariane_5">Ariane 5</a> rocket and reached the comet on 6 August 2014, becoming the first spacecraft to orbit a comet. (Previous missions had conducted successful flybys of seven other comets.) It is one of ESA's Horizon 2000 cornerstone missions. The spacecraft consists of the Rosetta orbiter, which features 12 instruments, and the Philae lander, with nine additional instruments. The Rosetta mission will orbit 67P for 17 months and is designed to complete the most detailed study of a comet ever attempted. The spacecraft is controlled from the <a href="http://en.wikipedia.org/wiki/European_Space_Operations_Centre">European Space Operations Centre</a> (ESOC), in Darmstadt, Germany. The planning for the operation of the scientific payload, together with the data retrieval, calibration, archiving and distribution, is performed from the <a href="http://en.wikipedia.org/wiki/European_Space_Astronomy_Centre">European Space Astronomy Centre</a> (ESAC), in Villanueva de la Cañada, near Madrid, Spain. It has been estimated that in the decade preceding 2014, some 2,000 people assisted in the mission in some capacity.</p>
 
 <figure class="image image-narrow image-align-right">
-	<a href="http://en.wikipedia.org/wiki/File:Comet_67P_on_19_September_2014_NavCam_mosaic.jpg"><img src="assets/mediaembed/comet-67p.jpg" alt="Comet 67P" width="1131" height="900" /></a>
+	<a href="http://en.wikipedia.org/wiki/File:Comet_67P_on_19_September_2014_NavCam_mosaic.jpg"><img src="assets/comet-67p.jpg" alt="Comet 67P" width="1131" height="900" /></a>
 	<figcaption>Comet 67P in September 2014</figcaption>
 </figure>
 
@@ -129,12 +129,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 					stylesSet: [
 						{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
+						{ name: 'Wide image', type: 'widget', widget: 'image', attributes: { 'class': 'image-wide' } },
 						{ name: 'Narrow media', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-narrow' } },
 						{ name: 'Centered media', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-align-center' } }
 					],
 
 					// Load the default contents.css file plus customizations for this sample.
-					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/mediaembed/contents.css' ],
+					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/widgetstyles.css' ],
 
 					// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
 					// resizer (because image size is controlled by widget styles or the image takes maximum

@@ -24,6 +24,12 @@ figure.image-narrow img, img.image-narrow {
 	height: auto;
 }
 
+/* Image wide style. */
+figure.image-wide img, img.image-wide {
+	max-width: 600px;
+	height: auto;
+}
+
 /* Image alignment styles. */
 .image-align-right {
 	float: right;

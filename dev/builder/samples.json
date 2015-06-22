@@ -22,6 +22,7 @@
 					"name": "Inserting Content",
 					"samples": [
 						"Captioned Images",
+						"Image Upload",
 						"Tables with Column Resizing",
 						"Code Snippets",
 						"Mathematical Formulas",
