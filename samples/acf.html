@@ -37,6 +37,9 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<p>
 			ACF is a highly configurable and powerful feature, so extensive documentation is available for it, too. The basics are explained in the <a href="http://docs.ckeditor.com/#!/guide/dev_acf">Getting Started</a> section of the "CKEditor Developer's Guide" and more advanced information is available in the <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">Deep Dive</a> section.
 		</p>
+		<p class="tip">
+			On Chrome, Opera and Safari (all Blink and Webkit based browsers) there is an additional <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-pasteFilter">filter for content pasted from outside of the editor</a>. Its role is to filter out all inline styles which these browsers keep in the clipboard. Content copied from the editor is not affected by this filter. It can be configured independently from the ACF and can cover all browsers.
+		</p>
 		<p style="margin-top: 20px">
 			The following text will be used in each sample to show different filtering options:
 		</p>
