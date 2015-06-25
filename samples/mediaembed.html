@@ -7,7 +7,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 <head>
 	<meta charset="utf-8">
 	<meta name="description" content="Embedding Media">
-	<meta name="keywords" content="ckeditor, editor, wysiwyg, media, content, iframely, embedding, embed, video, youtube, vimeo, twitter, facebook">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, media, content, iframely, embedding, oembed, embed, video, youtube, vimeo, twitter, facebook">
 	<meta name="sdk-samples" content="Using Media Embed">
 	<title>Embedding Media</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
@@ -36,10 +36,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Embedding Media <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_media_embed">Documentation</a></h1>
+			<h1>Embedding Media with oEmbed <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_media_embed">Documentation</a></h1>
 
 			<p>
-				The optional <a href="http://ckeditor.com/addon/embed">Media Embed</a> and <a href="http://ckeditor.com/addon/embedsemantic">Semantic Media Embed</a> plugins allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor.
+				The optional <a href="http://ckeditor.com/addon/embed">Media Embed</a> and <a href="http://ckeditor.com/addon/embedsemantic">Semantic Media Embed</a> plugins, introduced in CKEditor 4.5, allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor.
 			</p>
 
 			<p>
@@ -47,7 +47,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</p>
 
 			<p>
-				When either Media Embed or Semantic Media Embed plugin is enabled, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of a resource to be embedded. You can also <strong>paste</strong> that resource's URL into the contents and it will be automatically embedded if the optional <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> plugin is enabled.
+				When either Media Embed or Semantic Media Embed plugin is enabled, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of the resource to be embedded. You can also <strong>paste</strong> that resource's URL into the editor content and it will be automatically embedded if the optional <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> plugin is enabled.
 			</p>
 
 			<h2>Using Media Embed with Auto Embed</h2>
@@ -57,10 +57,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<p>Try embedding more resources like the following. You can either paste these URLs into the editor or use the Media Embed dialog.</p>
 
 			<ul class="exampleResources">
-				<li><input type="text" value="https://www.google.pl/maps/place/Zygmunta+Słomińskiego+15,+Warszawa" /></li>
-				<li><input type="text" value="https://www.youtube.com/watch?v=h9KV_VRvIG8" /></li>
-				<li><input type="text" value="http://www.slideshare.net/ranelpadon/ckeditor-widgets-with-drupal" /></li>
-				<li><input type="text" value="https://twitter.com/reinmarpl/status/573118615274315776" /></li>
+				<li><input type="text" value="https://goo.gl/maps/tWtnj" /></li>
+				<li><input type="text" value="https://www.youtube.com/watch?v=H08tGjXNHO4" /></li>
+				<li><input type="text" value="http://www.slideshare.net/esaops/rosetta-comet-landing-press-kit-12-nov-2014" /></li>
+				<li><input type="text" value="https://twitter.com/Philae2014/status/610047412036595712" /></li>
 			</ul>
 
 			<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
@@ -86,7 +86,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 <p>The spacecraft performed two asteroid flyby missions on its way to the comet. In 2007, Rosetta also performed a Mars swing-by (flyby). The craft completed its flyby of asteroid 2867 Šteins in September 2008 and of 21 Lutetia in July 2010. On 20 January 2014, Rosetta was taken out of a 31-month hibernation mode as it approached the comet.</p>
 
-<p>Rosetta'​s Philae lander successfully made the first soft landing on a comet nucleus when it touched down on 67P on 12 November 2014. Astrophysicist Elizabeth Pearson said that although the future of the lander Philae is uncertain, Rosetta is the workhorse of the mission and its work will carry on.</p>
+<p>Rosetta's Philae lander successfully made the first soft landing on a comet nucleus when it touched down on 67P on 12 November 2014. Astrophysicist Elizabeth Pearson said that although the future of the lander Philae is uncertain, Rosetta is the workhorse of the mission and its work will carry on.</p>
 
 <h2>Media coverage</h2>
 
@@ -126,8 +126,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					extraPlugins: 'embed,autoembed,image2',
 					height: 500,
 
-					// The following options are not necessary and are used here for presentational purposes.
-					// They configure styles dropdown and widgets to use classes.
+					// The following options are not necessary and are used here for presentation purposes only.
+					// They configure the Styles drop-down list and widgets to use classes.
 
 					stylesSet: [
 						{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
