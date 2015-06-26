@@ -23,6 +23,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<![endif]-->
 	<link rel="icon" href="../theme/img/favicon.ico">
 	<style data-sample="1">
+		.columns {
+			background: #fff;
+			padding: 20px;
+			border: 1px solid #E7E7E7;
+		}
 		.columns::after {
 			content: '';
 			clear: both;
@@ -30,25 +35,90 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		}
 		.columns > .editor {
 			float: left;
-			width: 600px;
+			width: 570px;
+			position: relative;
+			z-index: 1;
 		}
 		.contactList {
 			float: right;
-			width: 250px;
+			width: 300px;
 			list-style-type: none;
+			margin: 0 !important;
+			padding: 0;
 		}
-		.contactList .contact {
-			background: #EEE;
-			border-radius: 3px;
+		.contactList li {
+			background: #FAFAFA;
 			margin-bottom: 1px;
-			height: 30px;
-			line-height: 30px;
+			height: 56px;
+			line-height: 56px;
+			cursor: pointer;
+		}
+		.contactList li:nth-child(2n) {
+			background: #F3F3F3;
+		}
+		.contactList li:hover {
+			background: #FFFDE3;
+			border-left: 5px solid #DCDAC1;
+			margin-left: -5px;
+		}
+		.contact {
+			padding-left: 10px;
 		}
 		.contact .u-photo {
-			width: 30px;
-			height: 30px;
-			display: block;
-			float: left;
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 10px;
+		}
+		#editor1 .h-card {
+			background: #FFFDE3;
+			padding: 3px 6px;
+			border-bottom: 1px dashed #ccc;
+		}
+		#editor1 {
+			border: 1px solid #E7E7E7;
+			padding: 0 20px;
+			background: #fff;
+			position: relative;
+		}
+/*		#editor1::after, #editor1::before {
+			content: "";
+			position: absolute;
+			width: 100%;
+			background: #fff;
+			border: 1px solid #E7E7E7;
+		}
+		#editor1::before {
+			z-index: -1;
+			left: -3px;
+			top: -3px;
+			right: 3px;
+			bottom: 3px;
+			-moz-transform: rotate(1deg);
+			-webkit-transform: rotate(1deg);
+			transform: rotate(1deg);
+		}
+		#editor1::after {
+			z-index: -2;
+			left: -6px;
+			top: -6px;
+			right: 6px;
+			bottom: 6px;
+			-moz-transform: rotate(-1deg);
+			-webkit-transform: rotate(-1deg);
+			transform: rotate(-1deg);
+		}*/
+		#editor1 .h-card .p-tel {
+			font-style: italic;
+		}
+		#editor1 .h-card .p-tel::before,
+		#editor1 .h-card .p-tel::after {
+			font-style: normal;
+		}
+		#editor1 .h-card .p-tel::before {
+			content: "(☎ ";
+		}
+		#editor1 .h-card .p-tel::after {
+			content: ")";
 		}
 	</style>
 </head>
@@ -65,9 +135,19 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<div class="columns" data-sample="1">
 				<div class="editor">
-					<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample-short>
-						<p>TODO</p>
-					</textarea>
+					<div cols="10" id="editor1" name="editor1" rows="10" data-sample-short="" contenteditable="true">
+						<h1 style="text-align:center">The Annual Meeting of Fictional Characters</h1>
+						<h3 style="text-align: center;">Technical Announcement</h3>
+						<p>We hereby have the pleasure to announce that the theme of this year&#39;s meeting is &quot;<strong>E&ndash;ink Technology&nbsp;and Classical&nbsp;Faerie Tales</strong>&quot;. As&nbsp;every year, the event will be&nbsp;hosted in <em>The Wonderland</em>&nbsp;by&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo4@example.com">Alice, The</a> <span class="p-tel">+20 4345 234 235</span></span>&nbsp;and starts Yesterday at 8:00 CET.</p>
+						<h3>Speakers and Agenda</h3>
+						<p>TBA.</p>
+						<h3>Venue</h3>
+						<p>For detailed information, please contact&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo1@example.com">Huckleberry Finn</a> <span class="p-tel">+48 1345 234 235</span></span>.</p>
+						<h3>Accomodation</h3>
+						<p>Great thanks for&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span>&nbsp;who&nbsp;offered his island to the guests of the conference.</p>
+						<hr />
+						<p style="text-align: right;"><span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Little Red Riding Hood</a> <span class="p-tel">+45 2345 234 235</span></span></p>
+					</div>
 				</div>
 				<ul class="contactList" id="contactList"></ul>
 			</div>
@@ -76,19 +156,17 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				'use strict';
 
 				var CONTACTS = [
-					{ name: 'Foo Bar 1', tel: '+48 1345 234 235', email: 'foo1@example.com' },
-					{ name: 'Foo Bar 2', tel: '+45 2345 234 235', email: 'foo2@example.com' },
-					{ name: 'Foo Bar 3', tel: '+44 3345 234 235', email: 'foo3@example.com' },
-					{ name: 'Foo Bar 4', tel: '+20 4345 234 235', email: 'foo4@example.com' },
-					{ name: 'Foo Bar 2', tel: '+45 2345 234 235', email: 'foo2@example.com' },
-					{ name: 'Foo Bar 3', tel: '+44 3345 234 235', email: 'foo3@example.com' },
-					{ name: 'Foo Bar 4', tel: '+20 4345 234 235', email: 'foo4@example.com' },
-					{ name: 'Foo Bar 2', tel: '+45 2345 234 235', email: 'foo2@example.com' },
-					{ name: 'Foo Bar 3', tel: '+44 3345 234 235', email: 'foo3@example.com' },
-					{ name: 'Foo Bar 4', tel: '+20 4345 234 235', email: 'foo4@example.com' },
-					{ name: 'Foo Bar 2', tel: '+45 2345 234 235', email: 'foo2@example.com' },
-					{ name: 'Foo Bar 3', tel: '+44 3345 234 235', email: 'foo3@example.com' }
+					{ name: 'Huckleberry Finn', 		tel: '+48 1345 234 235', email: 'foo1@example.com', avatar: 'mp' },
+					{ name: 'D\'Artagnan', 				tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'ww' },
+					{ name: 'Phileas Fogg', 			tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'on' },
+					{ name: 'Alice, The', 				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'at' },
+					{ name: 'Little Red Riding Hood', 	tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'fk' },
+					{ name: 'Winetou', 					tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'pk' },
+					{ name: 'Willy Wonka', 				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'ks' },
+					{ name: 'Robinson Crusoe', 			tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'rm' },
 				];
+
+				CKEDITOR.disableAutoInline = true;
 
 				// Implements a simple widget that represents a contact details (see http://microformats.org/wiki/h-card).
 				CKEDITOR.plugins.add( 'hcard', {
@@ -153,12 +231,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				} );
 
 				// Initialize editor with the hcard plugin.
-				CKEDITOR.replace( 'editor1', {
+				CKEDITOR.inline( 'editor1', {
 					extraPlugins: 'hcard',
-					height: 400,
 
 					// Load the default contents.css file plus customizations for this sample.
-					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/draganddrop/contents.css' ]
+					contentsCss: [ CKEDITOR.basePath + 'contents.css' ]
 				} );
 
 
@@ -173,7 +250,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					CKEDITOR.document.getById( 'contactList' ),
 					new CKEDITOR.template(
 						'<div class="contact h-card" data-contact="{id}">' +
-							'<img src="https://github.com/identicons/{avatar}.png" alt="avatar" width="420" height="420" class="u-photo" /> {name}' +
+							'<img src="assets/draganddrop/img/avatar-{avatar}.png" alt="avatar" class="u-photo" /> {name}' +
 						'</div>'
 					),
 					CONTACTS
@@ -186,7 +263,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 							template.output( {
 								id: i,
 								name: items[ i ].name,
-								avatar: items[ i ].name.replace( /\s/g, '' )
+								avatar: items[ i ].avatar
 							} )
 						);
 						draggable.setAttributes( {
