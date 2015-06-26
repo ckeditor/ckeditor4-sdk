@@ -129,13 +129,21 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				// When an item in the contact list is dragged, copy its data into drag and drop data transfer.
 				// This data is later read by editor#paste listener in the hcard plugin defined above.
 				CKEDITOR.document.getById( 'contactList' ).on( 'dragstart', function( evt ) {
+					var target = evt.data.getTarget();
+
+					// We need to set some normal data types to a backup values for two reasons:
+					// * on some browsers this is necessary to enable drag and drop into text in editor,
+					// * the content may be dropped in other place than editor.
+					// Also we need to do it before `initDragDataTransfer`, because otherwise biding drag and drop
+					// events witch on IE is based on the comparing `text` will not work.
+					evt.data.$.dataTransfer.setData( 'text', target.getText() );
+
 					// Initialization of CKEditor's data transfer facade is a necessary step to extend and unify
 					// native browser capabilities. For instance, Internet Explorer does not support any other data type than 'text'.
 					// Note: evt is and instance of CKEDITOR.dom.event, not a native event.
 					CKEDITOR.plugins.clipboard.initDragDataTransfer( evt );
 
-					var target = evt.data.getTarget(),
-						dataTransfer = evt.data.dataTransfer;
+					var dataTransfer = evt.data.dataTransfer;
 
 					// We pass an object with contact details. Based on it, the editor#paste listener in the hcard plugin
 					// will create HTML to be inserted into editor. We could set text/html here as well, but:
@@ -143,12 +151,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// * we do not know now where the content will be dropped and the HTML to be inserted
 					// might vary depend on the drop target.
 					dataTransfer.setData( 'contact', CONTACTS[ target.data( 'contact' ) ] );
-
-					// We need to set some normal data types to a backup values for two reasons:
-					// * on some browsers this is necessary to enable drag and drop into text in editor,
-					// * the content may be dropped in other place than editor.
-					dataTransfer.setData( 'text/html', target.getText() );
-					dataTransfer.setData( 'text/plain', target.getText() + 'xxx' );
 				} );
 
 				// Initialize editor with the hcard plugin.
