@@ -20,13 +20,13 @@ figure img {
 
 /* Image narrow style. */
 figure.image-narrow img, img.image-narrow {
-	max-width: 400px;
+	max-width: 300px;
 	height: auto;
 }
 
 /* Image wide style. */
 figure.image-wide img, img.image-wide {
-	max-width: 600px;
+	max-width: 500px;
 	height: auto;
 }
 
