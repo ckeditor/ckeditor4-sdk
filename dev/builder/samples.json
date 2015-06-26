@@ -23,11 +23,11 @@
 					"samples": [
 						"Captioned Images",
 						"Image Upload",
+						"Embedding Media Resources",
 						"Tables with Column Resizing",
 						"Code Snippets",
 						"Mathematical Formulas",
-						"Placeholders",
-						"Embedding Media"
+						"Placeholders"
 					]
 				},
 				{
