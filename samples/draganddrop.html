@@ -132,13 +132,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// The target may be some element inside draggable div, so get the div.h-card.
 					var target = evt.data.getTarget().getAscendant( 'div', true );
 
-					// We need to set some normal data types to a backup values for two reasons:
-					// * on some browsers this is necessary to enable drag and drop into text in editor,
-					// * the content may be dropped in other place than editor.
-					// Also we need to do it before `initDragDataTransfer`, because otherwise biding drag and drop
-					// events witch on IE is based on the comparing `text` will not work.
-					evt.data.$.dataTransfer.setData( 'text', target.getText() );
-
 					// Initialization of CKEditor's data transfer facade is a necessary step to extend and unify
 					// native browser capabilities. For instance, Internet Explorer does not support any other data type than 'text'.
 					// Note: evt is and instance of CKEDITOR.dom.event, not a native event.
@@ -152,6 +145,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// * we do not know now where the content will be dropped and the HTML to be inserted
 					// might vary depend on the drop target.
 					dataTransfer.setData( 'contact', CONTACTS[ target.data( 'contact' ) ] );
+
+					// We need to set some normal data types to a backup values for two reasons:
+					// * on some browsers this is necessary to enable drag and drop into text in editor,
+					// * the content may be dropped in other place than editor.
+					dataTransfer.setData( 'text/html', target.getText() );
 				} );
 
 				// Initialize editor with the hcard plugin.
