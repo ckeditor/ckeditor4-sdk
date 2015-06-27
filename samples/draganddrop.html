@@ -129,7 +129,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				// When an item in the contact list is dragged, copy its data into drag and drop data transfer.
 				// This data is later read by editor#paste listener in the hcard plugin defined above.
 				CKEDITOR.document.getById( 'contactList' ).on( 'dragstart', function( evt ) {
-					var target = evt.data.getTarget();
+					// The target may be some element inside draggable div, so get the div.h-card.
+					var target = evt.data.getTarget().getAscendant( 'div', true );
 
 					// We need to set some normal data types to a backup values for two reasons:
 					// * on some browsers this is necessary to enable drag and drop into text in editor,
