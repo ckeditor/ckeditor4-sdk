@@ -37,18 +37,18 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				tool thanks to the <a href="http://ckeditor.com/addon/filebrowser">File Browser</a> plugin that
 				is available in all official CKEditor distributions.
 			</p>
-			
+
 			<p>
 				Once properly set up through the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-filebrowserBrowseUrl">config.filebrowserBrowseUrl</a></code>
 				and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-filebrowserUploadUrl">config.filebrowserUploadUrl</a></code>
 				configuration settings, all file manager features will automatically become available. This includes
 				the Upload tab in the Link or Image Properties dialog windows as well as the Browse Server button.
 			</p>
-			
+
 			<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 
 <h1>Rosetta</h1>
-	
+
 <p><a href="http://en.wikipedia.org/wiki/File:Comet_67P_on_19_September_2014_NavCam_mosaic.jpg"><img alt="Comet 67P" src="assets/comet-67p.jpg" style="float:right; height:239px; width:300px" /></a></p>
 
 <p>Rosetta is a robotic space probe built and launched by the <a href="http://en.wikipedia.org/wiki/European_Space_Agency">European Space Agency</a>. Along with <a href="http://en.wikipedia.org/wiki/Philae_(spacecraft)">Philae</a>, its lander module, Rosetta is performing a detailed study of <a href="http://en.wikipedia.org/wiki/67P/Churyumov%E2%80%93Gerasimenko">comet 67P/Churyumov–Gerasimenko (67P)</a>. On 12 November 2014 the mission performed the first soft landing on a comet and returned data from the surface.</p>
@@ -64,7 +64,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 <p>Source: <a href="http://en.wikipedia.org/wiki/Rosetta_(spacecraft)">Wikipedia.org</a></p>
 
 			</textarea>
-			
+
 			<p>
 				<strong>Note:</strong> This example integrates CKEditor with <a href="http://cksource.com/ckfinder">CKFinder</a>,
 				but you are free to implement your own solution thanks to the editor
@@ -74,11 +74,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				thanks to numerous editor configuration features that make it possible to, for example, setup the integration
 				for selected dialog windows or customize the file browser window size.
 			</p>
-			
+
 			<h2>Uploading Dropped and Pasted Images</h2>
-			
+
 			<p>
-				The optional <a href="http://ckeditor.com/addon/embed">Upload Image</a> plugin enables support for uploading
+				The optional <a href="http://ckeditor.com/addon/uploadimage">Upload Image</a> plugin enables support for uploading
 				images that were dropped or pasted into the editor.
 			</p>
 
@@ -102,7 +102,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<textarea cols="10" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
 
 <h1>Rosetta</h1>
-		
+
 <figure class="image image-narrow image-align-right">
 	<a href="http://en.wikipedia.org/wiki/File:Comet_67P_on_19_September_2014_NavCam_mosaic.jpg"><img src="assets/comet-67p.jpg" alt="Comet 67P" width="1131" height="900" /></a>
 	<figcaption>Comet 67P in September 2014</figcaption>
@@ -121,16 +121,17 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 <p>Source: <a href="http://en.wikipedia.org/wiki/Rosetta_(spacecraft)">Wikipedia.org</a></p>
 
 			</textarea>
-			
+
 			<h2>Related Features</h2>
 			<ul>
 				<li><a href="./captionedimage.html">Inserting Content &ndash; Creating Captioned Images</a></li>
+				<li><a href="./draganddrop.html">Inserting Content &ndash; Drag and Drop Integration</a></li>
 			</ul>
-			
+
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					height: 300,
-					
+
 					// Configure your file browser integration. This example uses CKFinder 3 for PHP.
 					// Please note that CKFinder 2 paths are different, check the relevant documentation.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
@@ -147,7 +148,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 					// Upload images to a CKFinder connector (note that the response type is set to JSON).
 					uploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
-					
+
 					// Configure your file browser integration. This example uses CKFinder 3 for PHP.
 					// Please note that CKFinder 2 paths are different, check the relevant documentation.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',

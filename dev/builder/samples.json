@@ -27,7 +27,8 @@
 						"Tables with Column Resizing",
 						"Code Snippets",
 						"Mathematical Formulas",
-						"Placeholders"
+						"Placeholders",
+						"Drag and Drop Integration"
 					]
 				},
 				{
@@ -38,8 +39,7 @@
 						"Styles and Stylesheet Parser",
 						"Text Formats",
 						"Text and Background Color",
-						"Multilingual Content",
-						"Drag and Drop Integration"
+						"Multilingual Content"
 					]
 				},
 				{
