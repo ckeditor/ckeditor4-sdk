@@ -28,8 +28,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			padding: 20px;
 			border: 1px solid #E7E7E7;
 		}
-		.columns::after {
-			content: '';
+		.columns:after {
+			content: "";
 			clear: both;
 			display: block;
 		}
@@ -80,33 +80,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			background: #fff;
 			position: relative;
 		}
-/*		#editor1::after, #editor1::before {
-			content: "";
-			position: absolute;
-			width: 100%;
-			background: #fff;
-			border: 1px solid #E7E7E7;
-		}
-		#editor1::before {
-			z-index: -1;
-			left: -3px;
-			top: -3px;
-			right: 3px;
-			bottom: 3px;
-			-moz-transform: rotate(1deg);
-			-webkit-transform: rotate(1deg);
-			transform: rotate(1deg);
-		}
-		#editor1::after {
-			z-index: -2;
-			left: -6px;
-			top: -6px;
-			right: 6px;
-			bottom: 6px;
-			-moz-transform: rotate(-1deg);
-			-webkit-transform: rotate(-1deg);
-			transform: rotate(-1deg);
-		}*/
 		#editor1 .h-card .p-tel {
 			font-style: italic;
 		}
@@ -119,6 +92,9 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		}
 		#editor1 .h-card .p-tel::after {
 			content: ")";
+		}
+		#editor1 h1 {
+			text-align: center;
 		}
 	</style>
 </head>
@@ -136,15 +112,15 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<div class="columns" data-sample="1">
 				<div class="editor">
 					<div cols="10" id="editor1" name="editor1" rows="10" data-sample-short="" contenteditable="true">
-						<h1 style="text-align:center">The Annual Meeting of Fictional Characters</h1>
-						<h3 style="text-align: center;">Technical Announcement</h3>
-						<p>We hereby have the pleasure to announce that the theme of this year&#39;s meeting is &quot;<strong>E&ndash;ink Technology&nbsp;and Classical&nbsp;Faerie Tales</strong>&quot;. As&nbsp;every year, the event will be&nbsp;hosted in <em>The Wonderland</em>&nbsp;by&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo4@example.com">Alice, The</a> <span class="p-tel">+20 4345 234 235</span></span>&nbsp;and starts Yesterday at 8:00 CET.</p>
+						<h1>The Annual Meeting of Fictional Characters</h1>
+						<h3>Technical Announcement</h3>
+						<p>We hereby have the pleasure to announce that the theme of this year&#39;s meeting is &quot;<strong>E&ndash;ink Technology  and Classical  Faerie Tales</strong>&quot;. As  every year, the event will be  hosted in <em>The Wonderland</em> by <span class="h-card"><a class="p-name u-email" href="mailto:foo4@example.com">Alice, The</a> <span class="p-tel">+20 4345 234 235</span></span> and starts Yesterday at 8:00 CET.</p>
 						<h3>Speakers and Agenda</h3>
 						<p>TBA.</p>
 						<h3>Venue</h3>
-						<p>For detailed information, please contact&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo1@example.com">Huckleberry Finn</a> <span class="p-tel">+48 1345 234 235</span></span>.</p>
+						<p>For detailed information, please contact <span class="h-card"><a class="p-name u-email" href="mailto:foo1@example.com">Huckleberry Finn</a> <span class="p-tel">+48 1345 234 235</span></span>.</p>
 						<h3>Accomodation</h3>
-						<p>Great thanks for&nbsp;<span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span>&nbsp;who&nbsp;offered his island to the guests of the conference.</p>
+						<p>Great thanks for <span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span>  who  offered his island to the guests of the conference.</p>
 						<hr />
 						<p style="text-align: right;"><span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Little Red Riding Hood</a> <span class="p-tel">+45 2345 234 235</span></span></p>
 					</div>
@@ -156,14 +132,14 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				'use strict';
 
 				var CONTACTS = [
-					{ name: 'Huckleberry Finn', 		tel: '+48 1345 234 235', email: 'foo1@example.com', avatar: 'mp' },
-					{ name: 'D\'Artagnan', 				tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'ww' },
-					{ name: 'Phileas Fogg', 			tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'on' },
-					{ name: 'Alice, The', 				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'at' },
-					{ name: 'Little Red Riding Hood', 	tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'fk' },
-					{ name: 'Winetou', 					tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'pk' },
-					{ name: 'Willy Wonka', 				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'ks' },
-					{ name: 'Robinson Crusoe', 			tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'rm' },
+					{ name: 'Huckleberry Finn',			tel: '+48 1345 234 235', email: 'foo1@example.com', avatar: 'mp' },
+					{ name: 'D\'Artagnan',				tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'ww' },
+					{ name: 'Phileas Fogg',				tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'on' },
+					{ name: 'Alice, The',				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'at' },
+					{ name: 'Little Red Riding Hood',	tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'fk' },
+					{ name: 'Winetou',					tel: '+44 3345 234 235', email: 'foo3@example.com', avatar: 'pk' },
+					{ name: 'Willy Wonka',				tel: '+20 4345 234 235', email: 'foo4@example.com', avatar: 'ks' },
+					{ name: 'Robinson Crusoe',			tel: '+45 2345 234 235', email: 'foo2@example.com', avatar: 'rm' }
 				];
 
 				CKEDITOR.disableAutoInline = true;
@@ -198,7 +174,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 								'<span class="h-card">' +
 									'<a href="mailto:' + contact.email + '" class="p-name u-email">' + contact.name + '</a>' +
 									' ' +
-									'<span class="p-tel">(' + contact.tel + ')</span>' +
+									'<span class="p-tel">' + contact.tel + '</span>' +
 								'</span>';
 						} );
 					}
@@ -207,11 +183,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				// When an item in the contact list is dragged, copy its data into drag and drop data transfer.
 				// This data is later read by editor#paste listener in the hcard plugin defined above.
 				CKEDITOR.document.getById( 'contactList' ).on( 'dragstart', function( evt ) {
-					// The target may be some element inside draggable div, so get the div.h-card.
+					// The target may be some element inside draggable div (e.g. the image), so get the div.h-card.
 					var target = evt.data.getTarget().getAscendant( 'div', true );
 
 					// Initialization of CKEditor's data transfer facade is a necessary step to extend and unify
-					// native browser capabilities. For instance, Internet Explorer does not support any other data type than 'text'.
+					// native browser capabilities. For instance, Internet Explorer does not support any other data type than 'text' and 'URL'.
 					// Note: evt is and instance of CKEDITOR.dom.event, not a native event.
 					CKEDITOR.plugins.clipboard.initDragDataTransfer( evt );
 
@@ -228,17 +204,18 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// * on some browsers this is necessary to enable drag and drop into text in editor,
 					// * the content may be dropped in other place than editor.
 					dataTransfer.setData( 'text/html', target.getText() );
+
+					// You can still access and use the native dataTransfer - e.g. to set a drag image.
+					// Note: IEs do not support this method... :(.
+					if ( dataTransfer.$.setDragImage ) {
+						dataTransfer.$.setDragImage( target.findOne( 'img' ).$, 0, 0 );
+					}
 				} );
 
 				// Initialize editor with the hcard plugin.
 				CKEDITOR.inline( 'editor1', {
-					extraPlugins: 'hcard',
-
-					// Load the default contents.css file plus customizations for this sample.
-					contentsCss: [ CKEDITOR.basePath + 'contents.css' ]
+					extraPlugins: 'hcard,sourcedialog,justify'
 				} );
-
-
 			</script>
 
 			<!--
@@ -246,6 +223,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				It is not needed there because that mechanism gets content by reading innerHTML, hence everything is in place.
 			-->
 			<script>
+				'use strict';
+
 				addItems(
 					CKEDITOR.document.getById( 'contactList' ),
 					new CKEDITOR.template(
