@@ -143,7 +143,7 @@ Sample.prototype = {
             element.text( resultHtml );
         } );
     },
-    
+
     validateLinks: function( errors ) {
         var that = this;
 
@@ -201,7 +201,11 @@ Sample.validateLink = function( href, errors ) {
         return new Error( 'Href attribute is empty.' );
     }
 
-    if ( href.indexOf( '/docs/' ) !== -1 ) {
+    if ( href.indexOf( 'localhost' ) !== -1 ) {
+        return new Error( 'Href points to localhost.' );
+    }
+
+    if ( href.indexOf( '/docs/build/#!' ) !== -1 ) {
         return new Error( 'Invalid link "/docs/" use "http://docs.ckeditor.com" instead.' );
     }
 };
