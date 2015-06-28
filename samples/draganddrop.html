@@ -97,6 +97,17 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			text-align: center;
 		}
 	</style>
+	<!--[if lte IE 9]>
+		<style>
+			/* Because only the image is draggable: */
+			.contactList li {
+				cursor: default;
+			}
+			.contactList li img {
+				cursor: pointer
+			}
+		</style>
+	<![endif]-->
 </head>
 <body>
 	<header class="sdk-header">
@@ -107,7 +118,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<section class="sdk-contents">
 			<h1>Drag and Drop Integration <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_drop_paste">Documentation</a></h1>
 
-			<p>TODO</p>
+			<p>The <a href="http://ckeditor.com/addon/clipboard">Clipboard</a> plugin (included in all presets) offers, among <a href="http://docs.ckeditor.com/#!/guide/dev_drop_paste">many other features</a>, an interface to integrate drag and drop operations with your editor. It also augments and unifies incomplete native support what allows to achieve better results.</p>
+
+			<p>The sample below allows you to drag contacts from the list on the right hand side to the editor on the left hand side. They are inserted into editor as widgets representing the <a href="http://microformats.org/wiki/h-card">h-card microformat</a>.</p>
+
+			<p class="tip">Note that in Internet Explorer 8-9 only the photos are draggable and none of Internet Explorer versions support <a href="https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer#setDragImage.28.29">setting drag image</a>.</p>
 
 			<div class="columns" data-sample="1">
 				<div class="editor">
@@ -119,8 +134,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 						<p>TBA.</p>
 						<h3>Venue</h3>
 						<p>For detailed information, please contact <span class="h-card"><a class="p-name u-email" href="mailto:foo1@example.com">Huckleberry Finn</a> <span class="p-tel">+48 1345 234 235</span></span>.</p>
-						<h3>Accomodation</h3>
-						<p>Great thanks for <span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span>  who  offered his island to the guests of the conference.</p>
+						<h3>Accommodation</h3>
+						<p>Great thanks for <span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Robinson Crusoe</a> <span class="p-tel">+45 2345 234 235</span></span> who offered his island to the guests of the conference.</p>
 						<hr />
 						<p style="text-align: right;"><span class="h-card"><a class="p-name u-email" href="mailto:foo2@example.com">Little Red Riding Hood</a> <span class="p-tel">+45 2345 234 235</span></span></p>
 					</div>
