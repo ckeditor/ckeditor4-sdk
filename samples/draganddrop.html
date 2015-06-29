@@ -35,16 +35,17 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		}
 		.columns > .editor {
 			float: left;
-			width: 570px;
+			width: 65%;
 			position: relative;
 			z-index: 1;
 		}
 		.contactList {
 			float: right;
-			width: 300px;
+			width: 35%;
+			box-sizing: border-box;
 			list-style-type: none;
 			margin: 0 !important;
-			padding: 0;
+			padding: 0 0 0 20px;
 		}
 		.contactList li {
 			background: #FAFAFA;
@@ -62,7 +63,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			margin-left: -5px;
 		}
 		.contact {
-			padding-left: 10px;
+			padding: 0 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		.contact .u-photo {
 			display: inline-block;
