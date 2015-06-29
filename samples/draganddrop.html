@@ -156,14 +156,14 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				'use strict';
 
 				var CONTACTS = [
-					{ name: 'Huckleberry Finn',			tel: '+48 1345 234 235', email: 'huckleberry@island.com', avatar: 'mp' },
-					{ name: 'D\'Artagnan',				tel: '+45 2345 234 235', email: 'dartagnan@musketeers.com', avatar: 'ww' },
-					{ name: 'Phileas Fogg',				tel: '+44 3345 234 235', email: 'fogg@world.com', avatar: 'on' },
-					{ name: 'Alice',					tel: '+20 4345 234 235', email: 'alice@hole.com', avatar: 'at' },
-					{ name: 'Little Red Riding Hood',	tel: '+45 2345 234 235', email: 'lrrh@forest.com', avatar: 'fk' },
-					{ name: 'Winnetou',					tel: '+44 3345 234 235', email: 'winnetou@apache.com', avatar: 'pk' },
-					{ name: 'Willy Wonka',				tel: '+20 4345 234 235', email: 'willy@factory.com', avatar: 'ks' },
-					{ name: 'Robinson Crusoe',			tel: '+45 2345 234 235', email: 'crusoe@island.com', avatar: 'rm' }
+					{ name: 'Huckleberry Finn',			tel: '+48 1345 234 235', email: 'huckleberry@island.com', avatar: 'hfin' },
+					{ name: 'D\'Artagnan',				tel: '+45 2345 234 235', email: 'dartagnan@musketeers.com', avatar: 'dartagnan' },
+					{ name: 'Phileas Fogg',				tel: '+44 3345 234 235', email: 'fogg@world.com', avatar: 'pfog' },
+					{ name: 'Alice',					tel: '+20 4345 234 235', email: 'alice@hole.com', avatar: 'alice' },
+					{ name: 'Little Red Riding Hood',	tel: '+45 2345 234 235', email: 'lrrh@forest.com', avatar: 'lrrh' },
+					{ name: 'Winnetou',					tel: '+44 3345 234 235', email: 'winnetou@apache.com', avatar: 'winetou' },
+					{ name: 'Edmond Dantès',			tel: '+20 4345 234 235', email: 'count@montecristo.com', avatar: 'edantes' },
+					{ name: 'Robinson Crusoe',			tel: '+45 2345 234 235', email: 'crusoe@island.com', avatar: 'rcrusoe' }
 				];
 
 				CKEDITOR.disableAutoInline = true;
@@ -253,7 +253,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					CKEDITOR.document.getById( 'contactList' ),
 					new CKEDITOR.template(
 						'<div class="contact h-card" data-contact="{id}">' +
-							'<img src="assets/draganddrop/img/avatar-{avatar}.png" alt="avatar" class="u-photo" /> {name}' +
+							'<img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}' +
 						'</div>'
 					),
 					CONTACTS
