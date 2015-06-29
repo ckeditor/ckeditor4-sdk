@@ -66,7 +66,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</textarea>
 
 			<p>
-				<strong>Note:</strong> This example integrates CKEditor with <a href="http://cksource.com/ckfinder">CKFinder</a>,
+				<strong>Note:</strong> The examples on this page integrate CKEditor with
+				<a href="http://cksource.com/ckfinder">CKFinder</a>,
 				but you are free to implement your own solution thanks to the editor
 				<a href="http://docs.ckeditor.com/#!/guide/dev_file_browser_api">File Browser API</a> or choose
 				another existing product. Additionally, file manager integration
@@ -125,19 +126,18 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h2>Related Features</h2>
 			<ul>
 				<li><a href="./captionedimage.html">Inserting Content &ndash; Creating Captioned Images</a></li>
-				<li><a href="./draganddrop.html">Inserting Content &ndash; Drag and Drop Integration</a></li>
+				<li><a href="./draganddrop.html">API Usage &ndash; Drag and Drop Integration</a></li>
 			</ul>
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					height: 300,
 
-					// Configure your file browser integration. This example uses CKFinder 3 for PHP.
-					// Please note that CKFinder 2 paths are different, check the relevant documentation.
+					// Configure your file manager integration. This example uses CKFinder 3 for PHP.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
 					filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
-					filebrowserUploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Files',
-					filebrowserImageUploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Images'
+					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
 				} );
 			</script>
 
@@ -147,17 +147,16 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					height: 300,
 
 					// Upload images to a CKFinder connector (note that the response type is set to JSON).
-					uploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
+					uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
 
-					// Configure your file browser integration. This example uses CKFinder 3 for PHP.
-					// Please note that CKFinder 2 paths are different, check the relevant documentation.
+					// Configure your file manager integration. This example uses CKFinder 3 for PHP.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
 					filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
-					filebrowserUploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Files',
-					filebrowserImageUploadUrl: '/ckfinder/connector/php/connector.php?command=QuickUpload&type=Images',
+					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
 
-					// The following options are not necessary and are used here for presentational purposes.
-					// They configure styles dropdown and widgets to use classes.
+					// The following options are not necessary and are used here for presentation purposes only.
+					// They configure the Styles drop-down list and widgets to use classes.
 
 					stylesSet: [
 						{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
