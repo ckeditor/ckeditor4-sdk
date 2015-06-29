@@ -39,25 +39,28 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			position: relative;
 			z-index: 1;
 		}
-		.contactList {
+		.columns > .contacts {
 			float: right;
 			width: 35%;
 			box-sizing: border-box;
-			list-style-type: none;
-			margin: 0 !important;
 			padding: 0 0 0 20px;
 		}
-		.contactList li {
+		#contactList {
+			list-style-type: none;
+			margin: 0 !important;
+			padding: 0;
+		}
+		#contactList li {
 			background: #FAFAFA;
 			margin-bottom: 1px;
 			height: 56px;
 			line-height: 56px;
 			cursor: pointer;
 		}
-		.contactList li:nth-child(2n) {
+		#contactList li:nth-child(2n) {
 			background: #F3F3F3;
 		}
-		.contactList li:hover {
+		#contactList li:hover {
 			background: #FFFDE3;
 			border-left: 5px solid #DCDAC1;
 			margin-left: -5px;
@@ -100,14 +103,19 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		#editor1 h1 {
 			text-align: center;
 		}
+		#editor1 hr {
+			border-style: dotted;
+			border-color: #DCDCDC;
+			border-width: 1px 0 0;
+		}
 	</style>
 	<!--[if lte IE 9]>
 		<style>
 			/* Because only the image is draggable: */
-			.contactList li {
+			#contactList li {
 				cursor: default;
 			}
-			.contactList li img {
+			#contactList li img {
 				cursor: pointer
 			}
 		</style>
@@ -144,8 +152,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 						<p style="text-align: right;"><span class="h-card"><a class="p-name u-email" href="mailto:lrrh@example.com">Little Red Riding Hood</a> <span class="p-tel">+45 2345 234 235</span></span></p>
 					</div>
 				</div>
-				<ul class="contactList" id="contactList"></ul>
+				<div class="contacts">
+					<h3>List of Droppable Contacts</h3>
+					<ul id="contactList"></ul>
+				</div>
 			</div>
+
+			<p>Photos: <a href="http://en.wikipedia.org">Wikipedia.org</a>.</p>
 
 			<h2>Related Features</h2>
 			<ul>
