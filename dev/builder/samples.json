@@ -27,8 +27,7 @@
 						"Tables with Column Resizing",
 						"Code Snippets",
 						"Mathematical Formulas",
-						"Placeholders",
-						"Drag and Drop Integration"
+						"Placeholders"
 					]
 				},
 				{
@@ -115,7 +114,8 @@
 					"name": "API Usage",
 					"samples": [
 						"Using CKEditor API",
-						"Read-Only Mode"
+						"Read-Only Mode",
+						"Drag and Drop Integration"
 					]
 				},
 				{
