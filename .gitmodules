@@ -1,10 +1,10 @@
 [submodule "vendor/mathjax"]
 	path = vendor/mathjax
-	url = https://github.com/mathjax/MathJax.git
+	url = git@github.com:mathjax/MathJax.git
 [submodule "docs"]
 	path = docs
-	url = https://github.com/ckeditor/ckeditor-docs.git
+	url = git@github.com:ckeditor/ckeditor-docs.git
 	branch = master
 [submodule "vendor/ckeditor-presets"]
 	path = vendor/ckeditor-presets
-	url = https://github.com/ckeditor/ckeditor-presets.git
+	url = git@github.com:ckeditor/ckeditor-presets.git
