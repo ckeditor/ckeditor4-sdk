@@ -308,6 +308,8 @@ function prepareSamplesFilesSync() {
             sample.fixCKEDITORVendorLinks( CKEDITOR_VERSION );
         }
 
+        sample.cleanOtherVersionElements( opts.version );
+
         _path = RELEASE_PATH + '/samples/' + sample.name + '.html';
         fs.writeFileSync( _path, sample.$.html(), 'utf8' );
         VERBOSE && console.log( 'Writing sample file: ', path.resolve( _path ) );
