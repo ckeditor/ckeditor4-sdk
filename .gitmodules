@@ -5,7 +5,6 @@
 	path = docs
 	url = https://github.com/ckeditor/ckeditor-docs.git
 	branch = master
-[submodule "ckeditor"]
-	path = vendor/ckeditor
-	url = https://github.com/ckeditor/ckeditor-dev.git
-	branch = major
+[submodule "vendor/ckeditor-presets"]
+	path = vendor/ckeditor-presets
+	url = https://github.com/ckeditor/ckeditor-presets.git

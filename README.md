@@ -17,7 +17,7 @@ You can also download the built package (click the **Download SDK** button at ht
 
 1. Get [Ruby](http://www.ruby-lang.org/en/).
 
-1. Follow instructions in [ckeditor-docs](https://github.com/ckeditor/ckeditor-docs) in order to 
+1. Follow instructions in [ckeditor-docs](https://github.com/ckeditor/ckeditor-docs) in order to
 setup working documentation dev environment.
 
 1. Install [Compass](http://compass-style.org/):
@@ -50,50 +50,54 @@ setup working documentation dev environment.
 1. #### setup
 
         grunt setup
-    
+
     Initializes the SDK builder.
 
 1. #### build
 
         grunt build [OPTIONS] [FLAGS]
-    
+
     When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/ckeditor-sdk` directory.
 
     ##### OPTIONS:
-    
+
         --sdk-version=VERSION
-    
+
     Determines whether to build an offline or an online version.
-	
-	`VERSION` may be: `offline` (default) or `online`. 
-    
+
+	`VERSION` may be: `offline` (default) or `online`.
+
     ##### FLAGS:
-    
-        --sdk-pack
-    
+
+        --sdk-verbose=true
+
+    Builds a development version of SDK using `../ckeditor-dev/` repository.
+
+        --sdk-pack=true
+
     Determines whether to pack the build into a `.zip` archive.
-    
-        --sdk-verbose
+
+        --sdk-verbose=true
 
     Verbose mode for the building process.
 
 1. #### watch-css
 
         grunt watch-css
-    
+
     Utilizes `compass watch` and outputs CSS directly into the `dev/ckeditor-sdk/theme/css` instead of `template/theme/css`. Useful for
 	developing styles for a working SDK.
-    
+
     **Note#1**: Call `grunt build` first. Developing CSS does not make much sense if there is no HTML.
-    
+
     **Note#2**: Produced styles are uncompressed. Also CSS<->SASS map are built.
 
 1. #### validatelinks
-    
+
         grunt validatelinks
-    
+
     Validate links in samples and the main index file.
-	
+
 ---
 
 ## License

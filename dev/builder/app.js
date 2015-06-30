@@ -31,7 +31,11 @@ var fs = require( 'fs' ),
     SAMPLES_PATH = '../../samples',
     RELEASE_PATH = '../ckeditor_sdk',
     BASE_PATH = path.resolve('../..'),
-    CKEDITOR_VERSION = determineCKEditorVersion(),
+    // Will be resolved later based on the --dev option.
+    CKEDITOR_VERSION,
+    CKEDITOR_PATH,
+    CKEDITOR_PATH_DEV = '/../ckeditor-dev/',
+    CKEDITOR_PATH_PRESETS = '/vendor/ckeditor-presets/',
     VENDORMATHJAX_PATH = path.resolve(BASE_PATH + '/vendor/mathjax'),
 
     validCategories = JSON.parse( fs.readFileSync( './samples.json', 'utf8' ) ).categories,
@@ -213,7 +217,7 @@ function copyVendor() {
     ];
 
     if ( opts.version == 'online' ) {
-        blacklist.push( path.join( BASE_PATH, 'vendor/ckeditor' ) );
+        blacklist.push( path.join( BASE_PATH, 'vendor/ckeditor-presets' ) );
     }
 
     var options = {
@@ -221,6 +225,12 @@ function copyVendor() {
     };
 
     return call( ncp, '../../vendor', path.join( RELEASE_PATH, 'vendor' ), options );
+}
+
+function copyCKEditor() {
+    console.log( 'Copying CKEditor files' );
+
+    return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 }
 
 function copyGuides( urls ) {
@@ -347,11 +357,49 @@ function prepareOfflineDocsBuilderConfig( cfg ) {
     return cfg;
 }
 
-function determineCKEditorVersion() {
-    var content  = fs.readFileSync( BASE_PATH + '/vendor/ckeditor/ckeditor.js', 'utf8' );
+// Builds CKEditor from vendor/ckeditor-presets.
+function buildCKEditor() {
+    console.log( 'Building CKEditor from presets...' );
 
-    // Replace white spaces with underscore sign, remove everything which is in brackets
-    return content.match( /version:"(.+?\s[a-zA-Z]*).+"/ )[ 1 ].trim().replace( '/\s/g', '_' );
+    // Skip building to speed up debugging:
+    // return when.resolve();
+
+    return curryExec( 'bash', [ BASE_PATH + CKEDITOR_PATH_PRESETS + 'build.sh', 'standard', 'all' ] )()
+        .then( function() {
+            console.log( 'Building CKEditor finished.' );
+        });
+}
+
+function determineCKEditorPath( dev ) {
+    return function() {
+        if ( dev ) {
+            CKEDITOR_PATH = BASE_PATH + CKEDITOR_PATH_DEV;
+        } else {
+            CKEDITOR_PATH = BASE_PATH + CKEDITOR_PATH_PRESETS + 'build/' + CKEDITOR_VERSION + '/standard-all/ckeditor/';
+        }
+
+        console.log( 'CKEditor path:', CKEDITOR_PATH );
+    };
+}
+
+function determineCKEditorVersion( dev ) {
+    return function() {
+        var content;
+
+        if ( dev ) {
+            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_DEV + 'dev/builder/build.sh', 'utf8' );
+            CKEDITOR_VERSION = content.match( /\sVERSION="([^"]+)"/ )[ 1 ];
+        } else {
+            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_PRESETS + 'build.sh', 'utf8' );
+            CKEDITOR_VERSION = content.match( /\sCKEDITOR_VERSION="([^"]+)"/ )[ 1 ];
+        }
+
+        // '4.5.0 beta' -> '4.5.0-beta'.
+        // '4.5.0 dev' -> '4.5.0'.
+        CKEDITOR_VERSION = CKEDITOR_VERSION.replace( / /g, '-' ).replace( /-dev/i, '' );
+
+        console.log( 'CKEditor version:', CKEDITOR_VERSION );
+    };
 }
 
 function getZipFilename() {
@@ -484,9 +532,17 @@ function build( opts ) {
     console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
 
     whenRimraf( RELEASE_PATH )
+        .then( function() {
+            if ( !opts.dev ) {
+                return buildCKEditor();
+            }
+        } )
+        .then( determineCKEditorVersion( opts.dev ) )
+        .then( determineCKEditorPath( opts.dev ) )
         .then( copyTemplate )
         .then( copySamples )
         .then( copyVendor )
+        .then( copyCKEditor )
         .then( copyMathjaxFiles )
         .then( readSamplesDir )
         .then( selectFilesSync )
