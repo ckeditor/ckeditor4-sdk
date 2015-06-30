@@ -171,6 +171,17 @@ Sample.prototype = {
 
     preventSearchEngineRobots: function() {
         this.$head.append( '<meta name="robots" content="noindex, nofollow">' );
+    },
+
+    cleanOtherVersionElements: function( version ) {
+        var that = this;
+        version = ( version == 'offline' ? 'online' : 'offline' );
+
+        this.$( '[data-sdk-version="' + version + '"]' ).remove();
+
+        this.$( '[data-sdk-version]' ).each( function ( index, element ) {
+            that.$( element ).removeAttr( 'data-sdk-version' );
+        } );
     }
 };
 
