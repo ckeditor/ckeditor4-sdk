@@ -213,12 +213,10 @@ function copyVendor() {
 
     var blacklist = [
         // Omit Mathjax files.
-        path.join( BASE_PATH, 'vendor/mathjax' )
+        path.join( BASE_PATH, 'vendor/mathjax' ),
+        // Omit CKEditor presets repo.
+        path.join( BASE_PATH, 'vendor/ckeditor-presets' )
     ];
-
-    if ( opts.version == 'online' ) {
-        blacklist.push( path.join( BASE_PATH, 'vendor/ckeditor-presets' ) );
-    }
 
     var options = {
         filter: createNcpBlacklistFilter( blacklist )
