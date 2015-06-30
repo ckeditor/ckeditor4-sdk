@@ -552,7 +552,7 @@ function build( opts ) {
                     .then( saveFiles )
                     .then( fixFontsLinks )
                     .then( saveFiles )
-                    .then( buildDocumentation )
+                    .then( buildDocumentation( opts.dev ) )
                     .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
                     .then( fixdocs )
                     .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
@@ -573,15 +573,25 @@ function build( opts ) {
         .catch( fail );
 }
 
-function buildDocumentation() {
-    console.log( 'Building documentation.' );
+function buildDocumentation( dev ) {
+    return function() {
+        console.log( 'Building documentation.' );
 
-    return curryExec( 'grunt', [
-        '--gruntfile', '../../docs/gruntfile.js',
-        '--path', '../vendor/ckeditor',
-        '--seo', false,
-        '--guides', '../dev/guides/guides.json'
-    ], true )();
+        var args = [
+            '--gruntfile', '../../docs/gruntfile.js',
+            '--seo', false,
+            '--guides', '../dev/guides/guides.json',
+            '--path'
+        ];
+
+        if ( dev ) {
+            args.push( BASE_PATH + CKEDITOR_PATH_DEV );
+        } else {
+            args.push( BASE_PATH + CKEDITOR_PATH_PRESETS + 'ckeditor' );
+        }
+
+        return curryExec( 'grunt', args, true )();
+    };
 }
 
 function curryExec( command, args, silent ) {

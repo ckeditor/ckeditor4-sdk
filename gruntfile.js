@@ -26,6 +26,7 @@ module.exports = function( grunt ) {
 					'npm install'
 				].join( '&&' )
 			},
+
 			'builder-cleanup': {
 				command: [
 					'cd ' + BUILDER_DIR,
@@ -45,6 +46,7 @@ module.exports = function( grunt ) {
 					].join( ' ' )
 				].join( '&&' )
 			},
+
 			'sdk-validatelinks': {
 				command: [
 					'cd ' + BUILDER_DIR,
