@@ -204,9 +204,11 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					}
 				} );
 
+				var contactList = CKEDITOR.document.getById( 'contactList' );
+
 				// When an item in the contact list is dragged, copy its data into drag and drop data transfer.
 				// This data is later read by editor#paste listener in the hcard plugin defined above.
-				CKEDITOR.document.getById( 'contactList' ).on( 'dragstart', function( evt ) {
+				contactList.on( 'dragstart', function( evt ) {
 					// The target may be some element inside draggable div (e.g. the image), so get the div.h-card.
 					var target = evt.data.getTarget().getAscendant( 'div', true );
 
@@ -235,6 +237,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 						dataTransfer.$.setDragImage( target.findOne( 'img' ).$, 0, 0 );
 					}
 				} );
+
+				// Make sure to reset dataTransfer on `dragend`. CKEditor use some global data which needs to be cleared
+				// when dragging is dome.
+				contactList.on( 'dragend', function( evt ) {
+					CKEDITOR.plugins.clipboard.resetDragDataTransfer();
+				} );
+
 
 				// Initialize editor with the hcard plugin.
 				CKEDITOR.inline( 'editor1', {
