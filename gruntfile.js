@@ -11,6 +11,8 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 
+	grunt.registerTask( 'default', 'build' );
+
 	grunt.initConfig( {
 		shell: {
 			options: {
