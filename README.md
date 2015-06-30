@@ -69,7 +69,7 @@ setup working documentation dev environment.
 
     ##### FLAGS:
 
-        --sdk-verbose=true
+        --sdk-dev=true
 
     Builds a development version of SDK using `../ckeditor-dev/` repository.
 
