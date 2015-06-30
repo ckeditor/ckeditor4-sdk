@@ -238,7 +238,7 @@ function copyGuides( urls ) {
 
     return when.promise( function ( resolve, reject ) {
         call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
-            resolve( urls );
+            resolve();
         }, reject);
     });
 }
@@ -340,21 +340,6 @@ function prepareSamplesFilesSync() {
 function readSamplesDir() {
     console.log( 'Reading sample directory', path.resolve( SAMPLES_PATH ) );
     return whenFs.readdir( SAMPLES_PATH );
-}
-
-function getOriginalDocsBuilderConfig() {
-    return JSON.parse( fs.readFileSync( BASE_PATH + '/docs/config.json', 'utf8' ) );
-}
-
-function prepareOfflineDocsBuilderConfig( cfg ) {
-    cfg = _.extend( {}, cfg );
-
-    delete cfg[ '--seo' ];
-    cfg[ '--guides' ] = '../dev/guides/guides.json';
-
-    fs.writeFileSync( BASE_PATH + '/docs/seo-off-config.json', JSON.stringify( cfg ), 'utf8' );
-
-    return cfg;
 }
 
 // Builds CKEditor from vendor/ckeditor-presets.
@@ -560,21 +545,15 @@ function build( opts ) {
         .then( prepareSamplesFilesSync )
         .then( function() {
             if ( opts.version === 'offline' ) {
-                // Have to crate artificial config with specific options for offline version.
-                var originalCfg = getOriginalDocsBuilderConfig(),
-                    offlineCfg = prepareOfflineDocsBuilderConfig( originalCfg ),
-                    urls = getGuidesFromConfig( path.resolve( BASE_PATH + '/docs/' + originalCfg[ '--guides' ] ) );
-
                 fixIndexSync();
 
-                return copyGuides( urls )
+                return copyGuides()
                     .then( fixGuidesLinks )
                     .then( saveFiles )
                     .then( fixFontsLinks )
                     .then( saveFiles )
                     .then( buildDocumentation )
                     .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
-                    .then( curryExec( 'rm', [ '../../docs/seo-off-config.json' ] ) )
                     .then( fixdocs )
                     .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
                     .then( function() {
@@ -596,7 +575,13 @@ function build( opts ) {
 
 function buildDocumentation() {
     console.log( 'Building documentation.' );
-    return curryExec( 'bash', [ '../../docs/build.sh', '--config', 'seo-off-config.json' ], true )();
+
+    return curryExec( 'grunt', [
+        '--gruntfile', '../../docs/gruntfile.js',
+        '--path', '../vendor/ckeditor',
+        '--seo', false,
+        '--guides', '../dev/guides/guides.json'
+    ], true )();
 }
 
 function curryExec( command, args, silent ) {
