@@ -6,10 +6,12 @@
 'use strict';
 
 module.exports = function( grunt ) {
-	var BUILDER_DIR = 'dev/builder';
+	var BUILDER_DIR = 'dev/builder',
+		CKEDITOR_VERSION = '4.0.0';
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
+	grunt.loadNpmTasks( 'grunt-text-replace' );
 
 	grunt.registerTask( 'default', 'build' );
 
@@ -55,6 +57,22 @@ module.exports = function( grunt ) {
 					'cd ' + BUILDER_DIR,
 					'./app.js' + ' validatelinks'
 				].join( '&&' )
+			},
+
+			'sdk-update': {
+				command: [
+					'cd vendor/ckeditor-presets',
+					'git checkout ' + ( grunt.option( 'sdk-submodule-version' ) || 'master' ),
+					'git describe --tags HEAD',
+					'cd ../..',
+					'git submodule update --init --recursive'
+				].join( '&&' ),
+				options: {
+					callback: function ( err, stdout, stderr, cb ) {
+						CKEDITOR_VERSION =  stdout.match( /\d\.\d\.\d/ )[0] || CKEDITOR_VERSION;
+						cb();
+					}
+				}
 			}
 		},
 
@@ -90,8 +108,26 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
+		},
+
+		replace: {
+			simplesample: {
+				src: [ 'samples/assets/simplesample.js' ],
+				dest: 'samples/assets/',
+				replacements: [ {
+					from: /cdn\.ckeditor\.com\/\d\.\d\.\d\/standard\-all\//,
+					to: function() {
+						return 'cdn.ckeditor.com/' + CKEDITOR_VERSION + '/standard-all/';
+					}
+				} ]
+			}
 		}
 	} );
+
+	grunt.registerTask( 'update', [
+		'shell:sdk-update',
+		'replace:simplesample'
+	] );
 
 	grunt.registerTask( 'setup', [
 		'shell:builder-cleanup',
