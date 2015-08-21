@@ -29,7 +29,7 @@ var fs = require( 'fs' ),
     Sample = require( './lib/Sample' ),
 
     SAMPLES_PATH = '../../samples',
-    RELEASE_PATH = '../ckeditor_sdk',
+    RELEASE_PATH,
     BASE_PATH = path.resolve('../..'),
     // Will be resolved later based on the --dev option.
     CKEDITOR_VERSION,
@@ -394,7 +394,7 @@ function determineCKEditorVersion( dev ) {
 }
 
 function getZipFilename() {
-    return 'ckeditor_' + CKEDITOR_VERSION +  '_sdk.zip';
+    return opts.version + '.zip';
 }
 
 function zipBuild() {
@@ -519,6 +519,9 @@ function packbuild() {
 }
 
 function build( opts ) {
+
+    RELEASE_PATH = BASE_PATH + '/build/' + opts.version;
+
     console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
     console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
 
