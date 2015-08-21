@@ -1,4 +1,4 @@
-dev/ckeditor_sdk
+build/*
 dev/builder/node_modules
 template/theme/css
 .idea
