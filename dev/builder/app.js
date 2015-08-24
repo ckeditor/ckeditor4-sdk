@@ -231,12 +231,20 @@ function copyCKEditor() {
     return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 }
 
-function copyGuides( urls ) {
+function copyGuides() {
     console.log( 'Copying guides' );
+    var urls = [];
 
     return when.promise( function ( resolve, reject ) {
-        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
-            resolve();
+        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides', {
+            transform: function(read, write) {
+                if (read.path.match(/guides\/(.*\.md$)/)) {
+                    urls.push(read.path.match(/guides\/(.*)/)[1]);
+                }
+                read.pipe(write);
+            }
+        } ).done( function() {
+            resolve( urls );
         }, reject);
     });
 }
