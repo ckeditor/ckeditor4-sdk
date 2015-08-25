@@ -231,12 +231,18 @@ function copyCKEditor() {
     return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 }
 
-function copyGuides( urls ) {
+function copyGuides() {
     console.log( 'Copying guides' );
+    var urls = [];
 
     return when.promise( function ( resolve, reject ) {
-        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
-            resolve();
+        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides', {
+            transform: function(read, write) {
+                urls.push(read.path.match(/guides\/(.*)/)[1]);
+                read.pipe(write);
+            }
+        } ).done( function() {
+            resolve( urls );
         }, reject);
     });
 }
@@ -653,12 +659,17 @@ function saveFiles( data ) {
  */
 function fixGuidesLinks( urls ) {
     console.log( 'Fixing guides links' );
-    var filesReadPromises = _.map( urls, function( url ) {
-        url = path.resolve( '../guides/' + url );
-        var promise = whenFs.readFile( url, 'utf8' );
+    var filesReadPromises = urls
+        .filter( function( url ) {
+            return url.match( /\.md$/ )
+        } )
+        .map( function( url ) {
+            console.log( url );
+            url = path.resolve( '../guides/' + url );
+            var promise = whenFs.readFile( url, 'utf8' );
 
-        return [ url, promise ];
-    } );
+            return [ url, promise ];
+        } );
     filesReadPromises = _.object( filesReadPromises );
 
     return whenKeys.map( filesReadPromises, function mapper( content ) {
