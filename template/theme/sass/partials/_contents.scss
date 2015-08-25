@@ -81,6 +81,14 @@ It is forbidden to copy and distribute this file in its original or modified for
 		&.spacious li {
 			margin: $std-standard-vgap/2;
 		}
+
+		&.code-samples {
+			list-style: none;
+
+			li {
+				margin-bottom: 0.5em;
+			}
+		}
 	}
 
 	pre, code, kbd

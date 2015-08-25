@@ -154,7 +154,7 @@
 			e.returnValue = false;
 			e.preventDefault && e.preventDefault();
 
-			if ( clicked instanceof HTMLAnchorElement ) {
+			if ( clicked instanceof HTMLButtonElement ) {
 				relLi = clicked.parentNode;
 			} else {
 				return false;
@@ -498,10 +498,10 @@
 	}
 
 	function prepareSamplesList( examples ) {
-		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
+		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul class="code-samples">';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a href="' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="' + id + '"><button>' + simpleSample.metaNames[ id - 1 ] + '</button></li>';
 		}
 		template += '</ul></div>';
 
