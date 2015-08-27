@@ -339,7 +339,7 @@
 						modalClass: 'source-code',
 						modalStyles: null,
 						closeStyles: null,
-						closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
+						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
 					} ),
 					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
 					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
