@@ -321,9 +321,11 @@ function prepareSamplesFilesSync() {
         sample.activateSamplesButton();
         if ( opts.version === 'offline' ) {
             sample.preventSearchEngineRobots();
+            sample.fixExternalPaths();
             sample.fixLinks();
             sample.fixFonts();
         } else {
+            sample.fixExternalPaths();
             sample.fixCKEDITORVendorLinks( CKEDITOR_VERSION );
         }
 
