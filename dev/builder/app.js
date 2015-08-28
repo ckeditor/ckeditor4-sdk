@@ -235,11 +235,11 @@ function copyGuides() {
     console.log( 'Copying guides' );
     var urls = [];
 
-    return when.promise( function ( resolve, reject ) {
+    return when.promise( function( resolve, reject ) {
         call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides', {
-            transform: function(read, write) {
-                urls.push(read.path.match(/guides\/(.*)/)[1]);
-                read.pipe(write);
+            transform: function( read, write ) {
+                urls.push( read.path.match( /guides\/(.*)/ )[ 1 ] );
+                read.pipe( write );
             }
         } ).done( function() {
             resolve( urls );
@@ -661,10 +661,9 @@ function fixGuidesLinks( urls ) {
     console.log( 'Fixing guides links' );
     var filesReadPromises = urls
         .filter( function( url ) {
-            return url.match( /\.md$/ )
+            return url.match( /\.md$/ );
         } )
         .map( function( url ) {
-            console.log( url );
             url = path.resolve( '../guides/' + url );
             var promise = whenFs.readFile( url, 'utf8' );
 
@@ -673,7 +672,7 @@ function fixGuidesLinks( urls ) {
     filesReadPromises = _.object( filesReadPromises );
 
     return whenKeys.map( filesReadPromises, function mapper( content ) {
-        return content.replace( /(\[.*?\])\((?:http:\/\/sdk\.ckeditor\.com([^)]*?))\)/, '$1(..$2)' );
+        return content.replace( /(\[.*?\])\((?:https?:\/\/sdk\.ckeditor\.com([^)]*?))\)/g, '$1(..$2)' );
     } );
 }
 
