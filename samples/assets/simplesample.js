@@ -159,8 +159,9 @@
 			} else {
 				return false;
 			}
-			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value;
+			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value.replace( /\D/g, '' );
 			showSampleSource( sampleId );
+			window.location.hash = sampleId;
 
 			return false;
 		} );
@@ -363,6 +364,10 @@
 			};
 		}
 
+		if ( window.location.hash ) {
+			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
+		}
+
 		function fixUrls( str ) {
 			return str
 
@@ -501,7 +506,7 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a href="' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="' + id + '"><a href="#' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
 		}
 		template += '</ul></div>';
 
