@@ -33,7 +33,7 @@ setup working documentation dev environment.
 
 1. Initialize and update Git submodules:
 
-        git update
+        grunt update
 
 1. Call Grunt `setup` task to setup the CKEditor SDK builder:
 
@@ -59,9 +59,9 @@ setup working documentation dev environment.
 
    ##### OPTIONS:
 
-       --sdk-submodule-version=VERSION
+       --sdk-ckeditor-version=VERSION
 
-    Specifies which branch of ckeditor-dev to checkout before update(major, master). Defaults to master.
+    Specifies which branch (or version - described by tag) of ckeditor-dev to checkout before update. Defaults to master.
 
 1. #### build
 

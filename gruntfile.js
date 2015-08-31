@@ -7,7 +7,8 @@
 
 module.exports = function( grunt ) {
 	var BUILDER_DIR = 'dev/builder',
-		CKEDITOR_VERSION = '4.0.0';
+		CKEDITOR_VERSION,
+		VERSION = grunt.option( 'sdk-version' ) || 'offline';
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
@@ -44,7 +45,7 @@ module.exports = function( grunt ) {
 					'cd ' + BUILDER_DIR,
 					[
 						'node ./app.js',
-						'--version=' + ( grunt.option( 'sdk-version' ) || 'offline' ),
+						'--version=' + VERSION,
 						grunt.option( 'sdk-dev' ) ? '--dev=true' : '',
 						grunt.option( 'sdk-pack' ) ? '--pack=true' : '',
 						grunt.option( 'sdk-verbose' ) ? '--verbose=true' : ''
@@ -62,13 +63,21 @@ module.exports = function( grunt ) {
 			'sdk-update': {
 				command: [
 					'cd vendor/ckeditor-presets',
-					'git checkout ' + ( grunt.option( 'sdk-submodule-version' ) || 'master' ),
-					'git describe --tags HEAD',
+					'git checkout ' + ( grunt.option( 'sdk-ckeditor-version' ) || 'master' ),
+					'git pull',
 					'cd ../..',
 					'git submodule update --init --recursive'
+				].join( '&&' )
+			},
+
+			'sdk-get-version': {
+				command: [
+					'cd vendor/ckeditor-presets',
+					'git describe --tags HEAD',
+					'cd ../..'
 				].join( '&&' ),
 				options: {
-					callback: function ( err, stdout, stderr, cb ) {
+					callback: function( err, stdout, stderr, cb ) {
 						CKEDITOR_VERSION =  stdout.match( /\d\.\d\.\d/ )[0] || CKEDITOR_VERSION;
 						cb();
 					}
@@ -113,11 +122,11 @@ module.exports = function( grunt ) {
 		replace: {
 			simplesample: {
 				src: [ 'samples/assets/simplesample.js' ],
-				dest: 'samples/assets/',
+				dest: 'build/' + VERSION + '/samples/assets/',
 				replacements: [ {
-					from: /cdn\.ckeditor\.com\/\d\.\d\.\d\/standard\-all\//,
+					from: /<CKEditorVersion>/,
 					to: function() {
-						return 'cdn.ckeditor.com/' + CKEDITOR_VERSION + '/standard-all/';
+						return CKEDITOR_VERSION;
 					}
 				} ]
 			}
@@ -125,8 +134,7 @@ module.exports = function( grunt ) {
 	} );
 
 	grunt.registerTask( 'update', [
-		'shell:sdk-update',
-		'replace:simplesample'
+		'shell:sdk-update'
 	] );
 
 	grunt.registerTask( 'setup', [
@@ -136,7 +144,9 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
-		'shell:sdk-build'
+		'shell:sdk-build',
+		'shell:sdk-get-version',
+		'replace:simplesample'
 	] );
 
 	grunt.registerTask( 'watch-css', [
