@@ -42,6 +42,7 @@ module.exports = function( grunt ) {
 
 			'sdk-build': {
 				command: [
+					'mkdir -p build',
 					'cd ' + BUILDER_DIR,
 					[
 						'node ./app.js',
@@ -68,20 +69,6 @@ module.exports = function( grunt ) {
 					'cd ../..',
 					'git submodule update --init --recursive'
 				].join( '&&' )
-			},
-
-			'sdk-get-version': {
-				command: [
-					'cd vendor/ckeditor-presets',
-					'git describe --tags HEAD',
-					'cd ../..'
-				].join( '&&' ),
-				options: {
-					callback: function( err, stdout, stderr, cb ) {
-						CKEDITOR_VERSION =  stdout.match( /\d\.\d\.\d/ )[0] || CKEDITOR_VERSION;
-						cb();
-					}
-				}
 			}
 		},
 
@@ -144,9 +131,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
-		'shell:sdk-build',
-		'shell:sdk-get-version',
-		'replace:simplesample'
+		'shell:sdk-build'
 	] );
 
 	grunt.registerTask( 'watch-css', [

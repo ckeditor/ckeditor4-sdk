@@ -199,7 +199,22 @@ function copySamples() {
     }
 
     var options = {
-        filter: createNcpBlacklistFilter( blacklist )
+        filter: createNcpBlacklistFilter( blacklist ),
+        transform: function( read, write ) {
+            if ( read.path.match( /simplesample.js$/ )) {
+                var content = '';
+
+                read.on( 'data', function( chunk ) {
+                    content += chunk;
+                });
+
+                read.on( 'end', function() {
+                    write.end( content.replace( '<CKEditorVersion>', CKEDITOR_VERSION) );
+                });
+            } else {
+                read.pipe( write );
+            }
+        }
     };
 
     return call( ncp, '../../samples', path.join( RELEASE_PATH, 'samples' ), options );
