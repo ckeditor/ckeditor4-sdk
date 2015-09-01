@@ -7,8 +7,8 @@
 
 module.exports = function( grunt ) {
 	var BUILDER_DIR = 'dev/builder',
-		CKEDITOR_VERSION,
-		VERSION = grunt.option( 'sdk-version' ) || 'offline';
+		SDK_VERSION = grunt.option( 'sdk-version' ) || 'offline',
+		CKE_VERSION = grunt.option( 'sdk-ckeditor-version' ) || 'master';
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
@@ -25,18 +25,12 @@ module.exports = function( grunt ) {
 
 			'builder-setup': {
 				command: [
+					'git submodule update --init --recursive',
 					'cd docs',
 					'npm install',
 					'cd ..',
 					'cd ' + BUILDER_DIR,
 					'npm install'
-				].join( '&&' )
-			},
-
-			'builder-cleanup': {
-				command: [
-					'cd ' + BUILDER_DIR,
-					'rm -rf node_modules'
 				].join( '&&' )
 			},
 
@@ -46,7 +40,7 @@ module.exports = function( grunt ) {
 					'cd ' + BUILDER_DIR,
 					[
 						'node ./app.js',
-						'--version=' + VERSION,
+						'--version=' + SDK_VERSION,
 						grunt.option( 'sdk-dev' ) ? '--dev=true' : '',
 						grunt.option( 'sdk-pack' ) ? '--pack=true' : '',
 						grunt.option( 'sdk-verbose' ) ? '--verbose=true' : ''
@@ -57,16 +51,24 @@ module.exports = function( grunt ) {
 			'sdk-validatelinks': {
 				command: [
 					'cd ' + BUILDER_DIR,
-					'./app.js' + ' validatelinks'
+					'./app.js validatelinks'
 				].join( '&&' )
 			},
 
 			'sdk-update': {
 				command: [
+					// Update presets.
 					'cd vendor/ckeditor-presets',
-					'git checkout ' + ( grunt.option( 'sdk-ckeditor-version' ) || 'master' ),
+					'git checkout ' + CKE_VERSION,
 					'git pull',
 					'cd ../..',
+					// Update docs.
+					'cd docs',
+					'git checkout ' + CKE_VERSION,
+					'git pull',
+					'cd ..',
+					// Commit it.
+					'git commit -a -m "Updated CKEditor presets and docs submodule HEADs."',
 					'git submodule update --init --recursive'
 				].join( '&&' )
 			}
@@ -104,19 +106,6 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
-		},
-
-		replace: {
-			simplesample: {
-				src: [ 'samples/assets/simplesample.js' ],
-				dest: 'build/' + VERSION + '/samples/assets/',
-				replacements: [ {
-					from: /<CKEditorVersion>/,
-					to: function() {
-						return CKEDITOR_VERSION;
-					}
-				} ]
-			}
 		}
 	} );
 
@@ -125,7 +114,6 @@ module.exports = function( grunt ) {
 	] );
 
 	grunt.registerTask( 'setup', [
-		'shell:builder-cleanup',
 		'shell:builder-setup'
 	] );
 

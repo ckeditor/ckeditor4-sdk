@@ -206,11 +206,11 @@ function copySamples() {
 
                 read.on( 'data', function( chunk ) {
                     content += chunk;
-                });
+                } );
 
                 read.on( 'end', function() {
-                    write.end( content.replace( '<CKEditorVersion>', CKEDITOR_VERSION) );
-                });
+                    write.end( content.replace( /<CKEditorVersion>/g, CKEDITOR_VERSION ) );
+                } );
             } else {
                 read.pipe( write );
             }
@@ -409,7 +409,7 @@ function determineCKEditorVersion( dev ) {
 }
 
 function getZipFilename() {
-    return opts.version + '.zip';
+    return 'ckeditor-sdk-' + opts.version + '.zip';
 }
 
 function zipBuild() {
@@ -534,7 +534,6 @@ function packbuild() {
 }
 
 function build( opts ) {
-
     RELEASE_PATH = BASE_PATH + '/build/' + opts.version;
 
     console.log( 'Building', opts.version, 'version of CKEditor SDK.' );

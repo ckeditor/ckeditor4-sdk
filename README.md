@@ -31,13 +31,13 @@ setup working documentation dev environment.
 
         npm install
 
-1. Initialize and update Git submodules:
-
-        grunt update
-
-1. Call Grunt `setup` task to setup the CKEditor SDK builder:
+1. Setup the the builder, submodules, etc.:
 
         grunt setup
+
+1. (**Optional**) Update Git submodules (will commit submodule HEADs change):
+
+        grunt update
 
 1. Run Grunt `build` task to build the CKEditor SDK:
 
@@ -57,11 +57,13 @@ setup working documentation dev environment.
 
         grunt update [OPTIONS]
 
-   ##### OPTIONS:
+    Updates CKEditor presets and CKEditor docs submodules to the `--sdk-ckeditor-version` (defaults to `master`), commits this change and updates all submodules recursively.
+
+    ##### OPTIONS:
 
        --sdk-ckeditor-version=VERSION
 
-    Specifies which branch (or version - described by tag) of ckeditor-dev to checkout before update. Defaults to master.
+    Specifies which branch or tag to checkout the submodules. Defaults to `master`.
 
 1. #### build
 
