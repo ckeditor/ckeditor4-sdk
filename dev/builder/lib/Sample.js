@@ -117,16 +117,13 @@ Sample.prototype = {
     },
 
     fixExternalPaths: function() {
-        var that = this;
-        this.$( 'head link[href^="../template/theme"]' ).each( function ( index, element ) {
-            that.$( element ).attr( 'href', element.attribs[ 'href' ].replace( '../template/theme', '../theme' ) );
-        } );
-
         // This is bad, but there's no real alternative to this given,
         // that the path that needs to be modified may appear within a script.
         var html = this.$( 'html' ).html();
         if ( html ) {
-            this.$( 'html' ).html( html.replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor' ) );
+            this.$( 'html' ).html( html
+                .replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor' )
+                .replace( /\.\.\/template\/theme/g, '../theme' ) );
         }
     },
 
