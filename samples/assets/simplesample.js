@@ -149,7 +149,7 @@
 		attachEvent( samplesList, 'click', function( e ) {
 			var clicked = e.target || e.srcElement,
 				relLi,
-				sampleId;
+				sampleHash;
 
 			e.returnValue = false;
 			e.preventDefault && e.preventDefault();
@@ -159,9 +159,10 @@
 			} else {
 				return false;
 			}
-			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value.replace( /\D/g, '' );
-			showSampleSource( sampleId );
-			window.location.hash = sampleId;
+
+			sampleHash = relLi.attributes.getNamedItem( 'data-sample' ).value;
+			window.location.hash = sampleHash;
+			showSampleSource( sampleHash.replace( /\D/g, '' ) );
 
 			return false;
 		} );
@@ -360,6 +361,7 @@
 					addEventListener( 'keydown', escListener );
 				} ).afterClose( function() {
 					removeEventListener( 'keydown', escListener );
+					window.location.hash = '';
 				} ).show();
 			};
 		}
@@ -506,7 +508,7 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a href="#' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
 		}
 		template += '</ul></div>';
 
