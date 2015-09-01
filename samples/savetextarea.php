@@ -10,7 +10,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta charset="utf-8">
 	<title>Saving Data in CKEditor Replacing a Textarea</title>
 	<link rel="stylesheet" href="../theme/css/sdk.css">
-	<link rel="stylesheet" href="highlight/styles/googlecode.css">
 	<style>
 	pre code {
 		white-space: pre-wrap;
@@ -19,6 +18,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	}
 	</style>
 	<link rel="icon" href="../theme/img/favicon.ico">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/github.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
 </head>
 <body>
 	<section class="sdk-container">
@@ -68,6 +69,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<footer class="sdk-footer">
 
 	</footer>
-
+	<script>
+		hljs.highlightBlock( document.querySelector( '.html' ) );
+	</script>
 </body>
 </html>

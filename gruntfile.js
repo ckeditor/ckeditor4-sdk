@@ -22,6 +22,9 @@ module.exports = function( grunt ) {
 
 			'builder-setup': {
 				command: [
+					'cd docs',
+					'npm install',
+					'cd ..',
 					'cd ' + BUILDER_DIR,
 					'npm install'
 				].join( '&&' )
