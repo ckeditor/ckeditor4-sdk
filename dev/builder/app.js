@@ -603,7 +603,7 @@ function buildDocumentation( dev ) {
         var args = [
             '--gruntfile', '../../docs/gruntfile.js',
             '--seo', false,
-            '--guides', '../dev/guides/guides.json',
+            '--guides', RELEASE_PATH + '/../guides/guides.json',
             '--path'
         ];
 
@@ -681,7 +681,7 @@ function fixGuidesLinks( urls ) {
             return url.match( /\.md$/ );
         } )
         .map( function( url ) {
-            url = path.resolve( '../guides/' + url );
+            url = path.resolve( RELEASE_PATH + '/../guides/' + url );
             var promise = whenFs.readFile( url, 'utf8' );
 
             return [ url, promise ];
