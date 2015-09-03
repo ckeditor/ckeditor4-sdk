@@ -29,7 +29,7 @@ var fs = require( 'fs' ),
     Sample = require( './lib/Sample' ),
 
     SAMPLES_PATH = '../../samples',
-    RELEASE_PATH = '../ckeditor_sdk',
+    RELEASE_PATH,
     BASE_PATH = path.resolve('../..'),
     // Will be resolved later based on the --dev option.
     CKEDITOR_VERSION,
@@ -199,7 +199,22 @@ function copySamples() {
     }
 
     var options = {
-        filter: createNcpBlacklistFilter( blacklist )
+        filter: createNcpBlacklistFilter( blacklist ),
+        transform: function( read, write ) {
+            if ( read.path.match( /simplesample.js$/ )) {
+                var content = '';
+
+                read.on( 'data', function( chunk ) {
+                    content += chunk;
+                } );
+
+                read.on( 'end', function() {
+                    write.end( content.replace( /<CKEditorVersion>/g, CKEDITOR_VERSION ) );
+                } );
+            } else {
+                read.pipe( write );
+            }
+        }
     };
 
     return call( ncp, '../../samples', path.join( RELEASE_PATH, 'samples' ), options );
@@ -231,14 +246,20 @@ function copyCKEditor() {
     return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 }
 
-function copyGuides( urls ) {
+function copyGuides() {
     console.log( 'Copying guides' );
+    var urls = [];
 
-    return when.promise( function ( resolve, reject ) {
-        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides' ).done( function() {
-            resolve();
+    return when.promise( function( resolve, reject ) {
+        call( ncp, '../../docs/guides', RELEASE_PATH + '/../guides', {
+            transform: function( read, write ) {
+                urls.push( read.path.match( /guides\/(.*)/ )[ 1 ] );
+                read.pipe( write );
+            }
+        } ).done( function() {
+            resolve( urls );
         }, reject);
-    });
+    } );
 }
 
 function copyMathjaxFiles() {
@@ -388,7 +409,7 @@ function determineCKEditorVersion( dev ) {
 }
 
 function getZipFilename() {
-    return 'ckeditor_' + CKEDITOR_VERSION +  '_sdk.zip';
+    return 'ckeditor-sdk-' + opts.version + '.zip';
 }
 
 function zipBuild() {
@@ -513,6 +534,8 @@ function packbuild() {
 }
 
 function build( opts ) {
+    RELEASE_PATH = BASE_PATH + '/build/' + opts.version;
+
     console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
     console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
 
@@ -555,7 +578,7 @@ function build( opts ) {
                     .then( buildDocumentation( opts.dev ) )
                     .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
                     .then( fixdocs )
-                    .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
+                    .then( curryExec( 'rm', [ '-rf', RELEASE_PATH + '/../guides' ] ) )
                     .then( function() {
                         if ( opts.pack ) {
                             return packbuild();
@@ -580,7 +603,7 @@ function buildDocumentation( dev ) {
         var args = [
             '--gruntfile', '../../docs/gruntfile.js',
             '--seo', false,
-            '--guides', '../dev/guides/guides.json',
+            '--guides', RELEASE_PATH + '/../guides/guides.json',
             '--path'
         ];
 
@@ -653,16 +676,20 @@ function saveFiles( data ) {
  */
 function fixGuidesLinks( urls ) {
     console.log( 'Fixing guides links' );
-    var filesReadPromises = _.map( urls, function( url ) {
-        url = path.resolve( '../guides/' + url );
-        var promise = whenFs.readFile( url, 'utf8' );
+    var filesReadPromises = urls
+        .filter( function( url ) {
+            return url.match( /\.md$/ );
+        } )
+        .map( function( url ) {
+            url = path.resolve( RELEASE_PATH + '/../guides/' + url );
+            var promise = whenFs.readFile( url, 'utf8' );
 
-        return [ url, promise ];
-    } );
+            return [ url, promise ];
+        } );
     filesReadPromises = _.object( filesReadPromises );
 
     return whenKeys.map( filesReadPromises, function mapper( content ) {
-        return content.replace( /(\[.*?\])\((?:http:\/\/sdk\.ckeditor\.com([^)]*?))\)/, '$1(..$2)' );
+        return content.replace( /(\[.*?\])\((?:https?:\/\/sdk\.ckeditor\.com([^)]*?))\)/g, '$1(..$2)' );
     } );
 }
 
