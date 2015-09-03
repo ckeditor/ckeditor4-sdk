@@ -12,9 +12,14 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
-	grunt.loadNpmTasks( 'grunt-text-replace' );
 
 	grunt.registerTask( 'default', 'build' );
+
+	var ignoreFiles = [
+		'build/**',
+		'vendor/**',
+		'node_modules/**'
+	];
 
 	grunt.initConfig( {
 		shell: {
@@ -106,7 +111,19 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
-		}
+		},
+
+		jshint: {
+			options: {
+				ignores: ignoreFiles
+			}
+		},
+
+		jscs: {
+			options: {
+				excludeFiles: ignoreFiles
+			}
+		},
 	} );
 
 	grunt.registerTask( 'update', [
@@ -129,4 +146,6 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'validatelinks', [
 		'shell:sdk-validatelinks'
 	] );
+
+	grunt.loadTasks( 'dev/tasks' );
 };
