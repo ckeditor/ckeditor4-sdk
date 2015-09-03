@@ -259,7 +259,7 @@ function copyGuides() {
         } ).done( function() {
             resolve( urls );
         }, reject);
-    });
+    } );
 }
 
 function copyMathjaxFiles() {
@@ -578,7 +578,7 @@ function build( opts ) {
                     .then( buildDocumentation( opts.dev ) )
                     .then( curryExec( 'mv', [ '../../docs/build', RELEASE_PATH + '/docs' ] ) )
                     .then( fixdocs )
-                    .then( curryExec( 'rm', [ '-rf', '../guides' ] ) )
+                    .then( curryExec( 'rm', [ '-rf', RELEASE_PATH + '/../guides' ] ) )
                     .then( function() {
                         if ( opts.pack ) {
                             return packbuild();
