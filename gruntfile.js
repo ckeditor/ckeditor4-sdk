@@ -18,7 +18,9 @@ module.exports = function( grunt ) {
 	var ignoreFiles = [
 		'build/**',
 		'vendor/**',
-		'node_modules/**'
+		'node_modules/**',
+		'docs/**',
+		'dev/builder/node_modules/**'
 	];
 
 	grunt.initConfig( {
