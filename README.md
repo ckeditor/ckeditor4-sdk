@@ -69,7 +69,7 @@ setup working documentation dev environment.
 
         grunt build [OPTIONS] [FLAGS]
 
-    When the build process is finished, you can find a working copy of CKEditor SDK in the `dev/ckeditor-sdk` directory.
+    When the build process is finished, you can find a working copy of CKEditor SDK in the `build/<version>/` directory (where `<version>` is the `--sdk-version`).
 
     ##### OPTIONS:
 
