@@ -3,10 +3,12 @@
  * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
  */
 
+/* global contentLoaded, html_beautify, picoModal, console */
+
 ( function() {
 	'use strict';
 	window.onbeforeunload = function() {
-		if (popup) {
+		if ( popup ) {
 			popup.close();
 		}
 	};
@@ -24,7 +26,7 @@
 	if ( typeof String.prototype.trim !== 'function' ) {
 		String.prototype.trim = function() {
 			return this.replace( /^\s+|\s+$/g, '' );
-		}
+		};
 	}
 
 	if ( !Object.keys ) {
@@ -41,7 +43,7 @@
 			}
 
 			return k;
-		}
+		};
 	}
 
 	function attachEvent( elem, evtName, callback ) {
@@ -67,7 +69,7 @@
 		}
 
 		var i = children.length;
-		while( i-- ) {
+		while ( i-- ) {
 			accept( children[ i ], visitator );
 		}
 	}
@@ -130,8 +132,8 @@
 			// this prevents any overhead from creating the object each time
 			var element = document.createElement( 'div' );
 
-			function decodeHTMLEntities ( str ) {
-				if( str && typeof str === 'string' ) {
+			function decodeHTMLEntities( str ) {
+				if ( str && typeof str === 'string' ) {
 					// strip script/html tags
 					str = str.replace( /<script[^>]*>([\S\s]*?)<\/script>/gmi, '' );
 					str = str.replace( /<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '' );
@@ -179,8 +181,7 @@
 		function createSampleSourceCode( id, wrapInHtmlStructure, wrapInCodePre, doubleEscapeTextAreaContent ) {
 			var sampleResources = resources[ id ],
 				resourcesString = '',
-				headResources = [],
-				result;
+				headResources = [];
 
 			wrapInHtmlStructure = ( wrapInHtmlStructure === false ? false : true );
 			wrapInCodePre = ( wrapInCodePre === false ? false : true );
@@ -234,16 +235,16 @@
 			} );
 
 			// Here we are going to remove extra new line characters and white spaces added by beautifier.
-			resourcesString = resourcesString.replace( /(<script>)(\n)([\s\S]*?)(\n)([\s\S]*?)(\<\/script\>)/g, function( match, $1, $2, $3, $4, $5, $6 ) {
+			resourcesString = resourcesString.replace( /(<script>)(\n)([\s\S]*?)(\n)([\s\S]*?)(<\/script>)/g, function( match, $1, $2, $3, $4, $5, $6 ) {
 				return $1 + $3.trim() + $6;
 			} );
 
-			resourcesString = resourcesString.replace( /&/g, '&amp;' ).replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
+			resourcesString = resourcesString.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
 			resourcesString = resourcesString.replace( /(\n)(\s*)([^\n]*)\[(\d)\]PLACEHOLDER/g, function( match, $0, $1, $2, $3 ) {
 				var placeholder = placeholders[ $3 ],
 					lines = placeholder.content.split( '\n' ), result = '',
-					noEndLineChar = ( match.indexOf('textarea') != -1 && !placeholder.example.preserveWhitespace );
+					noEndLineChar = ( match.indexOf( 'textarea' ) != -1 && !placeholder.example.preserveWhitespace );
 
 				// Removing whitespaces in each line.
 				var max = lines.length;
@@ -266,11 +267,11 @@
 					};
 				}
 
-				var getIndentChars = function( char, count ) {
+				var getIndentChars = function( character, count ) {
 					count = count < 0 ? 0 : count;
 					var result = '';
-					while( count-- ) {
-						result += char;
+					while ( count-- ) {
+						result += character;
 					}
 					return result;
 				};
@@ -279,12 +280,11 @@
 				lines.unshift( { indent: lines[ 0 ].indent, content: '' } );
 
 				// Indent one tab extra.
-				var i = 0,
-					max = lines.length;
-				for ( var i = 0; i < max; i++ ) {
+				max = lines.length;
+				for ( i = 0; i < max; i++ ) {
 					var line = lines[ i ];
 					// For the first line we don't want to create indentation #93.
-					result += ( i == 0 ? '' : getIndentChars( '\t', line.indent ) ) + line.content + ( noEndLineChar ? '' : '\n' );
+					result += ( i === 0 ? '' : getIndentChars( '\t', line.indent ) ) + line.content + ( noEndLineChar ? '' : '\n' );
 				}
 
 				result = $2 + ( doubleEscapeTextAreaContent ? result.replace( /\&/g, '&amp;' ) : result );
@@ -325,7 +325,8 @@
 					code = [
 						'<div>',
 							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
+							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) +
+							'" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
 							'<div class="textarea-wrapper">',
 								'<textarea>',
 									sampleSource.dialog,
@@ -408,7 +409,7 @@
 					}
 
 					// Removing dynamically created content from nodes.
-					accept( node, function ( node ) {
+					accept( node, function( node ) {
 						var attrs = node.attributes,
 						className = attrs ? attrs.getNamedItem( 'class' ) : null,
 						style = attrs ? attrs.getNamedItem( 'style' ) : null,
@@ -448,8 +449,8 @@
 					// When attribute is present we don't want replace content with placeholder.
 					if ( !sampleClear ) {
 						// Setting placeholder for textareas and keeping reference to content in global array.
-						var regexpTextarea = /(\<textarea.*?\>)([\s\S]*?)\n*(\s*)(\<\/textarea>)/g,
-							regexpScript = /(\<script.*?\>)([\s\S]*?)\n*(\s*)(\<\/script>)/g;
+						var regexpTextarea = /(<textarea.*?>)([\s\S]*?)\n*(\s*)(<\/textarea>)/g,
+							regexpScript = /(<script.*?>)([\s\S]*?)\n*(\s*)(<\/script>)/g;
 
 						var pickPlaceholder = function( text, $1, $2, $3, $4 ) {
 							$3 = $3.replace( '\n', '' );
@@ -458,7 +459,7 @@
 								content;
 
 							if ( shortContent ) {
-								content = SHORT_EDITOR_CONTENT.replace( /\</g, '&lt;' ).replace( /\>/g, '&gt;' );
+								content = SHORT_EDITOR_CONTENT.replace( /</g, '&lt;' ).replace( /\>/g, '&gt;' );
 							} else {
 								content = $2[0] === '\n' ? $2.replace( '\n', '' ) : $2;
 							}
@@ -481,11 +482,11 @@
 
 			// Sorting resources by usage.
 			var i = exampleBlocks.length;
-			while( i-- ) {
+			while ( i-- ) {
 				var block = exampleBlocks[ i ],
 					j = block.usedIn.length;
 
-				while( j-- ) {
+				while ( j-- ) {
 					var usageName = block.usedIn[ j ];
 
 					examples[ usageName ] = examples[ usageName ] || [];

@@ -3,7 +3,9 @@
  * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
  */
 
-var CKEDITOR_LANGS = (function () {
+/* exported CKEDITOR_LANGS */
+
+var CKEDITOR_LANGS = ( function() {
 	var langs = {
 		af: 'Afrikaans',
 		ar: 'Arabic',
@@ -79,9 +81,9 @@ var CKEDITOR_LANGS = (function () {
 		langsArray.push( { code: code, name: ( langs[ code ] || code ) } );
 	}
 
-	langsArray.sort( function ( a, b ) {
+	langsArray.sort( function( a, b ) {
 		return ( a.name < b.name ) ? -1 : 1;
 	} );
 
 	return langsArray;
-})();
+} )();

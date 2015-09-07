@@ -27,13 +27,13 @@ CKEDITOR.plugins.add( 'timestamp', {
 				// Insert the timestamp into the document.
 				editor.insertHtml( 'The current date and time is: <em>' + now.toString() + '</em>' );
 			}
-		});
+		} );
 
 		// Create the toolbar button that executes the above command.
 		editor.ui.addButton( 'Timestamp', {
 			label: 'Insert Timestamp',
 			command: 'insertTimestamp',
 			toolbar: 'insert'
-		});
+		} );
 	}
-});
+} );

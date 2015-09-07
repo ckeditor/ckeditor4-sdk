@@ -3,6 +3,8 @@
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 
+/* jshint node: true */
+
 'use strict';
 
 module.exports = function( grunt ) {
@@ -20,7 +22,14 @@ module.exports = function( grunt ) {
 		'vendor/**',
 		'node_modules/**',
 		'docs/**',
-		'dev/builder/node_modules/**'
+		'dev/builder/node_modules/**',
+		'samples/assets/contentloaded.js',
+		'samples/assets/plugins/abbr/dialogs/abbr.js',
+		'samples/assets/plugins/abbr/plugin.js',
+		'samples/assets/plugins/simplebox/plugin.js',
+		'samples/assets/html5shiv.min.js',
+		'samples/assets/beautify-html.js',
+		'samples/assets/picoModal-2.0.1.min.js'
 	];
 
 	grunt.initConfig( {
@@ -125,7 +134,7 @@ module.exports = function( grunt ) {
 			options: {
 				excludeFiles: ignoreFiles
 			}
-		},
+		}
 	} );
 
 	grunt.registerTask( 'update', [
