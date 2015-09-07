@@ -13,6 +13,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 	grunt.loadNpmTasks( 'grunt-text-replace' );
+	grunt.loadNpmTasks( 'grunt-mkdir' );
 
 	grunt.registerTask( 'default', 'build' );
 
@@ -36,7 +37,6 @@ module.exports = function( grunt ) {
 
 			'sdk-build': {
 				command: [
-					'mkdir -p build',
 					'cd ' + BUILDER_DIR,
 					[
 						'node ./app.js',
@@ -71,6 +71,14 @@ module.exports = function( grunt ) {
 					'git commit -a -m "Updated CKEditor presets and docs submodule HEADs."',
 					'git submodule update --init --recursive'
 				].join( '&&' )
+			}
+		},
+
+		mkdir: {
+			build: {
+				options: {
+					create: [ 'build' ]
+				}
 			}
 		},
 
@@ -119,6 +127,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
+		'mkdir:build',
 		'shell:sdk-build'
 	] );
 
