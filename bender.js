@@ -1,6 +1,6 @@
 /**
  * Bender configuration file
- * 
+ *
  * @param {Object}   applications       Applications used in current project
  * @param {Array}    browsers           List of browsers used for testing
  * @param {Number}   captureTimeout     Timeout before which a launched browser should connect to the server
@@ -18,6 +18,8 @@
  * @param {Object}   tests              Test groups for the project (Required)
  * @param {Number}   testTimeout        Timeout after which a test will be fetched again
  */
+
+/* jshint node: true */
 
 var config = {
 

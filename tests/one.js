@@ -1,6 +1,9 @@
+/* global describe, it, simpleSample, expect */
+
 ( function() {
 	var predefinedText = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
-		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
+		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. ' +
+			'You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
 
 	var samplesDescriptions = {
 		'1': 'has data-sample-short attribute',
@@ -31,7 +34,7 @@
 			iframe: iframe,
 			body: iframe.contentDocument.body,
 			textarea: iframe.contentDocument.body.querySelector( 'textarea' )
-		}
+		};
 	}
 
 	describe( 'Creating sample source code with no double escaping characters in textarea', function() {
@@ -66,7 +69,8 @@
 			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea ),
 				sandbox = createSandbox( downloadSampleCode );
 
-			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. ' +
+				'You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 
 		it( 'which ' + samplesDescriptions[ 2 ], function() {
@@ -80,7 +84,8 @@
 			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea ),
 				sandbox = createSandbox( downloadSampleCode );
 
-			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. ' +
+				'You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 
 		it( 'which ' + samplesDescriptions[ 4 ], function() {
@@ -96,7 +101,7 @@
 			var downloadSampleCode = simpleSample.createSampleSourceCode( '5', false, false ),
 				sandbox = createSandbox( downloadSampleCode );
 
-			expect( sandbox.body.querySelector('div input').value ).to.equal( 'Execute the &quot;bold&quot; Command' );
+			expect( sandbox.body.querySelector( 'div input' ).value ).to.equal( 'Execute the &quot;bold&quot; Command' );
 		} );
 	} );
 
@@ -133,7 +138,7 @@
 			var sampleSourceCode = simpleSample.getSampleSourceCode( '5' ),
 				sandbox = createSandbox( sampleSourceCode.download, true );
 
-			expect( sandbox.body.querySelector('input').value ).to.equal( 'Execute the &quot;bold&quot; Command' );
+			expect( sandbox.body.querySelector( 'input' ).value ).to.equal( 'Execute the &quot;bold&quot; Command' );
 		} );
 
 		it( 'which ' + samplesDescriptions[ 6 ], function() {
@@ -150,5 +155,4 @@
 			expect( sandbox.body.querySelector( 'textarea' ).value.trim() ).to.equal( '&amp;nbsp;&lt;code&gt;div&lt;/code&gt;&amp;nbsp;' );
 		} );
 	} );
-
 }() );

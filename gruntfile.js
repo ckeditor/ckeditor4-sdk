@@ -3,15 +3,34 @@
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 
+/* jshint node: true */
+
 'use strict';
 
 module.exports = function( grunt ) {
-	var BUILDER_DIR = 'dev/builder';
+	var BUILDER_DIR = 'dev/builder',
+		SDK_VERSION = grunt.option( 'sdk-version' ) || 'offline',
+		CKE_VERSION = grunt.option( 'sdk-ckeditor-version' ) || 'master';
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 
 	grunt.registerTask( 'default', 'build' );
+
+	var ignoreFiles = [
+		'build/**',
+		'vendor/**',
+		'node_modules/**',
+		'docs/**',
+		'dev/builder/node_modules/**',
+		'samples/assets/contentloaded.js',
+		'samples/assets/plugins/abbr/dialogs/abbr.js',
+		'samples/assets/plugins/abbr/plugin.js',
+		'samples/assets/plugins/simplebox/plugin.js',
+		'samples/assets/html5shiv.min.js',
+		'samples/assets/beautify-html.js',
+		'samples/assets/picoModal-2.0.1.min.js'
+	];
 
 	grunt.initConfig( {
 		shell: {
@@ -22,24 +41,22 @@ module.exports = function( grunt ) {
 
 			'builder-setup': {
 				command: [
+					'git submodule update --init --recursive',
+					'cd docs',
+					'npm install',
+					'cd ..',
 					'cd ' + BUILDER_DIR,
 					'npm install'
 				].join( '&&' )
 			},
 
-			'builder-cleanup': {
-				command: [
-					'cd ' + BUILDER_DIR,
-					'rm -rf node_modules'
-				].join( '&&' )
-			},
-
 			'sdk-build': {
 				command: [
+					'mkdir -p build',
 					'cd ' + BUILDER_DIR,
 					[
 						'node ./app.js',
-						'--version=' + ( grunt.option( 'sdk-version' ) || 'offline' ),
+						'--version=' + SDK_VERSION,
 						grunt.option( 'sdk-dev' ) ? '--dev=true' : '',
 						grunt.option( 'sdk-pack' ) ? '--pack=true' : '',
 						grunt.option( 'sdk-verbose' ) ? '--verbose=true' : ''
@@ -50,7 +67,25 @@ module.exports = function( grunt ) {
 			'sdk-validatelinks': {
 				command: [
 					'cd ' + BUILDER_DIR,
-					'./app.js' + ' validatelinks'
+					'./app.js validatelinks'
+				].join( '&&' )
+			},
+
+			'sdk-update': {
+				command: [
+					// Update presets.
+					'cd vendor/ckeditor-presets',
+					'git checkout ' + CKE_VERSION,
+					'git pull',
+					'cd ../..',
+					// Update docs.
+					'cd docs',
+					'git checkout ' + CKE_VERSION,
+					'git pull',
+					'cd ..',
+					// Commit it.
+					'git commit -a -m "Updated CKEditor presets and docs submodule HEADs."',
+					'git submodule update --init --recursive'
 				].join( '&&' )
 			}
 		},
@@ -87,11 +122,26 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
+		},
+
+		jshint: {
+			options: {
+				ignores: ignoreFiles
+			}
+		},
+
+		jscs: {
+			options: {
+				excludeFiles: ignoreFiles
+			}
 		}
 	} );
 
+	grunt.registerTask( 'update', [
+		'shell:sdk-update'
+	] );
+
 	grunt.registerTask( 'setup', [
-		'shell:builder-cleanup',
 		'shell:builder-setup'
 	] );
 
@@ -107,4 +157,6 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'validatelinks', [
 		'shell:sdk-validatelinks'
 	] );
+
+	grunt.loadTasks( 'dev/tasks' );
 };
