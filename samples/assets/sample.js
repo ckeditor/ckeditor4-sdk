@@ -21,7 +21,6 @@
 			icon.addClass( 'cke_button__' + name + '_icon' );
 			icon.setAttribute( 'style', style );
 			icon.setStyle( 'float', 'none' );
-
 		}
 	} );
 } )();

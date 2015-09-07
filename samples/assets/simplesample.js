@@ -36,6 +36,7 @@
 			}
 
 			var k = [], p;
+
 			for ( p in o ) {
 				if ( Object.prototype.hasOwnProperty.call( o, p ) ) {
 					k.push( p );
@@ -69,6 +70,7 @@
 		}
 
 		var i = children.length;
+
 		while ( i-- ) {
 			accept( children[ i ], visitator );
 		}
@@ -79,6 +81,7 @@
 		var div = document.createElement( 'div' );
 
 		setInnerHTML( div, html );
+
 		return div.firstChild;
 	}
 
@@ -168,7 +171,6 @@
 		} );
 
 		function getSampleSourceCode( sampleId ) {
-
 			var dialog = createSampleSourceCode( sampleId, false, false );
 
 			return {
@@ -189,6 +191,7 @@
 
 			var i = 0,
 				max = sampleResources.length;
+
 			for ( ; i < max; i++ ) {
 				var resource = sampleResources[ i ],
 					isHeadResource = ( resource.name == 'LINK' || resource.name == 'STYLE' );
@@ -224,7 +227,8 @@
 				];
 			}
 
-			resourcesString = getTemplatePre( headResources, simpleSample.metaNames[ id - 1 ] ).join( '' ) + resourcesString + getTemplatePost().join( '' );
+			resourcesString = getTemplatePre( headResources, simpleSample.metaNames[ id - 1 ] ).join( '' ) +
+				resourcesString + getTemplatePost().join( '' );
 
 			// Removing data-sample attribute.
 			resourcesString = resourcesString.replace( /(data\-sample=(?:\"|\')\S*(?:\"|\')\s*)/g, '' );
@@ -235,9 +239,10 @@
 			} );
 
 			// Here we are going to remove extra new line characters and white spaces added by beautifier.
-			resourcesString = resourcesString.replace( /(<script>)(\n)([\s\S]*?)(\n)([\s\S]*?)(<\/script>)/g, function( match, $1, $2, $3, $4, $5, $6 ) {
-				return $1 + $3.trim() + $6;
-			} );
+			resourcesString = resourcesString.replace( /(<script>)(\n)([\s\S]*?)(\n)([\s\S]*?)(<\/script>)/g,
+				function( match, $1, $2, $3, $4, $5, $6 ) {
+					return $1 + $3.trim() + $6;
+				} );
 
 			resourcesString = resourcesString.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( /\>/g, '&gt;' );
 
@@ -248,6 +253,7 @@
 
 				// Removing whitespaces in each line.
 				var max = lines.length;
+
 				for ( var i = 0; i < max; i++ ) {
 					var lineData = lines[ i ].match( /(\s*)([\S\s]*)/ ),
 						indent, content;
@@ -270,9 +276,11 @@
 				var getIndentChars = function( character, count ) {
 					count = count < 0 ? 0 : count;
 					var result = '';
+
 					while ( count-- ) {
 						result += character;
 					}
+
 					return result;
 				};
 
@@ -281,6 +289,7 @@
 
 				// Indent one tab extra.
 				max = lines.length;
+
 				for ( i = 0; i < max; i++ ) {
 					var line = lines[ i ];
 					// For the first line we don't want to create indentation #93.
@@ -307,9 +316,11 @@
 		simpleSample.createSampleSourceCode = createSampleSourceCode;
 
 		var showSampleSource;
+
 		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
 			showSampleSource = function( sampleId ) {
 				var code = createSampleSourceCode( sampleId );
+
 				if ( popup ) {
 					popup.close();
 				}
@@ -430,6 +441,7 @@
 							if ( typeof node.value === 'string' ) {
 								node.value = '';
 							}
+
 							if ( typeof node.innerHTML === 'string' ) {
 								node.innerHTML = '';
 							}
@@ -469,6 +481,7 @@
 								content: content,
 								example: example
 							} );
+
 							return $1 + '[' + k++ + ']PLACEHOLDER' + $4;
 						};
 
@@ -482,6 +495,7 @@
 
 			// Sorting resources by usage.
 			var i = exampleBlocks.length;
+
 			while ( i-- ) {
 				var block = exampleBlocks[ i ],
 					j = block.usedIn.length;
@@ -518,6 +532,7 @@
 
 		if ( !sidebar ) {
 			console.warn( 'Couldn\'t find sidebar'  );
+
 			return;
 		}
 

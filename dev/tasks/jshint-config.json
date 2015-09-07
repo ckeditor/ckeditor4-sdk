@@ -1,6 +1,5 @@
 {
 	"browser": true,
-
 	"es3": true,
 	"immed": true,
 	"latedef": "nofunc",
@@ -21,5 +20,5 @@
 	"loopfunc": true,
 	"validthis": true,
 
-	"predef": [ "CKEDITOR", "assert", "arrayAssert", "bender", "JSON", "objectAssert", "resume", "sinon", "wait", "YUITest" ]
+	"predef": [ "CKEDITOR" ]
 }

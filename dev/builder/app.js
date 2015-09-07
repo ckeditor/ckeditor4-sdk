@@ -325,6 +325,7 @@ function copyMathjaxFiles() {
 		] );
 
 		var preventCopy = !whiteList && blackList;
+
 		if ( VERBOSE && preventCopy ) {
 			console.log( '  Omitting ', name );
 		}
@@ -341,6 +342,7 @@ function prepareSamplesFilesSync() {
 		var _path;
 		sample.setSidebar( categories );
 		sample.activateSamplesButton();
+
 		if ( opts.version === 'offline' ) {
 			sample.preventSearchEngineRobots();
 			sample.fixLinks();
@@ -382,6 +384,7 @@ function prepareSamplesFilesSync() {
 // return promise
 function readSamplesDir() {
 	console.log( 'Reading sample directory', path.resolve( SAMPLES_PATH ) );
+
 	return whenFs.readdir( SAMPLES_PATH );
 }
 
@@ -443,8 +446,9 @@ function zipBuild() {
 			output,
 			archive = archiver( 'zip' );
 
-		if ( fs.existsSync( outputPath ) )
+		if ( fs.existsSync( outputPath ) ) {
 			fs.unlinkSync( outputPath );
+		}
 
 		output = fs.createWriteStream( outputPath );
 		output.on( 'close', function() {
@@ -488,6 +492,7 @@ function validateLinks( elements ) {
 
 		$( '.sdk-main-navigation a' ).each( function() {
 			var result = Sample.validateLink( this.attribs.href, errors );
+
 			if ( result instanceof Error ) {
 				errors.push( {
 					sample: 'index.html',
@@ -585,9 +590,9 @@ function build( opts ) {
 							return packbuild();
 						}
 					} );
-
 			} else {
 				fixIndexSync();
+
 				if ( opts.pack ) {
 					return packbuild();
 				}
@@ -700,7 +705,6 @@ function fixFontsLinks() {
 	];
 
 	var filesReadPromises = _.map( urls, function( url ) {
-
 		// Used when.promise here to resolve with customised and more sophisticated value
 		// which is literal object with file content and url of this file.
 		var promise = when.promise( function( resolve, reject ) {

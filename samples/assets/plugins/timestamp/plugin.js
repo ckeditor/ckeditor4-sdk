@@ -16,7 +16,6 @@ CKEDITOR.plugins.add( 'timestamp', {
 
 	// The plugin initialization logic goes inside this method.
 	init: function( editor ) {
-
 		// Define the editor command that inserts a timestamp.
 		editor.addCommand( 'insertTimestamp', {
 

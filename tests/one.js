@@ -2,7 +2,8 @@
 
 ( function() {
 	var predefinedText = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
-		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
+		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. ' +
+			'You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
 
 	var samplesDescriptions = {
 		'1': 'has data-sample-short attribute',
@@ -154,5 +155,4 @@
 			expect( sandbox.body.querySelector( 'textarea' ).value.trim() ).to.equal( '&amp;nbsp;&lt;code&gt;div&lt;/code&gt;&amp;nbsp;' );
 		} );
 	} );
-
 }() );

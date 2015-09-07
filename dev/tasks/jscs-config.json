@@ -1,7 +1,6 @@
 {
-	"es3": true,
 	"requireCurlyBraces": [
-		"switch", "try", "catch"
+		"if", "else", "for", "while", "do", "switch", "try", "catch"
 	],
 	"requireSpaceBeforeKeywords": true,
 	"requireSpaceAfterKeywords": [
@@ -23,6 +22,10 @@
 	},
 	"disallowSpacesInCallExpression": true,
 	"requireBlocksOnNewline": true,
+	"disallowPaddingNewlinesInBlocks": true,
+	"requirePaddingNewlinesBeforeKeywords": [
+		"do", "for", "if", "switch", "case", "try", "while", "with", "return"
+	],
 	"requireSpacesInsideObjectBrackets": "all",
 	"requireSpacesInsideArrayBrackets": "all",
 	"requireSpacesInsideParentheses": "all",
@@ -33,26 +36,24 @@
 	"disallowSpaceAfterPrefixUnaryOperators": true,
 	"disallowSpaceBeforePostfixUnaryOperators": true,
 	"requireSpaceBeforeBinaryOperators": true,
+	"disallowImplicitTypeConversion": [
+		"numeric", "binary", "string"
+	],
 	"requireSpaceAfterBinaryOperators": true,
 	"disallowKeywords": [
 		"with"
 	],
 	"disallowMultipleLineStrings": true,
+	"disallowMultipleLineBreaks": true,
 	"disallowMixedSpacesAndTabs": true,
 	"disallowTrailingWhitespace": true,
-	"maximumLineLength": 200,
-	"requireDotNotation": {
-		"allExcept": [ "keywords" ]
-	},
+	"maximumLineLength": 140,
+	"requireCapitalizedConstructors": true,
+	"requireDotNotation": true,
 	"disallowYodaConditions": true,
 	"disallowNewlineBeforeBlockStatements": true,
 	"validateLineBreaks": "LF",
-	"validateQuoteMarks": {
-		"mark": "'",
-		"escape": true
-	},
-	"validateIndentation": {
-		"value": "\t",
-		"allExcept": [ "comments" ]
-	}
+	"validateQuoteMarks": "'",
+	"validateIndentation": "\t",
+	"safeContextKeyword": [ "that" ]
 }

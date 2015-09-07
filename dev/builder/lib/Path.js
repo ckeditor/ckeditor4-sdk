@@ -32,7 +32,6 @@ Path.prototype = {
 		var last = arr.shift();
 
 		while ( typeof last === 'string' ) {
-
 			// Provided path is longer that checked one.
 			if ( i >= partsNumber ) {
 				return false;
@@ -53,6 +52,7 @@ Path.prototype = {
 			if ( result ) {
 				var extension = result[ 1 ],
 					compareResult = /^\S*\.(\w+)$/.exec( this.parts[ i ] );
+
 				if ( compareResult && compareResult[ 1 ] == extension ) {
 					// Assume that we are checking last element.
 					return true;

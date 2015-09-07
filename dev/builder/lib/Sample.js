@@ -49,7 +49,6 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
 		_.each( indexObj.appendElements, function( element ) {
 			that.$( element.selector ).append( element.html );
 		} );
-
 	} else {
 		if ( opts.version === 'online' ) {
 			this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
@@ -64,14 +63,16 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
 
 Sample.prototype = {
 	parseMeta: function( name, lengthValidator ) {
-
 		lengthValidator = lengthValidator || function( element ) {
 			return element.length != 1;
 		};
 
 		this[ name ] = this.$( 'meta[name="sdk-' + name + '"]' );
-		if ( lengthValidator( this[ name ] ) )
-		throw 'Invalid number of sdk-' + name + ' meta tags in sample: ' + this.name;
+
+		if ( lengthValidator( this[ name ] ) ) {
+			throw 'Invalid number of sdk-' + name + ' meta tags in sample: ' + this.name;
+		}
+
 		this[ name ] = this[ name ].attr( 'content' );
 	},
 
@@ -97,7 +98,7 @@ Sample.prototype = {
 
 		if ( this.name == 'index' || this.name == 'license' ) {
 			this.$( 'head link, head script, .sdk-header a, .sdk-header img, .sdk-footer a' ).each( function( index, element ) {
-			// We want to manipulate only this attributes - when are not present then we are doing nothing.
+				// We want to manipulate only this attributes - when are not present then we are doing nothing.
 				if ( !this.attribs.href && !this.attribs.src ) {
 					return;
 				}
@@ -232,8 +233,9 @@ Sample.createSidebar = function( categories, highlight, index ) {
 		result.push( '<h2>' + category.name + '</h2>' );
 
 		_.each( category.subcategories, function( subcategory ) {
-			if ( !subcategory.samples.length )
-			return;
+			if ( !subcategory.samples.length ) {
+				return;
+			}
 
 			highlightSubcategory = false;
 
@@ -246,7 +248,8 @@ Sample.createSidebar = function( categories, highlight, index ) {
 				sample.name == highlight.name
 				);
 
-				list.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' + ( index ? 'samples/' : '' ) + sample.name + '.html">' + sample.title + '</a></li>' );
+				list.push( '<li class="' + ( highlightMe ? 'active' : '' ) + '"><a href="' +
+					( index ? 'samples/' : '' ) + sample.name + '.html">' + sample.title + '</a></li>' );
 
 				highlightSubcategory |= highlightMe;
 			} );
