@@ -645,6 +645,10 @@ function curryExec( command, args, silent ) {
                     reject( code );
                 }
             } );
+
+            cmd.on( 'error', function( err ) {
+                console.log( 'Error "' + err + '" while executing command: "' + command + ' ' + args.join( ' ' ) + '"' );
+            } );
         } );
     }
 }
