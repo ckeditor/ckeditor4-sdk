@@ -201,7 +201,7 @@ function copySamples() {
     var options = {
         filter: createNcpBlacklistFilter( blacklist ),
         transform: function( read, write ) {
-            if ( read.path.match( /simplesample.js$/ )) {
+            if ( read.path.match( /samples\/assets\/simplesample\.js/ ) ) {
                 var content = '';
 
                 read.on( 'data', function( chunk ) {
@@ -209,7 +209,10 @@ function copySamples() {
                 } );
 
                 read.on( 'end', function() {
-                    write.end( content.replace( /<CKEditorVersion>/g, CKEDITOR_VERSION ) );
+                    content = content
+                        .replace( /\.\.\/template\/theme/g, '../theme' )
+                        .replace( /<CKEditorVersion>/g, CKEDITOR_VERSION );
+                    write.end( content );
                 } );
             } else {
                 read.pipe( write );
