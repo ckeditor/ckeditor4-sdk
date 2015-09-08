@@ -360,13 +360,13 @@
 					addEventListener( 'keydown', escListener );
 				} ).afterClose( function() {
 					removeEventListener( 'keydown', escListener );
-					window.location.hash = '';
 				} ).show();
 			};
 		}
 
 		if ( window.location.hash ) {
 			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
+			window.location.hash = '';
 		}
 
 		function fixUrls( str ) {
