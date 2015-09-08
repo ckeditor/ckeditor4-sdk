@@ -116,6 +116,17 @@ Sample.prototype = {
         } );
     },
 
+    fixExternalPaths: function() {
+        // This is bad, but there's no real alternative to this given,
+        // that the path that needs to be modified may appear within a script.
+        var html = this.$( 'html' ).html();
+        if ( html ) {
+            this.$( 'html' ).html( html
+                .replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor' )
+                .replace( /\.\.\/template\/theme/g, '../theme' ) );
+        }
+    },
+
     fixCKEDITORVendorLinks: function( version ) {
         var that = this,
             cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
