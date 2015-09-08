@@ -161,7 +161,6 @@
 			}
 
 			sampleHash = relLi.attributes.getNamedItem( 'data-sample' ).value;
-			window.location.hash = sampleHash;
 			showSampleSource( sampleHash.replace( /\D/g, '' ) );
 
 			return false;
