@@ -409,7 +409,7 @@ function determineCKEditorVersion( dev ) {
 }
 
 function getZipFilename() {
-    return 'ckeditor-sdk-' + opts.version + '.zip';
+    return 'ckeditor_sdk_' + CKEDITOR_VERSION + '.zip';
 }
 
 function zipBuild() {
