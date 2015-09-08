@@ -534,7 +534,7 @@ function packbuild() {
 }
 
 function build( opts ) {
-    RELEASE_PATH = BASE_PATH + '/build/' + opts.version;
+    RELEASE_PATH = BASE_PATH + '/build/' + opts.version + ( opts.pack ? '_pack' : '' );
 
     console.log( 'Building', opts.version, 'version of CKEditor SDK.' );
     console.log( 'Removing old release directory', path.resolve( RELEASE_PATH ) );
