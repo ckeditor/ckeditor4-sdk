@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 /*
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 */
 ?>

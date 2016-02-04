@@ -7,7 +7,7 @@ The following text describes the licensing of the CKEditor SDK and its component
 The source of the CKEditor SDK is licensed under the terms of the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html)
 (see Appendix A).
 
-Copyright (c) 2003-2014, [CKSource](http://cksource.com/) - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2016, [CKSource](http://cksource.com/) - Frederico Knabben. All rights reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
