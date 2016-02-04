@@ -50,7 +50,7 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
 
     } else {
         if ( opts.version === 'online' ) {
-            this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
+            this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/ckeditor-sdk-offline.zip">Download SDK</a></li>' );
         }
     }
 
