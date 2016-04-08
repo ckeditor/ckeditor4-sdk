@@ -56,6 +56,7 @@
 				{
 					"name": "Accessibility Support",
 					"samples": [
+						"Accessibility Checker",
 						"Accessibility and Keyboard Shortcuts",
 						"&quot;Tab&quot; Key Navigation"
 					]
