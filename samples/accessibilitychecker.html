@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Accessibility Checker">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, accessibility, keyboard, a11y, quickfix, content, disability">
+	<meta name="sdk-samples" content="Accessibility Checker">
+	<title>Accessibility Checker</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/sample.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<script src="../vendor/jquery/jquery-1.12.3.min.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../template/theme/img/favicon.ico">
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Accessibility Checker <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_accessibility_checker">Documentation</a></h1>
+
+			<p>
+				<a href="https://cksource.com/accessibility-checker/">Accessibility Checker</a> is an innovative solution that lets you <strong>inspect the accessibility level of content created in CKEditor</strong> and immediately <strong>solve any accessibility issues that are found</strong>.
+			</p>
+			<p>
+				This solution is based on two optional plugins (<a href="http://ckeditor.com/addon/a11ychecker">Accessibility Checker</a> and <a href="http://ckeditor.com/addon/balloonpanel">Balloon Panel</a>) that you can install with <a href="http://ckeditor.com/builder">CKBuilder</a>. By default, it uses <a href="http://quailjs.org/" target="_blank">Quail</a> as its accessibility tests library, but you can integrate any other similar library to achieve comparable results.
+			</p>
+
+			<p class="tip">
+				Accessibility Checker is available under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL</a> or commercial license. <a href="https://cksource.com/contact "target="_blank">Contact us</a> for more details.
+				<br>
+				Quail, the default accessibility tests library, requires <strong>jQuery 1.x</strong> to run. You thus need to add jQuery 1.x to any site that is going to use Accessibility Checker.  
+			</p>
+
+			<p>
+				When the Accessibility Checker plugin is enabled, the <span class="button_icon" data-icon="a11ychecker" title="Check Accessibility">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it starts checking your content for accessibility issues as defined in the tests library. All issues become highlighted and the Accessibility Checker panel will let you not only navigate through them, but also fix them as you go. Thanks to the <a href="http://docs.ckeditor.com/#!/guide/dev_accessibility_checker-section-using-quick-fixes">Quick Fix</a> feature you can correct common problems directly in the panel, sometimes with just one click of a button!
+			</p>
+
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+				&lt;h1 id=&quot;new-york-city&quot;&gt;New York City&lt;/h1&gt;
+				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/NewYorkCity.jpg&quot; class=&quot;right&quot;&gt;
+				&lt;strong&gt;New York&lt;/strong&gt; (NYC) – often called New York City or the City of New York to distinguish it from the State of New York, of which it is a part – is the most populous city in the United States and the center of the New York metropolitan area, the premier gateway for legal immigration to the United States and one of the most populous urban agglomerations in the world. A global power city, New York exerts a significant impact upon commerce, finance, media, art, fashion, research, technology, education, and entertainment. Home to the headquarters of the United Nations, New York is an important center for international diplomacy and has been described as the cultural and financial capital of the world.&lt;/p&gt;
+				&lt;p&gt;&lt;strong&gt;Boroughs&lt;/strong&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/5Boroughs.png&quot; alt=&quot;5Boroughs.png&quot; class=&quot;right&quot; style=&quot;margin-top:10px&quot;&gt;&lt;/p&gt;
+				&lt;p&gt;1) Manhattan (New York County) is the most densely populated borough and is home to Central Park and most of the city&amp;#39;s skyscrapers.&lt;br&gt;
+				2) The Bronx (Bronx County) is New York City&amp;#39;s northernmost borough, the location of Yankee Stadium, home of the New York Yankees, and home to the largest cooperatively owned housing complex in the United States, Co-op City.&lt;br&gt;
+				3) Brooklyn (Kings County), on the western tip of Long Island, is the city&amp;#39;s most populous borough and was an independent city until 1898.&lt;br&gt;
+				4) Queens (Queens County), on Long Island east of Brooklyn, is geographically the largest borough, the most ethnically diverse county in the United States, as well as the most ethnically diverse urban area in the world.&lt;br&gt;
+				5) Staten Island (Richmond County) is the most suburban in character of the five boroughs.&lt;br&gt;&lt;/p&gt;
+				&lt;h4 id=&quot;demographics&quot;&gt;Demographics&lt;/h4&gt;
+				&lt;table&gt;
+					&lt;tr&gt;&lt;td&gt;Racial composition&lt;/td&gt;&lt;td&gt;2010&lt;/td&gt;&lt;td&gt;1990&lt;/td&gt;&lt;td&gt;1970&lt;/td&gt;&lt;td&gt;1940&lt;/td&gt;&lt;tr&gt;
+					&lt;tr&gt;&lt;td&gt;White&lt;/td&gt;&lt;td&gt;44.0%&lt;/td&gt;&lt;td&gt;52.3%&lt;/td&gt;&lt;td&gt;76.6%&lt;/td&gt;&lt;td&gt;93.6%&lt;/td&gt;&lt;tr&gt;
+					&lt;tr&gt;&lt;td&gt;—Non-Hispanic&lt;/td&gt;&lt;td&gt;33.3%&lt;/td&gt;&lt;td&gt;43.2%&lt;/td&gt;&lt;td&gt;62.9%&lt;/td&gt;&lt;td&gt;92.0%&lt;/td&gt;&lt;tr&gt;
+					&lt;tr&gt;&lt;td&gt;Black or African American&lt;/td&gt;&lt;td&gt;25.5%&lt;/td&gt;&lt;td&gt;28.7%&lt;/td&gt;&lt;td&gt;21.1%&lt;/td&gt;&lt;td&gt;6.1%&lt;/td&gt;&lt;tr&gt;
+					&lt;tr&gt;&lt;td&gt;Hispanic or Latino (of any race)&lt;/td&gt;&lt;td&gt;28.6%&lt;/td&gt;&lt;td&gt;24.4%&lt;/td&gt;&lt;td&gt;16.2%&lt;/td&gt;&lt;td&gt;1.6%&lt;/td&gt;&lt;tr&gt;
+					&lt;tr&gt;&lt;td&gt;Asian&lt;/td&gt;&lt;td&gt;12.7%&lt;/td&gt;&lt;td&gt;7.0%&lt;/td&gt;&lt;td&gt;1.2%&lt;/td&gt;&lt;td&gt;−&lt;/td&gt;&lt;tr&gt;
+				&lt;/table&gt;
+
+				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/Demographics.jpg&quot; alt=&quot;Landmark 19th-century rowhouses on tree-lined Kent Street in Greenpoint Historic District, Brooklyn&quot; class=&quot;right&quot;&gt;
+				New York City is the most-populous city in the United States, with an estimated record high of 8,491,079 residents as of 2014, incorporating more immigration into the city than outmigration since the 2010 United States Census. More people live in New York City than in the next two most-populous U.S. cities (Los Angeles and Chicago) combined. This amounts to about 40% of the state of New York&amp;#39;s population and a similar percentage of the metropolitan regional population. In 2006, demographers estimated that New York&amp;#39;s population will reach between 9.2 and 9.5 million by 2030.&lt;/p&gt;
+				&lt;p&gt;Throughout its history, the city has been a major port of entry for immigrants into the United States; more than 12 million European immigrants were received at Ellis Island between 1892 and 1924. The term &lt;span style=&quot;font-style: italic;&quot;&gt;&amp;quot;melting pot&amp;quot;&lt;/span&gt; was first coined to describe densely populated immigrant neighborhoods on the Lower East Side. By 1900, Germans constituted the largest immigrant group, followed by the Irish, Jews, and Italians. In 1940, whites represented 92% of the city&amp;#39;s population.&lt;/p&gt;
+				&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/New_York_City&quot;&gt;Source:&lt;/a&gt; &lt;a href=&quot;http://en.wikipedia.org/wiki/New_York_City&quot;&gt;wikipedia.org&lt;/a&gt; with modifications.&lt;/p&gt;
+			</textarea>
+
+			<p>
+				Accessibility Checker comes with good keyboard support. A complete list of all supported keyboard shortcuts is <a href="http://docs.ckeditor.com/#!/guide/dev_accessibility_checker-section-keyboard-shortcuts">available here</a>.
+			</p>
+
+			<h2>Related Features</h2>
+			<ul>
+				<li><a href="./accessibility.html">Accessibility Support &ndash; Accessibility Support and Keyboard Shortcuts</a></li>
+				<li><a href="./tabindex.html">Accessibility Support &ndash; Page Navigation Using the "Tab" Key</a></li>
+			</ul>
+
+			<script data-sample="1">
+				CKEDITOR.plugins.addExternal( 'a11ychecker', '../../samples/assets/plugins/a11ychecker/', 'plugin.js' );
+				CKEDITOR.plugins.addExternal( 'balloonpanel', '../../samples/assets/plugins/balloonpanel/', 'plugin.js' );
+				
+				// Performance optimization:
+				// Send a request for tests JSON file ASAP, so it's likely to be ready when the user runs Acessibility Checker.
+				$.getJSON( 'assets/plugins/a11ychecker/libs/quail/tests.json' );
+
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'a11ychecker',
+					height: 500,
+					a11ychecker_quailParams: {
+						// Override Accessibility Checker gudielines from the default configuration.
+						guideline: [
+							'imgNonDecorativeHasAlt',
+							'imgImportantNoSpacerAlt',
+							'aTitleDescribesDestination',
+							'aAdjacentWithSameResourceShouldBeCombined',
+							'aImgAltNotRepetitive',
+							'aMustNotHaveJavascriptHref',
+							'aSuspiciousLinkText',
+							'blockquoteNotUsedForIndentation',
+							'documentVisualListsAreMarkedUp',
+							'headerH1',
+							'headerH2',
+							'headerH3',
+							'headerH4',
+							'imgAltIsDifferent',
+							'imgAltIsTooLong',
+							'imgAltNotEmptyInAnchor',
+							'imgAltTextNotRedundant',
+							'imgHasAlt',
+							'imgShouldNotHaveTitle',
+							'linkHasAUniqueContext',
+							'pNotUsedAsHeader',
+							'tableDataShouldHaveTh',
+							'imgWithEmptyAlt'
+						]
+					},
+					contentsCss: [
+						'assets/accessibilitychecker/contents.css',
+						'../../ckeditor-dev/contents.css'
+					]
+				} );
+			</script>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
