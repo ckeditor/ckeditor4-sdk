@@ -166,6 +166,68 @@
 			return false;
 		} );
 
+		var showSampleSource;
+		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
+			showSampleSource = function( sampleId ) {
+				var code = createSampleSourceCode( sampleId );
+				if ( popup ) {
+					popup.close();
+				}
+
+				popup = window.open( '', '', 'width=800, height=600' );
+
+				popup.document.write( code );
+			};
+		} else {
+			showSampleSource = function( sampleId ) {
+				var sampleSource = getSampleSourceCode( sampleId );
+				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
+					code = [
+						'<div>',
+						'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
+						( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
+						'<div class="textarea-wrapper">',
+						'<textarea>',
+						sampleSource.dialog,
+						'</textarea>',
+						'</div>',
+						'</div>'
+					].join( '' ),
+					modal = picoModal( {
+						content: code,
+						modalClass: 'source-code',
+						modalStyles: null,
+						closeStyles: null,
+						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
+					} ),
+					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
+					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
+					textarea = modalElem.findOne( 'textarea' );
+
+				function escListener( evt ) {
+					if ( evt.keyCode == 27 ) {
+						modal.close();
+					}
+				}
+
+				selectButton.on( 'click', function( evt ) {
+					textarea.$.select();
+					evt.data.preventDefault();
+				} );
+
+				modal.afterShow( function() {
+					addEventListener( 'keydown', escListener );
+				} ).afterClose( function() {
+					removeEventListener( 'keydown', escListener );
+				} ).show();
+			};
+		}
+
+		if ( window.location.hash ) {
+			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
+			window.location.hash = '';
+		}
+
 		function getSampleSourceCode( sampleId ) {
 
 			var dialog = createSampleSourceCode( sampleId, false, false );
@@ -306,68 +368,6 @@
 			].join( '' ).replace( /(data-sample[\s|\S]*?\"[\s|\S]*?\")/g, '' );
 		}
 		simpleSample.createSampleSourceCode = createSampleSourceCode;
-
-		var showSampleSource;
-		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
-			showSampleSource = function( sampleId ) {
-				var code = createSampleSourceCode( sampleId );
-				if ( popup ) {
-					popup.close();
-				}
-
-				popup = window.open( '', '', 'width=800, height=600' );
-
-				popup.document.write( code );
-			};
-		} else {
-			showSampleSource = function( sampleId ) {
-				var sampleSource = getSampleSourceCode( sampleId );
-				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
-					code = [
-						'<div>',
-							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
-							'<div class="textarea-wrapper">',
-								'<textarea>',
-									sampleSource.dialog,
-								'</textarea>',
-							'</div>',
-						'</div>'
-					].join( '' ),
-					modal = picoModal( {
-						content: code,
-						modalClass: 'source-code',
-						modalStyles: null,
-						closeStyles: null,
-						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
-					} ),
-					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
-					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
-					textarea = modalElem.findOne( 'textarea' );
-
-				function escListener( evt ) {
-					if ( evt.keyCode == 27 ) {
-						modal.close();
-					}
-				}
-
-				selectButton.on( 'click', function( evt ) {
-					textarea.$.select();
-					evt.data.preventDefault();
-				} );
-
-				modal.afterShow( function() {
-					addEventListener( 'keydown', escListener );
-				} ).afterClose( function() {
-					removeEventListener( 'keydown', escListener );
-				} ).show();
-			};
-		}
-
-		if ( window.location.hash ) {
-			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
-			window.location.hash = '';
-		}
 
 		function fixUrls( str ) {
 			return str
