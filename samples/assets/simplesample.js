@@ -18,7 +18,11 @@
 		SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
 		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
-		placeholders = [];
+		placeholders = [],
+		jsFiddleForm,
+		codepenForm,
+		resources,
+		decodeEntities
 
 	// IE8...
 	if ( typeof String.prototype.trim !== 'function' ) {
@@ -102,10 +106,11 @@
 	contentLoaded( window, onLoad );
 
 	function onLoad() {
-		var resources = prepareSampleResources(),
-			body = document.getElementsByTagName( 'body' )[ 0 ],
+		var body = document.getElementsByTagName( 'body' )[ 0 ],
 			sections = document.getElementsByTagName( 'section' ),
 			sdkContents;
+
+		resources = prepareSampleResources();
 
 		simpleSample.metaNames = prepareSamplesNames();
 
@@ -126,7 +131,7 @@
 		}
 
 		// http://stackoverflow.com/questions/5796718/html-entity-decode
-		var decodeEntities = ( function() {
+		decodeEntities = ( function() {
 			// this prevents any overhead from creating the object each time
 			var element = document.createElement( 'div' );
 
@@ -227,6 +232,8 @@
 			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
 			window.location.hash = '';
 		}
+
+		prepareExternalForms();
 
 		function getSampleSourceCode( sampleId ) {
 
@@ -507,11 +514,40 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' +
+				simpleSample.metaNames[ id - 1 ] + '</a>' +
+				'<img src="assets/img/jsfiddle-logo.png" style="height: 1em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+				'<img src="assets/img/codepen-logo.png" style="height: 1em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />' +
+				'</li>';
 		}
 		template += '</ul></div>';
 
 		return template;
+	}
+
+	function prepareExternalForms() {
+		jsFiddleForm = document.createElement( 'form' );
+		jsFiddleForm.style.display = 'none';
+		jsFiddleForm.id = 'jsFiddleForm';
+		jsFiddleForm.target = 'blank';
+		jsFiddleForm.method = 'post';
+		jsFiddleForm.action = 'http://jsfiddle.net/api/post/library/pure/';
+		jsFiddleForm.innerHTML = '<textarea name="wrap">l</textarea><textarea name="html"></textarea>' +
+			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
+			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full/ckeditor.js</textarea>';
+
+		document.body.appendChild( jsFiddleForm );
+
+		codepenForm = document.createElement( 'form' );
+		codepenForm.style.display = 'none';
+		codepenForm.id = 'codepenForm';
+		codepenForm.target = 'blank';
+		codepenForm.method = 'post';
+		codepenForm.action = 'http://codepen.io/pen/define/';
+
+		codepenForm.innerHTML = '<textarea name="data"></textarea>';
+
+		document.body.appendChild( codepenForm );
 	}
 
 	function initSidebarAccordion( body ) {
@@ -539,6 +575,56 @@
 			}
 		}
 	}
+
+	function collectFormData( sampleId ) {
+		var resource = resources[ sampleId ],
+			html = '', css = '', js = '';
+
+		for ( var i = 0; i < resource.length; i++ ) {
+			switch ( resource[ i ].name.toLowerCase() ) {
+				case 'textarea':
+				case 'form':
+					var html = decodeEntities( resource[ i ].innerHTML ).replace( /src="(assets.*?)"/g, 'src="http://sdk.ckeditor.com/samples/$1"' );
+					html = resource[i].html.replace( /\[\d\]PLACEHOLDER/ , html );
+					break;
+				case 'style':
+					css = decodeEntities( resource[ i ].innerHTML );
+					break;
+				case 'script':
+					js = decodeEntities( resource[ i ].innerHTML );
+
+			}
+		}
+
+		return {
+			html: html,
+			css: css,
+			js: js
+		}
+	}
+
+	function openJsFiddle( sampleId ) {
+		var formData = collectFormData( sampleId );
+
+		jsFiddleForm.querySelector( '[name="html"]' ).value = formData.html;
+		jsFiddleForm.querySelector( '[name="css"]' ).value = formData.css;
+		jsFiddleForm.querySelector( '[name="js"]' ).value = formData.js;
+
+		jsFiddleForm.submit();
+	}
+	simpleSample.openJsFiddle = openJsFiddle;
+
+	function openCodepen( sampleId ) {
+		var formData = collectFormData( sampleId, true );
+
+		// Hacky hack because for some reason Codepen ignores js_external in POST data.
+		formData.html += '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/full/ckeditor.js"></script>';
+
+		codepenForm.querySelector( '[name="data"]' ).value = JSON.stringify( formData );
+
+		codepenForm.submit();
+	}
+	simpleSample.openCodepen = openCodepen;
 
 	window.simpleSample = simpleSample;
 }() );
