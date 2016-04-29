@@ -51,30 +51,84 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</p>
 
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-				&lt;h1 id=&quot;new-york-city&quot;&gt;New York City&lt;/h1&gt;
-				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/NewYorkCity.jpg&quot; class=&quot;right&quot;&gt;
-				&lt;strong&gt;New York&lt;/strong&gt; (NYC) – often called New York City or the City of New York to distinguish it from the State of New York, of which it is a part – is the most populous city in the United States and the center of the New York metropolitan area, the premier gateway for legal immigration to the United States and one of the most populous urban agglomerations in the world. A global power city, New York exerts a significant impact upon commerce, finance, media, art, fashion, research, technology, education, and entertainment. Home to the headquarters of the United Nations, New York is an important center for international diplomacy and has been described as the cultural and financial capital of the world.&lt;/p&gt;
-				&lt;p&gt;&lt;strong&gt;Boroughs&lt;/strong&gt;&lt;/p&gt;
-				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/5Boroughs.png&quot; alt=&quot;5Boroughs.png&quot; class=&quot;right&quot; style=&quot;margin-top:10px&quot;&gt;&lt;/p&gt;
-				&lt;p&gt;1) Manhattan (New York County) is the most densely populated borough and is home to Central Park and most of the city&amp;#39;s skyscrapers.&lt;br&gt;
-				2) The Bronx (Bronx County) is New York City&amp;#39;s northernmost borough, the location of Yankee Stadium, home of the New York Yankees, and home to the largest cooperatively owned housing complex in the United States, Co-op City.&lt;br&gt;
-				3) Brooklyn (Kings County), on the western tip of Long Island, is the city&amp;#39;s most populous borough and was an independent city until 1898.&lt;br&gt;
-				4) Queens (Queens County), on Long Island east of Brooklyn, is geographically the largest borough, the most ethnically diverse county in the United States, as well as the most ethnically diverse urban area in the world.&lt;br&gt;
-				5) Staten Island (Richmond County) is the most suburban in character of the five boroughs.&lt;br&gt;&lt;/p&gt;
-				&lt;h4 id=&quot;demographics&quot;&gt;Demographics&lt;/h4&gt;
-				&lt;table&gt;
-					&lt;tr&gt;&lt;td&gt;Racial composition&lt;/td&gt;&lt;td&gt;2010&lt;/td&gt;&lt;td&gt;1990&lt;/td&gt;&lt;td&gt;1970&lt;/td&gt;&lt;td&gt;1940&lt;/td&gt;&lt;tr&gt;
-					&lt;tr&gt;&lt;td&gt;White&lt;/td&gt;&lt;td&gt;44.0%&lt;/td&gt;&lt;td&gt;52.3%&lt;/td&gt;&lt;td&gt;76.6%&lt;/td&gt;&lt;td&gt;93.6%&lt;/td&gt;&lt;tr&gt;
-					&lt;tr&gt;&lt;td&gt;—Non-Hispanic&lt;/td&gt;&lt;td&gt;33.3%&lt;/td&gt;&lt;td&gt;43.2%&lt;/td&gt;&lt;td&gt;62.9%&lt;/td&gt;&lt;td&gt;92.0%&lt;/td&gt;&lt;tr&gt;
-					&lt;tr&gt;&lt;td&gt;Black or African American&lt;/td&gt;&lt;td&gt;25.5%&lt;/td&gt;&lt;td&gt;28.7%&lt;/td&gt;&lt;td&gt;21.1%&lt;/td&gt;&lt;td&gt;6.1%&lt;/td&gt;&lt;tr&gt;
-					&lt;tr&gt;&lt;td&gt;Hispanic or Latino (of any race)&lt;/td&gt;&lt;td&gt;28.6%&lt;/td&gt;&lt;td&gt;24.4%&lt;/td&gt;&lt;td&gt;16.2%&lt;/td&gt;&lt;td&gt;1.6%&lt;/td&gt;&lt;tr&gt;
-					&lt;tr&gt;&lt;td&gt;Asian&lt;/td&gt;&lt;td&gt;12.7%&lt;/td&gt;&lt;td&gt;7.0%&lt;/td&gt;&lt;td&gt;1.2%&lt;/td&gt;&lt;td&gt;−&lt;/td&gt;&lt;tr&gt;
-				&lt;/table&gt;
+				<h1>Content Accessibility Matters</h1>
 
-				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/Demographics.jpg&quot; alt=&quot;Landmark 19th-century rowhouses on tree-lined Kent Street in Greenpoint Historic District, Brooklyn&quot; class=&quot;right&quot;&gt;
-				New York City is the most-populous city in the United States, with an estimated record high of 8,491,079 residents as of 2014, incorporating more immigration into the city than outmigration since the 2010 United States Census. More people live in New York City than in the next two most-populous U.S. cities (Los Angeles and Chicago) combined. This amounts to about 40% of the state of New York&amp;#39;s population and a similar percentage of the metropolitan regional population. In 2006, demographers estimated that New York&amp;#39;s population will reach between 9.2 and 9.5 million by 2030.&lt;/p&gt;
-				&lt;p&gt;Throughout its history, the city has been a major port of entry for immigrants into the United States; more than 12 million European immigrants were received at Ellis Island between 1892 and 1924. The term &lt;span style=&quot;font-style: italic;&quot;&gt;&amp;quot;melting pot&amp;quot;&lt;/span&gt; was first coined to describe densely populated immigrant neighborhoods on the Lower East Side. By 1900, Germans constituted the largest immigrant group, followed by the Irish, Jews, and Italians. In 1940, whites represented 92% of the city&amp;#39;s population.&lt;/p&gt;
-				&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/New_York_City&quot;&gt;Source:&lt;/a&gt; &lt;a href=&quot;http://en.wikipedia.org/wiki/New_York_City&quot;&gt;wikipedia.org&lt;/a&gt; with modifications.&lt;/p&gt;
+<p><img src="assets/accessibilitychecker/accessibility-matters-01.png" style="float:right" /> As the creators of a highly popular WYSIWYG rich text editor,&nbsp;<a href="http://cksource.com/">CKSource</a>&nbsp;is no stranger to proper web standards.&nbsp;<a href="http://ckeditor.com/demo">CKEditor</a>&nbsp;is responsible for producing a good part of the HTML content online so it must always generate semantic markup. Web standards are what keep the Internet from chaos and accessibility plays an important role in defining how the Web is shaped. CKSource is proud of being fully committed to the cause and thus&nbsp;CKEditor complies with most important industry standards, recommendations and checklists, including:</p>
+
+<ul>
+	<li><a href="http://www.state.gov/m/irm/impact/c32157.htm">Section 508 Amendment to the Rehabilitation Act of 1973</a></li>
+	<li><a href="http://www.w3.org/WAI/intro/wcag.php">Web Content Accessibility Guidelines (WCAG 2.0)</a></li>
+	<li><a href="http://www-03.ibm.com/able/guidelines/web/accessweb.html">IBM Web Accessibility Checklist</a></li>
+	<li><a href="http://www.w3.org/WAI/intro/aria.php">WAI-ARIA</a></li>
+</ul>
+
+<p>It also includes a <a href="http://docs.ckeditor.com/#!/guide/dev_a11y">number of features</a> that make it easy to use with assistive technologies, such as intuitive <a href="http://docs.ckeditor.com/#!/guide/dev_shortcuts">keyboard navigation</a> or WAI-ARIA based user interface.</p>
+
+<p><strong>Accessibility Checker Is Here!</strong></p>
+
+<p>Accessibility Checker is an innovative solution that lets you&nbsp;<strong>inspect the accessibility level</strong>&nbsp;of content created in CKEditor and&nbsp;<strong>immediately solve</strong>&nbsp;any accessibility issues that are found.</p>
+
+<p>It is built upon three key elements:</p>
+
+<p>1) <strong>Intuitive user interface</strong> optimized for quick problem solving.<br />
+2) Flexibility allowing you to use the <strong>accessibility checking engine</strong> of your choice.<br />
+3) <strong>Quick Fix</strong> feature letting you fix common problems fully automatically.</p>
+
+<p>All of this comes bundled with a tight integration with CKEditor.</p>
+
+<h3>Usage Instructions</h3>
+
+<p>You can enable Accessibility Checker by clicking the&nbsp;<strong>Check Accessibility</strong>&nbsp;(<img alt="a11ychecker.png" src="assets/accessibilitychecker/a11ychecker.png" title="Check Accessibility" />) toolbar button. Once the button is clicked, Accessibility Checker will perform the content checking process. Typically it takes a fraction of a second. Depending on the result, Accessibility Checker will switch to&nbsp;<strong>checking mode</strong>&nbsp;or inform you that the document contains no accessibility issues. If any issues are found, use the Accessbility Checker panel to investigate and fix them - often with one click of a button!</p>
+
+<h2>Keyboard Shortcuts</h2>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Command</td>
+			<td>Keystroke</td>
+			<td>Restrictions</td>
+		</tr>
+		<tr>
+			<td>Open or close Accessibility Checker</td>
+			<td><kbd>Ctrl+Alt+E</kbd></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Next issue</td>
+			<td><kbd>Ctrl+E</kbd></td>
+			<td>Checking mode only</td>
+		</tr>
+		<tr>
+			<td>Previous issue</td>
+			<td><kbd>Ctrl+Shift+E</kbd></td>
+			<td>Checking mode only</td>
+		</tr>
+		<tr>
+			<td>Close Accessibility Checker</td>
+			<td><kbd>Esc</kbd></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Switch to listening mode</td>
+			<td><kbd>Shift+Esc</kbd></td>
+			<td>Checking mode only</td>
+		</tr>
+		<tr>
+			<td>Switch to checking mode</td>
+			<td><kbd>Shift+Esc</kbd></td>
+			<td>Listening mode only</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Additional Information</h2>
+
+<p>Read the <a href="http://docs.ckeditor.com/#!/guide/dev_accessibility_checker">documentation</a>, try out this sample and visit <a href="http://sdk.ckeditor.com/samples/accessibilitychecker.html">Accessibility Checker</a> <a href="http://sdk.ckeditor.com/samples/accessibilitychecker.html">homepage</a> for more information!</p>
+
+<p>Accessibility Checker is licensed under GPL or a commercial license. <a href="https://cksource.com/contact">Contact us</a> for more details!</p>
+
+
 			</textarea>
 
 			<p>
