@@ -18,7 +18,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
-	<script src="../vendor/jquery/jquery-1.12.3.min.js"></script>
+	<script data-sample="1" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -43,7 +43,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<p class="tip">
 				Accessibility Checker is available under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL</a> or commercial license. <a href="https://cksource.com/contact "target="_blank">Contact us</a> for more details.
 				<br>
-				Quail, the default accessibility tests library, requires <strong>jQuery 1.x</strong> to run. You thus need to add jQuery 1.x to any site that is going to use Accessibility Checker.  
+				Quail, the default accessibility tests library, requires <strong>jQuery 1.x</strong> to run. You thus need to add jQuery 1.x to any site that is going to use Accessibility Checker.
 			</p>
 
 			<p>
@@ -142,7 +142,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<script data-sample="1">
 				CKEDITOR.plugins.addExternal( 'a11ychecker', '../../samples/assets/plugins/a11ychecker/', 'plugin.js' );
 				CKEDITOR.plugins.addExternal( 'balloonpanel', '../../samples/assets/plugins/balloonpanel/', 'plugin.js' );
-				
+
 				// Performance optimization:
 				// Send a request for tests JSON file ASAP, so it's likely to be ready when the user runs Acessibility Checker.
 				$.getJSON( 'assets/plugins/a11ychecker/libs/quail/tests.json' );
