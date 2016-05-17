@@ -181,6 +181,18 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					contentsCss: [
 						'assets/accessibilitychecker/contents.css',
 						'../../ckeditor-dev/contents.css'
+					],
+					// Adjust the toolbar of the standard preset.
+					toolbarGroups: [
+						{ name: 'document',	   groups: [ 'mode', 'document' ] },
+						{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+						{ name: 'links' },
+						{ name: 'insert' },
+						'/',
+						{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+						{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks' ] },
+						{ name: 'styles' },
+						{ name: 'about' }
 					]
 				} );
 			</script>
