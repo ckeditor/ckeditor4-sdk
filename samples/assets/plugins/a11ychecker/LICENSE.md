@@ -37,9 +37,6 @@ Third-party software included:
 - QUAIL, Copyright (c) 2013 Kevin Miller (libs/quail)<br>
   https://github.com/quailjs/quail<br>
   License under the terms of the MIT license.
-- jQuery, Copyright (c) 2011 John Resig (samples/jquery.min.js)<br>
-  http://jquery.com<br>
-  License under the terms of the MIT license.
  
 
 Parts of code taken from the following libraries are included in CKEditor Accessibility Checker:
@@ -47,15 +44,6 @@ Parts of code taken from the following libraries are included in CKEditor Access
 - CKEditor, Copyright (c) 2003 CKSource - Frederico Knabben (quickfix/TableHeaders.js)<br>
   http://ckeditor.com<br>
   License under the terms of the GNU General Public License Version 2 license.
-
-Third-party fonts included:
-
-- Maven Pro, Copyright (c) 2011 Joe Prince, Vissol Ltd. (samples/sdk-assets/fonts/mavenpro)<br>
-  http://vissol.co.uk/mavenpro<br>
-  License under the terms of the SIL OPEN FONT LICENSE Version 1.1 license.
-- Indie Flower, Copyright (c) 2010 Kimberly Geswein (samples/sdk-assets/fonts/indieflower)<br>
-  http://kimberlygeswein.com<br>
-  License under the terms of the SIL OPEN FONT LICENSE Version 1.1 license.
 
 Trademarks
 ----------
