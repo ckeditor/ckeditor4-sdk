@@ -18,7 +18,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
-	<script src="../vendor/jquery/jquery-1.12.3.min.js"></script>
+	<script data-sample="1" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -43,7 +43,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<p class="tip">
 				Accessibility Checker is available under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL</a> or commercial license. <a href="https://cksource.com/contact "target="_blank">Contact us</a> for more details.
 				<br>
-				Quail, the default accessibility tests library, requires <strong>jQuery 1.x</strong> to run. You thus need to add jQuery 1.x to any site that is going to use Accessibility Checker.  
+				Quail, the default accessibility tests library, requires <strong>jQuery 1.x or later</strong> to run. You thus need to add jQuery to any site that is going to use Accessibility Checker.
 			</p>
 
 			<p>
@@ -53,13 +53,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 				&lt;h1&gt;Content Accessibility Matters&lt;/h1&gt;
 
-				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/accessibility-matters-01.png&quot; style=&quot;float:right&quot; /&gt; As the creators of a highly popular WYSIWYG rich text editor,&amp;nbsp;&lt;a href=&quot;http://cksource.com/&quot;&gt;CKSource&lt;/a&gt;&amp;nbsp;is no stranger to proper web standards.&amp;nbsp;&lt;a href=&quot;http://ckeditor.com/demo&quot;&gt;CKEditor&lt;/a&gt;&amp;nbsp;is responsible for producing a good part of the HTML content online so it must always generate semantic markup. Web standards are what keep the Internet from chaos and accessibility plays an important role in defining how the Web is shaped. CKSource is proud of being fully committed to the cause and thus&amp;nbsp;CKEditor complies with most important industry standards, recommendations and checklists, including:&lt;/p&gt;
+				&lt;p&gt;&lt;img src=&quot;assets/accessibilitychecker/accessibility-matters-01.png&quot; style=&quot;float:right&quot; /&gt; As the creators of a highly popular WYSIWYG rich text editor,&amp;nbsp;&lt;a href=&quot;http://cksource.com/&quot;&gt;CKSource&lt;/a&gt;&amp;nbsp;is no stranger to web standards.&amp;nbsp;&lt;a href=&quot;http://ckeditor.com/demo&quot;&gt;CKEditor&lt;/a&gt;&amp;nbsp;is responsible for producing a good part of the HTML content online so it must always generate semantic markup. Web standards are what keep the Internet from chaos and accessibility plays an important role in defining how the Web is shaped. CKSource is proud of being fully committed to the cause and thus&amp;nbsp;CKEditor complies with most important industry standards, recommendations and checklists, including:&lt;/p&gt;
 
 				&lt;ul&gt;
-					&lt;li&gt;&lt;a href=&quot;http://www.state.gov/m/irm/impact/c32157.htm&quot;&gt;Section 508 Amendment to the Rehabilitation Act of 1973&lt;/a&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;a href=&quot;http://www.w3.org/WAI/intro/wcag.php&quot;&gt;Web Content Accessibility Guidelines (WCAG 2.0)&lt;/a&gt;&lt;/li&gt;
-					&lt;li&gt;&lt;a href=&quot;http://www-03.ibm.com/able/guidelines/web/accessweb.html&quot;&gt;IBM Web Accessibility Checklist&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;http://www.state.gov/m/irm/impact/c32157.htm&quot;&gt;Section 508 Amendment to the Rehabilitation Act of 1973&lt;/a&gt;&lt;/li&gt;
 					&lt;li&gt;&lt;a href=&quot;http://www.w3.org/WAI/intro/aria.php&quot;&gt;WAI-ARIA&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href=&quot;http://www-03.ibm.com/able/guidelines/web/accessweb.html&quot;&gt;IBM Web Accessibility Checklist&lt;/a&gt;&lt;/li&gt;
 				&lt;/ul&gt;
 
 				&lt;p&gt;It also includes a &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_a11y&quot;&gt;number of features&lt;/a&gt; that make it easy to use with assistive technologies, such as intuitive &lt;a href=&quot;http://docs.ckeditor.com/#!/guide/dev_shortcuts&quot;&gt;keyboard navigation&lt;/a&gt; or WAI-ARIA based user interface.&lt;/p&gt;
@@ -142,7 +142,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<script data-sample="1">
 				CKEDITOR.plugins.addExternal( 'a11ychecker', '../../samples/assets/plugins/a11ychecker/', 'plugin.js' );
 				CKEDITOR.plugins.addExternal( 'balloonpanel', '../../samples/assets/plugins/balloonpanel/', 'plugin.js' );
-				
+
 				// Performance optimization:
 				// Send a request for tests JSON file ASAP, so it's likely to be ready when the user runs Acessibility Checker.
 				$.getJSON( 'assets/plugins/a11ychecker/libs/quail/tests.json' );
