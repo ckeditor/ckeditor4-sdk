@@ -577,22 +577,21 @@
 	}
 
 	function collectFormData( sampleId ) {
+		var elements = document.querySelectorAll( '[data-sample="' + sampleId + '"]' );
 		var resource = resources[ sampleId ],
 			html = '', css = '', js = '';
 
-		for ( var i = 0; i < resource.length; i++ ) {
-			switch ( resource[ i ].name.toLowerCase() ) {
-				case 'textarea':
-				case 'form':
-					var html = decodeEntities( resource[ i ].innerHTML ).replace( /src="(assets.*?)"/g, 'src="http://sdk.ckeditor.com/samples/$1"' );
-					html = resource[i].html.replace( /\[\d\]PLACEHOLDER/ , html );
+		for ( var i = 0; i < elements.length; i++ ) {
+			var element = elements[i];
+			switch( element.tagName.toLowerCase() ) {
+				default:
+					html += element.outerHTML;
 					break;
 				case 'style':
-					css = decodeEntities( resource[ i ].innerHTML );
+					css += element.innerText;
 					break;
 				case 'script':
-					js = decodeEntities( resource[ i ].innerHTML );
-
+					js += element.innerText;
 			}
 		}
 
