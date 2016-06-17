@@ -514,11 +514,18 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
+			var js = collectFormData( id ).js;
+
 			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' +
-				simpleSample.metaNames[ id - 1 ] + '</a>' +
-				'<img src="assets/img/jsfiddle-logo.png" style="height: 1em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
-				'<img src="assets/img/codepen-logo.png" style="height: 1em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />' +
-				'</li>';
+				simpleSample.metaNames[ id - 1 ] + '</a>';
+
+			// Samples that require extra plugins break in jsFiddle and Codepen.
+			if ( !js.match(/extraPlugins/) ) {
+				template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+						'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
+			}
+
+			template += '</li>';
 		}
 		template += '</ul></div>';
 
