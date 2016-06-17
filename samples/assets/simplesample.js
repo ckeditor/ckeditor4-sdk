@@ -532,7 +532,7 @@
 		jsFiddleForm.target = 'blank';
 		jsFiddleForm.method = 'post';
 		jsFiddleForm.action = 'http://jsfiddle.net/api/post/library/pure/';
-		jsFiddleForm.innerHTML = '<textarea name="wrap">l</textarea><textarea name="html"></textarea>' +
+		jsFiddleForm.innerHTML = '<textarea name="wrap">b</textarea><textarea name="html"></textarea>' +
 			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
 			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full/ckeditor.js</textarea>';
 
