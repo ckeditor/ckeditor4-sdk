@@ -514,16 +514,12 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			var js = collectFormData( id ).js;
 
 			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' +
 				simpleSample.metaNames[ id - 1 ] + '</a>';
 
-			// Samples that require extra plugins break in jsFiddle and Codepen.
-			if ( !js.match(/extraPlugins/) ) {
-				template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
-						'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
-			}
+			template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+				'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
 
 			template += '</li>';
 		}
@@ -541,7 +537,7 @@
 		jsFiddleForm.action = 'http://jsfiddle.net/api/post/library/pure/';
 		jsFiddleForm.innerHTML = '<textarea name="wrap">b</textarea><textarea name="html"></textarea>' +
 			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
-			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full/ckeditor.js</textarea>';
+			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js</textarea>';
 
 		document.body.appendChild( jsFiddleForm );
 
@@ -624,7 +620,7 @@
 		var formData = collectFormData( sampleId, true );
 
 		// Hacky hack because for some reason Codepen ignores js_external in POST data.
-		formData.html += '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/full/ckeditor.js"></script>';
+		formData.html += '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js"></script>';
 
 		codepenForm.querySelector( '[name="data"]' ).value = JSON.stringify( formData );
 
