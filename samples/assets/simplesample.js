@@ -588,7 +588,8 @@
 			var element = elements[i];
 			switch( element.tagName.toLowerCase() ) {
 				default:
-					html += element.outerHTML;
+					html += element.outerHTML
+						.replace( /src="assets\//g, 'src="http://sdk.ckeditor.com/samples/assets/' );
 					break;
 				case 'style':
 					css += element.innerText;
