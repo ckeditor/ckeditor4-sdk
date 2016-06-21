@@ -537,7 +537,7 @@
 		jsFiddleForm.action = 'http://jsfiddle.net/api/post/library/pure/';
 		jsFiddleForm.innerHTML = '<textarea name="wrap">b</textarea><textarea name="html"></textarea>' +
 			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
-			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js</textarea>';
+			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js,https://code.jquery.com/jquery-2.2.3.min.js</textarea>';
 
 		document.body.appendChild( jsFiddleForm );
 
@@ -630,6 +630,7 @@
 
 		// Hacky hack because for some reason Codepen ignores js_external in POST data.
 		formData.html += '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js"></script>';
+		formData.html += '<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>';
 
 		codepenForm.querySelector( '[name="data"]' ).value = JSON.stringify( formData );
 
