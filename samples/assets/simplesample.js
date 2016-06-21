@@ -595,7 +595,15 @@
 					css += element.innerText;
 					break;
 				case 'script':
-					js += element.innerText;
+					js += element.innerText
+						.replace( /&lt;.*?&gt;/g, '' )
+						.replace( /^[\s]*\n/, '' )
+						// Replace path for some css files.
+						.replace( /'assets\//g, '\'http://sdk.ckeditor.com/samples/assets/' )
+						// Replace path for CKEditor
+						.replace( /\.\.\/vendor\/ckeditor\//g, 'http://cdn.ckeditor.com/<CKEditorVersion>/full-all/' )
+						// Replace path for additional plugins.
+						.replace( /\.\.\/\.\.\/samples\/assets/g, 'http://sdk.ckeditor.com/samples/assets' );
 			}
 		}
 
