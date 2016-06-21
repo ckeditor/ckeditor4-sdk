@@ -514,12 +514,17 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
+			var name = simpleSample.metaNames[ id - 1 ];
 
-			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' +
-				simpleSample.metaNames[ id - 1 ] + '</a>';
+			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + name + '</a>';
 
-			template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
-				'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
+			// Hack off these samples and keep them like that until the problems connected with them are solved.
+			if ( !( name == "Accessibility Checker" ||
+				name == "Default Styles Combo plugin implementation" ||
+				name == "Stylesheet Parser plugin" ) ) {
+				template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+						'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
+			}
 
 			template += '</li>';
 		}
