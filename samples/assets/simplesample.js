@@ -555,10 +555,10 @@
 		jsFiddleForm.id = 'jsFiddleForm';
 		jsFiddleForm.target = 'blank';
 		jsFiddleForm.method = 'post';
-		jsFiddleForm.action = 'http://jsfiddle.net/api/post/library/pure/';
+		jsFiddleForm.action = 'https://jsfiddle.net/api/post/library/pure/';
 		jsFiddleForm.innerHTML = '<textarea name="wrap">b</textarea><textarea name="html"></textarea>' +
 			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
-			'<textarea name="resources">http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js,https://code.jquery.com/jquery-2.2.3.min.js</textarea>';
+			'<textarea name="resources">https://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js,https://code.jquery.com/jquery-2.2.3.min.js</textarea>';
 
 		document.body.appendChild( jsFiddleForm );
 
@@ -567,7 +567,7 @@
 		codepenForm.id = 'codepenForm';
 		codepenForm.target = 'blank';
 		codepenForm.method = 'post';
-		codepenForm.action = 'http://codepen.io/pen/define/';
+		codepenForm.action = 'https://codepen.io/pen/define/';
 
 		codepenForm.innerHTML = '<textarea name="data"></textarea>';
 
@@ -622,7 +622,7 @@
 						// Replace path for some css files.
 						.replace( /'assets\//g, '\'http://sdk.ckeditor.com/samples/assets/' )
 						// Replace path for CKEditor
-						.replace( /\.\.\/vendor\/ckeditor\//g, 'http://cdn.ckeditor.com/<CKEditorVersion>/full-all/' )
+						.replace( /\.\.\/vendor\/ckeditor\//g, 'https://cdn.ckeditor.com/<CKEditorVersion>/full-all/' )
 						// Replace path for additional plugins.
 						.replace( /\.\.\/\.\.\/samples\/assets/g, 'http://sdk.ckeditor.com/samples/assets' );
 			}
@@ -650,7 +650,7 @@
 		var formData = collectFormData( sampleId, true );
 
 		// Hacky hack because for some reason Codepen ignores js_external in POST data.
-		formData.html += '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js"></script>';
+		formData.html += '<script src="https://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js"></script>';
 		formData.html += '<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>';
 
 		codepenForm.querySelector( '[name="data"]' ).value = JSON.stringify( formData );
