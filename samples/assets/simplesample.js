@@ -522,8 +522,20 @@
 			if ( !( name == "Accessibility Checker" ||
 				name == "Default Styles Combo plugin implementation" ||
 				name == "Stylesheet Parser plugin" ) ) {
-				template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
-						'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
+				template += getButton( {
+					src: 'assets/img/jsfiddle-logo.png',
+					onClick: 'simpleSample.openJsFiddle(' + id + ')',
+					title: 'JSFiddle sample',
+					alt: 'Open JSFiddle sample'
+				} ) + getButton( {
+							src: 'assets/img/codepen-logo.png',
+							onClick: 'simpleSample.openCodepen(' + id + ')',
+							title: 'Codepen sample',
+							alt: 'Open Codepen sample'
+				} );
+
+				// template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+				// 		'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
 			}
 
 			template += '</li>';
@@ -531,6 +543,10 @@
 		template += '</ul></div>';
 
 		return template;
+	}
+
+	function getButton( options ) {
+		return '<img src="' + options.src + '" style="height: 3em; cursor: pointer" title="' + options.title + '" alt="' + options.alt + '" onClick="' + options.onClick + '" />';
 	}
 
 	function prepareExternalForms() {
