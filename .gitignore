@@ -1,4 +1,4 @@
-dev/ckeditor_sdk
+build/*
 dev/builder/node_modules
 template/theme/css
 .idea
@@ -7,3 +7,4 @@ node_modules
 *.sublime-workspace
 *.sublime-project
 .bender
+vm

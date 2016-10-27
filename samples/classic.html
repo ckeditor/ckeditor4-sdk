@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 -->
 <html>
@@ -11,8 +11,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="sdk-samples" content="Classic editor with default styles|Classic editor with custom styles">
 	<title>Classic Editor</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
-	<link href="../theme/css/sdk.css" rel="stylesheet">
-	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
@@ -20,7 +20,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
-	<link rel="icon" href="../theme/img/favicon.ico">
+	<link rel="icon" href="../template/theme/img/favicon.ico">
 </head>
 <body>
 	<header class="sdk-header">
@@ -105,7 +105,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				CKEDITOR.replace( 'editor2', {
 					height: 260,
 					/* Default CKEditor styles are included as well to avoid copying default styles. */
-					contentsCss: [ '../vendor/ckeditor/contents.css', 'assets/css/classic.css' ]
+					contentsCss: [ '../../ckeditor-dev/contents.css', 'assets/css/classic.css' ]
 				} );
 			</script>
 

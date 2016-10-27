@@ -1,5 +1,5 @@
 ﻿/**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
  */
 
@@ -65,6 +65,7 @@ var CKEDITOR_LANGS = (function () {
 		sv: 'Swedish',
 		th: 'Thai',
 		tr: 'Turkish',
+		tt: 'Tatar',
 		ug: 'Uighur',
 		uk: 'Ukrainian',
 		vi: 'Vietnamese',

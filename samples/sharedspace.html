@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 -->
 <html>
@@ -11,14 +11,14 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="sdk-samples" content="Classic editors sharing toolbar and bottom bar|Inline editor with shared toolbar and bottom bar">
 	<title>Shared User Interface</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
-	<link href="../theme/css/sdk.css" rel="stylesheet">
-	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
 	<script src="assets/contentloaded.js"></script>
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
 	<script type="template" data-sample="2">
-		&lt;link href="../theme/css/sdk-inline.css" rel="stylesheet"&gt;
+		&lt;link href="../template/theme/css/sdk-inline.css" rel="stylesheet"&gt;
 	</script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
@@ -36,7 +36,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			overflow-y: auto;
 		}
 	</style>
-	<link rel="icon" href="../theme/img/favicon.ico">
+	<link rel="icon" href="../template/theme/img/favicon.ico">
 </head>
 <body>
 	<header class="sdk-header">
@@ -168,7 +168,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'sharedspace',
-					removePlugins: 'resize',
+					removePlugins: 'maximize,resize',
 					height: 410,
 					sharedSpaces: {
 						top: 'top',
@@ -178,7 +178,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 				CKEDITOR.replace( 'editor2', {
 					extraPlugins: 'sharedspace',
-					removePlugins: 'resize',
+					removePlugins: 'maximize,resize',
 					height: 410,
 					sharedSpaces: {
 						top: 'top',
@@ -194,7 +194,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				CKEDITOR.inline( 'inline1', {
 					// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
 					extraPlugins: 'sharedspace,sourcedialog',
-					removePlugins: 'floatingspace,resize',
+					removePlugins: 'floatingspace,maximize,resize',
 					sharedSpaces: {
 						top: 'top2',
 						bottom: 'bottom2'

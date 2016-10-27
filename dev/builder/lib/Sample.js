@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 var cheerio = require( 'cheerio' ),
@@ -50,7 +50,7 @@ function Sample( name, content, indexObj, zipFilename, opts ) {
 
     } else {
         if ( opts.version === 'online' ) {
-            this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/' + zipFilename + '">Download SDK</a></li>' );
+            this.$( '.sdk-main-navigation ul' ).append( '<li><a href="/ckeditor-sdk-offline.zip">Download SDK</a></li>' );
         }
     }
 
@@ -114,6 +114,17 @@ Sample.prototype = {
         this.$( '.sdk-contents form' ).each( function( index, element ) {
             that.$( element ).attr( 'action', Sample.fixFormAction( this.attribs.action ) );
         } );
+    },
+
+    fixExternalPaths: function() {
+        // This is bad, but there's no real alternative to this given,
+        // that the path that needs to be modified may appear within a script.
+        var html = this.$( 'html' ).html();
+        if ( html ) {
+            this.$( 'html' ).html( html
+                .replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor' )
+                .replace( /\.\.\/template\/theme/g, '../theme' ) );
+        }
     },
 
     fixCKEDITORVendorLinks: function( version ) {

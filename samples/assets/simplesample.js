@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
  */
 
@@ -149,7 +149,7 @@
 		attachEvent( samplesList, 'click', function( e ) {
 			var clicked = e.target || e.srcElement,
 				relLi,
-				sampleId;
+				sampleHash;
 
 			e.returnValue = false;
 			e.preventDefault && e.preventDefault();
@@ -159,8 +159,9 @@
 			} else {
 				return false;
 			}
-			sampleId = relLi.attributes.getNamedItem( 'data-sample' ).value;
-			showSampleSource( sampleId );
+
+			sampleHash = relLi.attributes.getNamedItem( 'data-sample' ).value;
+			showSampleSource( sampleHash.replace( /\D/g, '' ) );
 
 			return false;
 		} );
@@ -199,7 +200,7 @@
 				}
 			}
 
-			headResources.unshift( '<script src="http://cdn.ckeditor.com/4.5.0/standard-all/ckeditor.js"></script>' );
+			headResources.unshift( '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
 			headResources = headResources.join( '' );
 
 			function getTemplatePre( headResources, title ) {
@@ -338,7 +339,7 @@
 						modalClass: 'source-code',
 						modalStyles: null,
 						closeStyles: null,
-						closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
+						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
 					} ),
 					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
 					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
@@ -361,6 +362,11 @@
 					removeEventListener( 'keydown', escListener );
 				} ).show();
 			};
+		}
+
+		if ( window.location.hash ) {
+			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
+			window.location.hash = '';
 		}
 
 		function fixUrls( str ) {
@@ -501,7 +507,7 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="' + id + '"><a href="' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
 		}
 		template += '</ul></div>';
 

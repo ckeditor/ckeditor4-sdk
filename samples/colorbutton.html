@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 -->
 <html>
@@ -11,8 +11,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="sdk-samples" content="Text and background color with Color Dialog|Custom text and background colors">
 	<title>Text and Background Color</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
-	<link href="../theme/css/sdk.css" rel="stylesheet">
-	<script src="../vendor/ckeditor/ckeditor.js"></script>
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
 	<script src="assets/sample.js"></script>
 	<script src="assets/contentloaded.js"></script>
@@ -21,7 +21,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
-	<link rel="icon" href="../theme/img/favicon.ico">
+	<link rel="icon" href="../template/theme/img/favicon.ico">
 </head>
 <body>
 	<header class="sdk-header">
@@ -81,6 +81,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				uses the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-colorButton_colors">config.colorButton_colors</a></code>
 				option to trim down the color list to a selected few.
 			</p>
+			<p>
+				Additionally, since CKEditor 4.5.8 you can also disable the "Automatic" option by setting the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-colorButton_enableAutomatic">config.colorButton_enableAutomatic</a></code>
+				option to <code>false</code>. The editor instance below includes customizations.
+			</p>
 
 			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
 				&lt;h1&gt;&lt;span style=&quot;color:#66AB16&quot;&gt;Apollo 11&lt;/span&gt;&lt;/h1&gt;
@@ -126,7 +130,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				CKEDITOR.replace( 'editor2', {
 					height: 250,
 					extraPlugins: 'colorbutton',
-					colorButton_colors: 'CF5D4E,454545,FFF,CCC,DDD,CCEAEE,66AB16'
+					colorButton_colors: 'CF5D4E,454545,FFF,CCC,DDD,CCEAEE,66AB16',
+					colorButton_enableAutomatic: false
 				} );
 			</script>
 
