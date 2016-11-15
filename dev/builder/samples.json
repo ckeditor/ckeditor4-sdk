@@ -34,12 +34,12 @@
 					"name": "Authoring Content",
 					"samples": [
 						"Basic Text Styles",
+						"Copying Text Formatting",
 						"Removing Text Formatting",
 						"Styles and Stylesheet Parser",
 						"Text Formats",
 						"Text and Background Color",
-						"Multilingual Content",
-						"Copy Formatting"
+						"Multilingual Content"
 					]
 				},
 				{
