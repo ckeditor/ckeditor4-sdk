@@ -38,7 +38,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<p>
 				When the plugin is enabled, the <span class="button_icon" data-icon="copyformatting" title="Copy Formatting">&nbsp;</span>
-				button is automatically added to the toolbar. You can use it to copy text formatting from one place in the document and apply it to the other. This helps easily preserve stylistic consistency of the document.
+				button is automatically added to the editor toolbar. You can use it to copy text formatting from one place in the document and apply it to another. This helps easily preserve stylistic consistency of the document.
 			</p>
 
 			<p>
@@ -53,7 +53,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				see the example with filter customization below.
 				</p>
 				<p>
-					Copy Formatting only works with inline styles, so it will not copy and apply block-level styles (e.g. headers) to text.
+					Copy Formatting only works with inline styles, so it will not copy or apply block-level styles (e.g. headers) to text.
 				</p>
 			</div>
 
@@ -75,7 +75,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<p>
 				A special <em>sticky mode</em> allows you to copy formatting once and apply it in more than one place.
-				To enable it, double click the <span class="button_icon" data-icon="copyformatting" title="Copy Formatting">&nbsp;</span> button
+				To enable it, double-click the <span class="button_icon" data-icon="copyformatting" title="Copy Formatting">&nbsp;</span> button
 				or use the <kbd>Ctrl+Shift+C</kbd> keyboard shortcut. The sticky mode can be switched off by clicking
 				the <span class="button_icon" data-icon="copyformatting" title="Copy Formatting">&nbsp;</span> button again or by pressing the <kbd>Esc</kbd> key.
 			</p>
@@ -176,17 +176,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h2>Copy Formatting Filter Customization</h2>
 
 			<p>
-				Formatting from certain type of elements cannot be copied. By default these elements include:
+				Formatting from certain type of elements cannot be copied. By default these elements include links, headings, images, iframes, widgets and media embeds.
 			</p>
-
-			<ul>
-				<li>Links,</li>
-				<li>Headings,</li>
-				<li>Images,</li>
-				<li>Iframes,</li>
-				<li>Widgets,</li>
-				<li>Media embeds.</li>
-			</ul>
 
 			<p>
 				This can be changed through two configuration options available:
