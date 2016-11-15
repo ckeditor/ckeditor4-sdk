@@ -196,7 +196,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</p>
 
 			<p>
-				Additionally, you can also limit the contexts that are enabled for the Copy Formatting feature from the default plain text, lists and tables. The example below uses the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-copyFormatting_allowedContexts">config.copyFormatting_allowedContexts</a></code> configuration option set to <code>'text'</code> to disable copying formatting outside plain text (e.g. in the table).
+				Additionally, you can also limit the contexts (style types) that are enabled for the Copy Formatting feature from the default plain text, list and table styles. The example below uses the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-copyFormatting_allowedContexts">config.copyFormatting_allowedContexts</a></code> configuration option set to <code>'text'</code> to only enable copying of text styles (specifically, as set above, just bold), so e.g. table styles will not work.
 			</p>
 
 			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3" data-sample-short>
@@ -204,22 +204,22 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					&lt;caption&gt;&lt;strong&gt;Mission Crew&lt;/strong&gt;&lt;/caption&gt;
 					&lt;thead&gt;
 						&lt;tr&gt;
-							&lt;th scope="col" style="background-color: rgb(204, 204, 204)";&gt;Position&lt;/th&gt;
-							&lt;th scope="col" style="background-color: rgb(204, 204, 204)";&gt;Astronaut&lt;/th&gt;
+							&lt;th scope="col" style="background-color:#cccccc"&gt;Position&lt;/th&gt;
+							&lt;th scope="col" style="background-color:#cccccc"&gt;Astronaut&lt;/th&gt;
 						&lt;/tr&gt;
 					&lt;/thead&gt;
 					&lt;tbody&gt;
 						&lt;tr&gt;
-							&lt;td&gt;Commander&lt;/td&gt;
-							&lt;td&gt;Neil A. Armstrong&lt;/td&gt;
+							&lt;td style="background-color:#eeeeee"&gt;&lt;em&gt;Commander&lt;/em&gt;&lt;/td&gt;
+							&lt;td style="text-align:center"&gt;Neil A. Armstrong&lt;/td&gt;
 						&lt;/tr&gt;
 						&lt;tr&gt;
-							&lt;td&gt;Command Module Pilot&lt;/td&gt;
-							&lt;td&gt;Michael Collins&lt;/td&gt;
+							&lt;td style="background-color:#eeeeee"&gt;&lt;em&gt;Command Module Pilot&lt;/em&gt;&lt;/td&gt;
+							&lt;td style="text-align:center"&gt;Michael Collins&lt;/td&gt;
 						&lt;/tr&gt;
 						&lt;tr&gt;
-							&lt;td&gt;Lunar Module Pilot&lt;/td&gt;
-							&lt;td&gt;Edwin &amp;quot;Buzz&amp;quot; E. Aldrin, Jr.&lt;/td&gt;
+							&lt;td style="background-color:#eeeeee"&gt;&lt;em&gt;Lunar Module Pilot&lt;/em&gt;&lt;/td&gt;
+							&lt;td style="text-align:center"&gt;Edwin &amp;quot;Buzz&amp;quot; E. Aldrin, Jr.&lt;/td&gt;
 						&lt;/tr&gt;
 					&lt;/tbody&gt;
 				&lt;/table&gt;
@@ -232,7 +232,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 				&lt;hr /&gt;
 				&lt;p&gt;&lt;small&gt;&lt;sup&gt;1&amp;nbsp;&lt;/sup&gt;Source: &lt;a href="http://en.wikipedia.org/wiki/Apollo_11"&gt;Wikipedia.org&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
-
 			</textarea>
 
 			<p>
