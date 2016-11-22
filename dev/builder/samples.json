@@ -79,7 +79,8 @@
 					"samples": [
 						"Fixed User Interface",
 						"Floating User Interface",
-						"Shared User Interface"
+						"Shared User Interface",
+						"CKEditor Presets"
 					]
 				},
 				{
