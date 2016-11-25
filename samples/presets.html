@@ -9,7 +9,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="description" content="CKEditor Presets. Pre-configured installation packages.">
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, wysiwym, installation, package, preset, basic, standard, full, ui, interface, plugins">
 	<meta name="sdk-samples" content="Basic Package|Standard Package|Full Package">
-	<title>CKEditor Presets</title>
+	<title>Editor Presets</title>
 	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="../../ckeditor-dev/ckeditor.js"></script>
@@ -32,16 +32,16 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h1>CKEditor Installation Packages <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_installation">Documentation</a></h1>
 
 			<p>
-				CKEditor has a modular build which makes it easy to create a custom build tailored to your needs. Nevertheless, to make the initial trial and installation process easier, we have created three pre-configured installation packages (Basic, Standard and Full) that are a good base for learning about the available features and setups.
+				CKEditor is built from plugins which makes it easy to create a custom build tailored to your needs. Nevertheless, to make the initial trial and installation process easier, we have created three pre-configured installation packages (Basic, Standard and Full) that are a good base for learning about the available features and setups.
 			</p>
 			<p>
-				
+				The packages differ in the number of plugins that they include by default. Do note that not all plugins created by CKSource are included in these presets &mdash; plenty of features such as <a href="./captionedimage.html">captioned images</a>, <a href="./codesnippet.html">code snippets</a>, <a href="./mediaembed.html">embedded media resources</a>, <a href="./mathjax.html">mathematical formulas</a>, <a href="./fileupload.html#uploading-dropped-and-pasted-images">drag&amp;drop uploads</a> can be added to any CKEditor build with the <a href="http://ckeditor.com/builder">online builder</a>.
 			</p>
 
 			<h2 class="editor-title" id="basic">Basic Package</h2>
 
 			<p>
-				Basic package description.
+				This package contains 17 plugins and can be used for quick input fields. It has a minimal toolbar with <a href="./basicstyles.html">basic text styles</a> (bold, italic), lists and links.
 			</p>
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
@@ -59,7 +59,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h2 class="editor-title" id="standard">Standard Package</h2>
 
 			<p>
-				Standard package description.
+				This package contains 48 plugins with tools that can be used for creating standards-compliant content. It covers most editing needs for semantic-driven websites, with features such as <a href="./basicstyles.html">basic text styles</a> with <a href="./removeformat.html">remove format</a>, <a href="./styles.html">content styles</a>, <a href="./format.html">text formats</a>, copy and paste, <a href="./spellchecker.html">spell checker</a>, links, lists, images, <a href="./table.html">tables</a>, special characters and blockquotes. Two additional tools help you examine the created content more thoroughly: maximize shows the full-page document in the browser window and <a href="./sourcearea.html">source</a> lets you check the HTML source code behind your document.
 			</p>
 			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
@@ -77,7 +77,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h2 class="editor-title" id="full">Full Package</h2>
 
 			<p>
-				Full package description.
+				This heavier package contains 73 plugins with a multiline toolbar. Apart from the features included in the Standard package, it also has document tools (new page, page break, preview, print, save, content templates), find and replace, form tools, <a href="./copyformatting.html">copy formatting</a>, text alignment, <a href="./language.html">text direction and language</a>, font family and size, <a href="./colorbutton.html">text and background color</a>, inserting Flash objects, smileys and iframe elements. Select all and show blocks features provide some additional tools for working with the document.
 			</p>
 
 			<textarea cols="80" id="editor3" name="editor3" rows="10" data-sample="3" data-sample-short>
@@ -92,6 +92,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				&lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
 				Earth.&lt;/p&gt;
 			</textarea>
+
+			<p>
+				You can download the pre-configured installation packages from the <a href="http://ckeditor.com/download">CKEditor Download</a> page and examine their setups more thoroughly in the <a href="https://github.com/ckeditor/ckeditor-presets">ckeditor-presets</a> GitHub repository.
+			</p>
 
 			<p class="tip">
 				<strong>Best Practices:</strong> It is always recommended to <a href="http://ckeditor.com/builder">create a custom build with online builder</a> instead of downloading a ready-made package and manually enabling or disabling plugins in it. Packages created with online builder are minified and optimized.
