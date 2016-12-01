@@ -200,7 +200,9 @@
 				}
 			}
 
-			headResources.unshift( '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+			if ( !resourcesString.match( /<script[^>]*ckeditor\.js"[^>]*>/gi ) ) {
+				headResources.unshift( '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+			}
 			headResources = headResources.join( '' );
 
 			function getTemplatePre( headResources, title ) {
@@ -296,6 +298,10 @@
 			} );
 
 			resourcesString = fixUrls( resourcesString );
+			// Fix script tag that loads ckeditor.js, empty space inside is not needed.
+			resourcesString = resourcesString.replace( /(&gt;)\s*(&lt;\/script&gt;)/gi, function( match, $1, $2 ) {
+				return $1 + $2;
+			} );
 
 			return [
 				wrapInHtmlStructure ? getTemplatePre( [], simpleSample.metaNames[ id - 1 ] ).join( '' ) : '',

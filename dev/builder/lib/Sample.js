@@ -128,9 +128,21 @@ Sample.prototype = {
     },
 
     fixCKEDITORVendorLinks: function( version ) {
-        var that = this,
-            cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
-        this.$( 'head script[src$="ckeditor.js"]' ).each( function( index, element ) {
+        var that = this;
+        var cdnEditorLink;
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/basic-all/';
+        this.$( 'head script[src$="basic-all/ckeditor.js"]' ).each( function( index, element ) {
+            that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
+        } );
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
+        this.$( 'head script[src$="standard-all/ckeditor.js"]' ).each( function( index, element ) {
+            that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
+        } );
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/full-all/';
+        this.$( 'head script[src$="full-all/ckeditor.js"]' ).each( function( index, element ) {
             that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
         } );
 

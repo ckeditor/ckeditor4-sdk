@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="CKEditor Full Preset. Pre-configured installation packages.">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, wysiwym, installation, package, preset, full, ui, interface, plugins">
+	<meta name="sdk-samples" content="Full Preset">
+	<title>Full Preset</title>
+	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script data-sample="1" src="//cdn.ckeditor.com/4.6.0/full-all/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../template/theme/img/favicon.ico">
+</head>
+<body>
+<header class="sdk-header">
+</header>
+<section class="sdk-container">
+	<nav class="sdk-sidebar">
+	</nav>
+	<section class="sdk-contents">
+		<h1>CKEditor Installation Packages: Full <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_installation">
+			Documentation</a></h1>
+
+		<p>
+			CKEditor is built from plugins which makes it easy to create a custom build tailored to your needs. Nevertheless, to make the initial trial and installation process easier, we have created three pre-configured installation packages (Full, Standard and Full) that are a good base for learning about the available features and setups.
+		</p>
+		<div class="tip">
+			The installation packages are just predefined setups with the intention of satysfying some common scenarios. You are free to
+			<a href="http://ckeditor.com/builder">build a custom CKEditor package</a> adjusted to your needs.
+		</div>
+		<p>
+			The packages differ in the number of plugins that they include by default. Do note that not all plugins created by CKSource are included in these presets &mdash; plenty of features such as <a href="./captionedimage.html">captioned images</a>, <a href="./codesnippet.html">code snippets</a>, <a href="./mediaembed.html">embedded media resources</a>, <a href="./mathjax.html">mathematical formulas</a>, <a href="./fileupload.html#uploading-dropped-and-pasted-images">drag&amp;drop uploads</a> can be added to any CKEditor build with the <a href="http://ckeditor.com/builder">online builder</a>.
+		</p>
+
+		<h2 class="editor-title" id="full">Full Package</h2>
+
+		<p>
+			This heavier package contains plenty of plugins suitable for various different needs. Apart from the features included in the
+			Standard
+			package, it
+			also has document tools (new page, page break, preview, print, save, content templates), find and replace, form tools, <a href="./copyformatting.html">copy formatting</a>, text alignment, <a href="./language.html">text direction and language</a>, font family and size, <a href="./colorbutton.html">text and background color</a>, inserting Flash objects, smileys and iframe elements. Select all and show blocks features provide some additional tools for working with the document.
+		</p>
+		<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
+
+				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and
+				&lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours
+				later on July 21 at 02:56 UTC.&lt;/p&gt;
+
+				&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar
+				material for return to Earth. A third member of the mission, &lt;a href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, piloted the
+				&lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to
+				Earth.&lt;/p&gt;
+		</textarea>
+
+		<script data-sample="1">
+			CKEDITOR.replace( 'editor1', {
+				//height: 260
+			} );
+		</script>
+
+		<h2>Related Features</h2>
+		<ul>
+			<li><a href="./basicpreset.html">Editor Presets &ndash; Basic Preset</a></li>
+			<li><a href="./standardpreset.html">Editor Presets &ndash; Standard Preset</a></li>
+			<li><a href="./toolbar.html">Toolbar &ndash; Custom Toolbar</a></li>
+		</ul>
+
+	</section>
+</section>
+
+<footer class="sdk-footer">
+
+</footer>
+</body>
+</html>

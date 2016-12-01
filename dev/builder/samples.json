@@ -79,8 +79,15 @@
 					"samples": [
 						"Fixed User Interface",
 						"Floating User Interface",
-						"Shared User Interface",
-						"Editor Presets"
+						"Shared User Interface"
+					]
+				},
+				{
+					"name": "Editor Presets",
+					"samples": [
+						"Basic Preset",
+						"Standard Preset",
+						"Full Preset"
 					]
 				},
 				{
