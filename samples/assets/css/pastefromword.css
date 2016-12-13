@@ -18,6 +18,12 @@ body.document-editor table {
     margin-bottom:0.5cm;
 }
 
+body.document-editor table td > p {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 4px 0 3px 5px;
+}
+
 body.document-editor h1 {
     margin-bottom:1cm;
 }
