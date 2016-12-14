@@ -27,3 +27,7 @@ body.document-editor table td > p {
 body.document-editor h1 {
     margin-bottom:1cm;
 }
+
+body.document-editor ol, body.document-editor ul, body.document-editor dl {
+    padding: 0 20px;
+}
