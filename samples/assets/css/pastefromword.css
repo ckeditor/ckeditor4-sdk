@@ -14,8 +14,7 @@ body.document-editor, body.document-editor td, body.document-editor th {
 }
 
 body.document-editor table {
-    margin-top:0.5cm;
-    margin-bottom:0.5cm;
+    margin-top: 0.5cm;
 }
 
 body.document-editor table td > p {
@@ -25,9 +24,15 @@ body.document-editor table td > p {
 }
 
 body.document-editor h1 {
-    margin-bottom:1cm;
+    margin-bottom: 1cm;
 }
 
 body.document-editor ol, body.document-editor ul, body.document-editor dl {
     padding: 0 20px;
+}
+
+body.document-editor p {
+    margin-top: 0;
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
