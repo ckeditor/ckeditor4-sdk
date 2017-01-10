@@ -220,13 +220,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				} );
 
 				CKEDITOR.on( 'instanceReady', function() {
-					// When an item in the contact list is dragged, copy its data into drag and drop data transfer.
+					// When an item in the contact list is dragged, copy its data into the drag and drop data transfer.
 					// This data is later read by the editor#paste listener in the hcard plugin defined above.
 					CKEDITOR.document.getById( 'contactList' ).on( 'dragstart', function( evt ) {
 						// The target may be some element inside the draggable div (e.g. the image), so get the div.h-card.
 						var target = evt.data.getTarget().getAscendant( 'div', true );
 
-						// Initialization of CKEditor data transfer facade is a necessary step to extend and unify native
+						// Initialization of the CKEditor data transfer facade is a necessary step to extend and unify native
 						// browser capabilities. For instance, Internet Explorer does not support any other data type than 'text' and 'URL'.
 						// Note: evt is an instance of CKEDITOR.dom.event, not a native event.
 						CKEDITOR.plugins.clipboard.initDragDataTransfer( evt );
@@ -234,14 +234,14 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 						var dataTransfer = evt.data.dataTransfer;
 
 						// Pass an object with contact details. Based on it, the editor#paste listener in the hcard plugin
-						// will create HTML to be inserted into the editor. We could set text/html here as well, but:
+						// will create the HTML code to be inserted into the editor. You could set 'text/html' here as well, but:
 						// * It is a more elegant and logical solution that this logic is kept in the hcard plugin.
-						// * We do not know now where the content will be dropped and the HTML to be inserted
+						// * You do not know now where the content will be dropped and the HTML to be inserted
 						// might vary depending on the drop target.
 						dataTransfer.setData( 'contact', CONTACTS[ target.data( 'contact' ) ] );
 
-						// We need to set some normal data types to backup values for two reasons:
-						// * In some browsers this is necessary to enable drag and drop into text in editor.
+						// You need to set some normal data types to backup values for two reasons:
+						// * In some browsers this is necessary to enable drag and drop into text in the editor.
 						// * The content may be dropped in another place than the editor.
 						dataTransfer.setData( 'text/html', target.getText() );
 
@@ -260,7 +260,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</script>
 
 			<!--
-				Used separate script, so this code does not get into the sample source code to download.
+				Used a separate script, so this code does not get into the sample source code to download.
 				It is not needed there because that mechanism gets content by reading innerHTML, hence everything is in place.
 			-->
 			<script>
