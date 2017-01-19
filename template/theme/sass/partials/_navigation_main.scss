@@ -10,13 +10,15 @@ It is forbidden to copy and distribute this file in its original or modified for
 .sdk-main-navigation
 {
 	@include adjust-font-size-to( 1.063rem );
-	position: absolute;
-	right: 40px;
-	top: 60px;
+  	position: absolute;
+  	top: 65px;
+  	left: 320px;
+  	right: auto;
 
 	li
 	{
 		margin-left: 10px;
+	  	vertical-align: middle;
 	}
 
 	a
@@ -34,7 +36,7 @@ It is forbidden to copy and distribute this file in its original or modified for
 			color: $sdk-link-color;
 			background: #C9E3E6;
 
-			@include border-radius( 100px );
+			@include border-radius( 6px );
 			@include box-shadow(
 				0 -1px 3px rgba(0,0,0,0.2) inset,
 				0 0 1px rgba(255,255,255,0.5),

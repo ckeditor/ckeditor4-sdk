@@ -205,7 +205,24 @@ Sample.prototype = {
         this.$( '[data-sdk-version]' ).each( function ( index, element ) {
             that.$( element ).removeAttr( 'data-sdk-version' );
         } );
-    }
+    },
+
+	handleSearch: function( version ) {
+		if ( version === 'online' ) {
+			this.$( 'head' ).append( '<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css">' );
+			this.$( 'body' ).append( '<script type="text/javascript" ' +
+				'src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>' );
+			this.$( 'body' ).append( '<script type="text/javascript"> docsearch({' +
+				'apiKey: "43f8f34ee5b472d5fe0cdca7777d776b",' +
+				'indexName: "ckeditor",' +
+				'inputSelector: "#docsearch_input",' +
+				'debug: false' +
+				'});' +
+				'</script>' );
+		} else {
+			this.$( '.search-container' ).css( 'display', 'none' );
+		}
+	}
 };
 
 Sample.fixLink = function( href, prefix ) {
