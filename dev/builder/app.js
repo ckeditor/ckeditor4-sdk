@@ -333,6 +333,7 @@ function prepareSamplesFilesSync() {
         }
 
         sample.cleanOtherVersionElements( opts.version );
+        sample.handleSearch( opts.version );
 
         _path = RELEASE_PATH + '/samples/' + sample.name + '.html';
         fs.writeFileSync( _path, sample.$.html(), 'utf8' );
@@ -341,9 +342,11 @@ function prepareSamplesFilesSync() {
 
     index.setSidebar( categories );
     index.activateSamplesButton();
+	index.handleSearch( opts.version );
 
     license.setSidebar( categories );
     license.activateSamplesButton();
+    license.handleSearch( opts.version );
 
     if ( opts.version === 'offline' ) {
         index.preventSearchEngineRobots();
