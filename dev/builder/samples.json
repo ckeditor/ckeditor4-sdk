@@ -52,7 +52,9 @@
 				},
 				{
 					"name": "Pasting and Clipboard",
-					"samples": []
+					"samples": [
+						"Paste from Word"
+					]
 				},
 				{
 					"name": "Accessibility Support",
