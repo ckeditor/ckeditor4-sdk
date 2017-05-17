@@ -22,6 +22,7 @@
 					"name": "Inserting Content",
 					"samples": [
 						"Captioned Images",
+						"Paste from Word",
 						"File Upload",
 						"Embedding Media Resources",
 						"Tables with Column Resizing",
@@ -48,12 +49,6 @@
 						"Spell Checking",
 						"Source Code Editing",
 						"Magic Line"
-					]
-				},
-				{
-					"name": "Pasting and Clipboard",
-					"samples": [
-						"Paste from Word"
 					]
 				},
 				{
