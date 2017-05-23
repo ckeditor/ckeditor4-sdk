@@ -23,6 +23,7 @@
 					"samples": [
 						"Captioned Images",
 						"Paste from Word",
+						"Paste from Excel",
 						"File Upload",
 						"Embedding Media Resources",
 						"Tables with Column Resizing",

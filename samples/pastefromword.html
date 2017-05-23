@@ -142,7 +142,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			CKEDITOR.replace( 'editor1', {
 				// Define the toolbar: http://docs.ckeditor.com/#!/guide/dev_toolbar
 				// The full preset from CDN which we used as a base provides more features than we need.
-				// Also by default it comes with a 3-line toolbar. Here we put all buttons in a single row.
+				// Also by default it comes with a 3-line toolbar. Here we put all buttons in two rows.
 				toolbar: [
 					{ name: 'clipboard', items: [ 'PasteFromWord', '-', 'Undo', 'Redo' ] },
 					{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat', 'Subscript', 'Superscript' ] },
@@ -155,7 +155,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					{ name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
 					{ name: 'colors', items: [ 'TextColor', 'BGColor', 'CopyFormatting' ] },
 					{ name: 'align', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-					{ name: 'document', items: [ 'Source' ] }
+					{ name: 'document', items: [ 'Print', 'Source' ] }
 				],
 
 				// Since we define all configuration options here, let's instruct CKEditor to not load config.js which it does by default.
