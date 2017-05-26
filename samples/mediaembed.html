@@ -57,7 +57,6 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<p>Try embedding more resources like the following. You can either paste these URLs into the editor or use the Media Embed dialog.</p>
 
 			<ul class="exampleResources">
-				<li><input type="text" value="https://goo.gl/maps/tWtnj" /></li>
 				<li><input type="text" value="https://www.youtube.com/watch?v=H08tGjXNHO4" /></li>
 				<li><input type="text" value="http://www.slideshare.net/esaops/rosetta-comet-landing-press-kit-12-nov-2014" /></li>
 				<li><input type="text" value="https://twitter.com/Philae2014/status/610047412036595712" /></li>
@@ -133,6 +132,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 					// Load the default contents.css file plus customizations for this sample.
 					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
+					// Setup content provider. See http://docs.ckeditor.com/#!/guide/dev_media_embed
+					embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}',
 
 					// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
 					// resizer (because image size is controlled by widget styles or the image takes maximum
