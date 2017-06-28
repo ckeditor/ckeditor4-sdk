@@ -7,6 +7,7 @@ var CKEDITOR_LANGS = (function () {
 	var langs = {
 		af: 'Afrikaans',
 		ar: 'Arabic',
+		az: 'Azerbaijani',
 		bg: 'Bulgarian',
 		bn: 'Bengali/Bangla',
 		bs: 'Bosnian',
@@ -23,6 +24,7 @@ var CKEDITOR_LANGS = (function () {
 		'en-gb': 'English (United Kingdom)',
 		eo: 'Esperanto',
 		es: 'Spanish',
+		'es-mx': 'Spanish (Mexico)',
 		et: 'Estonian',
 		eu: 'Basque',
 		fa: 'Persian',
