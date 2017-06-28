@@ -398,19 +398,7 @@ function determineCKEditorPath( dev ) {
 
 function determineCKEditorVersion( dev ) {
     return function() {
-        var content;
-
-        if ( dev ) {
-            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_DEV + 'dev/builder/build.sh', 'utf8' );
-            CKEDITOR_VERSION = content.match( /\sVERSION="([^"]+)"/ )[ 1 ];
-        } else {
-            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_PRESETS + 'build.sh', 'utf8' );
-            CKEDITOR_VERSION = content.match( /\sCKEDITOR_VERSION="([^"]+)"/ )[ 1 ];
-        }
-
-        // '4.5.0 beta' -> '4.5.0-beta'.
-        // '4.5.0 dev' -> '4.5.0'.
-        CKEDITOR_VERSION = CKEDITOR_VERSION.replace( / /g, '-' ).replace( /-dev/i, '' );
+        CKEDITOR_VERSION = require( BASE_PATH + CKEDITOR_PATH_DEV + 'package.json' ).version;
 
         console.log( 'CKEditor version:', CKEDITOR_VERSION );
     };
