@@ -201,7 +201,7 @@
 			}
 
 			if ( !resourcesString.match( /<script[^>]*ckeditor\.js"[^>]*>/gi ) ) {
-				headResources.unshift( '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+				headResources.unshift( '<script src="https://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
 			}
 			headResources = headResources.join( '' );
 

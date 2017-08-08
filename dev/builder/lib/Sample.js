@@ -153,11 +153,11 @@ Sample.prototype = {
 
             resultHtml = html.replace( /(\s{1})(['|"][\s\S]*?['|"])([\s\S]*?)/g, function( match, $1, $2, $3 ) {
                 if ( $2.indexOf( '../..' ) != -1 ) {
-                    return $1 + $2.replace( '../..', 'http://sdk.ckeditor.com' ) + $3;
+                    return $1 + $2.replace( '../..', 'https://sdk.ckeditor.com' ) + $3;
                 }
 
                 if ( $2.indexOf( '../vendor/ckeditor/' ) != -1 ) {
-                    return $1 + $2.replace( '../vendor/ckeditor/', 'http:' + cdnEditorLink ) + $3;
+                    return $1 + $2.replace( '../vendor/ckeditor/', 'https:' + cdnEditorLink ) + $3;
                 }
 
                 return $1 + $2 + $3;
@@ -236,10 +236,8 @@ Sample.fixLink = function( href, prefix ) {
 };
 
 Sample.fixFormAction = function( href ) {
-    var regExp = /\.\/(\S*)/;
-
     return href.replace( /\.\/(\S*)/, function( a, $1 ) {
-        return 'http://sdk.ckeditor.com/samples/' + $1;
+        return 'https://sdk.ckeditor.com/samples/' + $1;
     } );
 };
 

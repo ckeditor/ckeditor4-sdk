@@ -45,7 +45,7 @@ var fs = require( 'fs' ),
     categories = {},
 
     REGEXP = {
-        LINK_FONT: /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g,
+        LINK_FONT: /(<link\s+href=")(https?:\/\/fonts[^\"]*)(")/g,
         DOCUMENT_WRITE_ARG: /(document\.write\()(.*)(\))/
     },
 
