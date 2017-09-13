@@ -398,7 +398,14 @@ function determineCKEditorPath( dev ) {
 
 function determineCKEditorVersion( dev ) {
     return function() {
-        CKEDITOR_VERSION = require( BASE_PATH + CKEDITOR_PATH_DEV + 'package.json' ).version;
+        var $ckeditorSourcePath;
+
+        if ( dev ) {
+            $ckeditorSourcePath = BASE_PATH + CKEDITOR_PATH_DEV;
+        } else {
+            $ckeditorSourcePath = BASE_PATH + CKEDITOR_PATH_PRESETS + 'ckeditor/';
+        }
+        CKEDITOR_VERSION = require( $ckeditorSourcePath + 'package.json' ).version;
 
         console.log( 'CKEditor version:', CKEDITOR_VERSION );
     };
