@@ -1,6 +1,6 @@
 /**
  * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+ * For licensing, see license.html or https://sdk.ckeditor.com/license.html.
  */
 
 ( function() {
@@ -15,8 +15,8 @@
 		HTML5 = {
 			downloadAttr: typeof document.createElement( 'a' ).download != 'undefined'
 		},
-		SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
-		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
+		SDK_ONLINE_URL = 'https://sdk.ckeditor.com/',
+		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="https://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
 		placeholders = [];
 
@@ -378,22 +378,22 @@
 		function fixUrls( str ) {
 			return str
 
-				// "../../something.html" ==> "http://sdk.ckeditor.com/something.html"
+				// "../../something.html" ==> "https://sdk.ckeditor.com/something.html"
 				.replace( /\.\.\/\.\.\//g, function() {
 					return SDK_ONLINE_URL;
 				} )
 
-				// "../something.html"    ==> "http://sdk.ckeditor.com/something.html"
+				// "../something.html"    ==> "https://sdk.ckeditor.com/something.html"
 				.replace( /\.\.\//g, function() {
 					return SDK_ONLINE_URL;
 				} )
 
-				// "./example.php"        ==> "http://sdk.ckeditor.com/samples/example.php"
+				// "./example.php"        ==> "https://sdk.ckeditor.com/samples/example.php"
 				.replace( /("|')(:?\.\/)(.*?\.(?:html|php))/g, function( match, p1, p2, p3 ) {
 					return p1 + SDK_ONLINE_URL + 'samples/' + p3;
 				}, '$1' + SDK_ONLINE_URL + 'samples/$3' )
 
-				// "assets/some.php"      ==> "http://sdk.ckeditor.com/samples/assets/some.php"
+				// "assets/some.php"      ==> "https://sdk.ckeditor.com/samples/assets/some.php"
 				.replace( /("|')(assets\/)/g, function( match, p1, p2 ) {
 					return p1 + SDK_ONLINE_URL + 'samples/' + p2;
 				} );

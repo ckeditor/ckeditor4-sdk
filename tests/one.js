@@ -1,6 +1,6 @@
 ( function() {
-	var predefinedText = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
-		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
+	var predefinedText = '<p>This is some <strong>sample text</strong>. You are using <a href="https://ckeditor.com/">CKEditor</a>.</p>',
+		predefinedTextEscaped = '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="https://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;';
 
 	var samplesDescriptions = {
 		'1': 'has data-sample-short attribute',
@@ -66,7 +66,7 @@
 			var downloadSampleCode = simpleSample.createSampleSourceCode( '1', false, false, doubleEscapeTextarea ),
 				sandbox = createSandbox( downloadSampleCode );
 
-			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="https://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 
 		it( 'which ' + samplesDescriptions[ 2 ], function() {
@@ -80,7 +80,7 @@
 			var downloadSampleCode = simpleSample.createSampleSourceCode( '3', false, false, doubleEscapeTextarea ),
 				sandbox = createSandbox( downloadSampleCode );
 
-			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
+			expect( sandbox.textarea.value.trim() ).to.equal( '&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="https://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;' );
 		} );
 
 		it( 'which ' + samplesDescriptions[ 4 ], function() {

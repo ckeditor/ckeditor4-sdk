@@ -5,7 +5,7 @@
  * The abbr plugin dialog window definition.
  *
  * Created out of the CKEditor Plugin SDK:
- * http://docs.ckeditor.com/#!/guide/plugin_sdk_sample_1
+ * https://docs.ckeditor.com/ckeditor4/docs/#!/guide/plugin_sdk_sample_1
  */
 
 // Our dialog definition.
@@ -135,7 +135,7 @@ CKEDITOR.dialog.add( 'abbrDialog', function( editor ) {
 		onOk: function() {
 
 			// The context of this function is the dialog object itself.
-			// http://docs.ckeditor.com/#!/api/CKEDITOR.dialog
+			// https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.dialog
 			var dialog = this;
 
 			// Create a new <abbr> element.

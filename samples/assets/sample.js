@@ -1,6 +1,6 @@
 /**
  * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+ * For licensing, see license.html or https://sdk.ckeditor.com/license.html.
  */
 
 // Helper script for the sample pages inserting the toolbar button image into sample text.
