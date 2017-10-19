@@ -7,7 +7,7 @@ The following text describes the licensing of the CKEditor SDK and its component
 The source of the CKEditor SDK is licensed under the terms of the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html)
 (see Appendix A).
 
-Copyright (c) 2003-2017, [CKSource](http://cksource.com/) - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2017, [CKSource](https://cksource.com/) - Frederico Knabben. All rights reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ All CKEditor SDK samples are distributed under the following terms:
 
 All libraries and components included in the CKEditor SDK are licensed under the terms of their own respective licenses. This pertains, but is not limited to, the following:
 
-* [CKEditor](http://ckeditor.com)
+* [CKEditor](https://ckeditor.com/ckeditor-4/)
 * [ContentLoaded](http://javascript.nwbox.com/ContentLoaded/)
 * [HTML5 Shiv](https://github.com/aFarkas/html5shiv)
 * [jQuery](http://jquery.com/)
@@ -43,7 +43,7 @@ All libraries and components included in the CKEditor SDK are licensed under the
 
 ## Trademarks
 
-CKEditor is a trademark of [CKSource - Frederico Knabben](http://cksource.com). All other brand and product names are trademarks, registered trademarks or service marks of their respective holders.
+CKEditor is a trademark of [CKSource - Frederico Knabben](https://cksource.com). All other brand and product names are trademarks, registered trademarks or service marks of their respective holders.
 
 ---
 
