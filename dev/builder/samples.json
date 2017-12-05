@@ -22,6 +22,8 @@
 					"name": "Inserting Content",
 					"samples": [
 						"Captioned Images",
+						"Paste from Word",
+						"Paste from Excel",
 						"File Upload",
 						"Embedding Media Resources",
 						"Tables with Column Resizing",
@@ -34,6 +36,7 @@
 					"name": "Authoring Content",
 					"samples": [
 						"Basic Text Styles",
+						"Copying Text Formatting",
 						"Removing Text Formatting",
 						"Styles and Stylesheet Parser",
 						"Text Formats",
@@ -48,10 +51,6 @@
 						"Source Code Editing",
 						"Magic Line"
 					]
-				},
-				{
-					"name": "Pasting and Clipboard",
-					"samples": []
 				},
 				{
 					"name": "Accessibility Support",
@@ -79,6 +78,14 @@
 						"Fixed User Interface",
 						"Floating User Interface",
 						"Shared User Interface"
+					]
+				},
+				{
+					"name": "Editor Presets",
+					"samples": [
+						"Basic Preset",
+						"Standard Preset",
+						"Full Preset"
 					]
 				},
 				{

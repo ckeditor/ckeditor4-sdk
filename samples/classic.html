@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 -->
 <html>
 <head>
@@ -10,7 +10,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, wysiwym, classic, framed, iframe, frame, ui, interface, styles">
 	<meta name="sdk-samples" content="Classic editor with default styles|Classic editor with custom styles">
 	<title>Classic Editor</title>
-	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
@@ -29,7 +29,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Classic Editor <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_framed">Documentation</a></h1>
+			<h1>Classic Editor <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_framed">Documentation</a></h1>
 
 			<p>
 				<strong>Classic editor</strong> is what most users traditionally learnt to associate with a rich text editor &mdash; a toolbar with an editing area placed in a specific position on the page, usually as a part of a form that you use to submit some content to the server. Sometimes it is also called "framed editing", because in this scenario the editor creates a temporary <code>&lt;iframe&gt;</code> element for itself.
@@ -77,9 +77,9 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<h2 class="editor-title">Classic Editor with Custom Styles</h2>
 
 			<p>
-				It is possible to specify custom styles for edited content with the <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code> option. In the editor instance below font size was increased and the colors of links, headers, and struck-through content were changed.
+				It is possible to specify custom styles for edited content with the <code><a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-contentsCss">config.contentsCss</a></code> option. In the editor instance below font size was increased and the colors of links, headers, and struck-through content were changed.
 			</p>
-			<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="2" data-sample-short>
+			<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2" data-sample-short>
 				&lt;h1&gt;&lt;img alt=&quot;Saturn V carrying Apollo 11&quot; class=&quot;right&quot; src=&quot;assets/sample.jpg&quot;/&gt; Apollo 11&lt;/h1&gt;
 
 				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and
@@ -98,7 +98,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			</p>
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
-					height: 260
+					height: 260,
+					width: 700,
 				} );
 			</script>
 			<script data-sample="2">

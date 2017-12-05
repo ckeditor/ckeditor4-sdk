@@ -200,3 +200,29 @@ textarea.disabled
 		margin-left: 15px;
 	}
 }
+
+/* --- Search ------------------------ */
+
+.search-container {
+	position: absolute;
+	top: 65px;
+	right: 60px;
+}
+
+#docsearch_input {
+	@include border-radius( 6px );
+	min-width: 180px;
+	padding: 6px 25px 6px 6px;
+	font-size: 14px;
+	border: 1px solid #9e9e9e;
+	@include background( #fff image-url("icon-search.svg") no-repeat 100% 50%);
+
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 3px #2196F3;
+	}
+}
+
+.algolia-autocomplete .ds-dropdown-menu [class^="ds-dataset-"] .algolia-docsearch-suggestion {
+	font-size: 0.9em;
+}

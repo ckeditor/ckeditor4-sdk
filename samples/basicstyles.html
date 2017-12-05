@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 -->
 <html>
 <head>
@@ -10,7 +10,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, text, font, style, bold, italic, underline, strikethrough, subscript, superscript">
 	<meta name="sdk-samples" content="Default basic text styles|Custom basic text styles definition">
 	<title>Basic Text Styles</title>
-	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
@@ -30,31 +30,31 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Basic Text Styles: Bold, Italic and More <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_basicstyles">Documentation</a></h1>
+			<h1>Basic Text Styles: Bold, Italic and More <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_basicstyles">Documentation</a></h1>
 
 			<p>
 				Basic text styles are provided through the
-				<a href="http://ckeditor.com/addon/basicstyles">Basic Styles</a> plugin which is available in all 
+				<a href="https://ckeditor.com/cke4/addon/basicstyles">Basic Styles</a> plugin which is available in all
 				official CKEditor distributions (Basic, Standard, Full), although some text style buttons are disabled
 				in the Basic and Standard preset.
 			</p>
 
 			<p>
-				When the plugin is enabled, the <span class="button_icon" data-icon="bold" title="Bold">&nbsp;</span>, 
-				<span class="button_icon" data-icon="italic" title="Italic">&nbsp;</span>, 
-				<span class="button_icon" data-icon="underline" title="Underline">&nbsp;</span>, 
-				<span class="button_icon" data-icon="strike" title="Strikethrough">&nbsp;</span>, 
-				<span class="button_icon" data-icon="subscript" title="Subscript">&nbsp;</span> and 
+				When the plugin is enabled, the <span class="button_icon" data-icon="bold" title="Bold">&nbsp;</span>,
+				<span class="button_icon" data-icon="italic" title="Italic">&nbsp;</span>,
+				<span class="button_icon" data-icon="underline" title="Underline">&nbsp;</span>,
+				<span class="button_icon" data-icon="strike" title="Strikethrough">&nbsp;</span>,
+				<span class="button_icon" data-icon="subscript" title="Subscript">&nbsp;</span> and
 				<span class="button_icon" data-icon="superscript" title="Superscript">&nbsp;</span>
-				buttons are automatically added to the toolbar. You can use them to add some basic inline text formatting 
+				buttons are automatically added to the toolbar. You can use them to add some basic inline text formatting
 				to your document. If you want to quickly remove basic styles from your document,
 				use the <span class="button_icon" data-icon="removeformat" title="Remove Format">&nbsp;</span> button provided
 				by the <a href="./removeformat.html">Remove Format</a> plugin.
 			</p>
-			
+
 			<p>
 				Basic text styles work on text selections; check the <a href="./format.html">text formats</a>
-				feature for block-level text formatting.  
+				feature for block-level text formatting.
 			</p>
 
 			<h2>Default Basic Text Styles</h2>
@@ -62,7 +62,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 			<p>
 				The Basic Styles plugin adds the bold, italic, underline, strikethrough, subscript and superscript features, as visible
 				in the editor instance below. In some editor distributions (Basic, Standard) a few of these features are disabled, though;
-				refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_basicstyles-section-enabling-all-basic-styles">Basic Styles: Bold,
+				refer to the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_basicstyles-section-enabling-all-basic-styles">Basic Styles: Bold,
 				Italic and More</a> documentation for more information on how to enable them.
 			</p>
 
@@ -97,17 +97,17 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<p>
 				Basic text styles can be output in HTML in different ways. For example, the <strong>Bold</strong> feature can be
-				implemented as <code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code>,  
-				<code>&lt;span style=&quot;font-weight: bold;&quot;&gt;</code> or 
-				<code>&lt;span class=&quot;Bold&quot;&gt;</code>. Refer to the 
-				<a href="http://docs.ckeditor.com/#!/guide/dev_basicstyles-section-custom-basic-text-styles-definition">Basic Text Styles: Bold, Italic and More</a> 
+				implemented as <code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code>,
+				<code>&lt;span style=&quot;font-weight: bold;&quot;&gt;</code> or
+				<code>&lt;span class=&quot;Bold&quot;&gt;</code>. Refer to the
+				<a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_basicstyles-section-custom-basic-text-styles-definition">Basic Text Styles: Bold, Italic and More</a>
 				article for more information on how to customize the output of this feature.
 			</p>
-			
+
 			<p>
-				The editor instance below, for example, outputs bold with the <code>&lt;b&gt;</code> and italic with the 
-				<code>&lt;i&gt;</code> element. Click the 
-				<span class="button_icon" data-icon="source" title="Source">&nbsp;</span> <strong>Source</strong> 
+				The editor instance below, for example, outputs bold with the <code>&lt;b&gt;</code> and italic with the
+				<code>&lt;i&gt;</code> element. Click the
+				<span class="button_icon" data-icon="source" title="Source">&nbsp;</span> <strong>Source</strong>
 				buttons of both editor instances available on this page to compare the source code and see how the same text formatting
 				can be achieved with different style definitions.
 			</p>
@@ -145,7 +145,8 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<h2>Related Features</h2>
 			<ul>
-				<li><a href="./format.html">Authoring Content &ndash; Removing Text Formatting</a></li>
+				<li><a href="./copyformatting.html">Authoring Content &ndash; Copying Text Formatting</a></li>
+				<li><a href="./removeformat.html">Authoring Content &ndash; Removing Text Formatting</a></li>
 				<li><a href="./styles.html">Authoring Content &ndash; Applying Styles to Editor Content</a></li>
 				<li><a href="./format.html">Authoring Content &ndash; Applying Block-Level Text Formats</a></li>
 				<li><a href="./colorbutton.html">Authoring Content &ndash; Setting Text and Background Color</a></li>

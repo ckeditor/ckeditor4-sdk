@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 -->
 <html>
 <head>
@@ -10,7 +10,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, bbcode, output, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 	<meta name="sdk-samples" content="BBCode editing">
 	<title>BBCode Editing</title>
-	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="assets/picoModal-2.0.1.min.js"></script>
 	<script src="assets/contentloaded.js"></script>
@@ -29,10 +29,10 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>BBCode Editing <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_bbcode">Documentation</a></h1>
+			<h1>BBCode Editing <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_bbcode">Documentation</a></h1>
 
 			<p>
-				An optional CKEditor <a href="http://ckeditor.com/addon/bbcode">BBCode Output Format</a> plugin makes it possible to configure the editor to output BBCode instead of HTML. Additionally, the plugin also modifies the editor configuration to provide a better match for the BBCode environment.
+				An optional CKEditor <a href="https://ckeditor.com/cke4/addon/bbcode">BBCode Output Format</a> plugin makes it possible to configure the editor to output BBCode instead of HTML. Additionally, the plugin also modifies the editor configuration to provide a better match for the BBCode environment.
 			</p>
 
 			<p>
@@ -56,7 +56,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			<div class="tip">
 				<p>
-					Please note that currently there is no standard for the <a href="http://en.wikipedia.org/wiki/BBCode">BBCode markup language</a>, so its implementation for different platforms (message boards, blogs etc.) can vary. This means that before using CKEditor to output BBCode you may need to adjust the implementation to your own environment. Refer to the <a href="http://docs.ckeditor.com/#!/guide/dev_bbcode">BBCode Editing</a> article to learn more about this feature.
+					Please note that currently there is no standard for the <a href="http://en.wikipedia.org/wiki/BBCode">BBCode markup language</a>, so its implementation for different platforms (message boards, blogs etc.) can vary. This means that before using CKEditor to output BBCode you may need to adjust the implementation to your own environment. Refer to the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_bbcode">BBCode Editing</a> article to learn more about this feature.
 				</p>
 
 			</div>
@@ -70,7 +70,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 					// Add plugins providing functionality popular in BBCode environment.
 					extraPlugins: 'bbcode,smiley,font,colorbutton',
 					// Remove unused plugins.
-					removePlugins: 'filebrowser,format,horizontalrule,pastetext,pastefromword,scayt,showborders,stylescombo,table,tabletools,wsc',
+					removePlugins: 'filebrowser,format,horizontalrule,pastetext,pastefromword,scayt,showborders,stylescombo,table,tabletools,tableselection,wsc',
 					// Remove unused buttons.
 					removeButtons: 'Anchor,BGColor,Font,Strike,Subscript,Superscript',
 					// Width and height are not supported in the BBCode format, so object resizing is disabled.

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 -->
 <html>
 <head>
@@ -10,7 +10,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="keywords" content="ckeditor, editor, wysiwyg, media, content, iframely, embedding, oembed, embed, video, youtube, vimeo, twitter, facebook">
 	<meta name="sdk-samples" content="Using Media Embed with Auto Embed">
 	<title>Embedding Media Resources</title>
-	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
@@ -36,28 +36,27 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 		<nav class="sdk-sidebar">
 		</nav>
 		<section class="sdk-contents">
-			<h1>Embedding Media Resources with oEmbed <a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_media_embed">Documentation</a></h1>
+			<h1>Embedding Media Resources with oEmbed <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_media_embed">Documentation</a></h1>
 
 			<p>
-				The optional <a href="http://ckeditor.com/addon/embed">Media Embed</a> and <a href="http://ckeditor.com/addon/embedsemantic">Semantic Media Embed</a> plugins, introduced in CKEditor 4.5, allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor.
+				The optional <a href="https://ckeditor.com/cke4/addon/embed">Media Embed</a> and <a href="https://ckeditor.com/cke4/addon/embedsemantic">Semantic Media Embed</a> plugins, introduced in CKEditor 4.5, allow to embed resources (videos, images, tweets, etc.) hosted by other services (called the "content providers") in the editor.
 			</p>
 
 			<p>
-				By default the plugins use the <a href="https://iframely.com/">Iframely</a> proxy service which supports over <a href="https://iframely.com/domains">1715 content providers</a> such as YouTube, Vimeo, Twitter, Instagram, Imgur, SlideShare, or Google Maps, but you can <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-embed_provider">configure</a> the widgets to use another proxy service of your choice.
+				When either Media Embed or Semantic Media Embed plugin is enabled and the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_media_embed-section-configuring-the-content-provider">content provider</a> is configured, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of the resource to be embedded. You can also <strong>paste</strong> that resource's URL into the editor content and it will be automatically embedded if the optional <a href="https://ckeditor.com/cke4/addon/autoembed">Auto Embed</a> plugin is enabled.
 			</p>
 
 			<p>
-				When either Media Embed or Semantic Media Embed plugin is enabled, the <span class="button_icon" data-icon="embed" title="Media Embed">&nbsp;</span> button is automatically added to the toolbar. Once clicked, it opens the <strong>Media Embed</strong> dialog window that lets you add the URL of the resource to be embedded. You can also <strong>paste</strong> that resource's URL into the editor content and it will be automatically embedded if the optional <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> plugin is enabled.
+				We recommend to use the <a href="https://iframely.com/">Iframely</a> proxy service which supports over <a href="https://iframely.com/domains">1800 content providers</a> such as YouTube, Vimeo, Twitter, Instagram, Imgur, SlideShare, or Google Maps, but you can <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-embed_provider">configure</a> the widgets to use another proxy service of your choice.
 			</p>
 
 			<h2>Using Media Embed with Auto Embed</h2>
 
-			<p>The sample below uses the <a href="http://ckeditor.com/addon/embed">Media Embed</a> plugin together with the <a href="http://ckeditor.com/addon/autoembed">Auto Embed</a> and <a href="http://ckeditor.com/addon/image2">Enhanced Image</a> plugins. Additional <a href="http://docs.ckeditor.com/#!/guide/dev_styles-section-widget-styles">widget styles</a> are defined to control widget size and alignment.</p>
+			<p>The sample below uses the <a href="https://ckeditor.com/cke4/addon/embed">Media Embed</a> plugin together with the <a href="https://ckeditor.com/cke4/addon/autoembed">Auto Embed</a> and <a href="https://ckeditor.com/cke4/addon/image2">Enhanced Image</a> plugins. Additional <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_styles-section-widget-styles">widget styles</a> are defined to control widget size and alignment.</p>
 
 			<p>Try embedding more resources like the following. You can either paste these URLs into the editor or use the Media Embed dialog.</p>
 
 			<ul class="exampleResources">
-				<li><input type="text" value="https://goo.gl/maps/tWtnj" /></li>
 				<li><input type="text" value="https://www.youtube.com/watch?v=H08tGjXNHO4" /></li>
 				<li><input type="text" value="http://www.slideshare.net/esaops/rosetta-comet-landing-press-kit-12-nov-2014" /></li>
 				<li><input type="text" value="https://twitter.com/Philae2014/status/610047412036595712" /></li>
@@ -71,7 +70,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 <h2>Mission overview</h2>
 
-<div data-oembed-url="https://www.youtube.com/watch?v=cArihDTnOZg" class="embed-narrow embed-align-center">
+<div data-oembed-url="https://www.youtube.com/watch?v=cArihDTnOZg" class="embed-360p">
 <div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.2493%;"><iframe allowfullscreen="true" frameborder="0" mozallowfullscreen="true" src="https://www.youtube.com/embed/cArihDTnOZg?wmode=transparent&amp;rel=0&amp;autohide=1&amp;showinfo=0&amp;enablejsapi=1" style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute;" webkitallowfullscreen="true"></iframe></div>
 </div>
 
@@ -121,23 +120,20 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 			</textarea>
 
+			<h2>Related Features</h2>
+			<ul>
+				<li><a href="./styles.html#widget-styles">Authoring Content &ndash; Applying Styles to Editor Content</a></li>
+			</ul>
+
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'embed,autoembed,image2',
 					height: 500,
 
-					// The following options are not necessary and are used here for presentation purposes only.
-					// They configure the Styles drop-down list and widgets to use classes.
-
-					stylesSet: [
-						{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
-						{ name: 'Wide image', type: 'widget', widget: 'image', attributes: { 'class': 'image-wide' } },
-						{ name: 'Narrow media', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-narrow' } },
-						{ name: 'Centered media', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-align-center' } }
-					],
-
 					// Load the default contents.css file plus customizations for this sample.
 					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
+					// Setup content provider. See https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_media_embed
+					embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}',
 
 					// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
 					// resizer (because image size is controlled by widget styles or the image takes maximum

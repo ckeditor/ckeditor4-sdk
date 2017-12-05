@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 -->
 <html>
 <head>
@@ -10,7 +10,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<meta name="keywords" content="ACF, advanced content filter, content filtering, removing tags, deleting tags, html lost, elements removed">
 	<meta name="sdk-samples" content="Automatic ACF mode|Automatic ACF mode with extra allowed content|Disabling ACF">
 	<title>ACF &ndash; Automatic Mode</title>
-	<link href="http://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 	<link href="../template/theme/css/sdk.css" rel="stylesheet">
 	<script src="../../ckeditor-dev/ckeditor.js"></script>
 	<script src="assets/picoModal-2.0.1.min.js"></script>
@@ -29,13 +29,13 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 	<nav class="sdk-sidebar">
 	</nav>
 	<section class="sdk-contents">
-		<h1>Advanced Content Filter &ndash; Automatic Mode<a class="documentation" href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">Documentation</a></h1>
+		<h1>Advanced Content Filter &ndash; Automatic Mode<a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_advanced_content_filter-section-automatic-mode">Documentation</a></h1>
 		<p>
 			Advanced Content Filter (ACF) is an important CKEditor core feature that <strong>filters incoming HTML content</strong> by transforming and deleting disallowed elements, attributes, classes and styles.
-			By default it is enabled and works in <strong><a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-automatic-mode">automatic mode</a></strong>, which means that CKEditor will only accept content that was defined as allowed by enabled CKEditor features (such as plugins or buttons).
+			By default it is enabled and works in <strong><a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_advanced_content_filter-section-automatic-mode">automatic mode</a></strong>, which means that CKEditor will only accept content that was defined as allowed by enabled CKEditor features (such as plugins or buttons).
 		</p>
 		<p>
-			ACF is a highly configurable and powerful feature, so extensive documentation is available for it, too. The basics are explained in the <a href="http://docs.ckeditor.com/#!/guide/dev_acf">Getting Started</a> section of the "CKEditor Developer's Guide" and more advanced information is available in the <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">Deep Dive</a> section.
+			ACF is a highly configurable and powerful feature, so extensive documentation is available for it, too. The basics are explained in the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_acf">Getting Started</a> section of the "CKEditor Developer's Guide" and more advanced information is available in the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_advanced_content_filter">Deep Dive</a> section.
 		</p>
 		<p style="margin-top: 20px">
 			The following text will be used in each sample to show different filtering options:
@@ -61,7 +61,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 				{ name: 'about', items: [ 'About' ] }
 			];
 			// Disable paste filter to avoid confusion on browsers on which it is enabled by default and may affect results.
-			// Read more in http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter-section-filtering-pasted-and-dropped-content
+			// Read more in https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_advanced_content_filter-section-filtering-pasted-and-dropped-content
 			CKEDITOR.config.pasteFilter = null;
 
 			CKEDITOR.config.height = 150;
@@ -88,7 +88,7 @@ For licensing, see license.html or http://sdk.ckeditor.com/license.html.
 
 		<h2>Adjusting Automatic ACF Mode</h2>
 		<p>
-			It is possible to allow or disallow additional elements or properties in CKEditor by passing special configuration options: <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent">config.extraAllowedContent</a></code> and <code><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-disallowedContent">config.disallowedContent</a></code>.
+			It is possible to allow or disallow additional elements or properties in CKEditor by passing special configuration options: <code><a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-extraAllowedContent">config.extraAllowedContent</a></code> and <code><a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-disallowedContent">config.disallowedContent</a></code>.
 		</p>
 		<p>
 			In this example <code>config.extraAllowedContent = 'u;span{color}'</code> has the following consequences:

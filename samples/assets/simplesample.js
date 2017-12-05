@@ -1,6 +1,6 @@
 /**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see license.html or http://sdk.ckeditor.com/license.html.
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see license.html or https://sdk.ckeditor.com/license.html.
  */
 
 ( function() {
@@ -15,8 +15,8 @@
 		HTML5 = {
 			downloadAttr: typeof document.createElement( 'a' ).download != 'undefined'
 		},
-		SDK_ONLINE_URL = 'http://sdk.ckeditor.com/',
-		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="http://ckeditor.com/">CKEditor</a>.</p>',
+		SDK_ONLINE_URL = 'https://sdk.ckeditor.com/',
+		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="https://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
 		placeholders = [];
 
@@ -200,7 +200,9 @@
 				}
 			}
 
-			headResources.unshift( '<script src="http://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+			if ( !resourcesString.match( /<script[^>]*ckeditor\.js"[^>]*>/gi ) ) {
+				headResources.unshift( '<script src="https://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+			}
 			headResources = headResources.join( '' );
 
 			function getTemplatePre( headResources, title ) {
@@ -296,6 +298,10 @@
 			} );
 
 			resourcesString = fixUrls( resourcesString );
+			// Fix script tag that loads ckeditor.js, empty space inside is not needed.
+			resourcesString = resourcesString.replace( /(&gt;)\s*(&lt;\/script&gt;)/gi, function( match, $1, $2 ) {
+				return $1 + $2;
+			} );
 
 			return [
 				wrapInHtmlStructure ? getTemplatePre( [], simpleSample.metaNames[ id - 1 ] ).join( '' ) : '',
@@ -372,22 +378,22 @@
 		function fixUrls( str ) {
 			return str
 
-				// "../../something.html" ==> "http://sdk.ckeditor.com/something.html"
+				// "../../something.html" ==> "https://sdk.ckeditor.com/something.html"
 				.replace( /\.\.\/\.\.\//g, function() {
 					return SDK_ONLINE_URL;
 				} )
 
-				// "../something.html"    ==> "http://sdk.ckeditor.com/something.html"
+				// "../something.html"    ==> "https://sdk.ckeditor.com/something.html"
 				.replace( /\.\.\//g, function() {
 					return SDK_ONLINE_URL;
 				} )
 
-				// "./example.php"        ==> "http://sdk.ckeditor.com/samples/example.php"
+				// "./example.php"        ==> "https://sdk.ckeditor.com/samples/example.php"
 				.replace( /("|')(:?\.\/)(.*?\.(?:html|php))/g, function( match, p1, p2, p3 ) {
 					return p1 + SDK_ONLINE_URL + 'samples/' + p3;
 				}, '$1' + SDK_ONLINE_URL + 'samples/$3' )
 
-				// "assets/some.php"      ==> "http://sdk.ckeditor.com/samples/assets/some.php"
+				// "assets/some.php"      ==> "https://sdk.ckeditor.com/samples/assets/some.php"
 				.replace( /("|')(assets\/)/g, function( match, p1, p2 ) {
 					return p1 + SDK_ONLINE_URL + 'samples/' + p2;
 				} );

@@ -5,7 +5,7 @@
  * Basic sample plugin inserting abbreviation elements into the CKEditor editing area.
  *
  * Created out of the CKEditor Plugin SDK:
- * http://docs.ckeditor.com/#!/guide/plugin_sdk_sample_1
+ * https://docs.ckeditor.com/ckeditor4/docs/#!/guide/plugin_sdk_sample_1
  */
 
 // Register the plugin within the editor.

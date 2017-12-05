@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 var cheerio = require( 'cheerio' ),
@@ -128,9 +128,21 @@ Sample.prototype = {
     },
 
     fixCKEDITORVendorLinks: function( version ) {
-        var that = this,
-            cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
-        this.$( 'head script[src$="ckeditor.js"]' ).each( function( index, element ) {
+        var that = this;
+        var cdnEditorLink;
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/basic-all/';
+        this.$( 'head script[src$="basic-all/ckeditor.js"]' ).each( function( index, element ) {
+            that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
+        } );
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/standard-all/';
+        this.$( 'head script[src$="standard-all/ckeditor.js"]' ).each( function( index, element ) {
+            that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
+        } );
+
+        cdnEditorLink = '//cdn.ckeditor.com/' + version + '/full-all/';
+        this.$( 'head script[src$="full-all/ckeditor.js"]' ).each( function( index, element ) {
             that.$( element ).attr( 'src', cdnEditorLink + 'ckeditor.js' );
         } );
 
@@ -141,11 +153,11 @@ Sample.prototype = {
 
             resultHtml = html.replace( /(\s{1})(['|"][\s\S]*?['|"])([\s\S]*?)/g, function( match, $1, $2, $3 ) {
                 if ( $2.indexOf( '../..' ) != -1 ) {
-                    return $1 + $2.replace( '../..', 'http://sdk.ckeditor.com' ) + $3;
+                    return $1 + $2.replace( '../..', 'https://sdk.ckeditor.com' ) + $3;
                 }
 
                 if ( $2.indexOf( '../vendor/ckeditor/' ) != -1 ) {
-                    return $1 + $2.replace( '../vendor/ckeditor/', 'http:' + cdnEditorLink ) + $3;
+                    return $1 + $2.replace( '../vendor/ckeditor/', 'https:' + cdnEditorLink ) + $3;
                 }
 
                 return $1 + $2 + $3;
@@ -193,7 +205,24 @@ Sample.prototype = {
         this.$( '[data-sdk-version]' ).each( function ( index, element ) {
             that.$( element ).removeAttr( 'data-sdk-version' );
         } );
-    }
+    },
+
+	handleSearch: function( version ) {
+		if ( version === 'online' ) {
+			this.$( 'head' ).append( '<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css">' );
+			this.$( 'body' ).append( '<script type="text/javascript" ' +
+				'src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>' );
+			this.$( 'body' ).append( '<script type="text/javascript"> docsearch({' +
+				'apiKey: "43f8f34ee5b472d5fe0cdca7777d776b",' +
+				'indexName: "ckeditor",' +
+				'inputSelector: "#docsearch_input",' +
+				'debug: false' +
+				'});' +
+				'</script>' );
+		} else {
+			this.$( '.search-container' ).css( 'display', 'none' );
+		}
+	}
 };
 
 Sample.fixLink = function( href, prefix ) {
@@ -207,10 +236,8 @@ Sample.fixLink = function( href, prefix ) {
 };
 
 Sample.fixFormAction = function( href ) {
-    var regExp = /\.\/(\S*)/;
-
     return href.replace( /\.\/(\S*)/, function( a, $1 ) {
-        return 'http://sdk.ckeditor.com/samples/' + $1;
+        return 'https://sdk.ckeditor.com/samples/' + $1;
     } );
 };
 

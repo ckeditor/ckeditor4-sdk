@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  * Licensed under the terms of the GNU GPL license v3 or later. See LICENSE.md for more information.
  */
 
@@ -45,7 +45,7 @@ var fs = require( 'fs' ),
     categories = {},
 
     REGEXP = {
-        LINK_FONT: /(<link\s+href=")(http:\/\/fonts[^\"]*)(")/g,
+        LINK_FONT: /(<link\s+href=")(https?:\/\/fonts[^\"]*)(")/g,
         DOCUMENT_WRITE_ARG: /(document\.write\()(.*)(\))/
     },
 
@@ -333,6 +333,7 @@ function prepareSamplesFilesSync() {
         }
 
         sample.cleanOtherVersionElements( opts.version );
+        sample.handleSearch( opts.version );
 
         _path = RELEASE_PATH + '/samples/' + sample.name + '.html';
         fs.writeFileSync( _path, sample.$.html(), 'utf8' );
@@ -341,9 +342,11 @@ function prepareSamplesFilesSync() {
 
     index.setSidebar( categories );
     index.activateSamplesButton();
+	index.handleSearch( opts.version );
 
     license.setSidebar( categories );
     license.activateSamplesButton();
+    license.handleSearch( opts.version );
 
     if ( opts.version === 'offline' ) {
         index.preventSearchEngineRobots();
@@ -395,19 +398,14 @@ function determineCKEditorPath( dev ) {
 
 function determineCKEditorVersion( dev ) {
     return function() {
-        var content;
+        var $ckeditorSourcePath;
 
         if ( dev ) {
-            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_DEV + 'dev/builder/build.sh', 'utf8' );
-            CKEDITOR_VERSION = content.match( /\sVERSION="([^"]+)"/ )[ 1 ];
+            $ckeditorSourcePath = BASE_PATH + CKEDITOR_PATH_DEV;
         } else {
-            content = fs.readFileSync( BASE_PATH + CKEDITOR_PATH_PRESETS + 'build.sh', 'utf8' );
-            CKEDITOR_VERSION = content.match( /\sCKEDITOR_VERSION="([^"]+)"/ )[ 1 ];
+            $ckeditorSourcePath = BASE_PATH + CKEDITOR_PATH_PRESETS + 'ckeditor/';
         }
-
-        // '4.5.0 beta' -> '4.5.0-beta'.
-        // '4.5.0 dev' -> '4.5.0'.
-        CKEDITOR_VERSION = CKEDITOR_VERSION.replace( / /g, '-' ).replace( /-dev/i, '' );
+        CKEDITOR_VERSION = require( $ckeditorSourcePath + 'package.json' ).version;
 
         console.log( 'CKEditor version:', CKEDITOR_VERSION );
     };

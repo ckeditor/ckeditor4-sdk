@@ -1,9 +1,9 @@
 # CKEditor SDK
 
-This repository contains the **CKEditor SDK** that includes the  [CKEditor developer documentation](http://docs.ckeditor.com/) as well as working CKEditor samples showcasing its numerous features.
+This repository contains the **CKEditor SDK** that includes the  [CKEditor developer documentation](https://docs.ckeditor.com/ckeditor4/) as well as working CKEditor samples showcasing its numerous features.
 
-It is used for building the online version of the CKEditor SDK which is available at http://sdk.ckeditor.com/.
-You can also download the built package (click the **Download SDK** button at http://sdk.ckeditor.com/) to use it offline.
+It is used for building the online version of the CKEditor SDK which is available at https://sdk.ckeditor.com/.
+You can also download the built package (click the **Download SDK** button at https://sdk.ckeditor.com/) to use it offline.
 
 **Note:** The CKEditor SDK is a work in progress. Use the [Issues](https://github.com/ckeditor/ckeditor-sdk/issues) tab to report any bugs and tips. Thanks!
 
