@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Balloon Toolbar">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, inline toolbar, balloon toolbar">
+	<meta name="sdk-samples" content="Configuring custom Balloon Toolbars">
+	<title>Balloon Toolbar</title>
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/sample.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../template/theme/img/favicon.ico">
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Balloon Toolbar <!-- <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_balloon_toolbar">Documentation</a> --></h1>
+
+			<p>
+				The optional <a href="https://ckeditor.com/cke4/addon/balloontoolbar">Balloon Toolbar</a>plugin, introduced in CKEditor 4.8, allow to add context-aware toolbar in the editor.
+			</p>
+
+			<p>This feature prvoides you with a very easy way of defining customized toolbar for a given content type.</p>
+
+			<p>As an example, below you'll find an editor where following buttons are displayed:</p>
+
+			<ul>
+				<li>Link, Unlink and Image buttons for image widgets.</li>
+				<li>Text Color button for placeholder widgets.</li>
+				<li>Numbered List and Bulleted List buttons for list items.</li>
+				<li>Bold, Italics and Strike buttons for any other case.</li>
+			</ul>
+
+			<p>Please, give it a try - put the selection in a list, image or any other place of the editor content to see a different toolbar.</p>
+
+			<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+
+<h2>Essential things to think about before starting a blog</h2>
+
+<figure class="image" style="float:right"><img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg" width="450px" />
+<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
+</figure>
+
+<p>It has been exactly 3 years since I wrote my first blog series entitled &ldquo;Flavorful Tuscany&rdquo;, but starting it was definitely not easy. Back then, I didn&rsquo;t know much about blogging, let alone think that one day it could become <strong>my full-time job</strong>. Even though I had many recipes and food-related stories to tell, it never crossed my mind that I could be sharing them with the whole world</p>
+
+<p>I am now a <strong>full-time blogger</strong> and the curator of the <a href="#">Simply delicious newsletter</a>, sharing stories about traveling and cooking, as well as tips on how to run a successful blog.</p>
+
+<p>If you are tempted by the idea of creating your own blog, please think about the following:</p>
+
+<ul>
+	<li>[[Your story]] (what do you want to tell your audience)</li>
+	<li>[[Your audience]] (who do you write for)</li>
+	<li>[[Your blog name]] and design</li>
+</ul>
+
+<p>After you get your head around these 3 essentials, all you have to do is grab your keyboard and the rest will follow.</p>
+
+			</textarea>
+
+			<p id="ie8-warning">
+				Please note that this plugin is not compatible with Internet Explorer 8.
+			</p>
+
+			<script data-sample="1">
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'balloontoolbar,image2,placeholder',
+					height: 500,
+
+					on: {
+						instanceReady: function( evt ) {
+							var editor = evt.editor;
+
+							editor.balloonToolbars.create ( {
+								buttons: 'Link,Unlink,Image',
+								widgets: 'image2'
+							} );
+
+							editor.balloonToolbars.create ( {
+								buttons: 'TextColor',
+								widgets: 'placeholder'
+							} );
+
+							editor.balloonToolbars.create ( {
+								buttons: 'NumberedList,BulletedList',
+								cssSelector: 'li'
+							} );
+
+							editor.balloonToolbars.create ( {
+								buttons: 'Bold,Italic,Strike',
+								priority: CKEDITOR.plugins.balloontoolbar.PRIORITY.LOW,
+								refresh: function() { return true }
+							} );
+						}
+					},
+
+					// Load the default contents.css file plus customizations for this sample.
+					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
+
+					// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
+					// resizer (because image size is controlled by widget styles or the image takes maximum
+					// 100% of the editor width).
+					image2_alignClasses: [ 'image-align-left', 'image-align-center', 'image-align-right' ],
+					image2_disableResizer: true
+				} );
+			</script>
+
+			<script>
+			if ( CKEDITOR.env.ie && CKEDITOR.env.version <= 8 ) {
+				CKEDITOR.document.getById( 'ie8-warning' ).addClass( 'tip alert' );
+			}
+			</script>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
