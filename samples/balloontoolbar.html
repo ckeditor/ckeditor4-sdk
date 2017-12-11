@@ -82,6 +82,7 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
 					extraPlugins: 'balloontoolbar,colorbutton,image2,placeholder,autogrow',
+					height: 620,
 
 					on: {
 						instanceReady: function( evt ) {
@@ -115,6 +116,16 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 							} );
 						}
 					},
+
+					toolbar: [
+						{ name: 'document', items: [ 'Source' ] },
+						{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+						{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+						{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+						{ name: 'insert', items: [ 'Image', 'Placeholder', 'Table' ] },
+						{ name: 'styles', items: [ 'Styles', 'Format' ] },
+						{ name: 'tools', items: [ 'Maximize', 'ShowBlocks', 'About' ] }
+					],
 
 					// Load the default contents.css file plus customizations for this sample.
 					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
