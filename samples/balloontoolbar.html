@@ -33,7 +33,7 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			<h1>Balloon Toolbar <!-- <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_balloon_toolbar">Documentation</a> --></h1>
 
 			<p>
-				The optional <a href="https://ckeditor.com/cke4/addon/balloontoolbar">Balloon Toolbar</a> plugin, introduced in CKEditor 4.8, allow to add context-aware toolbar in the editor.
+				The optional <a href="https://ckeditor.com/cke4/addon/balloontoolbar">Balloon Toolbar</a> plugin, introduced in CKEditor 4.8, allows for adding context-aware toolbar in the editor.
 			</p>
 
 			<p>This feature provides you with a very easy way of defining customized toolbar for a given content type.</p>
@@ -53,11 +53,13 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 
 <h2>Essential things to think about before starting a blog</h2>
 
-<figure class="image" style="float:right"><img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg" width="450px" />
-<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
-</figure>
-
 <p>It has been exactly 3 years since I wrote my first blog series entitled &ldquo;Flavorful Tuscany&rdquo;, but starting it was definitely not easy. Back then, I didn&rsquo;t know much about blogging, let alone think that one day it could become <strong>my full-time job</strong>. Even though I had many recipes and food-related stories to tell, it never crossed my mind that I could be sharing them with the whole world</p>
+
+<div class="image-align-center">
+	<figure class="image"><img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg" width="450px" />
+		<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
+	</figure>
+</div>
 
 <p>I am now a <strong>full-time blogger</strong> and the curator of the <a href="#">Simply delicious newsletter</a>, sharing stories about traveling and cooking, as well as tips on how to run a successful blog.</p>
 
@@ -79,30 +81,35 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
-					extraPlugins: 'balloontoolbar,colorbutton,image2,placeholder',
-					height: 500,
+					extraPlugins: 'balloontoolbar,colorbutton,image2,placeholder,autogrow',
 
 					on: {
 						instanceReady: function( evt ) {
 							var editor = evt.editor;
 
+							// Context for image widgets.
 							editor.balloonToolbars.create ( {
 								buttons: 'Link,Unlink,Image',
 								widgets: 'image'
 							} );
 
+							// Context for placeholder widgets.
 							editor.balloonToolbars.create ( {
 								buttons: 'Bold',
 								widgets: 'placeholder'
 							} );
 
+							// Context for list items.
 							editor.balloonToolbars.create ( {
 								buttons: 'NumberedList,BulletedList',
 								cssSelector: 'li'
 							} );
 
+							// Context for any other selection.
 							editor.balloonToolbars.create ( {
 								buttons: 'Bold,Italic,Strike',
+								// This context should have low priority, so that it only
+								// triggers if no other context was matched.
 								priority: CKEDITOR.plugins.balloontoolbar.PRIORITY.LOW,
 								refresh: function() { return true }
 							} );
