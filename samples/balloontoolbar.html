@@ -51,27 +51,15 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 
 			<textarea cols="10" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 
-<h2>Essential things to think about before starting a blog</h2>
+<h1>Essential things to think about before starting a blog</h1>
 
-<p>It has been exactly 3 years since I wrote my first blog series entitled &ldquo;Flavorful Tuscany&rdquo;, but starting it was definitely not easy. Back then, I didn&rsquo;t know much about blogging, let alone think that one day it could become <strong>my full-time job</strong>. Even though I had many recipes and food-related stories to tell, it never crossed my mind that I could be sharing them with the whole world</p>
+<figure class="image image-align-right">
+	<img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg"
+		width="300px" />
+	<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
+</figure>
 
-<div class="image-align-center">
-	<figure class="image"><img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg" width="450px" />
-		<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
-	</figure>
-</div>
-
-<p>I am now a <strong>full-time blogger</strong> and the curator of the <a href="#">Simply delicious newsletter</a>, sharing stories about traveling and cooking, as well as tips on how to run a successful blog.</p>
-
-<p>If you are tempted by the idea of creating your own blog, please think about the following:</p>
-
-<ul>
-	<li>[[Your story]] (what do you want to tell your audience)</li>
-	<li>[[Your audience]] (who do you write for)</li>
-	<li>[[Your blog name]] and design</li>
-</ul>
-
-<p>After you get your head around these 3 essentials, all you have to do is grab your keyboard and the rest will follow.</p>
+<p>If you are tempted by the idea of creating your own blog, please <a href="https://ckeditor.com/ckeditor-4/">read the following article</a>.</p>
 
 			</textarea>
 
@@ -79,9 +67,14 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				Please note that this plugin is not compatible with Internet Explorer 8.
 			</p>
 
+			<script>
+				CKEDITOR.plugins.addExternal( 'openlink', '../../samples/assets/plugins/openlink/', 'plugin.js' );
+				CKEDITOR.plugins.addExternal( 'linkballoon', '../../samples/assets/plugins/linkballoon/', 'plugin.js' );
+			</script>
+
 			<script data-sample="1">
 				CKEDITOR.replace( 'editor1', {
-					extraPlugins: 'balloontoolbar,colorbutton,image2,placeholder,autogrow',
+					extraPlugins: 'balloontoolbar,linkballoon,image2,autogrow',
 					height: 620,
 
 					on: {
@@ -92,18 +85,6 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 							editor.balloonToolbars.create ( {
 								buttons: 'Link,Unlink,Image',
 								widgets: 'image'
-							} );
-
-							// Context for placeholder widgets.
-							editor.balloonToolbars.create ( {
-								buttons: 'Bold',
-								widgets: 'placeholder'
-							} );
-
-							// Context for list items.
-							editor.balloonToolbars.create ( {
-								buttons: 'NumberedList,BulletedList',
-								cssSelector: 'li'
 							} );
 
 							// Context for any other selection.

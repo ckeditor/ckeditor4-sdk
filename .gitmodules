@@ -8,3 +8,9 @@
 [submodule "vendor/ckeditor-presets"]
 	path = vendor/ckeditor-presets
 	url = https://github.com/ckeditor/ckeditor-presets.git
+[submodule "samples/assets/plugins/openlink"]
+	path = samples/assets/plugins/openlink
+	url = https://github.com/mlewand/ckeditor-plugin-openlink.git
+[submodule "samples/assets/plugins/linkballoon"]
+	path = samples/assets/plugins/linkballoon
+	url = https://github.com/ckeditor/ckeditor4-plugin-linkballoon.git
