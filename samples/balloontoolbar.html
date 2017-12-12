@@ -55,7 +55,7 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 
 <figure class="image image-align-right">
 	<img alt="A picture of wooden spoons with spices and herbs in them." src="https://ckeditor.com/assets/images/bg/spoons.jpg"
-		width="300px" />
+		width="240px" />
 	<figcaption>It takes several ingredients to create a delicious blog.</figcaption>
 </figure>
 
@@ -70,35 +70,11 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			<script>
 				CKEDITOR.plugins.addExternal( 'openlink', '../../samples/assets/plugins/openlink/', 'plugin.js' );
 				CKEDITOR.plugins.addExternal( 'linkballoon', '../../samples/assets/plugins/linkballoon/', 'plugin.js' );
-			</script>
 
-			<script data-sample="1">
-				CKEDITOR.replace( 'editor1', {
-					extraPlugins: 'balloontoolbar,linkballoon,image2,autogrow',
-					height: 620,
+				CKEDITOR.addCss( 'h1{ font-size: 1.7em; }' );
 
-					on: {
-						instanceReady: function( evt ) {
-							var editor = evt.editor;
-
-							// Context for image widgets.
-							editor.balloonToolbars.create ( {
-								buttons: 'Link,Unlink,Image',
-								widgets: 'image'
-							} );
-
-							// Context for any other selection.
-							editor.balloonToolbars.create ( {
-								buttons: 'Bold,Italic,Strike',
-								// This context should have low priority, so that it only
-								// triggers if no other context was matched.
-								priority: CKEDITOR.plugins.balloontoolbar.PRIORITY.LOW,
-								refresh: function() { return true }
-							} );
-						}
-					},
-
-					toolbar: [
+				CKEDITOR.editorConfig = function( config ) {
+					config.toolbar = [
 						{ name: 'document', items: [ 'Source' ] },
 						{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
 						{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Blockquote' ] },
@@ -106,16 +82,34 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 						{ name: 'insert', items: [ 'Image', 'Placeholder', 'Table' ] },
 						{ name: 'styles', items: [ 'Styles', 'Format' ] },
 						{ name: 'tools', items: [ 'Maximize', 'ShowBlocks', 'About' ] }
-					],
-
-					// Load the default contents.css file plus customizations for this sample.
-					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
+					];
 
 					// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
 					// resizer (because image size is controlled by widget styles or the image takes maximum
 					// 100% of the editor width).
-					image2_alignClasses: [ 'image-align-left', 'image-align-center', 'image-align-right' ],
-					image2_disableResizer: true
+					config.image2_alignClasses = [ 'image-align-left', 'image-align-center', 'image-align-right' ];
+					config.image2_disableResizer = true;
+				};
+			</script>
+
+			<script data-sample="1">
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'balloontoolbar,linkballoon,image2,autogrow',
+
+					on: {
+						instanceReady: function( evt ) {
+							var editor = evt.editor;
+
+							// Register custom context for image widgets on the fly.
+							editor.balloonToolbars.create ( {
+								buttons: 'Link,Unlink,Image',
+								widgets: 'image'
+							} );
+						}
+					},
+
+					// Load the default contents.css file plus customizations for this sample.
+					contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
 				} );
 			</script>
 
