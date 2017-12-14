@@ -92,6 +92,7 @@
 					"name": "Toolbar",
 					"samples": [
 						"Custom Toolbar",
+						"Balloon Toolbar",
 						"Toolbar Location"
 					]
 				},
