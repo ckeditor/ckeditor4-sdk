@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Easy Image">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, image, caption, widget, drag, drop, easyimage, enhanced, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Creating Easy Image widget">
+	<title>Easy Image</title>
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<script src="assets/sample.js"></script>
+	<script src="assets/cloudservice.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../template/theme/img/favicon.ico">
+</head>
+<body>
+	<header class="sdk-header">
+	</header>
+	<section class="sdk-container">
+		<nav class="sdk-sidebar">
+		</nav>
+		<section class="sdk-contents">
+			<h1>Creating Easy Images <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_easyimage">Documentation</a></h1>
+
+			<p>
+				The optional <a href="https://ckeditor.com/cke4/addon/easyimage">Easy Image</a> plugin, introduced in CKEditor 4.9, supports uploading and inserting images into editor content. It provides the following features when compared to the other <a href="https://ckeditor.com/cke4/addon/image2">Image</a> widget that is available as optional plugin in CKEditor distributions:
+			</p>
+			<ul>
+				<li>
+					It allows for adding <strong>image captions</strong> (that will not be separated from the image when its location changes).
+				</li>
+				<li>
+					It allows for uploading images to Cloud Services, which <strong>optimizes images</strong> by rescaling them and compressing, resulting in smaller sizes and faster download times.
+				</li>
+				<li>
+					It produces <strong>responsive markup</strong>, so inserted images are suitable for a wide range of devices (including mobile ones).
+				</li>
+				<li>
+					It allows for adding <strong>custom styles</strong> for inserted images.
+				</li>
+				<li>
+					It uses <strong>customizable balloon toolbar</strong> for every widget.
+				</li>
+				<li>
+					It does not produce any reflow, resulting in smoother working, visible to the user.
+				</li>
+			</ul>
+
+			<p>
+				A few configuration options are available to fine-tune this feature, including <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-easyimage_styles">adding custom styles</a>, <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-easyimage_styles">customizing widget's toolbar</a> or setting a <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/api/CKEDITOR.config-cfg-easyimage_class">custom CSS class</a> for the widget. Refer to the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_easyimage">Creating Easy Images</a> article to learn more about this feature.
+			</p>
+
+			<p>Example below uses config variables mentioned above:</p>
+			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+				&lt;figure class=&quot;easyimage&quot; &gt;&lt;img alt=&quot;Saturn V&quot; src=&quot;assets/captionedimage/image1.jpg&quot; width=&quot;200&quot; /&gt;
+				&lt;figcaption&gt;Roll out of Saturn V on launch pad&lt;/figcaption&gt;
+				&lt;/figure&gt;
+
+				&lt;h1&gt;Apollo 11&lt;/h1&gt;
+
+				&lt;p&gt;&lt;strong&gt;Apollo 11&lt;/strong&gt; was the spaceflight that landed the first humans, Americans &lt;a href=&quot;http://en.wikipedia.org/wiki/Neil_Armstrong&quot;&gt;Neil Armstrong&lt;/a&gt; and &lt;a href=&quot;http://en.wikipedia.org/wiki/Buzz_Aldrin&quot;&gt;Buzz Aldrin&lt;/a&gt;, on the Moon on July 20, 1969, at 20:18 UTC. Armstrong became the first to step onto the lunar surface 6 hours later on July 21 at 02:56 UTC.&lt;/p&gt;
+			</textarea>
+
+			<h2>Related Features</h2>
+			<ul>
+				<li><a href="./styles.html#widget-styles">Authoring Content &ndash; Applying Styles to Editor Content</a></li>
+			</ul>
+
+			<script data-sample="1" >
+				// getCSToken function is used only for example brevity. For real usage,
+				// please refer to official Cloud Services documentation about token endpoints.
+				getCSToken( function( token ) {
+					// Don't forget to add CSS for your custom styles.
+					CKEDITOR.addCss( '.easyimage-sepia img { filter: sepia( 100% ); }' +
+						'.easyimage-blackwhite img { filter: grayscale( 100% ); }' );
+
+					CKEDITOR.replace( 'editor1', {
+						extraPlugins: 'easyimage',
+						height: 450,
+						cloudServices_url: 'https://files.cke-cs.com/upload/',
+						cloudServices_token: token,
+						easyimage_styles: {
+							sepia: {
+								group: 'easyimage-filters',
+								attributes: {
+									'class': 'easyimage-sepia'
+								},
+								label: 'Sepia'
+							},
+							blackwhite: {
+								group: 'easyimage-filters',
+								attributes: {
+									'class': 'easyimage-blackwhite'
+								},
+								label: 'Black and white'
+							}
+						},
+						easyimage_toolbar: [
+							'EasyimageFull',
+							'EasyimageSide',
+							'EasyimageSepia',
+							'EasyimageBlackwhite'
+						]
+					} );
+				} );
+			</script>
+
+		</section>
+	</section>
+
+	<footer class="sdk-footer">
+	</footer>
+</body>
+</html>
