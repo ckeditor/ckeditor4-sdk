@@ -19,6 +19,7 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 	<script src="assets/beautify-html.js"></script>
 	<script src="assets/sample.js"></script>
 	<script src="assets/cloudservice.js"></script>
+	<script src="assets/eioptimizations.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
 	<![endif]-->
@@ -78,6 +79,11 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				&lt;p&gt;Armstrong spent about &lt;s&gt;three and a half&lt;/s&gt; two and a half hours outside the spacecraft, Aldrin slightly less; and together they collected 47.5 pounds (21.5&amp;nbsp;kg) of lunar material for return to Earth. A third member of the mission, &lt;a href=&quot;http://en.wikipedia.org/wiki/Michael_Collins_(astronaut)&quot;&gt;Michael Collins&lt;/a&gt;, piloted the &lt;a href=&quot;http://en.wikipedia.org/wiki/Apollo_Command/Service_Module&quot;&gt;command&lt;/a&gt; spacecraft alone in lunar orbit until Armstrong and Aldrin returned to it for the trip back to Earth.&lt;/p&gt;
 			</textarea>
 
+			<h2>Optimization</h2>
+			<div id="optimizations">
+				<p>Please upload some image to see level of optimization.</p>
+			</div>
+
 			<p class="tip">
 				If you are looking for pixel-perfect image alignment with vertical and horizotal whitespace, configurable image border and file manager integration, try the default <a href="./image.html">Image</a> plugin. If you need more modern image support with features such as image captions, drag and drop positioning, click and drag resizing, image alignment (including centering) with inline styles or CSS classes and custom image styles, but without cloud storage support with optimized images and responsive markup, try <a href="./image2.html">Enhanced Image</a>.
 			</p>
@@ -135,6 +141,11 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				} );
 			</script>
 
+			<script>
+				CKEDITOR.once( 'instanceReady', function( evt ) {
+					setupOptimizationsCalculator( evt.editor, '#optimizations' );
+				} );
+			</script>
 		</section>
 	</section>
 
