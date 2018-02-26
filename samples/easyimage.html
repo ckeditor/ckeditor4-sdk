@@ -100,8 +100,8 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				// refer to the official CKEditor Cloud Services documentation about token endpoints.
 				getCSToken( function( token ) {
 					// Don't forget to add CSS for your custom styles.
-					CKEDITOR.addCss( '.easyimage-sepia img { filter: sepia( 100% ); }' +
-						'.easyimage-blackwhite img { filter: grayscale( 100% ); }' );
+					CKEDITOR.addCss( '.easyimage-standard-border { border: 2px #f00 solid; }' +
+						'.easyimage-rounded-border { border: 2px #f00 solid; border-radius: 6px; }' );
 
 					CKEDITOR.replace( 'editor1', {
 						extraPlugins: 'easyimage',
@@ -117,18 +117,18 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 						cloudServices_token: token,
 						easyimage_styles: {
 							sepia: {
-								group: 'easyimage-filters',
+								group: 'easyimage-borders',
 								attributes: {
-									'class': 'easyimage-sepia'
+									'class': 'easyimage-standard-border'
 								},
-								label: 'Sepia'
+								label: 'Standard border'
 							},
 							blackwhite: {
-								group: 'easyimage-filters',
+								group: 'easyimage-borders',
 								attributes: {
-									'class': 'easyimage-blackwhite'
+									'class': 'easyimage-rounded-border'
 								},
-								label: 'Black and white'
+								label: 'Rounded border'
 							}
 						},
 						easyimage_toolbar: [
