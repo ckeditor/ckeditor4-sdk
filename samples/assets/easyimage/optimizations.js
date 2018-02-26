@@ -68,7 +68,7 @@ var setupOptimizationsCalculator = ( function() {
 				xhr = new XMLHttpRequest(),
 				requestContainer = document.createElement( 'div' );
 
-			if ( container.getElementsByTagName( 'table' ).length < 1 ) {
+			if ( container.getElementsByTagName( 'img' ).length < 1 ) {
 				container.innerHTML = '';
 			}
 
