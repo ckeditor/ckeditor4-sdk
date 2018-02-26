@@ -11,10 +11,14 @@ var setupOptimizationsCalculator = ( function() {
 		var devices = [
 			'Small mobiles (≤230px)',
 			'Medium mobiles',
+			'Phablets',
 			'Tablets',
 			'Small notebooks',
-			'Notebooks',
-			'Full HD screens'
+			'Medium notebooks',
+			'Large notebooks',
+			'Full HD screens',
+			'Ultra HD screens',
+			'4K screens'
 		];
 
 		function formatInfo( img ) {
@@ -39,11 +43,7 @@ var setupOptimizationsCalculator = ( function() {
 			return html;
 		}
 
-		if ( container.getElementsByTagName( 'table' ).length < 1 ) {
-			container.innerHTML = '';
-		}
-
-		container.insertAdjacentHTML( 'beforeend', '<table>\
+		container.innerHTML = '<table>\
 			<caption>\
 				<p>Image:</p>\
 				<p><img src="' + info.original.image + '" alt="" style="max-width: 300px;"></p>\
@@ -58,14 +58,23 @@ var setupOptimizationsCalculator = ( function() {
 			</thead>\
 			<tbody>' + generateRows( info.optimized ) +
 			'</tbody>\
-		</table>' );
+		</table>';
 	}
 
 	function getImageInfoHandler( container ) {
 		return function( evt ) {
 			var loader = evt.data.loader,
 				original = loader.file,
-				xhr = new XMLHttpRequest();
+				xhr = new XMLHttpRequest(),
+				requestContainer = document.createElement( 'div' );
+
+			if ( container.getElementsByTagName( 'table' ).length < 1 ) {
+				container.innerHTML = '';
+			}
+
+			requestContainer.innerHTML = '<p><img src="' + loader.data + '" style="opacity: .4; max-width: 100%;"></p>\
+			<p>Please wait while image is being processed…</p>';
+			container.appendChild( requestContainer );
 
 			xhr.open( 'POST', 'easyimage.php' );
 			xhr.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
@@ -75,7 +84,7 @@ var setupOptimizationsCalculator = ( function() {
 				var data = JSON.parse( xhr.responseText ),
 					original = data.pop();
 
-				displayInfo( container, {
+				displayInfo( requestContainer, {
 					original: original,
 					optimized: data
 				} );
