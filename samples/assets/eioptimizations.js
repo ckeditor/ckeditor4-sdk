@@ -43,20 +43,20 @@ var setupOptimizationsCalculator = ( function() {
 			return html;
 		}
 
-		container.innerHTML = '<table>\
+		container.innerHTML = '<table class="ei-optimization">\
 			<caption>\
 				<p>Image:</p>\
-				<p><img src="' + info.original.image + '" alt="" style="max-width: 300px;"></p>\
+				<p><img src="' + info.original.image + '" alt="" class="ei-image"></p>\
 				<p>' + formatInfo( info.original ) + '</p>\
 			</caption>\
-			<thead>\
+			<thead class="ei-optimization-head">\
 				<tr>\
 					<th scope="col">Device</th>\
 					<th scope="col">Size used</th>\
 					<th scope="col">Optimization</th>\
 				</tr>\
 			</thead>\
-			<tbody>' + generateRows( info.optimized ) +
+			<tbody class="ei-optimization-body">' + generateRows( info.optimized ) +
 			'</tbody>\
 		</table>';
 	}
@@ -72,7 +72,7 @@ var setupOptimizationsCalculator = ( function() {
 				container.innerHTML = '';
 			}
 
-			requestContainer.innerHTML = '<p><img src="' + loader.data + '" style="opacity: .4; max-width: 100%;"></p>\
+			requestContainer.innerHTML = '<p><img src="' + loader.data + '" class="ei-placeholder"></p>\
 			<p>Please wait while image is being processed…</p>';
 			container.appendChild( requestContainer );
 

@@ -1,0 +1,26 @@
+.ei-image, .ei-placeholder {
+	max-width: 100%;
+}
+.ei-placeholder {
+	opacity: .4;
+}
+
+.ei-optimization {
+	border-collapse: collapse;
+	table-layout: fixed;
+	border: 1px #000 solid;
+}
+.ei-optimization td, .ei-optimization th {
+	padding: 0 10px;
+	border-bottom: 1px #000 solid;
+}
+.ei-optimization td + td, .ei-optimization th + td, .ei-optimization th + th {
+	border-left: 1px #000 solid;
+}
+.ei-optimization-head tr {
+	background: #ccc;
+}
+.ei-optimization-body tr:nth-child( odd ) {
+	background: #000;
+	color: #fff;
+}
