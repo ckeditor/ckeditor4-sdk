@@ -16,8 +16,16 @@ var setupOptimizationsCalculator = ( function() {
 			2880: 'Macbook Pro with Retina display'
 		};
 
+		function formatSize( bytes ) {
+			if ( bytes >= 524288 ) {
+				return Number( bytes / 1048576 ).toFixed( 2 ) + ' MB';
+			}
+
+			return Number( bytes / 1024 ).toFixed( 2 ) + ' KB';
+		}
+
 		function formatInfo( img ) {
-			return img.width + 'x' + img.height + 'px (' + img.size + 'B)';
+			return img.width + 'x' + img.height + 'px (' + formatSize( img.size ) + ')';
 		}
 
 		function getOptimization( optimized, original ) {
