@@ -101,8 +101,10 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				// refer to the official CKEditor Cloud Services documentation about token endpoints.
 				getCSToken( function( token ) {
 					// Don't forget to add CSS for your custom styles.
-					CKEDITOR.addCss( '.easyimage-standard-border { border: 2px #f00 solid; }' +
-						'.easyimage-rounded-border { border: 2px #f00 solid; border-radius: 6px; }' );
+					CKEDITOR.addCss( '.easyimage-standard-border { border-radius: 0; }' +
+						'.easyimage-rounded-border { border-radius: 6px; }' +
+						'.easyimage-rounded-border img { border-radius: 6px 6px 0 0; }' +
+						'.easyimage-rounded-border figcaption { border-radius: 0 0 6px 6px; }' );
 
 					CKEDITOR.replace( 'editor1', {
 						extraPlugins: 'easyimage',
