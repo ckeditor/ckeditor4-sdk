@@ -3,7 +3,26 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'POST' || empty( $_POST[ 'imgs' ] ) ) {
 	exit();
 }
 
+function calculateBreakpoint( $width, $breakpoints ) {
+	$calculated = [];
+
+	foreach ( $breakpoints as $breakpoint ) {
+		if ( $width < $breakpoint ) {
+			$calculated[] = $breakpoint;
+		}
+	}
+
+	return $calculated;
+}
+
 function getImageInfo( $img ) {
+	$breakpoints = [
+		360,
+		375,
+		768,
+		1920,
+		2880
+	];
 	$size = 0;
 	$tempName = tempnam( '.', 'eicache-' );
 
@@ -20,6 +39,7 @@ function getImageInfo( $img ) {
 	curl_close( $curl );
 
 	return [
+		'breakpoints' => calculateBreakpoint( $width, $breakpoints ),
 		'image' => $img,
 		'width' => $width,
 		'height' => $height,
@@ -28,6 +48,7 @@ function getImageInfo( $img ) {
 }
 
 $imgs = json_decode( $_POST[ 'imgs' ] );
+$default = end( $imgs );
 $return = [];
 
 foreach ( $imgs as $img ) {
@@ -35,7 +56,20 @@ foreach ( $imgs as $img ) {
 		continue;
 	}
 
-	$return[] = getImageInfo( $img );
+	$info = getImageInfo( $img );
+	$breakpoints = $info[ 'breakpoints' ];
+
+	unset( $info[ 'breakpoints' ] );
+
+	if ( $img === $default ) {
+		$return[ 'default' ] = $info;
+		break;
+	}
+
+	foreach( $breakpoints as $breakpoint ) {
+		$return[ $breakpoint ] = $info;
+	}
+
 }
 
 echo json_encode( $return );

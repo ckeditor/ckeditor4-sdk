@@ -8,18 +8,13 @@
 
 var setupOptimizationsCalculator = ( function() {
 	function displayInfo( container, info ) {
-		var devices = [
-			'Small mobiles (≤230px)',
-			'Medium mobiles',
-			'Phablets',
-			'Tablets',
-			'Small notebooks',
-			'Medium notebooks',
-			'Large notebooks',
-			'Full HD screens',
-			'Ultra HD screens',
-			'4K screens'
-		];
+		var devices = {
+			360: 'Samsung Galaxy S3',
+			375: 'iPhone 8',
+			768: 'iPad 4',
+			1920: 'Full HD',
+			2880: 'Macbook Pro with Retina display'
+		};
 
 		function formatInfo( img ) {
 			return img.width + 'x' + img.height + 'px (' + img.size + 'B)';
@@ -32,11 +27,15 @@ var setupOptimizationsCalculator = ( function() {
 		function generateRows( data ) {
 			var html = '';
 
-			data.forEach( function( row, i ) {
+			Object.keys( data ).forEach( function( row ) {
+				if ( row === 'default' ) {
+					return;
+				}
+
 				html += '<tr>\
-					<th scope="row">' + devices[ i ] +'</th>\
-					<td>' + formatInfo( row ) + '</td>\
-					<td>' + getOptimization( row.size, info.original.size ) + '%</td>\
+					<th scope="row">' + devices[ row ] +'</th>\
+					<td>' + formatInfo( data[ row ] ) + '</td>\
+					<td>' + getOptimization( data[ row ].size, info.original.size ) + '%</td>\
 				</tr>';
 			} );
 
@@ -82,7 +81,7 @@ var setupOptimizationsCalculator = ( function() {
 
 			xhr.onload = function() {
 				var data = JSON.parse( xhr.responseText ),
-					original = data.pop();
+					original = data[ 'default' ];
 
 				displayInfo( requestContainer, {
 					original: original,
