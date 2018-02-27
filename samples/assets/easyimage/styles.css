@@ -1,3 +1,19 @@
+.sdk-row {
+	display: table;
+}
+.sdk-col {
+	display: table-cell;
+	padding: 0 10px;
+	vertical-align: top;
+	width: 50%;
+}
+.sdk-col-main {
+	width: 70%;
+}
+.sdk-col-aside {
+	width: 30%;
+}
+
 .ei-image, .ei-placeholder {
 	max-width: 100%;
 }
@@ -23,4 +39,7 @@
 .ei-optimization-body tr:nth-child( odd ) {
 	background: #000;
 	color: #fff;
+}
+.ei-optimization-body tr:nth-child( odd ) td + td, .ei-optimization-body tr:nth-child( odd ) th + td {
+	border-left-color: #fff;
 }
