@@ -14,7 +14,12 @@ var setupOptimizationsCalculator = ( function() {
 			768: 'iPad 4',
 			1920: 'Full HD',
 			2880: 'Macbook Pro with Retina display'
-		};
+		},
+		ratio = info.original.naturalHeight / info.original.naturalWidth;
+
+		function getHeight( img, ratio ) {
+			return img.naturalHeight || Math.ceil( img.width * ratio );
+		}
 
 		function formatSize( bytes ) {
 			if ( bytes >= 524288 ) {
@@ -25,7 +30,7 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		function formatInfo( img ) {
-			return img.width + 'x' + img.height + 'px (' + formatSize( img.size ) + ')';
+			return img.width + 'x' + getHeight( img, ratio ) + 'px (' + formatSize( img.size ) + ')';
 		}
 
 		function getOptimization( optimized, original ) {
@@ -36,10 +41,6 @@ var setupOptimizationsCalculator = ( function() {
 			var html = '';
 
 			Object.keys( data ).forEach( function( row ) {
-				if ( row === 'default' ) {
-					return;
-				}
-
 				html += '<tr>\
 					<th scope="row">' + devices[ row ] +'</th>\
 					<td>' + formatInfo( data[ row ] ) + '</td>\
@@ -53,7 +54,7 @@ var setupOptimizationsCalculator = ( function() {
 		container.innerHTML = '<table class="ei-optimization">\
 			<caption>\
 				<p>Image:</p>\
-				<p><img src="' + info.original.image + '" alt="" class="ei-image"></p>\
+				<p><img src="' + info.original.src + '" alt="" class="ei-image"></p>\
 				<p>' + formatInfo( info.original ) + '</p>\
 			</caption>\
 			<thead class="ei-optimization-head">\
@@ -69,6 +70,17 @@ var setupOptimizationsCalculator = ( function() {
 	}
 
 	function getImageInfoHandler( container ) {
+		function waitForImage( image, callback ) {
+			if ( image.complete ) {
+				return callback();
+			}
+
+			image.addEventListener( 'load', function listener() {
+				image.removeEventListener( 'load', listener, false );
+				callback();
+			}, false );
+		}
+
 		return function( evt ) {
 			var loader = evt.data.loader,
 				original = loader.file,
@@ -89,11 +101,18 @@ var setupOptimizationsCalculator = ( function() {
 
 			xhr.onload = function() {
 				var data = JSON.parse( xhr.responseText ),
-					original = data[ 'default' ];
+					original = new Image();
 
-				displayInfo( requestContainer, {
-					original: original,
-					optimized: data
+				original.src = loader.data;
+				original.size = data[ 'default' ].size;
+
+				delete data[ 'default' ];
+
+				waitForImage( original, function() {
+					displayInfo( requestContainer, {
+						original: original,
+						optimized: data
+					} );
 				} );
 			};
 		}
