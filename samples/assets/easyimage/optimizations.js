@@ -22,7 +22,9 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		function formatSize( bytes ) {
-			if ( bytes >= 524288 ) {
+			var abs = Math.abs( bytes );
+
+			if ( abs >= 524288 ) {
 				return Number( bytes / 1048576 ).toFixed( 2 ) + ' MB';
 			}
 
@@ -34,7 +36,7 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		function getOptimization( optimized, original ) {
-			return Math.ceil( 100 - ( ( optimized * 100 ) / original ) );
+			return formatSize( Math.ceil( original - optimized ) );
 		}
 
 		function generateRows( data ) {
@@ -44,7 +46,7 @@ var setupOptimizationsCalculator = ( function() {
 				html += '<tr>\
 					<th scope="row">' + devices[ row ] +'</th>\
 					<td>' + formatInfo( data[ row ] ) + '</td>\
-					<td>' + getOptimization( data[ row ].size, info.original.size ) + '%</td>\
+					<td>' + getOptimization( data[ row ].size, info.original.size ) + '</td>\
 				</tr>';
 			} );
 
