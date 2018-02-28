@@ -51,22 +51,24 @@ var setupOptimizationsCalculator = ( function() {
 			return html;
 		}
 
-		container.innerHTML = '<table class="ei-optimization">\
-			<caption>\
-				<p>Image:</p>\
-				<p><img src="' + info.original.src + '" alt="" class="ei-image"></p>\
-				<p>' + formatInfo( info.original ) + '</p>\
-			</caption>\
-			<thead class="ei-optimization-head">\
-				<tr>\
-					<th scope="col">Device</th>\
-					<th scope="col">Size used</th>\
-					<th scope="col">Optimization</th>\
-				</tr>\
-			</thead>\
-			<tbody class="ei-optimization-body">' + generateRows( info.optimized ) +
-			'</tbody>\
-		</table>';
+		container.innerHTML = '<div class="sdk-col">\
+			<p>Image:</p>\
+			<p><img src="' + info.original.src + '" alt="" class="ei-image"></p>\
+			<p>' + formatInfo( info.original ) + '</p>\
+		</div>\
+		<div class="sdk-col">\
+			<table class="ei-optimization">\
+				<thead class="ei-optimization-head">\
+					<tr>\
+						<th scope="col">Device</th>\
+						<th scope="col">Size used</th>\
+						<th scope="col">Optimization</th>\
+					</tr>\
+				</thead>\
+				<tbody class="ei-optimization-body">' + generateRows( info.optimized ) +
+				'</tbody>\
+			</table>\
+		</div>';
 	}
 
 	function getImageInfoHandler( container ) {
@@ -91,8 +93,9 @@ var setupOptimizationsCalculator = ( function() {
 				container.innerHTML = '';
 			}
 
-			requestContainer.innerHTML = '<p><img src="' + loader.data + '" class="ei-placeholder"></p>\
-			<p>Please wait while image is being processed…</p>';
+			requestContainer.className = 'sdk-row';
+			requestContainer.innerHTML = '<p class="sdk-col"><img src="' + loader.data + '" class="ei-placeholder"></p>\
+			<p class="sdk-col">Please wait while image is being processed…</p>';
 			container.appendChild( requestContainer );
 
 			xhr.open( 'POST', 'easyimage.php' );
