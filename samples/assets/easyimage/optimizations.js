@@ -13,7 +13,7 @@ var setupOptimizationsCalculator = ( function() {
 			375: 'iPhone 8',
 			768: 'iPad 4',
 			1920: 'Full HD',
-			2880: 'Macbook Pro with Retina display'
+			2880: 'Macbook Pro Retina'
 		},
 		ratio = info.original.naturalHeight / info.original.naturalWidth;
 
@@ -32,11 +32,11 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		function formatInfo( img ) {
-			return img.width + 'x' + getHeight( img, ratio ) + 'px (' + formatSize( img.size ) + ')';
+			return img.width + 'x' + getHeight( img, ratio ) + 'px';
 		}
 
 		function getOptimization( optimized, original ) {
-			return formatSize( Math.ceil( original - optimized ) );
+			return formatSize( optimized ) + ' (' + Math.ceil( 100 - ( optimized * 100 / original ) ) + '%)';
 		}
 
 		function generateRows( data ) {
@@ -56,7 +56,7 @@ var setupOptimizationsCalculator = ( function() {
 		container.innerHTML = '<div class="sdk-col">\
 			<p>Image:</p>\
 			<p><img src="' + info.original.src + '" alt="" class="ei-image"></p>\
-			<p>' + formatInfo( info.original ) + '</p>\
+			<p>' + formatInfo( info.original ) + ' (' + formatSize( info.original.size ) + '), type: ' + info.original.type + '</p>\
 		</div>\
 		<div class="sdk-col">\
 			<table class="ei-optimization">\
@@ -110,6 +110,7 @@ var setupOptimizationsCalculator = ( function() {
 
 				original.src = loader.data;
 				original.size = data[ 'default' ].size;
+				original.type = data[ 'default' ].type;
 
 				delete data[ 'default' ];
 

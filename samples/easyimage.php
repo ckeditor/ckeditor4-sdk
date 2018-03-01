@@ -19,6 +19,10 @@ function calculateBreakpoints( $width, $breakpoints ) {
 	return $calculated;
 }
 
+function getImageType( $mime ) {
+	return strtoupper( explode( '/', $mime )[ 1 ] );
+}
+
 function getImageInfo( $width, $img ) {
 	$breakpoints = [
 		360,
@@ -28,13 +32,16 @@ function getImageInfo( $width, $img ) {
 		2880
 	];
 	$size = 0;
+	$type = '';
 
 	$curl = curl_init( $img );
 	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 	curl_exec( $curl );
 
 	if ( !curl_errno( $curl ) ) {
-		$size = curl_getinfo( $curl )[ 'size_download' ];
+		$info = curl_getinfo( $curl );
+		$size = $info[ 'size_download' ];
+		$type = getImageType( $info[ 'content_type' ] );
 	}
 
 	curl_close( $curl );
@@ -43,7 +50,8 @@ function getImageInfo( $width, $img ) {
 		'breakpoints' => calculateBreakpoints( $width, $breakpoints ),
 		'image' => $img,
 		'width' => $width,
-		'size' => $size
+		'size' => $size,
+		'type' => $type
 	];
 }
 
