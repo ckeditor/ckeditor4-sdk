@@ -24,6 +24,10 @@ var setupOptimizationsCalculator = ( function() {
 		function formatSize( bytes ) {
 			var abs = Math.abs( bytes );
 
+			if ( bytes === 0 ) {
+				return 'unknown size';
+			}
+
 			if ( abs >= 524288 ) {
 				return Number( bytes / 1048576 ).toFixed( 2 ) + ' MB';
 			}
@@ -36,6 +40,10 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		function getOptimization( optimized, original ) {
+			if ( optimized === 0 || original === 0 ) {
+				return 'Not available';
+			}
+
 			return formatSize( optimized ) + ' (' + Math.ceil( 100 - ( optimized * 100 / original ) ) + '%)';
 		}
 
@@ -110,7 +118,7 @@ var setupOptimizationsCalculator = ( function() {
 
 				original.src = loader.data;
 				original.size = data[ 'default' ].size;
-				original.type = data[ 'default' ].type;
+				original.type = data[ 'default' ].type || 'Not available';
 
 				delete data[ 'default' ];
 
