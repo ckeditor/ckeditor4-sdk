@@ -62,7 +62,6 @@ var setupOptimizationsCalculator = ( function() {
 		}
 
 		container.innerHTML = '<div class="sdk-col">\
-			<p>Image:</p>\
 			<p><img src="' + info.original.src + '" alt="" class="ei-image"></p>\
 			<p>' + formatInfo( info.original ) + ' (' + formatSize( info.original.size ) + '), type: ' + info.original.type + '</p>\
 		</div>\
