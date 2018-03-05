@@ -24,9 +24,7 @@ function getCSToken( callback ) {
 
 	xhr.onload = function() {
 		if ( xhr.status >= 200 && xhr.status < 300 ) {
-			var response = JSON.parse( xhr.responseText );
-
-			callback( response.token );
+			callback( xhr.responseText );
 		} else {
 			console.error( xhr.status );
 		}
@@ -39,4 +37,4 @@ function getCSToken( callback ) {
 	xhr.send( null );
 }
 
-getCSToken.CLOUD_SERVICES_TOKEN_URL = 'https://j2sns7jmy0.execute-api.eu-central-1.amazonaws.com/prod/token';
+getCSToken.CLOUD_SERVICES_TOKEN_URL = 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt';

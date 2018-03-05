@@ -45,7 +45,7 @@ $options = array(
     CURLOPT_MAXREDIRS => 5);
 
 foreach ($imgs as $width => $url) {
-    if ( strpos( $url, 'https://cdn.cke-cs.com/' ) !== 0 ) {
+    if ( strpos( $url, 'https://33333.cdn.cke-cs.com/' ) !== 0 ) {
         continue;
     }
     $ch = curl_init();
