@@ -36,6 +36,10 @@ function getWidthOfImage($imgURL, $imgs) {
     }
 }
 
+function getImageType( $mime ) {
+    return strtoupper( explode( '/', isset( $mime ) ? $mime : '' )[ 1 ] );
+}
+
 $multiInit = curl_multi_init();
 $options = array(
     CURLOPT_RETURNTRANSFER => true,
@@ -64,7 +68,10 @@ do {
     while($multiResponse = curl_multi_info_read($multiInit)) {
         $info = curl_getinfo($multiResponse['handle']);
         if ($info['http_code'] == 200)  {
-            $return[$info['url']] = array('size' => $info['download_content_length']>0 ? $info['download_content_length'] : 0);
+            $return[$info['url']] = array(
+                'size' => $info['download_content_length']>0 ? $info['download_content_length'] : 0,
+                'type' => getImageType( $info['content_type'] )
+            );
             $ch = curl_init();
             $options[CURLOPT_URL] = next($imgs);//it should take next url by prev url
             curl_setopt_array($ch,$options);
@@ -88,6 +95,7 @@ foreach ( $imgs as $width => $img ) {
         'image' => $img,
         'width' => $width,
         'size' => isset($return[$img]['size']) ? $return[$img]['size'] : 0,
+        'type' => isset($return[$img]['type']) ? $return[$img]['type'] : null,
     ];
     if(isset($return[$img]['error'])){
         $info['error'] = $return[$img]['error'];
