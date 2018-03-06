@@ -10,7 +10,7 @@ It is forbidden to copy and distribute this file in its original or modified for
 .sdk-top-navigation
 {
 	height: 26px;
-	background: #454545;
+	background: #fafafa;
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -41,7 +41,8 @@ It is forbidden to copy and distribute this file in its original or modified for
 	a
 	{
 		@include adjust-font-size-to( .5625rem );
-		color: #c3c3c3;
+		color: #333333;
+		color: rgba( #000000, .7 );
 		font-weight: bold;
 		text-decoration: none;
 		text-transform: uppercase;
@@ -49,7 +50,8 @@ It is forbidden to copy and distribute this file in its original or modified for
 		&:hover
 		{
 			cursor: pointer;
-			color: #fff;
+			color: rgba( #000000, .87 );
+			color: #111111;
 		}
 	}
 }

@@ -5,15 +5,20 @@ It is forbidden to copy and distribute this file in its original or modified for
 */
 
 @charset "utf-8";
+
+
+
 /* --- Main navigation ------------------------ */
 
 .sdk-main-navigation
 {
 	@include adjust-font-size-to( 1.063rem );
   	position: absolute;
-  	top: 65px;
+  	top: 50%;
   	left: 320px;
-  	right: auto;
+	right: auto;
+	margin-top: 12.5px;
+	transform: translateY( -50% );
 
 	li
 	{
@@ -23,25 +28,22 @@ It is forbidden to copy and distribute this file in its original or modified for
 
 	a
 	{
-		color: #6b6b6b;
+		color: #ffffff;
 		text-decoration: none;
-		padding: 0 15px;
+		padding: 7px 15px;
 		height: 33px;
 		line-height: 33px;
 		display: inline-block;
 		font-family: $sdk-font-maven;
 
-		&:hover, &.active
+		&:hover
 		{
-			color: $sdk-link-color;
-			background: #C9E3E6;
+			background: lighten( $sdk-ckeditor-color, 4 );
+		}
 
-			@include border-radius( 6px );
-			@include box-shadow(
-				0 -1px 3px rgba(0,0,0,0.2) inset,
-				0 0 1px rgba(255,255,255,0.5),
-				0 1px 3px rgba(0,0,0,0.1) inset
-			);
+		&.active
+		{
+			background: darken( $sdk-ckeditor-color, 4 );
 		}
 	}
 }
