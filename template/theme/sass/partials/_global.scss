@@ -39,13 +39,30 @@ body, html
 .sdk-logo
 {
 	position: absolute;
-	left: 40px;
+	left: 30px;
 	top: 50px;
+	height: 50px;
 	margin: 0;
+	padding-left: 65px;
+	background: {
+		image: image-url( 'logo.svg' );
+		size: contain;
+		repeat: no-repeat;
+	}
+	font: {
+		size: 24px;
+		weight: 400;
+	}
+	color: white;
+	line-height: 50px;
 
-	img
-	{
-		border: transparent;
+	a {
+		color: white;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }
 
@@ -207,7 +224,7 @@ textarea.disabled
 .search-container {
 	position: absolute;
 	top: 50%;
-	right: 40px;
+	right: 30px;
 	margin-top: 12.5px;
 	transform: translateY( -50% );
 }
