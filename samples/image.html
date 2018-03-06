@@ -57,17 +57,19 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			</p>
 
 			<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-				&lt;p&gt;&lt;img alt="Bilancino Hotel logo" src="assets/image/bilancino-logo.png" style="float:left; height:75px; width: 75px;margin:15px" /&gt;&lt;br/&gt;&lt;/p&gt;
+				&lt;h2 style="text-align:center;line-height: 75px;"&gt;&lt;img alt="Bilancino Hotel logo" src="assets/image/bilancino-logo.png" style="float:right; height:75px; width: 75px;" /&gt;The Flavorful Tuscany Meetup&lt;/h2&gt;
 
-				&lt;h1&gt;The Flavorful Tuscany Meetup&lt;/h1&gt;
+				&lt;h3 style="text-align:center;clear: both;margin-top: -2em;margin-left: -2em"&gt;&lt;span style="color:#007ac9"&gt;&lt;strong&gt;Welcome letter&lt;/strong&gt;&lt;/span&gt;&lt;/h3&gt;
 
 				&lt;p&gt;&nbsp;&lt;/p&gt;
 
 				&lt;p&gt;Dear Guest,&lt;/p&gt;
 
-				&lt;p&gt;We are delighted to welcome you to the annual &lt;em&gt;Flavorful Tuscany Meetup&lt;/em&gt; and hope you will enjoy the programme as well as your stay at the Bilancino Hotel. Please find below the full schedule of the event.&lt;/p&gt;
+				&lt;p&gt;We are delighted to welcome you to the annual &lt;em&gt;Flavorful Tuscany Meetup&lt;/em&gt; and hope you will enjoy the programme as well as your stay at the Bilancino Hotel.&lt;/p&gt;
 
-				&lt;table cellpadding="10" cellspacing="0" style="width:100%"&gt;
+				&lt;p&gt;Please find below the full schedule of the event.&lt;/p&gt;
+
+				&lt;table cellpadding="15" cellspacing="0" style="width:100%"&gt;
 					&lt;thead&gt;
 						&lt;tr&gt;
 							&lt;th colspan="2" scope="col" style="background-color:#f2f9ff; text-align:center"&gt;Saturday, July 14&lt;/th&gt;
@@ -89,7 +91,11 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 					&lt;/tbody&gt;
 				&lt;/table&gt;
 
-				&lt;p&gt;&nbsp;&lt;/p&gt;
+				&lt;blockquote&gt;
+				&lt;p&gt;The annual Flavorful Tuscany meetups are always a culinary discovery. You get the best of Tuscan flavors during an intense one-day stay at one of the top hotels of the region. All the sessions are lead by top chefs passionate about their profession. I would certainly recommend to save the date in your calendar for this one!&lt;/p&gt;
+
+				&lt;p&gt;Angelina Calvino, food journalist&lt;/p&gt;
+				&lt;/blockquote&gt;
 
 				&lt;p&gt;Please arrive at the Bilancino Hotel reception desk at least &lt;strong&gt;half an hour earlier&lt;/strong&gt; to make sure that the registration process goes as smoothly as possible.&lt;/p&gt;
 
@@ -114,6 +120,8 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			</ul>
 
 			<script data-sample="1" >
+				CKEDITOR.addCss( '.cke_editable { font-size: 15px; padding: 2em; }' );
+
 				CKEDITOR.replace( 'editor1', {
 					toolbar: [
 						{ name: 'document', items: [ 'Print' ] },
@@ -130,6 +138,8 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 						{ name: 'editing', items: [ 'Scayt' ] }
 					],
 
+					extraAllowedContent: 'h3{clear};h2{line-height};h2 h3{margin-left,margin-top}',
+
 					// Adding drag and drop image upload.
 					extraPlugins: 'print,format,font,colorbutton,justify,uploadimage',
 					uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
@@ -140,7 +150,7 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
 					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
 
-					height: 570,
+					height: 560,
 
 					removeDialogTabs: 'image:advanced;link:advanced'
 				} );
