@@ -19,9 +19,16 @@
 					]
 				},
 				{
+					"name": "Inserting Images",
+					"samples": [
+						"Default Image Plugin",
+						"Enhanced Image Plugin",
+						"Easy Image Plugin"
+					]
+				},
+				{
 					"name": "Inserting Content",
 					"samples": [
-						"Captioned Images",
 						"Paste from Word",
 						"Paste from Excel",
 						"File Upload",
