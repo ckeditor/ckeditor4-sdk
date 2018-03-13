@@ -19,7 +19,6 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 	<script src="assets/simplesample.js"></script>
 	<script src="assets/beautify-html.js"></script>
 	<script src="assets/sample.js"></script>
-	<script src="assets/cloudservice.js"></script>
 	<script src="assets/easyimage/optimizations.js"></script>
 	<!--[if lt IE 9]>
 	<script src="assets/html5shiv.min.js"></script>
@@ -121,67 +120,65 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 			</ul>
 
 			<script data-sample="1" >
-				// The getCSToken function is used only for example brevity. For real-life usage,
-				// refer to the official CKEditor Cloud Services documentation about token endpoints.
-				getCSToken( function( token ) {
-					// Don't forget to add CSS for your custom styles.
-					CKEDITOR.addCss( 'figure[class*=easyimage-gradient]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }' +
-						'figure[class*=easyimage-gradient] figcaption { position: relative; z-index: 2; }' +
-						'.easyimage-gradient-1::before { background-image: linear-gradient( 135deg, rgba( 115, 110, 254, 0 ) 0%, rgba( 66, 174, 234, .72 ) 100% ); }' +
-						'.easyimage-gradient-2::before { background-image: linear-gradient( 135deg, rgba( 115, 110, 254, 0 ) 0%, rgba( 228, 66, 234, .72 ) 100% ); }' );
+				// Don't forget to add CSS for your custom styles.
+				CKEDITOR.addCss( 'figure[class*=easyimage-gradient]::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }' +
+					'figure[class*=easyimage-gradient] figcaption { position: relative; z-index: 2; }' +
+					'.easyimage-gradient-1::before { background-image: linear-gradient( 135deg, rgba( 115, 110, 254, 0 ) 0%, rgba( 66, 174, 234, .72 ) 100% ); }' +
+					'.easyimage-gradient-2::before { background-image: linear-gradient( 135deg, rgba( 115, 110, 254, 0 ) 0%, rgba( 228, 66, 234, .72 ) 100% ); }' );
 
-					CKEDITOR.replace( 'editor1', {
-						extraPlugins: 'easyimage',
-						removePlugins: 'image',
-						removeDialogTabs: 'link:advanced',
-						toolbar: [
-							{ name: 'document', items: [ 'Undo', 'Redo' ] },
-							{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
-							{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] },
-							{ name: 'links', items: [ 'Link', 'Unlink' ] },
-							{ name: 'styles', items: [ 'Format' ] }
-						],
-						height: 630,
-						cloudServices_url: 'https://33333.cke-cs.com/easyimage/upload/',
-						cloudServices_token: token,
-						easyimage_styles: {
-							gradient1: {
-								group: 'easyimage-gradients',
-								attributes: {
-									'class': 'easyimage-gradient-1'
-								},
-								label: 'Blue Gradient',
-								icon: '../../samples/assets/easyimage/icons/gradient1.png',
-								iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/gradient1.png'
+				CKEDITOR.replace( 'editor1', {
+					extraPlugins: 'easyimage',
+					removePlugins: 'image',
+					removeDialogTabs: 'link:advanced',
+					toolbar: [
+						{ name: 'document', items: [ 'Undo', 'Redo' ] },
+						{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+						{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] },
+						{ name: 'links', items: [ 'Link', 'Unlink' ] },
+						{ name: 'styles', items: [ 'Format' ] }
+					],
+					height: 630,
+					cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
+					// Note: this is a token endpoint to be used for CKEditor 4 samples only. Images uploaded using this token may be deleted automatically at any moment.
+					// To create your own token URL please visit https://ckeditor.com/ckeditor-cloud-services/.
+					cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
+					easyimage_styles: {
+						gradient1: {
+							group: 'easyimage-gradients',
+							attributes: {
+								'class': 'easyimage-gradient-1'
 							},
-							gradient2: {
-								group: 'easyimage-gradients',
-								attributes: {
-									'class': 'easyimage-gradient-2'
-								},
-								label: 'Pink Gradient',
-								icon: '../../samples/assets/easyimage/icons/gradient2.png',
-								iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/gradient2.png'
-							},
-							noGradient: {
-								group: 'easyimage-gradients',
-								attributes: {
-									'class': 'easyimage-no-gradient'
-								},
-								label: 'No Gradient',
-								icon: '../../samples/assets/easyimage/icons/nogradient.png',
-								iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/nogradient.png'
-							}
+							label: 'Blue Gradient',
+							icon: '../../samples/assets/easyimage/icons/gradient1.png',
+							iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/gradient1.png'
 						},
-						easyimage_toolbar: [
-							'EasyimageFull',
-							'EasyimageSide',
-							'EasyimageGradient1',
-							'EasyimageGradient2',
-							'EasyimageNoGradient',
-							'EasyimageAlt'
-						]
-					} );
+						gradient2: {
+							group: 'easyimage-gradients',
+							attributes: {
+								'class': 'easyimage-gradient-2'
+							},
+							label: 'Pink Gradient',
+							icon: '../../samples/assets/easyimage/icons/gradient2.png',
+							iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/gradient2.png'
+						},
+						noGradient: {
+							group: 'easyimage-gradients',
+							attributes: {
+								'class': 'easyimage-no-gradient'
+							},
+							label: 'No Gradient',
+							icon: '../../samples/assets/easyimage/icons/nogradient.png',
+							iconHiDpi: '../../samples/assets/easyimage/icons/hidpi/nogradient.png'
+						}
+					},
+					easyimage_toolbar: [
+						'EasyImageFull',
+						'EasyImageSide',
+						'EasyImageGradient1',
+						'EasyImageGradient2',
+						'EasyImageNoGradient',
+						'EasyImageAlt'
+					]
 				} );
 			</script>
 
