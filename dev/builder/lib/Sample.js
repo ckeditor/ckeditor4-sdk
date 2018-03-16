@@ -116,13 +116,13 @@ Sample.prototype = {
         } );
     },
 
-    fixExternalPaths: function() {
+    fixExternalPaths: function( version ) {
         // This is bad, but there's no real alternative to this given,
         // that the path that needs to be modified may appear within a script.
         var html = this.$( 'html' ).html();
         if ( html ) {
             this.$( 'html' ).html( html
-                .replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor' )
+                .replace( /\.\.\/\.\.\/ckeditor\-dev/g, '../vendor/ckeditor/' + version )
                 .replace( /\.\.\/template\/theme/g, '../theme' ) );
         }
     },
@@ -156,8 +156,8 @@ Sample.prototype = {
                     return $1 + $2.replace( '../..', 'https://sdk.ckeditor.com' ) + $3;
                 }
 
-                if ( $2.indexOf( '../vendor/ckeditor/' ) != -1 ) {
-                    return $1 + $2.replace( '../vendor/ckeditor/', 'https:' + cdnEditorLink ) + $3;
+                if ( $2.indexOf( '../vendor/ckeditor/' + version + '/' ) != -1 ) {
+                    return $1 + $2.replace( '../vendor/ckeditor/' + version + '/', 'https:' + cdnEditorLink ) + $3;
                 }
 
                 return $1 + $2 + $3;
