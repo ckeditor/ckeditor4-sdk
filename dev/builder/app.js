@@ -245,8 +245,9 @@ function copyVendor() {
 
 function copyCKEditor() {
     console.log( 'Copying CKEditor files' );
+    fs.mkdirSync( path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 
-    return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
+    return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor', CKEDITOR_VERSION ) );
 }
 
 function copyGuides() {
@@ -324,11 +325,11 @@ function prepareSamplesFilesSync() {
         sample.activateSamplesButton();
         if ( opts.version === 'offline' ) {
             sample.preventSearchEngineRobots();
-            sample.fixExternalPaths();
+            sample.fixExternalPaths( CKEDITOR_VERSION );
             sample.fixLinks();
             sample.fixFonts();
         } else {
-            sample.fixExternalPaths();
+            sample.fixExternalPaths( CKEDITOR_VERSION );
             sample.fixCKEDITORVendorLinks( CKEDITOR_VERSION );
         }
 
