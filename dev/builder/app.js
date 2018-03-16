@@ -245,8 +245,9 @@ function copyVendor() {
 
 function copyCKEditor() {
     console.log( 'Copying CKEditor files' );
+    fs.mkdirSync( path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
 
-    return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor' ) );
+    return call( ncp, CKEDITOR_PATH, path.join( RELEASE_PATH, 'vendor', 'ckeditor', CKEDITOR_VERSION ) );
 }
 
 function copyGuides() {
