@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'en',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 			/**
@@ -91,8 +91,8 @@
 				}
 			};
 
-			TableHeaders.prototype.lang = {"positionLabel":"Position","positionHorizontally":"Horizontally","positionVertically":"Vertically","positionBoth":"Both"};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'en/TableHeaders', TableHeaders );
+			TableHeaders.prototype.lang = {"positionLabel":"Posição","positionHorizontally":"Horizontal","positionVertically":"Vertical","positionBoth":"Ambos"};
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/TableHeaders', TableHeaders );
 		}
 	} );
 }() );

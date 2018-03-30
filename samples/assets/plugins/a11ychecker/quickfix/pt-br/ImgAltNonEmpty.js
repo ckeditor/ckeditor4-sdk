@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'en',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'ImgAlt',
 		callback: function( ImgAlt ) {
 
@@ -37,8 +37,8 @@
 				return ret;
 			};
 
-			ImgAltNonEmpty.prototype.lang = {"altLabel":"Alternative text","errorTooLong":"Alternative text is too long. It should be up to {limit} characters while your has {length}","errorWhitespace":"Alternative text can not only contain whitespace characters","errorSameAsFileName":"Image alt should not be the same as the file name","errorEmpty":"Alternative text can not be empty"};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'en/ImgAltNonEmpty', ImgAltNonEmpty );
+			ImgAltNonEmpty.prototype.lang = {"altLabel":"Texto alternativo","errorTooLong":"O texto alternativo é muito longo. Este deve conter no máximo {limit} caracteres, enquanto o seu possui {length}","errorWhitespace":"O texto alternativo não pode conter somente espaços em branco.","errorSameAsFileName":"O texto alternativo da imagem não deve ter o mesmo nome do arquivo da imagem","errorEmpty":"O texto alternativo não deve estar vazio"};
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/ImgAltNonEmpty', ImgAltNonEmpty );
 		}
 	} );
 }() );

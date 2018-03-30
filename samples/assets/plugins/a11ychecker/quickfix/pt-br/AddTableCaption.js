@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'nl',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 
@@ -68,8 +68,8 @@
 				return ret;
 			};
 
-			AddTableCaption.prototype.lang = {"captionLabel":"Caption","errorEmpty":"Caption (bijschtift) tekst mag niet leeg zijn"};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'nl/AddTableCaption', AddTableCaption );
+			AddTableCaption.prototype.lang = {"captionLabel":"Legenda da tabela","errorEmpty":"O texto da legenda da tabela não pode estar vazio"};
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/AddTableCaption', AddTableCaption );
 		}
 	} );
 }() );

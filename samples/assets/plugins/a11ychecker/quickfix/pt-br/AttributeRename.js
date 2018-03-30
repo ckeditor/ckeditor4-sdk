@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'nl',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 			/**
@@ -80,7 +80,7 @@
 			};
 
 			AttributeRename.prototype.lang = {};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'nl/AttributeRename', AttributeRename );
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/AttributeRename', AttributeRename );
 		}
 	} );
 }() );

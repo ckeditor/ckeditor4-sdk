@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'en',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 			/**
@@ -74,7 +74,7 @@
 			};
 
 			AnchorsMerge.prototype.lang = {};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'en/AnchorsMerge', AnchorsMerge );
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/AnchorsMerge', AnchorsMerge );
 		}
 	} );
 }() );
