@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--
+	Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+	For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Mentions plugin">
+		<meta name="keywords" content="ckeditor, editor, wysiwyg, mentions, complete, autocomplete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+		<meta name="sdk-samples" content="Mentions plugin">
+		<title>Mentions plugin</title>
+		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+		<link href="../template/theme/css/sdk.css" rel="stylesheet">
+		<script src="../../ckeditor-dev/ckeditor.js"></script>
+		<script src="assets/picoModal-2.0.1.min.js"></script>
+		<script src="assets/contentloaded.js"></script>
+		<script src="assets/simplesample.js"></script>
+		<script src="assets/beautify-html.js"></script>
+		<script src="assets/sample.js"></script>
+		<!--[if lt IE 9]>
+			<script src="assets/html5shiv.min.js"></script>
+		<![endif]-->
+		<link rel="icon" href="../template/theme/img/favicon.ico">
+	</head>
+	<body>
+		<style data-sample="1">
+		.columns {
+			background: #fff;
+			padding: 20px;
+			border: 1px solid #E7E7E7;
+		}
+		.columns:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+		.editor {
+			float: left;
+			width: 55%;
+			position: relative;
+			z-index: 1;
+		}
+		.chat {
+			float: right;
+			width: 40%;
+			box-sizing: border-box;
+			border: 1px solid #E7E7E7;
+		}
+		.chat-input {
+			border: 1px solid #E7E7E7;
+		}
+		.chat-send {
+			cursor: pointer;
+			text-align: center;
+			padding-bottom: 5px;
+		}
+		.comments {
+			height: 550px;
+			list-style-type: none;
+			margin: 0 !important;
+			padding: 0;
+			overflow-y: auto;
+		}
+		.comments li {
+			background: #FAFAFA;
+			margin-bottom: 1px;
+			padding: 5px;
+		}
+		.comments li:nth-child(2n) {
+			background: #F3F3F3;
+		}
+		.comments li:hover {
+			background: #FFFDE3;
+		}
+		.message {
+			padding: 0 10px;
+		}
+		.contact .u-photo {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 10px;
+		}
+		.sdk-contents .cke {
+			margin: 0;
+		}
+		</style>
+
+		<header class="sdk-header">
+		</header>
+		<section class="sdk-container">
+			<nav class="sdk-sidebar">
+			</nav>
+			<section class="sdk-contents">
+				<h1>Mentions plugin</h1>
+
+				<p>
+				The mentions plugin has been introduced in CKEditor 4.10 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type selected marker he will get information about available, existing options.
+				</p>
+
+				<p>Mentions plugin allows you to use different data sources:</p>
+
+				<ul>
+					<li>
+						A simple array of text matches as synchronous data feed.
+					</li>
+					<li>
+						A backend URL string responding with a list of items in JSON format.
+					</li>
+					<li>
+						A function allowing to use asynchronous callback to customize data source.
+					</li>
+				</ul>
+
+				<div class="columns">
+					<div class="editor">
+						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+							<h1>Mentions plugin</h1>
+
+							<p>With mentions plugin you will never misspell any important words! With easy configuration and a little effort, you will be able to create custom autocompletion in a couple of minutes!</p>
+
+							<p>To see how it works just type `@` and you will get usernames completion!</p>
+
+							<p>But it's not only about usernames! Everyone loves using tags, but how to keep them consistent?</p>
+
+							<p>Just type `#` and you will get tags completion! Do you see how easy it is?</p>
+
+							<p>Play a little with mentions and you will fall in love quickly like us!</p>
+						</textarea>
+					</div>
+					<div class="chat">
+						<ul id="comments" class="comments"></ul>
+						<div class="chat-input">
+							<div class="chat-editor">
+								<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="1" data-sample-short>
+									<p>I know your names!</p>
+								</textarea>
+							</div>
+							<div class="chat-send">
+								<button id="send-comment">Send</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</section>
+
+		<footer class="sdk-footer">
+		</footer>
+
+		<script data-sample="1" >
+
+		var CONTACTS = [
+			{ name: 'Huckleberry Finn', avatar: 'hfin', message: 'Does anybody seen Phileas Frogg?' },
+			{ name: 'Phileas Fogg', avatar: 'pfog', message: 'Phileas Fogg you flicky bastard!' },
+			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'Hucklybenny Finn doesn\'t mean to offend you my dear friend!' },
+			{ name: 'Alice', avatar: 'alice', message: 'I\'m sure he doesn\'t mean to be rude D\'arthonion!' },
+			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'D\'Artagnan!' },
+			{ name: 'Little Red Riding Hood', avatar: 'lrrh', message: 'Doesn\'t recognize him, is he handsome?' },
+			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'Guys, just start using mentions!'},
+			{ name: 'Robinson Crusoe', avatar: 'rcrusoe', message: 'What\'s that Dantes?' },
+			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'It\'s Dantès! With \'è!\' Type \'@\' and everything will be clear!' },
+		],
+		USERNAMES = [
+			'Anna',
+			'Annabelle',
+			'Anita',
+			'Celina',
+			'Jack',
+			'Jacob',
+			'Jacoby',
+			'Thomas',
+			'Tody',
+			'Tonny',
+			'Tamara'
+		],
+		TAGS = [
+			'mentions',
+			'autocomplete',
+			'ckeditor',
+			'social',
+			'news',
+			'creative',
+			'awesome'
+		],
+		template = new CKEDITOR.template(
+			'<li class="comment">' +
+				'<div class="contact"><img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}</div>' +
+				'<div class="message">{message}</div>' +
+			'</li>'
+		);
+
+		createChatComments(
+			CKEDITOR.document.getById( 'comments'),
+			new CKEDITOR.template(
+				'<li class="comment">' +
+					'<div class="contact"><img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}</div>' +
+					'<div class="message">{message}</div>' +
+				'</li>'
+			)
+		);
+
+		CKEDITOR.addCss( '.cke_editable { padding: 5px; }' );
+
+		CKEDITOR.replace( 'editor1', {
+			extraPlugins: 'mentions',
+			removeDialogTabs: 'link:advanced',
+			toolbar: [
+				{ name: 'document', items: [ 'Undo', 'Redo' ] },
+				{ name: 'styles', items: [ 'Format' ] },
+				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+				{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] },
+				{ name: 'links', items: [ 'Link', 'Unlink' ] }
+			],
+			height: 600,
+			mentions: [
+				{
+					feed: USERNAMES,
+					minChars: 0
+				},
+				{
+					feed: TAGS,
+					marker: '#',
+					minChars: 0
+				}
+			]
+		} );
+
+		CKEDITOR.inline( 'editor2', {
+			extraPlugins: 'mentions',
+			toolbar: [],
+			mentions: [
+				{
+					feed: CKEDITOR.tools.array.map( CONTACTS, function( contact ) {
+						return contact.name;
+					} ),
+					minChars: 0
+				}
+			],
+			on: {
+				instanceReady: function( evt ) {
+					var editor = evt.editor,
+						editable = editor.editable(),
+						container = CKEDITOR.document.getById( 'comments' ),
+						button = CKEDITOR.document.getById( 'send-comment' );
+
+					button.on( 'click', function() {
+						var item = {
+							name: 'Winnetou',
+							avatar: 'winetou',
+							message: editable.getText()
+						};
+
+						container.append( createComment( item ) );
+
+						editable.setData( 'I know your names!' );
+					} );
+				}
+			}
+		} );
+
+		function createChatComments( container ) {
+			for ( var i = 0; i < CONTACTS.length; i++ ) {
+				container.append( createComment( CONTACTS[ i ] ) );
+			}
+		}
+
+		function createComment( item ) {
+			return CKEDITOR.dom.element.createFromHtml( template.output( item ));
+		}
+		</script>
+	</body>
+</html>
