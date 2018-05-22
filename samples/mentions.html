@@ -119,7 +119,7 @@
 						<div class="chat-input">
 							<div class="chat-editor">
 								<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="1" data-sample-short>
-									<p>I know your names!</p>
+									<p>Type your comment here…</p>
 								</textarea>
 							</div>
 							<div class="chat-send">
@@ -138,14 +138,14 @@
 
 		var CONTACTS = [
 			{ name: 'Huckleberry Finn', avatar: 'hfin', message: 'Does anybody seen Phileas Frogg?' },
-			{ name: 'Phileas Fogg', avatar: 'pfog', message: 'Phileas Fogg you flicky bastard!' },
+			{ name: 'Phileas Fogg', avatar: 'pfog', message: 'It\'s Phileas Fogg!' },
 			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'Hucklybenny Finn doesn\'t mean to offend you my dear friend!' },
 			{ name: 'Alice', avatar: 'alice', message: 'I\'m sure he doesn\'t mean to be rude D\'arthonion!' },
 			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'D\'Artagnan!' },
 			{ name: 'Little Red Riding Hood', avatar: 'lrrh', message: 'Doesn\'t recognize him, is he handsome?' },
 			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'Guys, just start using mentions!'},
 			{ name: 'Robinson Crusoe', avatar: 'rcrusoe', message: 'What\'s that Dantes?' },
-			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'It\'s Dantès! With \'è!\' Type \'@\' and everything will be clear!' },
+			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'It\'s that feature that makes you write Dantès! With \'è\' 🙂 Just type \'@\'.' },
 		],
 		USERNAMES = [
 			'Anna',
@@ -237,7 +237,7 @@
 
 						container.append( createComment( item ) );
 
-						editable.setData( 'I know your names!' );
+						editable.setData( 'Type your comment here…' );
 
 						container.$.scrollTop = container.$.scrollHeight - container.$.clientHeight;
 					} );
