@@ -22,70 +22,62 @@
 			<script src="assets/html5shiv.min.js"></script>
 		<![endif]-->
 		<link rel="icon" href="../template/theme/img/favicon.ico">
-	</head>
-	<body>
 		<style data-sample="1">
-		.columns {
-			background: #fff;
-			padding: 20px;
-			border: 1px solid #E7E7E7;
+		.forum {
+			width: 600px;
 		}
-		.columns:after {
-			content: "";
-			clear: both;
-			display: block;
-		}
-		.editor {
-			float: left;
-			width: 55%;
-			position: relative;
-			z-index: 1;
-		}
-		.chat {
-			float: right;
-			width: 40%;
-			box-sizing: border-box;
-			border: 1px solid #E7E7E7;
-		}
-		.chat-input {
-			border: 1px solid #E7E7E7;
-		}
-		.chat-send {
-			cursor: pointer;
-			text-align: center;
-			padding-bottom: 5px;
-		}
-		.comments {
-			height: 550px;
+
+		.posts {
 			list-style-type: none;
-			margin: 0 !important;
 			padding: 0;
-			overflow-y: auto;
-		}
-		.comments li {
-			background: #FAFAFA;
-			margin-bottom: 1px;
-			padding: 5px;
-		}
-		.comments li:nth-child(2n) {
-			background: #F3F3F3;
-		}
-		.comments li:hover {
-			background: #FFFDE3;
-		}
-		.message {
-			padding: 0 10px;
-		}
-		.contact .u-photo {
-			display: inline-block;
-			vertical-align: middle;
-			margin-right: 10px;
-		}
-		.sdk-contents .cke {
 			margin: 0;
 		}
-		</style>
 
+		.posts .message {
+			display: inline-block;
+			margin-left: 20px;
+			width: 80%;
+		}
+
+		.posts .message .time {
+			color: #b7b7b7;
+			font-size: .9em;
+		}
+
+		.posts .photo {
+			height: 40px;
+			vertical-align: top;
+			border-radius: 15%;
+		}
+
+		.cke_autocomplete_panel {
+			width: 250px !important;
+		}
+
+		.cke_autocomplete_panel .photo {
+			display: inline-block;
+			vertical-align: middle;
+			height: 30px;
+			border-radius: 50%;
+		}
+
+		.bullet {
+			padding-left: 5px;
+			padding-right: 5px;
+			color: #b7b7b7;
+		}
+
+		.cke_autocomplete_panel .username {
+			padding-left: 5px;
+		}
+
+		.cke_autocomplete_panel .fullname {
+			padding-left: 5px;
+			color: #b7b7b7;
+		}
+		</style>
+	</head>
+	<body>
 		<header class="sdk-header">
 		</header>
 		<section class="sdk-container">
@@ -98,35 +90,38 @@
 				The mentions plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type selected marker he will get information about available, existing options.
 				</p>
 
-				<div class="columns">
-					<div class="editor">
-						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-							<h1>Mentions plugin</h1>
-
-							<p>With mentions plugin you will never misspell any important words! With easy configuration and a little effort, you will be able to create custom autocompletion in a couple of minutes!</p>
-
-							<p>To see how it works just type `@` and you will get usernames completion!</p>
-
-							<p>But it's not only about usernames! Everyone loves using tags, but how to keep them consistent?</p>
-
-							<p>Just type `#` and you will get tags completion! Do you see how easy it is?</p>
-
-							<p>Play a little with mentions and you will fall in love quickly like us!</p>
-						</textarea>
-					</div>
-					<div class="chat">
-						<ul id="comments" class="comments"></ul>
-						<div class="chat-input">
-							<div class="chat-editor">
-								<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="1" data-sample-short>
-									<p>Type your comment here…</p>
-								</textarea>
+				<div class="forum">
+					<ul class="posts">
+						<li>
+							<img src="assets/mentions/img/m_1.jpg" alt="avatar" class="photo" />
+							<div class="message">
+								<strong>Charles Flores</strong>
+								<span class="bullet">•</span>
+								<span class="time">2 hours ago</span>
+								<p>
+								Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
+								</p>
 							</div>
-							<div class="chat-send">
-								<button id="send-comment">Send</button>
+						</li>
+						<li>
+							<img src="assets/mentions/img/w_1.jpg" alt="avatar" class="photo" />
+							<div class="message">
+								<strong>Wildred Milson</strong>
+								<span class="bullet">•</span>
+								<span class="time">4 hours ago</span>
+								<p>
+								Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
+								</p>
 							</div>
-						</div>
-					</div>
+						</li>
+					</ul>
+				</div>
+				<div class="editor">
+					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+						<h1>Lorem eaque sapiente ab necessitatibus quam? Sit dolor praesentium illum!</h1>
+						<p>Adipisicing perferendis aspernatur consectetur fuga unde! Quia aut magni ipsa.</p>
+						<p>Adipisicing perferendis aspernatur consectetur fuga unde! Quia aut magni ipsa.</p>
+					</textarea>
 				</div>
 			</section>
 		</section>
@@ -135,137 +130,78 @@
 		</footer>
 
 		<script data-sample="1" >
+			var users = [
+				{ id: 1, avatar: 'm_1', fullname: 'Charles Flores' },
+				{ id: 2, avatar: 'm_2', fullname: 'Gerald Jackson' },
+				{ id: 3, avatar: 'm_3', fullname: 'Wayne Reed' },
+				{ id: 4, avatar: 'm_4', fullname: 'Louis Garcia' },
+				{ id: 5, avatar: 'm_5', fullname: 'Roy Wilson' },
+				{ id: 6, avatar: 'm_6', fullname: 'Matthew Nelson' },
+				{ id: 7, avatar: 'm_7', fullname: 'Randy Williams' },
+				{ id: 8, avatar: 'm_8', fullname: 'Albert Johnson' },
+				{ id: 9, avatar: 'm_9', fullname: 'Steve Roberts' },
+				{ id: 10, avatar: 'm_10', fullname: 'Kevin Evans' },
 
-		var CONTACTS = [
-			{ name: 'Huckleberry Finn', avatar: 'hfin', message: 'Does anybody seen Phileas Frogg?' },
-			{ name: 'Phileas Fogg', avatar: 'pfog', message: 'It\'s Phileas Fogg!' },
-			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'Hucklybenny Finn doesn\'t mean to offend you my dear friend!' },
-			{ name: 'Alice', avatar: 'alice', message: 'I\'m sure he doesn\'t mean to be rude D\'arthonion!' },
-			{ name: 'D\'Artagnan', avatar: 'dartagnan', message: 'D\'Artagnan!' },
-			{ name: 'Little Red Riding Hood', avatar: 'lrrh', message: 'Doesn\'t recognize him, is he handsome?' },
-			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'Guys, just start using mentions!'},
-			{ name: 'Robinson Crusoe', avatar: 'rcrusoe', message: 'What\'s that Dantes?' },
-			{ name: 'Edmond Dantès', avatar: 'edantes', message: 'It\'s that feature that makes you write Dantès! With \'è\' 🙂 Just type \'@\'.' },
-		],
-		USERNAMES = [
-			'Anna',
-			'Annabelle',
-			'Anita',
-			'Celina',
-			'Jack',
-			'Jacob',
-			'Jacoby',
-			'Thomas',
-			'Tody',
-			'Tonny',
-			'Tamara'
-		],
-		TAGS = [
-			'mentions',
-			'autocomplete',
-			'ckeditor',
-			'social',
-			'news',
-			'creative',
-			'awesome'
-		],
-		template = new CKEDITOR.template(
-			'<li class="comment">' +
-				'<div class="contact"><img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}</div>' +
-				'<div class="message">{message}</div>' +
-			'</li>'
-		);
+				{ id: 11, avatar: 'w_1', fullname: 'Mildred Wilson' },
+				{ id: 12, avatar: 'w_2', fullname: 'Melissa Nelson' },
+				{ id: 13, avatar: 'w_3', fullname: 'Kathleen Allen' },
+				{ id: 14, avatar: 'w_4', fullname: 'Mary Young' },
+				{ id: 15, avatar: 'w_5', fullname: 'Ashley Rogers' },
+				{ id: 16, avatar: 'w_6', fullname: 'Debra Griffin' },
+				{ id: 17, avatar: 'w_7', fullname: 'Denise Williams' },
+				{ id: 18, avatar: 'w_8', fullname: 'Amy James' },
+				{ id: 19, avatar: 'w_9', fullname: 'Ruby Anderson' },
+				{ id: 20, avatar: 'w_10', fullname: 'Wanda Lee' }
+			];
 
-		createChatComments(
-			CKEDITOR.document.getById( 'comments'),
-			new CKEDITOR.template(
-				'<li class="comment">' +
-					'<div class="contact"><img src="assets/draganddrop/img/{avatar}.png" alt="avatar" class="u-photo" /> {name}</div>' +
-					'<div class="message">{message}</div>' +
-				'</li>'
-			)
-		);
-
-		CKEDITOR.addCss( '.cke_editable { padding: 5px; }' );
+		CKEDITOR.tools.array.forEach( users, function( user ) {
+			user.username = user.fullname.toLowerCase().replace( ' ', '.' );
+		} );
 
 		CKEDITOR.replace( 'editor1', {
 			extraPlugins: 'mentions',
 			removeDialogTabs: 'link:advanced',
+			height: 150,
 			toolbar: [
 				{ name: 'document', items: [ 'Undo', 'Redo' ] },
-				{ name: 'styles', items: [ 'Format' ] },
 				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
-				{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] },
 				{ name: 'links', items: [ 'Link', 'Unlink' ] }
 			],
-			height: 600,
 			mentions: [
 				{
-					feed: USERNAMES,
-					minChars: 0
-				},
-				{
-					feed: TAGS,
-					marker: '#',
+					feed: dataFeed,
+					itemTemplate: '<li data-id="{id}"><img class="photo" src="assets/mentions/img/{avatar}.jpg" /><strong class="username">{username}</strong><span class="fullname">{fullname}</span></li>',
+					outputTemplate: '<a href="mailto:{username}@cksource.com">@{username}</a><span>&nbsp;</span>',
 					minChars: 0
 				}
 			]
 		} );
 
-		CKEDITOR.inline( 'editor2', {
-			extraPlugins: 'mentions',
-			toolbar: [],
-			mentions: [
-				{
-					feed: getContactsFeed(),
-					minChars: 0
+		function dataFeed( opts, callback ) {
+			 var data = users.filter( function( item ) {
+					return compareWithQuery( opts.query, item.username ) || compareWithQuery( opts.query, item.fullname );
+				} );
+
+			data = data.sort( function( a, b ) {
+				var nameA = a.fullname.toUpperCase(),
+					nameB = b.fullname.toUpperCase();
+
+				if (nameA < nameB) {
+					return -1;
 				}
-			],
-			on: {
-				instanceReady: function( evt ) {
-					var editor = evt.editor,
-						editable = editor.editable(),
-						container = CKEDITOR.document.getById( 'comments' ),
-						button = CKEDITOR.document.getById( 'send-comment' );
 
-					button.on( 'click', function() {
-						var item = {
-							name: 'Winnetou',
-							avatar: 'winetou',
-							message: editable.getText()
-						};
-
-						container.append( createComment( item ) );
-
-						editable.setData( 'Type your comment here…' );
-
-						container.$.scrollTop = container.$.scrollHeight - container.$.clientHeight;
-					} );
+				if (nameA > nameB) {
+					return 1;
 				}
-			}
-		} );
 
-		function getContactsFeed() {
-			var items = CKEDITOR.tools.array.map( CONTACTS, function( contact ) {
-				return contact.name.replace(/\s+/g, '.' );
+				return 0;
 			} );
 
-			return CKEDITOR.tools.array.reduce( items, function( current, item ) {
-				if ( CKEDITOR.tools.array.indexOf( current, item ) === -1 ) {
-					current.push( item );
-				}
-				return current;
-			}, [] );
+			callback( data );
 		}
 
-		function createChatComments( container ) {
-			for ( var i = 0; i < CONTACTS.length; i++ ) {
-				container.append( createComment( CONTACTS[ i ] ) );
-			}
-		}
-
-		function createComment( item ) {
-			return CKEDITOR.dom.element.createFromHtml( template.output( item ));
+		function compareWithQuery( query, str ) {
+			return str.toLowerCase().indexOf( query.toLowerCase() ) == 0;
 		}
 		</script>
 	</body>
