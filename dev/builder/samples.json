@@ -55,9 +55,9 @@
 					"name": "Working with Document",
 					"samples": [
 						"Spell Checking",
+						"Mentions plugin",
 						"Source Code Editing",
-						"Magic Line",
-						"Mentions plugin"
+						"Magic Line"
 					]
 				},
 				{

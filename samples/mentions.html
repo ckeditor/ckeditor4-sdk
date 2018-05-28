@@ -23,14 +23,18 @@
 		<![endif]-->
 		<link rel="icon" href="../template/theme/img/favicon.ico">
 		<style data-sample="1">
-		.forum {
-			width: 600px;
-		}
 
 		.posts {
+			width: 600px;
 			list-style-type: none;
-			padding: 0;
-			margin: 0;
+			padding: 15px;
+			margin: 0 !important;
+			border: 1px solid #d1d1d1;
+			border-bottom: none;
+		}
+
+		.posts li:first-child {
+			margin-bottom: 15px;
 		}
 
 		.posts .message {
@@ -39,7 +43,7 @@
 			width: 80%;
 		}
 
-		.posts .message .time {
+		.posts .time {
 			color: #b7b7b7;
 			font-size: .9em;
 		}
@@ -75,6 +79,39 @@
 			padding-left: 5px;
 			color: #b7b7b7;
 		}
+
+		.cke_1 {
+			margin: 0 !important;
+		}
+
+		.send {
+			width: 100px;
+			height: 35px;
+			border: none;
+			border-radius: 5px;
+			background-color: #0287D0;
+			color: #fafafa !important;
+			margin-top: 8px;
+			cursor: pointer;
+			float: right;
+		}
+
+		.send:hover {
+			background-color: #027abc
+		}
+
+		.mailto-user {
+			color: #b7b7b7 !important;
+			text-decoration: underline !important;
+		}
+
+		.mailto-user:hover {
+			color: #a0a0a0 !important;
+		}
+
+		.post-content {
+			margin: 0 !important;
+		}
 		</style>
 	</head>
 	<body>
@@ -90,32 +127,34 @@
 				The mentions plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type selected marker he will get information about available, existing options.
 				</p>
 
-				<div class="forum">
-					<ul class="posts">
-						<li>
-							<img src="assets/mentions/img/m_1.jpg" alt="avatar" class="photo" />
-							<div class="message">
-								<strong>Charles Flores</strong>
-								<span class="bullet">•</span>
-								<span class="time">2 hours ago</span>
-								<p>
-								Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
-								</p>
-							</div>
-						</li>
-						<li>
-							<img src="assets/mentions/img/w_1.jpg" alt="avatar" class="photo" />
-							<div class="message">
-								<strong>Mildred Wilson</strong>
-								<span class="bullet">•</span>
-								<span class="time">4 hours ago</span>
-								<p>
-								Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
-								</p>
-							</div>
-						</li>
-					</ul>
-				</div>
+				<ul class="posts">
+					<li>
+						<img src="assets/mentions/img/m_1.jpg" alt="avatar" class="photo" />
+						<div class="message">
+							<strong>Charles Flores</strong>
+							<span class="bullet">•</span>
+							<a  class="mailto-user" href="mailto:cflores@example.com">@cflores</a>
+							<span class="bullet">•</span>
+							<span class="time">2 hours ago</span>
+							<p class="post-content">
+							Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
+							</p>
+						</div>
+					</li>
+					<li>
+						<img src="assets/mentions/img/w_1.jpg" alt="avatar" class="photo" />
+						<div class="message">
+							<strong>Mildred Wilson</strong>
+							<span class="bullet">•</span>
+							<a class="mailto-user" href="mailto:mwilson@example.com">@mwilson</a>
+							<span class="bullet">•</span>
+							<span class="time">4 hours ago</span>
+							<p class="post-content">
+							Elit eligendi eos iure enim dignissimos. Corporis consequatur non voluptates quisquam sapiente Libero rem cupiditate possimus deleniti maxime. Similique praesentium provident nisi nulla ab Quae reiciendis incidunt optio voluptate voluptatibus
+							</p>
+						</div>
+					</li>
+				</ul>
 				<div class="editor">
 					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 						<h1>Lorem eaque sapiente ab necessitatibus quam? Sit dolor praesentium illum!</h1>
@@ -123,6 +162,7 @@
 						<p>Adipisicing perferendis aspernatur consectetur fuga unde! Quia aut magni ipsa.</p>
 					</textarea>
 				</div>
+				<button id="send" class="send">Send</button>
 			</section>
 		</section>
 
@@ -152,16 +192,22 @@
 				{ id: 18, avatar: 'w_8', fullname: 'Amy James' },
 				{ id: 19, avatar: 'w_9', fullname: 'Ruby Anderson' },
 				{ id: 20, avatar: 'w_10', fullname: 'Wanda Lee' }
-			];
+			],
 
+			buttonEl = document.getElementById( 'send' );
+
+		// Lets create some fake usernames from fullnames.
 		CKEDITOR.tools.array.forEach( users, function( user ) {
-			user.username = user.fullname.toLowerCase().replace( ' ', '.' );
+			var username = user.fullname.split( ' ' );
+			username[ 0 ] = username[ 0 ].substring( 0, 1 );
+			user.username = username.join( '' ).toLowerCase();
 		} );
 
 		CKEDITOR.replace( 'editor1', {
 			extraPlugins: 'mentions',
 			removeDialogTabs: 'link:advanced',
 			height: 150,
+			resize_enabled: false,
 			toolbar: [
 				{ name: 'document', items: [ 'Undo', 'Redo' ] },
 				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
@@ -170,16 +216,27 @@
 			mentions: [
 				{
 					feed: dataFeed,
-					itemTemplate: '<li data-id="{id}"><img class="photo" src="assets/mentions/img/{avatar}.jpg" /><strong class="username">{username}</strong><span class="fullname">{fullname}</span></li>',
-					outputTemplate: '<a href="mailto:{username}@cksource.com">@{username}</a><span>&nbsp;</span>',
+					itemTemplate:
+					'<li data-id="{id}"><img class="photo" src="assets/mentions/img/{avatar}.jpg" />' +
+						'<strong class="username">{username}</strong>' +
+						'<span class="fullname">{fullname}</span>' +
+					'</li>',
+					outputTemplate: '<a href="mailto:{username}@example.com">@{username}</a><span>&nbsp;</span>',
 					minChars: 0
 				}
-			]
+			],
+			on: {
+				instanceReady: function( evt ) {
+					buttonEl.addEventListener( 'click', function() {
+						evt.editor.showNotification( 'Your message has been send! However this is only example chat and we cannot make your post public.', 'success', 8000 );
+					} );
+				}
+			}
 		} );
 
 		function dataFeed( opts, callback ) {
 			 var data = users.filter( function( item ) {
-					return compareWithQuery( opts.query, item.username ) || compareWithQuery( opts.query, item.fullname );
+					return compareWithQuery( opts.query, item.username ) || compareWithQuery( opts.query, item.fullname.replace( ' ', '' ) );
 				} );
 
 			data = data.sort( function( a, b ) {
