@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--
+	Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+	For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Mentions plugin">
+	<meta name="keywords" content="ckeditor, editor, wysiwyg, ui, toolbar, splitbutton, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+	<meta name="sdk-samples" content="Splitbutton plugin">
+	<title>Splitbutton plugin</title>
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+	<link href="../template/theme/css/sdk.css" rel="stylesheet">
+	<script src="../../ckeditor-dev/ckeditor.js"></script>
+	<script src="assets/picoModal-2.0.1.min.js"></script>
+	<script src="assets/contentloaded.js"></script>
+	<script src="assets/simplesample.js"></script>
+	<script src="assets/beautify-html.js"></script>
+	<script src="assets/sample.js"></script>
+	<!--[if lt IE 9]>
+	<script src="assets/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="icon" href="../template/theme/img/favicon.ico">
+</head>
+<body>
+<header class="sdk-header">
+</header>
+<section class="sdk-container">
+	<nav class="sdk-sidebar">
+	</nav>
+	<section class="sdk-contents">
+		<h1>Splitbutton plugin <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/api/CKEDITOR_ui_button.html">Documentation</a></h1>
+
+		<p>
+			The <a href="https://ckeditor.com/cke4/addon/splitbutton">Splitbutton</a> plugin was introduced in CKEditor 4.10.0. It is new UI component, that allows to minimalize UI in convenient way.
+		</p>
+
+			<div class="editor">
+				<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+					<p>Select various parts of text to see how <u style="text-decoration-style:double;">Splitbutton</u> plugin works.</p>
+					<p style="text-align:center"><u style="text-decoration-style:wavy;"><strong>Sample letter:</strong></u></p>
+					<p style="text-align:right">January 1, 1970<br>
+						From:<br>
+						John Smith<br>
+						73, Fictional Street<br>
+						Some Crowded City, Country<br>
+						Phone number:</p>
+					<p style="text-align:left">To:<br>
+						Jane Doe<br>
+						95, Some Other Street<br>
+						A Bit Less Crowded City, Country<br>
+						Phone Number:</p>
+					<p style="text-align:justify">Dear Mrs Doe,<br>
+						This is lengthy content of example letter. First it says that John is congratulating Jane on achieving something, then he says why he didn't write for so long. Then John tells what was happening in his life.</p>
+					<p style="text-align:left">John signature</p>
+					<p style="text-align:left">Attachments:</p>
+					<ul>
+						<li style="text-align:left"><u style="text-decoration-style:solid;">Bucket of cold water</u></li>
+						<li style="text-align:left"><u style="text-decoration-style:solid;">Bunch of butterflies</u></li>
+						<li style="text-align:left"><u style="text-decoration-style:solid;">Key to success</u></li></ul>
+				</textarea>
+			</div>
+	</section>
+</section>
+	<footer class="sdk-footer">
+	</footer>
+
+<script data-sample="1" >
+	CKEDITOR.plugins.add( 'justifysplit', {
+		requires: 'splitbutton,justify',
+		init: function( editor ) {
+
+			editor.ui.add( 'JustifySplit', CKEDITOR.UI_SPLITBUTTON, {
+				label: 'Text Align',
+				items: [ {
+					label: 'Left',
+					command: 'justifyleft',
+					icon: 'justifyleft',
+					'default': true
+				}, {
+					label: 'Center',
+					command: 'justifycenter',
+					icon: 'justifycenter'
+				}, {
+					label: 'Right',
+					command: 'justifyright',
+					icon: 'justifyright'
+				}, {
+					label: 'Justify',
+					command: 'justifyblock',
+					icon: 'justifyblock'
+				} ]
+			} );
+		}
+	} );
+
+	CKEDITOR.plugins.add( 'underlinesplit', {
+		requires: 'splitbutton,basicstyles',
+		init: function( editor ) {
+			var styleKeys = [ 'dotted', 'dashed', 'wavy', 'double', 'solid' ],
+				styles = {},
+				items,
+				lastStyle;
+
+			CKEDITOR.tools.array.forEach( styleKeys, function( item ) {
+				styles[ item ] = createStyle( item );
+			} );
+
+			lastStyle = styles.solid;
+
+			editor.addCommand( 'underlinestyle', {
+				exec: function( editor, data ) {
+					var style = styles[ data.style ] || lastStyle;
+
+					if ( style.checkApplicable( editor.elementPath(), editor ) ) {
+						if ( style.checkActive( editor.elementPath(), editor ) ) {
+							editor.removeStyle( style );
+						} else {
+							editor.applyStyle( style );
+							lastStyle = style;
+						}
+					}
+				}
+			} );
+
+			items = CKEDITOR.tools.array.map( styleKeys, function( item ) {
+				return {
+					label: item.charAt( 0 ).toUpperCase() + item.substr( 1 ),
+					command: 'underlinestyle',
+					commandData: { style: item },
+					icon: 'underline'
+				};
+			} );
+
+			editor.on( 'selectionChange', function( event ) {
+				var active = false;
+
+				for ( var key in styles ) {
+					if ( styles[ key ].checkActive( event.data.path, this ) ) {
+						active = true;
+						break;
+					}
+				}
+				editor.getCommand( 'underlinestyle' ).setState( active ?
+					CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF
+				);
+			} );
+
+			editor.ui.add( 'UnderlineSplit', CKEDITOR.UI_SPLITBUTTON, {
+				face: {
+					label: 'Underline',
+					command: 'underlinestyle',
+					icon: 'underline'
+				},
+				onMenu: function( start, selection ) {
+					var activeItems = {},
+						editor = selection.root.editor,
+						style;
+					for ( var key in this.items ) {
+						var commandDisabled = editor.getCommand( this.items[ key ].command ).state === CKEDITOR.TRISTATE_DISABLED;
+						style = styles[ this.items[ key ].commandData.style ];
+						if ( editor.elementPath() && !commandDisabled ) {
+							activeItems[ key ] = style.checkActive( editor.elementPath(), editor ) ? CKEDITOR.TRISTATE_ON : CKEDITOR.TRISTATE_OFF;
+						} else {
+							activeItems[ key ] = commandDisabled ? CKEDITOR.TRISTATE_DISABLED : CKEDITOR.TRISTATE_OFF;
+						}
+					}
+					return activeItems;
+				},
+				items: items
+			} );
+
+			function createStyle( style ) {
+				return new CKEDITOR.style( {
+					element: 'u',
+					attributes: {
+						style: ( CKEDITOR.env.safari ? '-webkit-' : '' ) + 'text-decoration-style: ' + style
+					}
+				} );
+			}
+		}
+	} );
+
+	CKEDITOR.replace( 'editor1', {
+		plugins: 'sourcearea,toolbar,undo,wysiwygarea,list,justifysplit,underlinesplit,format,link,basicstyles,splitbutton',
+		toolbar: [
+			{ name: 'document', items: [ 'Source', 'Undo', 'Redo' ] },
+			{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', 'UnderlineSplit' ] },
+			{ name: 'align', items: [ 'JustifySplit' ] },
+			{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] }
+		],
+		extraAllowedContent: 'u{text-decoration-style,-webkit-text-decoration-style}',
+		height: 500
+	} );
+</script>
+</body>
+</html>
