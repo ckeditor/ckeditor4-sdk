@@ -31,48 +31,23 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 
 				<section class="sdk-contents">
 					<h1>Emoji plugin</h1>
-					<p>Emoji plugin provides possibility to easily insert utf symbols, commonly known as emoji, inside editor content.
+					<p>Emoji plugin provides possibility to easily insert UTF symbols, commonly known as emoji, inside editor content.
 						Every emoji has it's own name which is used to select proper symbol from available set. By default pressing <code>:</code> activates drop down suggestion box
 						where user can select proper emoji. User can type emoji name after <code>:</code> character to narrow down suggestions on the list.</p>
-					<p>Plugin provides configuration options.</p>
-					<p><code>emoji_numberOfCharactersToStart</code> customises how many characters is required to activate emoji suggestion box.
-						For example setting this value to <code>2</code> will make emoji's suggestions appear after typing <code>:fa</code>.</p>
-					<p>Another configuration option is <code>emoji_preventTransformation</code>. This array contains name of tags where emoji is not active. By default emoji plugin is not active inside &lt;pre&gt; and &lt;code&gt; tags</p>
-					<p>Emoji are integrated with embedding inserted content. That's why strings like <code>:face_with_tears_of_joy:</code> will be automatically convert to emoji symbol during paste event, inserting text, creating editor or setting up editor's data.</p>
-					<h2>Default emoji configuration</h2>
 					<p>Start to typing <code>:</code> to activate autocomplete menu with emoji list.</p>
 					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
 <p>This is some text with emojis :sparkles: :waving_hand: :sparkles:</p>
 <p>Emoji are not always converted. By default inside <code>&amp;lt;pre&amp;gt;&amp;lt;/pre&amp;gt;</code> or <code>&amp;lt;code&amp;gt;&amp;lt;/code&gt;</code> tags emoji won't be converted.</p>
 <p>Here is an example with :face_with_tears_of_joy: <code>:face_with_tears_of_joy:</code></p>
 					</textarea>
-					<h2>Customised emoji configuration</h2>
-					<p>Below you can find differently configured editor. Here emoji are forbidden in <code>h1</code>, <code>h2</code> and <code>ul</code> elements.</p>
-					<p>It's also necessary to type at least <strong>1 letter</strong> to activate emoji plugin. For example <code>:fa</code>.</p>
-					<textarea cols="80" id="editor2" name="editor2" rows="10" data-sample="2">
-<h1>Inside this header emoji won't be activated.</h1>
-<ul>
-	<li><p>The same will happen inside list item</p></li>
-	<li><p>Even when list item has <strong>nested <em>other tags</em></strong>.</p></li>
-</ul>
-<p>Inside paragraph you can easily type any emoji you want.</p>
-<ol>
-	<li><p>the same will happen inside order list</p></li>
-	<ul>
-		<li><p>But not here.</p></li>
-	</ul>
-</ol>
-					</textarea>
 					<script data-sample="1">
 						CKEDITOR.replace( 'editor1', {
-							extraPlugins: 'emoji'
-						} );
-					</script>
-					<script data-sample="2">
-						CKEDITOR.replace( 'editor2', {
-							extraPlugins: 'emoji',
-							emoji_preventTransformation: [ 'h1', 'h2', 'ul' ],
-							emoji_numberOfCharactersToStart: 1
+							plugins: 'emoji,wysiwygarea,basicstyles,undo,toolbar,link,format,removeformat',
+							toolbarGroups: [
+								{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+								{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup', 'links' ] },
+								{ name: 'styles', groups: [ 'styles' ] }
+							]
 						} );
 					</script>
 				</section>
