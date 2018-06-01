@@ -24,6 +24,10 @@
 		<link rel="icon" href="../template/theme/img/favicon.ico">
 		<style data-sample="1">
 
+		.chat {
+			width: 600px;
+		}
+
 		.posts {
 			list-style-type: none;
 			padding: 15px;
@@ -91,8 +95,8 @@
 			background-color: #0287D0;
 			color: #fafafa !important;
 			margin-top: 8px;
-			cursor: pointer;
 			float: right;
+			cursor: pointer;
 		}
 
 		.send:hover {
@@ -110,6 +114,7 @@
 
 		.post-content {
 			margin: 0 !important;
+			line-height: 19px;;
 		}
 		</style>
 	</head>
@@ -126,40 +131,43 @@
 				The mentions plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type selected marker he will get information about available, existing options.
 				</p>
 
-				<ul class="posts">
-					<li>
-						<img src="assets/mentions/img/m_1.jpg" alt="avatar" class="photo" />
-						<div class="message">
-							<strong>Charles Flores</strong>
-							<span class="bullet">•</span>
-							<a  class="mailto-user" href="mailto:cflores@example.com">@cflores</a>
-							<span class="bullet">•</span>
-							<span class="time">2 hours ago</span>
-							<p class="post-content">
-							I’m very surprised to see that we’re not allowed to rate each other’s answers anymore. I think it was a quick and easy way to measure the quality of the content.
-							</p>
-						</div>
-					</li>
-					<li>
-						<img src="assets/mentions/img/w_1.jpg" alt="avatar" class="photo" />
-						<div class="message">
-							<strong>Mildred Wilson</strong>
-							<span class="bullet">•</span>
-							<a class="mailto-user" href="mailto:mwilson@example.com">@mwilson</a>
-							<span class="bullet">•</span>
-							<span class="time">4 hours ago</span>
-							<p class="post-content">
-							Rating has been discontinued because it caused a decline in content quality rather than its increase. People were providing content that would be upvoted, not the content valuable for the community. There are even “secret” groups now!
-							</p>
-						</div>
-					</li>
-				</ul>
-				<div class="editor">
-					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-						I agree with <a href="mailto: mildred@example.com">@mwilson</a>. Rating system made the quality much worse. In the long run, especially when we have more new members, it will be too hard to control.
-					</textarea>
+				<div class="chat">
+					<ul class="posts">
+						<li>
+							<img src="assets/mentions/img/m_1.jpg" alt="avatar" class="photo" />
+							<div class="message">
+								<strong>Charles Flores</strong>
+								<span class="bullet">•</span>
+								<a	class="mailto-user" href="mailto:cflores@example.com">@cflores</a>
+								<span class="bullet">•</span>
+								<span class="time">2 hours ago</span>
+								<p class="post-content">
+								I’m very surprised to see that we’re not allowed to rate each other’s answers anymore. I think it was a quick and easy way to measure the quality of the content.
+								</p>
+							</div>
+						</li>
+						<li>
+							<img src="assets/mentions/img/w_1.jpg" alt="avatar" class="photo" />
+							<div class="message">
+								<strong>Mildred Wilson</strong>
+								<span class="bullet">•</span>
+								<a class="mailto-user" href="mailto:mwilson@example.com">@mwilson</a>
+								<span class="bullet">•</span>
+								<span class="time">4 hours ago</span>
+								<p class="post-content">
+								Rating has been discontinued because it caused a decline in content quality rather than its increase. People were providing content that would be upvoted, not the content valuable for the community. There are even “secret” groups now!
+								</p>
+							</div>
+						</li>
+					</ul>
+					<div class="editor">
+						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+							I agree with <a href="mailto: mildred@example.com">@mwilson</a>. Rating system made the quality much worse. In the long run, especially when we have more new members, it will be too hard to control.
+						</textarea>
+					</div>
+					<button id="send" class="send">Send</button>
 				</div>
-				<button id="send" class="send">Send</button>
+
 			</section>
 		</section>
 
@@ -203,6 +211,7 @@
 		CKEDITOR.replace( 'editor1', {
 			extraPlugins: 'mentions',
 			removeDialogTabs: 'link:advanced',
+			removePlugins: 'elementspath',
 			height: 150,
 			resize_enabled: false,
 			toolbar: [
