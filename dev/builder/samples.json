@@ -7,8 +7,7 @@
 					"name": "User Interface",
 					"samples": [
 						"UI Color",
-						"UI Language",
-						"Splitbutton plugin"
+						"UI Language"
 					]
 				},
 				{
@@ -101,7 +100,8 @@
 					"samples": [
 						"Custom Toolbar",
 						"Balloon Toolbar",
-						"Toolbar Location"
+						"Toolbar Location",
+						"Splitbutton plugin"
 					]
 				},
 				{
