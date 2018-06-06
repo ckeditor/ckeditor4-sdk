@@ -70,82 +70,21 @@
 					</ul>
 				</textarea>
 			</div>
-		<h2>Regular editor for comparisement</h2>
-			<div class="editor">
-				<textarea cols="80" id="editor2" name="editor1" rows="10" data-sample="1" data-sample-short>
-					<p>Select various parts of text to see how Splitbutton plugin works.</p>
-
-					<p style="text-align:center"><strong>Sample letter:</strong></p>
-
-					<p style="text-align:right">January 1, 1970<br />
-					From:<br />
-					John Smith<br />
-					73, Fictional Street<br />
-					Some Crowded City, Country<br />
-					Phone number:</p>
-
-					<p style="text-align:left">To:<br />
-					Jane Doe<br />
-					95, Some Other Street<br />
-					A Bit Less Crowded City, Country<br />
-					Phone Number:</p>
-
-					<p style="text-align:justify">Dear Mrs Doe,<br />
-					This is lengthy content of example letter. First it says that John is congratulating Jane on achieving something, then he says why he didn&#39;t write for so long. Then John tells what was happening in his life.</p>
-
-					<p style="text-align:left">John signature</p>
-
-					<p style="text-align:left">Attachments:</p>
-
-					<ul>
-						<li style="text-align:left">Bucket of cold water</li>
-						<li style="text-align:left">Bunch of butterflies</li>
-						<li style="text-align:left">Key to success</li>
-					</ul>
-				</textarea>
-			</div>
 	</section>
 </section>
 	<footer class="sdk-footer">
 	</footer>
 <script type="text/javascript" src="./assets/splitbutton/listsplit.js"></script>
 <script type="text/javascript" src="./assets/splitbutton/justifysplit.js"></script>
-<script type="text/javascript" src="./assets/splitbutton/pastesplit.js"></script>
-<script type="text/javascript" src="./assets/splitbutton/findreplacesplit.js"></script>
-<script type="text/javascript" src="./assets/splitbutton/formssplit.js"></script>
-<script type="text/javascript" src="./assets/splitbutton/linksplit.js"></script>
-<script type="text/javascript" src="./assets/splitbutton/insertsplit.js"></script>
 <script data-sample="1" >
 	CKEDITOR.replace( 'editor1', {
-		extraPlugins: 'splitbutton,justifysplit,listsplit,pastesplit,findreplacesplit,formssplit,linksplit,insertsplit',
+		extraPlugins: 'splitbutton,justifysplit,listsplit',
 		toolbar: [
-			[ 'Source'],
-			[ 'Save', 'NewPage', 'Preview', 'Print' ],
-			[ 'Templates' ],
-			[ 'Cut', 'Copy', 'PasteSplit' ],
-			[ 'Undo', 'Redo' ],
-			[ 'FindReplaceSplit' ],
-			[ 'SelectAll' ],
-			[ 'FormsSplit' ],
-			'/',
-			[ 'Bold', 'Italic', 'Underline', 'Strike', 'Superscript', 'Subscript' ],
-			[ 'CopyFormatting', 'RemoveFormat' ],
-			[ 'UnorderedListSplit', 'NumberedListSplit' ],
-			[ 'Indent', 'Outdent' ],
-			[ 'Blockquote', 'CreateDiv'],
-			[ 'JustifySplit' ],
-			[ 'BidiLtr', 'BidiRtl', 'Language' ],
-			[ 'LinkSplit'],
-			[ 'Table', 'InsertSplit' ],
-			'/',
-			[ 'Styles', 'Format', 'Font', 'FontSize' ],
-			[ 'TextColor', 'BGColor' ],
-			[ 'Maximize', 'ShowBlocks' ],
-			[ 'About' ]
+			{ name: 'document', items: [ 'Source', 'Undo', 'Redo' ] },
+			{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', 'Underline' ] },
+			{ name: 'align', items: [ 'JustifySplit' ] },
+			{ name: 'paragraph', items: [ 'NumberedListSplit', 'UnorderedListSplit' ] }
 		],
-		height: 500
-	} );
-	CKEDITOR.replace( 'editor2', {
 		height: 500
 	} );
 </script>
