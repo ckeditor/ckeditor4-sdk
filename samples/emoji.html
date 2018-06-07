@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Emoji plugin">
+		<meta name="keywords" content="ckeditor, editor, wysiwyg, emoji">
+		<meta name="sdk-samples" content="Default emoji configuration|Customised emoji configuration">
+		<title>Emoji plugin</title>
+		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+		<link href="../template/theme/css/sdk.css" rel="stylesheet">
+		<script src="../../ckeditor-dev/ckeditor.js"></script>
+		<script src="assets/picoModal-2.0.1.min.js"></script>
+		<script src="assets/sample.js"></script>
+		<script src="assets/contentloaded.js"></script>
+		<script src="assets/simplesample.js"></script>
+		<script src="assets/beautify-html.js"></script>
+		<!--[if lt IE 9]>
+		<script src="assets/html5shiv.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<header class="sdk-header">
+			</header>
+			<section class="sdk-container">
+				<nav class="sdk-sidebar">
+				</nav>
+
+				<section class="sdk-contents">
+					<h1>Emoji plugin</h1>
+					<p>Emoji plugin provides possibility to easily insert UTF symbols, commonly known as emoji, inside editor content.
+						Every emoji has it's own name which is used to select proper symbol from available set. By default pressing <code>:</code> activates drop down suggestion box
+						where user can select proper emoji. User can type emoji name after <code>:</code> character to narrow down suggestions on the list.</p>
+					<p>Start to typing <code>:</code> to activate autocomplete menu with emoji list.</p>
+					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1">
+<p>This is some text with emojis :sparkles: :waving_hand: :sparkles:</p>
+<p>Emoji are not always converted. By default inside <code>&amp;lt;pre&amp;gt;&amp;lt;/pre&amp;gt;</code> or <code>&amp;lt;code&amp;gt;&amp;lt;/code&gt;</code> tags emoji won't be converted.</p>
+<p>Here is an example with :face_with_tears_of_joy: <code>:face_with_tears_of_joy:</code></p>
+					</textarea>
+					<script data-sample="1">
+						CKEDITOR.replace( 'editor1', {
+							plugins: 'emoji,wysiwygarea,basicstyles,undo,toolbar,link,format,removeformat',
+							toolbarGroups: [
+								{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+								{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup', 'links' ] },
+								{ name: 'styles', groups: [ 'styles' ] }
+							]
+						} );
+					</script>
+				</section>
+			</section>
+			<footer class="sdk-footer">
+			</footer>
+	</body>
+</html>
