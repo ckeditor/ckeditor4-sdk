@@ -7,7 +7,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="description" content="Mentions plugin">
-		<meta name="keywords" content="ckeditor, editor, wysiwyg, mentions, complete, autocomplete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+		<meta name="keywords" content="ckeditor, editor, wysiwyg, mentions, emoji, complete, autocomplete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
 		<meta name="sdk-samples" content="Mentions plugin">
 		<title>Mentions plugin</title>
 		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
@@ -22,46 +22,45 @@
 			<script src="assets/html5shiv.min.js"></script>
 		<![endif]-->
 		<link rel="icon" href="../template/theme/img/favicon.ico">
-		<style data-sample="1">
-
+		<style>
 		.chat {
 			width: 600px;
 		}
 
-		.posts {
+		.chat > .posts {
 			list-style-type: none;
 			padding: 15px;
-			margin: 0 !important;
+			margin: 0;
 			border: 1px solid #d1d1d1;
 			border-bottom: none;
 		}
 
-		.posts li:first-child {
+		.chat > .posts li:first-child {
 			margin-bottom: 15px;
 		}
 
-		.posts .message {
+		.chat > .posts .message {
 			display: inline-block;
 			margin-left: 20px;
 			width: 80%;
 		}
 
-		.posts .time {
+		.chat > .posts .time {
 			color: #b7b7b7;
 			font-size: .9em;
 		}
 
-		.posts .photo {
+		.chat > .posts .photo {
 			height: 40px;
 			vertical-align: top;
 			border-radius: 15%;
 		}
 
-		.cke_autocomplete_panel {
-			width: 250px !important;
+		ul.cke_autocomplete_panel {
+			width: 250px;
 		}
 
-		.cke_autocomplete_panel .photo {
+		ul.cke_autocomplete_panel .photo {
 			display: inline-block;
 			vertical-align: middle;
 			height: 30px;
@@ -83,37 +82,37 @@
 			color: #b7b7b7;
 		}
 
-		.cke_1 {
-			margin: 0 !important;
+		.sdk-contents .cke {
+			margin: 0;
 		}
 
-		.send {
+		.sdk-contents button.send {
 			width: 100px;
 			height: 35px;
 			border: none;
 			border-radius: 5px;
 			background-color: #0287D0;
-			color: #fafafa !important;
+			color: #fafafa;
 			margin-top: 8px;
 			float: right;
 			cursor: pointer;
 		}
 
-		.send:hover {
+		.sdk-contents button.send:hover {
 			background-color: #027abc
 		}
 
-		.mailto-user {
-			color: #b7b7b7 !important;
-			text-decoration: underline !important;
+		.sdk-contents a.mailto-user {
+			color: #b7b7b7;
+			text-decoration: underline;
 		}
 
-		.mailto-user:hover {
-			color: #a0a0a0 !important;
+		.sdk-contents a.mailto-user:hover {
+			color: #a0a0a0;
 		}
 
-		.post-content {
-			margin: 0 !important;
+		.sdk-contents p.post-content {
+			margin: 0;
 			line-height: 19px;;
 		}
 		</style>
@@ -176,54 +175,43 @@
 
 		<script data-sample="1" >
 			var users = [
-				{ id: 1, avatar: 'm_1', fullname: 'Charles Flores' },
-				{ id: 2, avatar: 'm_2', fullname: 'Gerald Jackson' },
-				{ id: 3, avatar: 'm_3', fullname: 'Wayne Reed' },
-				{ id: 4, avatar: 'm_4', fullname: 'Louis Garcia' },
-				{ id: 5, avatar: 'm_5', fullname: 'Roy Wilson' },
-				{ id: 6, avatar: 'm_6', fullname: 'Matthew Nelson' },
-				{ id: 7, avatar: 'm_7', fullname: 'Randy Williams' },
-				{ id: 8, avatar: 'm_8', fullname: 'Albert Johnson' },
-				{ id: 9, avatar: 'm_9', fullname: 'Steve Roberts' },
-				{ id: 10, avatar: 'm_10', fullname: 'Kevin Evans' },
+				{ id: 1, avatar: 'm_1', fullname: 'Charles Flores', username: 'cflores' },
+				{ id: 2, avatar: 'm_2', fullname: 'Gerald Jackson', username: 'gjackson' },
+				{ id: 3, avatar: 'm_3', fullname: 'Wayne Reed', username: 'wreed' },
+				{ id: 4, avatar: 'm_4', fullname: 'Louis Garcia', username: 'lgarcia' },
+				{ id: 5, avatar: 'm_5', fullname: 'Roy Wilson', username: 'rwilson' },
+				{ id: 6, avatar: 'm_6', fullname: 'Matthew Nelson', username: 'mnelson' },
+				{ id: 7, avatar: 'm_7', fullname: 'Randy Williams', username: 'rwilliams' },
+				{ id: 8, avatar: 'm_8', fullname: 'Albert Johnson', username: 'ajohnson' },
+				{ id: 9, avatar: 'm_9', fullname: 'Steve Roberts', username: 'sroberts' },
+				{ id: 10, avatar: 'm_10', fullname: 'Kevin Evans', username: 'kevans' },
 
-				{ id: 11, avatar: 'w_1', fullname: 'Mildred Wilson' },
-				{ id: 12, avatar: 'w_2', fullname: 'Melissa Nelson' },
-				{ id: 13, avatar: 'w_3', fullname: 'Kathleen Allen' },
-				{ id: 14, avatar: 'w_4', fullname: 'Mary Young' },
-				{ id: 15, avatar: 'w_5', fullname: 'Ashley Rogers' },
-				{ id: 16, avatar: 'w_6', fullname: 'Debra Griffin' },
-				{ id: 17, avatar: 'w_7', fullname: 'Denise Williams' },
-				{ id: 18, avatar: 'w_8', fullname: 'Amy James' },
-				{ id: 19, avatar: 'w_9', fullname: 'Ruby Anderson' },
-				{ id: 20, avatar: 'w_10', fullname: 'Wanda Lee' }
-			],
-
-			buttonEl = document.getElementById( 'send' );
-
-		// Lets create some fake usernames from fullnames.
-		CKEDITOR.tools.array.forEach( users, function( user ) {
-			var username = user.fullname.split( ' ' );
-			username[ 0 ] = username[ 0 ].substring( 0, 1 );
-			user.username = username.join( '' ).toLowerCase();
-		} );
+				{ id: 11, avatar: 'w_1', fullname: 'Mildred Wilson', username: 'mwilson' },
+				{ id: 12, avatar: 'w_2', fullname: 'Melissa Nelson', username: 'mnelson' },
+				{ id: 13, avatar: 'w_3', fullname: 'Kathleen Allen', username: 'kallen' },
+				{ id: 14, avatar: 'w_4', fullname: 'Mary Young', username: 'myoung' },
+				{ id: 15, avatar: 'w_5', fullname: 'Ashley Rogers', username: 'arogers' },
+				{ id: 16, avatar: 'w_6', fullname: 'Debra Griffin', username: 'dgriffin' },
+				{ id: 17, avatar: 'w_7', fullname: 'Denise Williams', username: 'dwilliams' },
+				{ id: 18, avatar: 'w_8', fullname: 'Amy James', username: 'ajames' },
+				{ id: 19, avatar: 'w_9', fullname: 'Ruby Anderson', username: 'randerson' },
+				{ id: 20, avatar: 'w_10', fullname: 'Wanda Lee', username: 'wlee' }
+			];
 
 		CKEDITOR.replace( 'editor1', {
-			extraPlugins: 'mentions,emoji',
-			removeDialogTabs: 'link:advanced',
-			removePlugins: 'elementspath',
+			plugins: 'mentions,emoji,basicstyles,undo,link,wysiwygarea,toolbar',
 			height: 150,
-			resize_enabled: false,
 			toolbar: [
 				{ name: 'document', items: [ 'Undo', 'Redo' ] },
-				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+				{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike' ] },
 				{ name: 'links', items: [ 'Link', 'Unlink' ] }
 			],
 			mentions: [
 				{
 					feed: dataFeed,
 					itemTemplate:
-					'<li data-id="{id}"><img class="photo" src="assets/mentions/img/{avatar}.jpg" />' +
+					'<li data-id="{id}">' +
+						'<img class="photo" src="assets/mentions/img/{avatar}.jpg" />' +
 						'<strong class="username">{username}</strong>' +
 						'<span class="fullname">{fullname}</span>' +
 					'</li>',
@@ -233,17 +221,19 @@
 			],
 			on: {
 				instanceReady: function( evt ) {
-					buttonEl.addEventListener( 'click', function() {
-						evt.editor.showNotification( 'Your message has been send! However this is only example chat and we cannot make your post public.', 'success', 8000 );
+					document.getElementById( 'send' ).addEventListener( 'click', function() {
+						evt.editor.showNotification( 'Your message has been send! ' +
+						'However this is only example chat and we cannot make your post public.',
+						'success', 8000 );
 					} );
 				}
 			}
 		} );
 
 		function dataFeed( opts, callback ) {
-			 var data = users.filter( function( item ) {
-					return compareWithQuery( opts.query, item.username ) || compareWithQuery( opts.query, item.fullname.replace( ' ', '' ) );
-				} );
+			var data = users.filter( function( item ) {
+				return item.username.indexOf( opts.query.toLowerCase() ) == 0;
+			} );
 
 			data = data.sort( function( a, b ) {
 				var nameA = a.fullname.toUpperCase(),
@@ -261,10 +251,6 @@
 			} );
 
 			callback( data );
-		}
-
-		function compareWithQuery( query, str ) {
-			return str.toLowerCase().indexOf( query.toLowerCase() ) == 0;
 		}
 		</script>
 	</body>
