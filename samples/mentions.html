@@ -209,49 +209,39 @@
 			mentions: [
 				{
 					feed: dataFeed,
-					itemTemplate:
-					'<li data-id="{id}">' +
-						'<img class="photo" src="assets/mentions/img/{avatar}.jpg" />' +
-						'<strong class="username">{username}</strong>' +
-						'<span class="fullname">{fullname}</span>' +
-					'</li>',
+					itemTemplate: '<li data-id="{id}">' +
+							'<img class="photo" src="assets/mentions/img/{avatar}.jpg" />' +
+							'<strong class="username">{username}</strong>' +
+							'<span class="fullname">{fullname}</span>' +
+						'</li>',
 					outputTemplate: '<a href="mailto:{username}@example.com">@{username}</a><span>&nbsp;</span>',
 					minChars: 0
 				}
-			],
-			on: {
-				instanceReady: function( evt ) {
-					document.getElementById( 'send' ).addEventListener( 'click', function() {
-						evt.editor.showNotification( 'Your message has been send! ' +
-						'However this is only example chat and we cannot make your post public.',
-						'success', 8000 );
-					} );
-				}
-			}
+			]
 		} );
 
 		function dataFeed( opts, callback ) {
-			var data = users.filter( function( item ) {
-				return item.username.indexOf( opts.query.toLowerCase() ) == 0;
-			} );
+			var matchProperty = 'username',
+				data = users.filter( function( item ) {
+					return item[ matchProperty ].indexOf( opts.query.toLowerCase() ) == 0;
+				} );
 
 			data = data.sort( function( a, b ) {
-				var nameA = a.fullname.toUpperCase(),
-					nameB = b.fullname.toUpperCase();
-
-				if (nameA < nameB) {
-					return -1;
-				}
-
-				if (nameA > nameB) {
-					return 1;
-				}
-
-				return 0;
+				return a[ matchProperty ].localeCompare( b[ matchProperty ], undefined, { sensitivity: 'accent' } );
 			} );
 
 			callback( data );
 		}
+		</script>
+
+		<script>
+			CKEDITOR.instances.editor1.once( 'instanceReady', function( evt ) {
+				document.getElementById( 'send' ).addEventListener( 'click', function() {
+					evt.editor.showNotification( 'Your message has been send! ' +
+						'However this is only example chat and we cannot make your post public.',
+						'success', 8000 );
+				} );
+			} );
 		</script>
 	</body>
 </html>
