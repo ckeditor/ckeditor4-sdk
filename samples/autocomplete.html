@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--
+	Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+	For licensing, see license.html or https://sdk.ckeditor.com/license.html.
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Autocomplete plugin">
+		<meta name="keywords" content="ckeditor, editor, wysiwyg, autocomplete, complete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+		<meta name="sdk-samples" content="Autocomplete plugin">
+		<title>Autocomplete plugin</title>
+		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
+		<link href="../template/theme/css/sdk.css" rel="stylesheet">
+		<script src="../../ckeditor-dev/ckeditor.js"></script>
+		<script src="assets/picoModal-2.0.1.min.js"></script>
+		<script src="assets/contentloaded.js"></script>
+		<script src="assets/simplesample.js"></script>
+		<script src="assets/beautify-html.js"></script>
+		<script src="assets/sample.js"></script>
+		<!--[if lt IE 9]>
+			<script src="assets/html5shiv.min.js"></script>
+		<![endif]-->
+		<link rel="icon" href="../template/theme/img/favicon.ico">
+		<style data-sample="1">
+			.cke_autocomplete_panel {
+				width: 300px !important;
+			}
+			.cke_autocomplete_panel li {
+				padding: 5px;
+			}
+			.cke_autocomplete_panel .content {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				color: #676767;
+				padding-top: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="sdk-header">
+		</header>
+		<section class="sdk-container">
+			<nav class="sdk-sidebar">
+			</nav>
+			<section class="sdk-contents">
+				<h1>Autocomplete plugin</h1>
+
+				<p>
+				The autocomplete plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type matching text he will get information about available, existing options.
+				</p>
+
+				<p>
+					Use autocomplete plugin if you would like to configure completion feature from scratch. If you are looking for the feature working out of the box, see <a href="mentions.html">Mentions plugin</a>.
+				</p>
+
+				<p>Try it by yourself! Start typing the name of one of ours templates. Type at least 3 characters and accept selected option using <kbd>enter</kbd> or <kbd>tab</kbd> key.</p>
+
+				<p>Available templates:</p>
+				<ul>
+					<li>Missing tests</li>
+					<li>No response</li>
+					<li>Security issue</li>
+					<li>Support question</li>
+					<li>Third party</li>
+					<li>Unsupported browser</li>
+				</ul>
+
+				<div class="editor">
+					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short></textarea>
+				</div>
+			</section>
+		</section>
+
+		<footer class="sdk-footer">
+		</footer>
+
+		<script data-sample="1" >
+			var TEMPLATES = [
+				{
+					id: 1,
+					name: 'Missing tests',
+					content: 'This pull request is missing tests, see our [Contributing Code](http://docs.ckeditor.com/#!/guide/dev_contributing_code) guide for more details.'
+				},
+				{
+					id: 2,
+					name: 'No response',
+					content: "Hi, It's been a while since we last heard from you. We're closing this issue for now. Still, feel free provide us requested feedback, so that we can reopen this issue."
+				},
+				{
+					id: 3,
+					name: 'Security issue',
+					content: "Thank you for your report. We will investigate it thoroughly. Meanwhile I will close this issue as we normally ask for sending security reports through [our contact form](https://ckeditor.com/contact/). For security reasons I removed the original description, but the original issue you submitted is being handled in our security tracker."
+				},
+				{
+					id: 4,
+					name: 'Support question',
+					content: 'Please note that our GitHub issue tracker serves for reporting bugs and new features only. Unfortunately, your request is neither of them, therefore please leave your question on [Stack Overflow](https://stackoverflow.com/questions/tagged/ckeditor) where our team and the community assist other users in solving their issues. Also, since CKEditor is an Open Source software, we believe it’s crucial to share proposed solutions and make others benefit from them. If you have CKEditor license, please contact our support team. You also can ask your implementation questions at [ Stack Overflow](http://stackoverflow.com/questions/tagged/ckeditor).'
+				},
+				{
+					id: 5,
+					name: 'Third party',
+					content: 'The plugin you are referring to is a third-party one, and it is not maintained by CKSource. Since we cannot fix issues with the code that does not belong to us, we are unable to help solve your issue. Please redirect your question to the plugin’s author who should be able to review the problem and suggest a solution. If, however, after contacting the plugin’s maintainer you find out the issue lies on the editor’s side, and you can provide a test case file showing the problem, we will be happy to have a look at it.'
+				},
+				{
+					id: 6,
+					name: 'Unsupported browser',
+					content: 'Unfortunately, we are currently unable to fix issues occurring in browsers that we do not support. [Check supported browsers](https://docs.ckeditor.com/ckeditor4/latest/guide/dev_browsers.html#officially-supported-browsers). Please [contact CKSource](https://ckeditor.com/contact/) to check what possibilities for fixing the issue the extended support can offer.'
+				}
+			];
+
+			CKEDITOR.replace( 'editor1', {
+				extraPlugins: 'autocomplete,textmatch',
+				removeDialogTabs: 'link:advanced',
+				toolbar: [
+					{ name: 'document', items: [ 'Undo', 'Redo' ] },
+					{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+					{ name: 'links', items: [ 'Link', 'Unlink' ] }
+				],
+				on: {
+					instanceReady: function( evt ) {
+						var itemTemplate = '<li data-id="{id}">' +
+								'<strong>{name}</strong>' +
+								'<div class="content">{content}</div>' +
+							'</li>',
+							outputTemplate = '<p>{content}</p>';
+
+						new CKEDITOR.plugins.autocomplete( evt.editor, textTestCallback, dataCallback, itemTemplate, outputTemplate );
+					}
+				}
+			} );
+
+			function textTestCallback( range ) {
+				if ( !range.collapsed ) {
+					return null;
+				}
+
+				return CKEDITOR.plugins.textMatch.match( range, matchCallback );
+			}
+
+			function matchCallback( text, offset ) {
+				var pattern = /\w{3,}$/,
+					match = text.slice( 0, offset )
+					.match( pattern );
+
+				if ( !match ) {
+					return null;
+				}
+
+				return {
+					start: match.index,
+					end: offset
+				};
+			}
+
+			function dataCallback( query, range, callback ) {
+				var data = TEMPLATES.filter( function( item ) {
+					return item.name.toLowerCase()
+					.replace( /\s/g, '' )
+					.indexOf( query.toLowerCase() ) == 0;
+				} );
+
+				callback( data );
+			}
+		</script>
+	</body>
+</html>
