@@ -51,6 +51,9 @@
 			.columns > .templates > ul {
 				margin: 15px 0 0 10px;
 			}
+			.item-title {
+				background-color: #ff0;
+			}
 		</style>
 	</head>
 	<body>
@@ -71,27 +74,22 @@
 				</p>
 
 				<p>
-					The following sample implements a few smart templates for a bug tracker. Start typing the name of one the templates visible on the right side of the editor. Type at least 3 characters and accept the selected option from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
+				The following sample implements a few smart placeholders for Custome Care Service email responses. Start typing the name of one of the placeholders visible on the right side of the editor. Type <code>[[</code> and accept the selected placeholder from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
 				</p>
 
 				<div class="columns">
-					<div class="templates">
-						<ul>
-							<li><code>missingtests</code></li>
-							<li><code>noresponse</code></li>
-							<li><code>securityissue</code></li>
-							<li><code>supportquestion</code></li>
-							<li><code>thirdparty</code></li>
-							<li><code>unsupportedbrowser</code></li>
-							<li><code>translation</code></li>
-							<li><code>englishonly</code></li>
-							<li><code>upstream</code></li>
-							<li><code>missingdetails</code></li>
-						</ul>
-					</div>
+					<div class="templates"></div>
 
 					<div class="editor">
-						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short></textarea>
+						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
+							<p>Dear [[Customer Name]],</p>
+							<p>thank you for contacting us.</p>
+							<p>Your case was logged as [[Case ID]] and is assigned to [[Technician Name]]. We will attempt to resolve your issue within the next [[Time]] hours.</p>
+							<p>If you need any assistance, do not hesitate to contact our Customer Support Hotline at [[Hotline Number]]</p>
+							<p>Your sincerely,</p>
+							<p>[[Name]]</p>
+							<p><b>Customer Support Team</b></p>
+						</textarea>
 					</div>
 				</div>
 
@@ -107,71 +105,71 @@
 		</footer>
 
 		<script data-sample="1" >
-			var TEMPLATES = [
+			var PLACEHOLDERS = [
 				{
 					id: 1,
-					name: 'missingtests',
-					title: 'Missing tests',
-					content: 'This pull request is missing tests, see our <a href="http://docs.ckeditor.com/#!/guide/dev_contributing_code">Contributing Code</a> guide for more details.'
+					name: 'customer',
+					title: 'Customer Name',
+					description: 'Receipent of your response.'
 				},
 				{
 					id: 2,
-					name: 'noresponse',
-					title: 'No response',
-					content: "It has been a while since we last heard from you. We are closing this issue for now. Still, we will be happy to reopen this issue should you provide us with the requested feedback."
+					name: 'caseid',
+					title: 'Case ID',
+					description: 'Unique case number used to distinguish tickets.'
 				},
 				{
 					id: 3,
-					name: 'securityissue',
-					title: 'Security issue',
-					content: 'Thank you for your report. We will investigate it thoroughly. Meanwhile I will close this issue as we normally ask for sending security reports through <a href="https://ckeditor.com/contact/" >our contact form</a>. For security reasons I removed the original description, but the issue you submitted is being handled in our security tracker.'
+					name: 'technician',
+					title: 'Technician Name',
+					description: 'Technician which will handle this ticket.'
 				},
 				{
 					id: 4,
-					name: 'supportquestion',
-					title: 'Support question',
-					content: 'Please note that our GitHub issue tracker serves for reporting bugs and new features only. Unfortunately, your request is neither of them, therefore please leave your question on <a href="https://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a> where our team and the community assist other users in solving their issues. Also, since CKEditor is Open Source software, we believe it is crucial to share proposed solutions and make others benefit from them. If you have a commercial CKEditor license, please contact our support team. You also can ask your implementation questions at <a href="http://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a>.'
+					name: 'time',
+					title: 'Time',
+					description: 'Predicted time when technician will be able to handle the issue.'
 				},
 				{
 					id: 5,
-					name: 'thirdparty',
-					title: 'Third party',
-					content: 'The plugin you are referring to is a third-party one, and it is not maintained by <strong><a href="https://cksource.com">CKSource</a></strong>. Since we cannot fix issues with the code that does not belong to us, we are unable to help solve your issue. Please redirect your question to the plugin’s author who should be able to review the problem and suggest a solution. If, however, after contacting the plugin’s maintainer you find out the issue lies on the editor’s side, and you can provide a test case file showing the problem, we will be happy to have a look at it.'
+					name: 'name',
+					title: 'Name',
+					description: 'Assignee name.'
 				},
 				{
 					id: 6,
-					name: 'unsupportedbrowser',
-					title: 'Unsupported browser',
-					content: 'Unfortunately, we are currently unable to fix issues occurring in browsers that we do not support. <a href="https://docs.ckeditor.com/ckeditor4/latest/guide/dev_browsers.html#officially-supported-browsers">See the supported browsers</a>. Please <a href="https://ckeditor.com/contact/">contact CKSource</a> to check what possibilities for fixing the issue the extended support can offer.'
+					name: 'hotline',
+					title: 'Hotline Number',
+					description: 'Customer Support Hotline number.'
 				},
 				{
 					id: 7,
-					name: 'translation',
-					title: 'Translation',
-					content: 'Thank you very much for your contribution! We are using <a href="https://www.transifex.com/ckeditor/ckeditor/">Transifex</a> for managing language strings. Please send your contribution there, so that we can pull it into the upcoming release.'
+					name: 'contact',
+					title: 'Contact e-mail',
+					description: 'Customer Support contact e-mail address.'
 				},
 				{
 					id: 8,
-					name: 'englishonly',
-					title: 'English only',
-					content: 'We are really sorry, but we do not speak your language. Can you please create a new issue in <strong>English</strong>?'
+					name: 'correspondence',
+					title: 'Correspondence address',
+					description: 'Customer Support correspondence address.'
 				},
 				{
 					id: 9,
-					name: 'upstream',
-					title: 'Upstream issue',
-					content: 'This looks like a browser issue. We have reported it to the browser vendor and will update this bug report when we have information about a fix or suggested workaround.'
+					name: 'work',
+					title: 'Works hours.',
+					description: 'Custommer support work hours.'
 				},
 				{
 					id: 10,
-					name: 'missingdetails',
-					title: 'Missing details',
-					content: 'We are unable to reproduce your issue. Can you please provide more information about your editor version, configuration, plugins used as well as the environment where this issue occurs?'
-				}
+					name: 'department',
+					title: 'Department Name',
+					description: 'Department name responsible for servicing this ticket.'
+				},
 			];
 
 			CKEDITOR.replace( 'editor1', {
-				plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,link,undo',
+				plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,link,undo,placeholder',
 				toolbar: [
 					{ name: 'document', items: [ 'Undo', 'Redo' ] },
 					{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike' ] },
@@ -180,10 +178,10 @@
 				on: {
 					instanceReady: function( evt ) {
 						var itemTemplate = '<li data-id="{id}">' +
-								'<strong>{title}</strong>' +
-								'<div class="content">{content}</div>' +
+								'<div><strong class="item-title">{title}</strong></div>' +
+								'<div><i>{description}</i></div>' +
 							'</li>',
-							outputTemplate = '<p>{content}</p>';
+							outputTemplate = '[[{title}]]<span>&nbsp;</span>';
 
 						var autocomplete = new CKEDITOR.plugins.autocomplete( evt.editor, {
 							textTestCallback: textTestCallback,
@@ -209,7 +207,7 @@
 			}
 
 			function matchCallback( text, offset ) {
-				var pattern = /\w{3,}$/,
+				var pattern = /\[{2}(\w|\])*$/,
 					match = text.slice( 0, offset )
 					.match( pattern );
 
@@ -224,12 +222,26 @@
 			}
 
 			function dataCallback( matchInfo, callback ) {
-				var data = TEMPLATES.filter( function( item ) {
-					return item.name.indexOf( matchInfo.query.toLowerCase() ) == 0;
+				var data = PLACEHOLDERS.filter( function( item ) {
+					var itemName = '[[' + item.name + ']]';
+					return itemName.indexOf( matchInfo.query.toLowerCase() ) == 0;
 				} );
 
 				callback( data );
 			}
+		</script>
+
+		<script>
+			var templates = CKEDITOR.document.findOne( '.templates' ),
+				list = new CKEDITOR.dom.element( 'ul' );
+
+			CKEDITOR.tools.array.forEach( PLACEHOLDERS, function( placeholder ) {
+				var item = new CKEDITOR.dom.element( 'li' );
+				item.setHtml( '<code>' + placeholder.name + '</code>' );
+				list.append( item );
+			} );
+
+			templates.append( list );
 		</script>
 	</body>
 </html>
