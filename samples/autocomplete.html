@@ -126,7 +126,12 @@
 							'</li>',
 							outputTemplate = '<p>{content}</p>';
 
-						new CKEDITOR.plugins.autocomplete( evt.editor, textTestCallback, dataCallback, itemTemplate, outputTemplate );
+						new CKEDITOR.plugins.autocomplete( evt.editor, {
+							textTestCallback: textTestCallback,
+							dataCallback: dataCallback,
+							itemTemplate: itemTemplate,
+							outputTemplate: outputTemplate
+						} );
 					}
 				}
 			} );
@@ -154,11 +159,11 @@
 				};
 			}
 
-			function dataCallback( query, range, callback ) {
+			function dataCallback( matchInfo, callback ) {
 				var data = TEMPLATES.filter( function( item ) {
 					return item.name.toLowerCase()
 					.replace( /\s/g, '' )
-					.indexOf( query.toLowerCase() ) == 0;
+					.indexOf( matchInfo.query.toLowerCase() ) == 0;
 				} );
 
 				callback( data );
