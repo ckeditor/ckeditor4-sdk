@@ -8,8 +8,8 @@
 		<meta charset="utf-8">
 		<meta name="description" content="Autocomplete plugin">
 		<meta name="keywords" content="ckeditor, editor, wysiwyg, autocomplete, complete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
-		<meta name="sdk-samples" content="Autocomplete plugin">
-		<title>Autocomplete plugin</title>
+		<meta name="sdk-samples" content="Autocomplete">
+		<title>Autocomplete</title>
 		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 		<link href="../template/theme/css/sdk.css" rel="stylesheet">
 		<script src="../../ckeditor-dev/ckeditor.js"></script>
@@ -45,33 +45,41 @@
 			<nav class="sdk-sidebar">
 			</nav>
 			<section class="sdk-contents">
-				<h1>Autocomplete plugin</h1>
+				<h1>Autocomplete <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_autocomplete.html">Documentation</a></h1>
 
 				<p>
-				The autocomplete plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type matching text he will get information about available, existing options.
+					The optional <a href="https://ckeditor.com/cke4/addon/autocomplete">Autocomplete</a> plugin, introduced in CKEditor 4.10, provides contextual completion functionality for custom text matches based on user input. Every time the user types a pre-configured special character, such as <code>@</code> or <code>#</code>, they get information about available autocomplete options.
 				</p>
 
 				<p>
-					Use autocomplete plugin if you would like to configure completion feature from scratch. If you are looking for the feature working out of the box, see <a href="mentions.html">Mentions plugin</a>.
+					This feature is a base for implementing specialized autocomplete features, such as <a href="./mentions.html">mentions, tags, emoji</a> or custom implementations.
 				</p>
 
-				<p>Try it by yourself! Start typing the name of one of ours templates. Type at least 3 characters and accept selected option using <kbd>enter</kbd> or <kbd>tab</kbd> key.</p>
+				<p>
+					The following sample implements a few smart templates for a bug tracker. Start typing the name of one the templates. Type at least 3 characters and accept the selected option from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
+				</p>
 
 				<p>Available templates:</p>
 				<ul>
-					<li>missingtests</li>
-					<li>noresponse</li>
-					<li>securityissue</li>
-					<li>supportquestion</li>
-					<li>thirdparty</li>
-					<li>unsupportedbrowser</li>
-					<li>translation</li>
-					<li>englishonly</li>
+					<li><code>missingtests</code></li>
+					<li><code>noresponse</code></li>
+					<li><code>securityissue</code></li>
+					<li><code>supportquestion</code></li>
+					<li><code>thirdparty</code></li>
+					<li><code>unsupportedbrowser</code></li>
+					<li><code>translation</code></li>
+					<li><code>englishonly</code></li>
 				</ul>
 
 				<div class="editor">
 					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short></textarea>
 				</div>
+
+				<h2>Related Features</h2>
+				<ul>
+					<li><a href="./mentions.html">Working with Document &ndash; Mentions, Tags and Emoji</a></li>
+				</ul>
+
 			</section>
 		</section>
 
@@ -90,19 +98,19 @@
 					id: 2,
 					name: 'noresponse',
 					title: 'No response',
-					content: "Hi, It's been a while since we last heard from you. We're closing this issue for now. Still, feel free provide us requested feedback, so that we can reopen this issue."
+					content: "It has been a while since we last heard from you. We are closing this issue for now. Still, we will be happy to reopen this issue should you provide us with the requested feedback."
 				},
 				{
 					id: 3,
 					name: 'securityissue',
 					title: 'Security issue',
-					content: 'Thank you for your report. We will investigate it thoroughly. Meanwhile I will close this issue as we normally ask for sending security reports through <a href="https://ckeditor.com/contact/" >our contact form</a>. For security reasons I removed the original description, but the original issue you submitted is being handled in our security tracker.'
+					content: 'Thank you for your report. We will investigate it thoroughly. Meanwhile I will close this issue as we normally ask for sending security reports through <a href="https://ckeditor.com/contact/" >our contact form</a>. For security reasons I removed the original description, but the issue you submitted is being handled in our security tracker.'
 				},
 				{
 					id: 4,
 					name: 'supportquestion',
 					title: 'Support question',
-					content: 'Please note that our GitHub issue tracker serves for reporting bugs and new features only. Unfortunately, your request is neither of them, therefore please leave your question on <a href="https://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a> where our team and the community assist other users in solving their issues. Also, since CKEditor is an Open Source software, we believe it’s crucial to share proposed solutions and make others benefit from them. If you have CKEditor license, please contact our support team. You also can ask your implementation questions at <a href="http://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a>.'
+					content: 'Please note that our GitHub issue tracker serves for reporting bugs and new features only. Unfortunately, your request is neither of them, therefore please leave your question on <a href="https://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a> where our team and the community assist other users in solving their issues. Also, since CKEditor is Open Source software, we believe it is crucial to share proposed solutions and make others benefit from them. If you have a commercial CKEditor license, please contact our support team. You also can ask your implementation questions at <a href="http://stackoverflow.com/questions/tagged/ckeditor">Stack Overflow</a>.'
 				},
 				{
 					id: 5,
@@ -114,13 +122,13 @@
 					id: 6,
 					name: 'unsupportedbrowser',
 					title: 'Unsupported browser',
-					content: 'Unfortunately, we are currently unable to fix issues occurring in browsers that we do not support. <a href="https://docs.ckeditor.com/ckeditor4/latest/guide/dev_browsers.html#officially-supported-browsers">Check supported browsers</a>. Please <a href="https://ckeditor.com/contact/">contact CKSource</a> to check what possibilities for fixing the issue the extended support can offer.'
+					content: 'Unfortunately, we are currently unable to fix issues occurring in browsers that we do not support. <a href="https://docs.ckeditor.com/ckeditor4/latest/guide/dev_browsers.html#officially-supported-browsers">See the supported browsers</a>. Please <a href="https://ckeditor.com/contact/">contact CKSource</a> to check what possibilities for fixing the issue the extended support can offer.'
 				},
 				{
 					id: 7,
 					name: 'translation',
 					title: 'Translation',
-					content: 'Thank you very much for contribution! We are using <a href="https://www.transifex.com/ckeditor/ckeditor/">Transifex</a> for managing language strings. Please send your contribution there, so that we can pull it into the upcoming release.'
+					content: 'Thank you very much for your contribution! We are using <a href="https://www.transifex.com/ckeditor/ckeditor/">Transifex</a> for managing language strings. Please send your contribution there, so that we can pull it into the upcoming release.'
 				},
 				{
 					id: 8,
