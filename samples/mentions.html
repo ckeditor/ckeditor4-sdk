@@ -7,9 +7,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="description" content="Mentions plugin">
-		<meta name="keywords" content="ckeditor, editor, wysiwyg, mentions, emoji, complete, autocomplete, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
-		<meta name="sdk-samples" content="Mentions plugin">
-		<title>Mentions plugin</title>
+		<meta name="keywords" content="ckeditor, editor, wysiwyg, mentions, tags, emoji, complete, autocomplete, autocompletion, default, configure, configuration, setup, settings, options, customization, customize, customise, customisation, config, modification, modify, change">
+		<meta name="sdk-samples" content="Mentions, Tags and Emoji">
+		<title>Mentions, Tags and Emoji</title>
 		<link href="https://fonts.googleapis.com/css?family=Maven+Pro:700,500,400" rel="stylesheet">
 		<link href="../template/theme/css/sdk.css" rel="stylesheet">
 		<script src="../../ckeditor-dev/ckeditor.js"></script>
@@ -94,6 +94,7 @@
 			background-color: #0287D0;
 			color: #fafafa;
 			margin-top: 8px;
+			margin-bottom: 16px;
 			float: right;
 			cursor: pointer;
 		}
@@ -124,15 +125,21 @@
 			<nav class="sdk-sidebar">
 			</nav>
 			<section class="sdk-contents">
-				<h1>Mentions plugin</h1>
+				<h1>Mentions, Tags and Emoji <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_mentions.html">Documentation</a></h1>
 
 				<p>
-				The mentions plugin has been introduced in CKEditor 4.10.0 and it provides smart autocompletion feature for custom text matches based on user input. Every time when user type selected marker he will get information about available, existing options.
+					The optional <a href="https://ckeditor.com/cke4/addon/mentions">Mentions</a> and <a href="https://ckeditor.com/cke4/addon/emoji">Emoji</a> plugins, introduced in CKEditor 4.10, support inserting mentions, tags and emojis into the editor content. Both features were built on top of the <a href="./autocomplete.html">Autocomplete</a> plugin that provides a base for smart autocompletion functionality for custom text matches based on user input.
 				</p>
 
 				<p>
-				This sample also integrates emoji plugin introduced alongside with mentions feature. Start typing emoji name prefixed with <strong>:</strong> marker (at least 2 characters) to see emoji ideographs e.g. <strong>:fa</strong>
+					 Every time the user types the selected, pre-configured marker into the editor, information about available autocomplete options is displayed in the dedicated dropdown. Use the sample below to try out some autocomplete suggestions:
 				</p>
+
+				<ul>
+					<li>Start with "<strong>@</strong>" to mention a user.</li>
+					<li>Start with "<strong>#</strong>" to insert a food-related tag.</li>
+					<li>Start with "<strong>:</strong>" to insert a Unicode emoji character.</li>
+				</ul>
 
 				<div class="chat">
 					<ul class="posts">
@@ -170,6 +177,15 @@
 					</div>
 					<button id="send" class="send">Send</button>
 				</div>
+
+				<p style="clear: both;">
+					Check the documentation for the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_mentions.html">Mentions</a> and <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_emoji.html">Emoji</a> plugins for some customization options. Read more about the <a href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_autocomplete.html">Autocomplete</a> feature if you want to implement a custom smart completion mechanism.
+				</p>
+
+				<h2>Related Features</h2>
+				<ul>
+					<li><a href="./image2.html">Working with Document &ndash; Autocomplete</a></li>
+				</ul>
 
 			</section>
 		</section>
@@ -241,8 +257,8 @@
 		<script>
 			CKEDITOR.instances.editor1.once( 'instanceReady', function( evt ) {
 				document.getElementById( 'send' ).addEventListener( 'click', function() {
-					evt.editor.showNotification( 'Your message has been send! ' +
-						'However this is only example chat and we cannot make your post public.',
+					evt.editor.showNotification( 'Your message was sent! ' +
+						'However, this is only a sample chat and we cannot make your post public.',
 						'success', 8000 );
 				} );
 			} );

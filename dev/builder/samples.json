@@ -55,7 +55,7 @@
 					"name": "Working with Document",
 					"samples": [
 						"Spell Checking",
-						"Mentions plugin",
+						"Mentions, Tags and Emoji",
 						"Autocomplete plugin",
 						"Source Code Editing",
 						"Magic Line"
