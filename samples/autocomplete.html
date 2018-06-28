@@ -74,7 +74,7 @@
 				</p>
 
 				<p>
-				The following sample implements a few smart placeholders for Custome Care Service email responses. Start typing the name of one of the placeholders visible on the right side of the editor. Type <code>[[</code> and accept the selected placeholder from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
+				The following sample implements a few smart placeholders for <b>Customer Care Service</b> email responses. Start typing the name of one of the placeholders visible on the right side of the editor. Type <code>[[</code> and accept the selected placeholder from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
 				</p>
 
 				<div class="columns">
@@ -84,10 +84,10 @@
 						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 							<p>Dear [[Customer Name]],</p>
 							<p>thank you for contacting us.</p>
-							<p>Your case was logged as [[Case ID]] and is assigned to [[Technician Name]]. We will attempt to resolve your issue within the next [[Time]] hours.</p>
+							<p>Your case was logged as [[Case ID]] and is assigned to [[Technician Name]]. We will attempt to resolve your issue within the next [[Deadline Time]] hours.</p>
 							<p>If you need any assistance, do not hesitate to contact our Customer Support Hotline at [[Hotline Number]].</p>
 							<p>Your sincerely,</p>
-							<p>[[Name]]</p>
+							<p>[[Assignee]]</p>
 							<p><b>Customer Support Team</b></p>
 						</textarea>
 					</div>
@@ -108,64 +108,64 @@
 			var PLACEHOLDERS = [
 				{
 					id: 1,
-					name: 'customer',
-					title: 'Customer Name',
-					description: 'Receipent of your response.'
+					name: 'address',
+					title: 'Address',
+					description: 'Customer Support correspondence address.'
 				},
 				{
 					id: 2,
+					name: 'assignee',
+					title: 'Assignee Name',
+					description: 'Ticket assignee name.'
+				},
+				{
+					id: 3,
+					name: 'deadline',
+					title: 'Deadline Time',
+					description: 'Utmost time to which technician should handle the issue.'
+				},
+				{
+					id: 4,
+					name: 'department',
+					title: 'Department Name',
+					description: 'Department name responsible for servicing this ticket.'
+				},
+				{
+					id: 5,
 					name: 'caseid',
 					title: 'Case ID',
 					description: 'Unique case number used to distinguish tickets.'
 				},
 				{
-					id: 3,
-					name: 'technician',
-					title: 'Technician Name',
-					description: 'Technician which will handle this ticket.'
-				},
-				{
-					id: 4,
-					name: 'time',
-					title: 'Time',
-					description: 'Predicted time when technician will be able to handle the issue.'
-				},
-				{
-					id: 5,
-					name: 'name',
-					title: 'Name',
-					description: 'Assignee name.'
-				},
-				{
 					id: 6,
+					name: 'casename',
+					title: 'Case Name',
+					description: 'Name of the ticket provided by the user.'
+				},
+				{
+					id: 7,
+					name: 'contact',
+					title: 'Contact E-mail',
+					description: 'Customer Support contact e-mail address.'
+				},
+				{
+					id: 8,
+					name: 'customer',
+					title: 'Customer Name',
+					description: 'Receipent of your response.'
+				},
+				{
+					id: 9,
 					name: 'hotline',
 					title: 'Hotline Number',
 					description: 'Customer Support Hotline number.'
 				},
 				{
-					id: 7,
-					name: 'contact',
-					title: 'Contact e-mail',
-					description: 'Customer Support contact e-mail address.'
-				},
-				{
-					id: 8,
-					name: 'correspondence',
-					title: 'Correspondence address',
-					description: 'Customer Support correspondence address.'
-				},
-				{
-					id: 9,
-					name: 'work',
-					title: 'Works hours.',
-					description: 'Custommer support work hours.'
-				},
-				{
 					id: 10,
-					name: 'department',
-					title: 'Department Name',
-					description: 'Department name responsible for servicing this ticket.'
-				},
+					name: 'technician',
+					title: 'Technician Name',
+					description: 'Technician which will handle this ticket.'
+				}
 			];
 
 			CKEDITOR.addCss( 'span > .cke_placeholder { background-color: #ffeec2; }' );
