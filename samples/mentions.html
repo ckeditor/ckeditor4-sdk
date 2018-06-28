@@ -137,8 +137,8 @@
 
 				<ul>
 					<li>Start with <code>@</code> to mention a user.</li>
-					<li>Start with <code>#</code> to insert a food-related tag.</li>
-					<li>Start with <code>:</code> to insert a Unicode emoji character.</li>
+					<li>Start with <code>#</code> to insert a food-related tag. Type at least 1 character e.g. <code>#f</code></li>
+					<li>Start with <code>:</code> to insert a Unicode emoji character. Type at least 2 characters e.g. <code>:fa</code></li>
 				</ul>
 
 				<div class="chat">
@@ -152,7 +152,7 @@
 								<span class="bullet">•</span>
 								<span class="time">2 hours ago</span>
 								<p class="post-content">
-								I’m very surprised to see that we’re not allowed to rate each other’s answers anymore. I think it was a quick and easy way to measure the quality of the content.
+								Thanks for another <b>#yummy</b> recipe, <a href="mailto: dwilliams@example.com">@dwilliams</a>! Makes me <b>#hungry</b> just looking at the photos 😋. Definitely adding it to my TODO list for our next <b>#mediterranean</b> potluck.
 								</p>
 							</div>
 						</li>
@@ -165,14 +165,14 @@
 								<span class="bullet">•</span>
 								<span class="time">4 hours ago</span>
 								<p class="post-content">
-								Rating has been discontinued because it caused a decline in content quality rather than its increase. People were providing content that would be upvoted, not the content valuable for the community. There are even “secret” groups now!
+								Really appreciate the <b>#vegetarian</b> and <b>#vegan</b> variations of your recipes. So thoughtful of you! 🌱
 								</p>
 							</div>
 						</li>
 					</ul>
 					<div class="editor">
 						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-							I agree with <a href="mailto: mildred@example.com">@mwilson</a>. Rating system made the quality much worse. In the long run, especially when we have more new members, it will be too hard to control.
+							I agree with <a href="mailto: mildred@example.com">@mwilson</a> 👍. It’s so nice of you to always be providing a few options to try! I love <strong>#greek</strong> cuisine with a modern twist, this one will be perfect to try.
 						</textarea>
 					</div>
 					<button id="send" class="send">Send</button>
@@ -216,6 +216,73 @@
 				{ id: 18, avatar: 'w_8', fullname: 'Amy James', username: 'ajames' },
 				{ id: 19, avatar: 'w_9', fullname: 'Ruby Anderson', username: 'randerson' },
 				{ id: 20, avatar: 'w_10', fullname: 'Wanda Lee', username: 'wlee' }
+			],
+			tags = [
+				'vegan',
+				'vegetarian',
+				'halal',
+				'asian',
+				'vietnamese',
+				'chinese',
+				'american',
+				'mexican',
+				'caribbean',
+				'fusion',
+				'italian',
+				'french',
+				'greek',
+				'indian',
+				'japanese',
+				'korean',
+				'mediterranean',
+				'moroccan',
+				'spanish',
+				'thai',
+				'meat',
+				'eggs',
+				'fish',
+				'dairy',
+				'poultry',
+				'glutenfree',
+				'lactosefree',
+				'sugarfree',
+				'keto',
+				'paleo',
+				'cooking',
+				'baking',
+				'grilling',
+				'food',
+				'foodporn',
+				'yum',
+				'yummy',
+				'sweet',
+				'snack',
+				'dinner',
+				'lunch',
+				'breakfast',
+				'fresh',
+				'tasty',
+				'delish',
+				'delicious',
+				'eating',
+				'eat',
+				'hungry',
+				'foodgasm',
+				'hot',
+				'foods',
+				'dessert',
+				'desserts',
+				'yum',
+				'yummy',
+				'nom',
+				'nomnom',
+				'chocolate',
+				'cake',
+				'icecream',
+				'tasty',
+				'sweettooth',
+				'foodie',
+				'homemade'
 			];
 
 		CKEDITOR.replace( 'editor1', {
@@ -236,6 +303,13 @@
 						'</li>',
 					outputTemplate: '<a href="mailto:{username}@example.com">@{username}</a><span>&nbsp;</span>',
 					minChars: 0
+				},
+				{
+					feed: tags,
+					marker: '#',
+					itemTemplate: '<li data-id="{id}"><strong>{name}</strong></li>',
+					outputTemplate: '<strong>{name}</strong><span>&nbsp;</span>',
+					minChars: 1
 				}
 			]
 		} );
