@@ -52,7 +52,7 @@
 				margin: 15px 0 0 10px;
 			}
 			.item-title {
-				background-color: #ff0;
+				background-color: #ffeec2
 			}
 		</style>
 	</head>
@@ -168,11 +168,13 @@
 				},
 			];
 
+			CKEDITOR.addCss( 'span > .cke_placeholder { background-color: #ffeec2; }' );
+
 			CKEDITOR.replace( 'editor1', {
 				plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,link,undo,placeholder',
 				toolbar: [
 					{ name: 'document', items: [ 'Undo', 'Redo' ] },
-					{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike' ] },
+					{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
 					{ name: 'links', items: [ 'Link', 'Unlink' ] }
 				],
 				on: {
