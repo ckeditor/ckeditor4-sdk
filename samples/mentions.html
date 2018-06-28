@@ -152,7 +152,7 @@
 								<span class="bullet">•</span>
 								<span class="time">2 hours ago</span>
 								<p class="post-content">
-								Thanks for another <b>#yummy</b> recipe, <a href="mailto: dwilliams@example.com">@dwilliams</a>! Makes me <b>#hungry</b> just looking at the photos 😋. Definitely adding it to my TODO list for our next <b>#mediterranean</b> potluck.
+								Thanks for another <a href="#yummy">#yummy</a> recipe, <a href="mailto: dwilliams@example.com">@dwilliams</a>! Makes me <a href="#hungry">#hungry</a> just looking at the photos 😋. Definitely adding it to my TODO list for our next <a href="#mediterranean">#mediterranean</a> potluck.
 								</p>
 							</div>
 						</li>
@@ -165,14 +165,14 @@
 								<span class="bullet">•</span>
 								<span class="time">4 hours ago</span>
 								<p class="post-content">
-								Really appreciate the <b>#vegetarian</b> and <b>#vegan</b> variations of your recipes. So thoughtful of you! 🌱
+								Really appreciate the <a href="#vegetarian">#vegetarian</a> and <a href="#vegan">#vegan</a> variations of your recipes. So thoughtful of you! 🌱
 								</p>
 							</div>
 						</li>
 					</ul>
 					<div class="editor">
 						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-							I agree with <a href="mailto: mildred@example.com">@mwilson</a> 👍. It’s so nice of you to always be providing a few options to try! I love <strong>#greek</strong> cuisine with a modern twist, this one will be perfect to try.
+							<p>I agree with <a href="mailto: mildred@example.com">@mwilson</a> 👍. It’s so nice of you to always be providing a few options to try! I love <a href="#greek">#greek</a> cuisine with a modern twist, this one will be perfect to try.</p>
 						</textarea>
 					</div>
 					<button id="send" class="send">Send</button>
@@ -284,6 +284,10 @@
 
 		CKEDITOR.replace( 'editor1', {
 			plugins: 'mentions,emoji,basicstyles,undo,link,wysiwygarea,toolbar',
+			contentsCss: [
+				'../../ckeditor-dev/contents.css',
+				'assets/mentions/contents.css'
+			],
 			height: 150,
 			toolbar: [
 				{ name: 'document', items: [ 'Undo', 'Redo' ] },
@@ -305,7 +309,7 @@
 					feed: tags,
 					marker: '#',
 					itemTemplate: '<li data-id="{id}"><strong>{name}</strong></li>',
-					outputTemplate: '<strong>{name}</strong><span>&nbsp;</span>',
+					outputTemplate: '<a href="#{name}">{name}</a><span>&nbsp;</span>',
 					minChars: 1
 				}
 			]
