@@ -209,7 +209,7 @@
 			}
 
 			function matchCallback( text, offset ) {
-				var pattern = /\[{2}(\w|\])*$/,
+				var pattern = /\[{2}([A-z]|\])*$/,
 					match = text.slice( 0, offset )
 					.match( pattern );
 
