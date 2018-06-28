@@ -48,7 +48,7 @@
 				<h1>Autocomplete <a class="documentation" href="https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_autocomplete.html">Documentation</a></h1>
 
 				<p>
-					The optional <a href="https://ckeditor.com/cke4/addon/autocomplete">Autocomplete</a> plugin, introduced in CKEditor 4.10, provides contextual completion functionality for custom text matches based on user input. Every time the user types a pre-configured special character, such as <code>@</code> or <code>#</code>, they get information about available autocomplete options.
+					The optional <a href="https://ckeditor.com/cke4/addon/autocomplete">Autocomplete</a> plugin, introduced in CKEditor 4.10, provides contextual completion functionality for custom text matches based on user input. Every time the user types a pre-configured special character, such as <code>@</code> or <code>#</code>, they get information about available autocomplete suggestions displayed in a dedicated dropdown.
 				</p>
 
 				<p>
@@ -69,6 +69,8 @@
 					<li><code>unsupportedbrowser</code></li>
 					<li><code>translation</code></li>
 					<li><code>englishonly</code></li>
+					<li><code>upstream</code></li>
+					<li><code>missingdetails</code></li>
 				</ul>
 
 				<div class="editor">
@@ -135,6 +137,18 @@
 					name: 'englishonly',
 					title: 'English only',
 					content: 'We are really sorry, but we do not speak your language. Can you please create a new issue in <strong>English</strong>?'
+				},
+				{
+					id: 9,
+					name: 'upstream',
+					title: 'Upstream issue',
+					content: 'This looks like a browser issue. We have reported it to the browser vendor and will update this bug report when we have information about a fix or suggested workaround.'
+				},
+				{
+					id: 10,
+					name: 'missingdetails',
+					title: 'Missing details',
+					content: 'We are unable to reproduce your issue. Can you please provide more information about your editor version, configuration, plugins used as well as the environment where this issue occurs?'
 				}
 			];
 
