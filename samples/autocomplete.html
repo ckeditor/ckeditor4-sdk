@@ -36,6 +36,21 @@
 				color: #676767;
 				padding-top: 5px;
 			}
+			.columns {
+				overflow: hidden;
+			}
+			.columns > .editor {
+				float: left;
+				width: 65%;
+				position: relative;
+			}
+			.columns > .templates {
+				float: right;
+				width: 35%;
+			}
+			.columns > .templates > ul {
+				margin: 15px 0 0 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -56,25 +71,28 @@
 				</p>
 
 				<p>
-					The following sample implements a few smart templates for a bug tracker. Start typing the name of one the templates. Type at least 3 characters and accept the selected option from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
+					The following sample implements a few smart templates for a bug tracker. Start typing the name of one the templates visible at the right side of the editor. Type at least 3 characters and accept the selected option from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
 				</p>
 
-				<p>Available templates:</p>
-				<ul>
-					<li><code>missingtests</code></li>
-					<li><code>noresponse</code></li>
-					<li><code>securityissue</code></li>
-					<li><code>supportquestion</code></li>
-					<li><code>thirdparty</code></li>
-					<li><code>unsupportedbrowser</code></li>
-					<li><code>translation</code></li>
-					<li><code>englishonly</code></li>
-					<li><code>upstream</code></li>
-					<li><code>missingdetails</code></li>
-				</ul>
+				<div class="columns">
+					<div class="templates">
+						<ul>
+							<li><code>missingtests</code></li>
+							<li><code>noresponse</code></li>
+							<li><code>securityissue</code></li>
+							<li><code>supportquestion</code></li>
+							<li><code>thirdparty</code></li>
+							<li><code>unsupportedbrowser</code></li>
+							<li><code>translation</code></li>
+							<li><code>englishonly</code></li>
+							<li><code>upstream</code></li>
+							<li><code>missingdetails</code></li>
+						</ul>
+					</div>
 
-				<div class="editor">
-					<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short></textarea>
+					<div class="editor">
+						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short></textarea>
+					</div>
 				</div>
 
 				<h2>Related Features</h2>
