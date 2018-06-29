@@ -74,7 +74,7 @@
 				</p>
 
 				<p>
-				The following sample implements a few smart placeholders for <b>Customer Care Service</b> email responses. Start typing the name of one of the placeholders visible on the right side of the editor. Type <code>[[</code> and accept the selected placeholder from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
+					The following sample implements a few smart placeholders for <b>Customer Care Service</b> email responses. Start typing the name of one of the placeholders visible on the right side of the editor. Type <code>[[</code> and accept the selected placeholder from the dropdown using the <kbd>Enter</kbd> or <kbd>Tab</kbd> key.
 				</p>
 
 				<div class="columns">
@@ -83,7 +83,7 @@
 					<div class="editor">
 						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
 							<p>Dear [[Customer Name]],</p>
-							<p>thank you for contacting us.</p>
+							<p>Thank you for contacting us.</p>
 							<p>Your case was logged as [[Case ID]] and is assigned to [[Technician Name]]. We will attempt to resolve your issue within the next [[Deadline Time]] hours.</p>
 							<p>If you need any assistance, do not hesitate to contact our Customer Support Hotline at [[Hotline Number]].</p>
 							<p>Your sincerely,</p>
@@ -96,6 +96,7 @@
 				<h2>Related Features</h2>
 				<ul>
 					<li><a href="./mentions.html">Working with Document &ndash; Mentions, Tags and Emoji</a></li>
+					<li><a href="./placeholder.html">Inserting Content &ndash; Using Placeholders</a></li>
 				</ul>
 
 			</section>
@@ -110,7 +111,7 @@
 					id: 1,
 					name: 'address',
 					title: 'Address',
-					description: 'Customer Support correspondence address.'
+					description: 'Customer Support address.'
 				},
 				{
 					id: 2,
@@ -122,13 +123,13 @@
 					id: 3,
 					name: 'deadline',
 					title: 'Deadline Time',
-					description: 'Utmost time to which technician should handle the issue.'
+					description: 'Time for the technician to handle this issue.'
 				},
 				{
 					id: 4,
 					name: 'department',
 					title: 'Department Name',
-					description: 'Department name responsible for servicing this ticket.'
+					description: 'Department name responsible for handling this ticket.'
 				},
 				{
 					id: 5,
@@ -152,7 +153,7 @@
 					id: 8,
 					name: 'customer',
 					title: 'Customer Name',
-					description: 'Receipent of your response.'
+					description: 'Recipient of your response.'
 				},
 				{
 					id: 9,
@@ -164,7 +165,7 @@
 					id: 10,
 					name: 'technician',
 					title: 'Technician Name',
-					description: 'Technician which will handle this ticket.'
+					description: 'Technician who will handle this ticket.'
 				}
 			];
 
