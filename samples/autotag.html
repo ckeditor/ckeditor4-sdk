@@ -63,7 +63,12 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 				CKEDITOR.plugins.addExternal( 'autotag', '../../../samples/assets/plugins/autotag/', 'plugin.js' );
 
 				CKEDITOR.replace( 'editor1', {
-					extraPlugins: 'autotag'
+					plugins: 'textmatch,toolbar,wysiwygarea,basicstyles,link,undo,autotag',
+					toolbar: [
+						{ name: 'document', items: [ 'Undo', 'Redo' ] },
+						{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] },
+						{ name: 'links', items: [ 'Link', 'Unlink' ] }
+					]
 				} );
 			</script>
 
