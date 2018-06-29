@@ -82,10 +82,10 @@
 
 					<div class="editor">
 						<textarea cols="80" id="editor1" name="editor1" rows="10" data-sample="1" data-sample-short>
-							<p>Dear [[Customer Name]],</p>
+							<p>Dear [[CustomerName]],</p>
 							<p>Thank you for contacting us.</p>
-							<p>Your case was logged as [[Case ID]] and is assigned to [[Technician Name]]. We will attempt to resolve your issue within the next [[Deadline Time]] hours.</p>
-							<p>If you need any assistance, do not hesitate to contact our Customer Support Hotline at [[Hotline Number]].</p>
+							<p>Your case was logged as [[CaseID]] and is assigned to [[TechnicianName]]. We will attempt to resolve your issue within the next [[DeadlineTime]] hours.</p>
+							<p>If you need any assistance, do not hesitate to contact our Customer Support Hotline at [[HotlineNumber]].</p>
 							<p>Your sincerely,</p>
 							<p>[[Assignee]]</p>
 							<p><b>Customer Support Team</b></p>
@@ -109,62 +109,52 @@
 			var PLACEHOLDERS = [
 				{
 					id: 1,
-					name: 'address',
-					title: 'Address',
+					name: 'Address',
 					description: 'Customer Support address.'
 				},
 				{
 					id: 2,
-					name: 'assignee',
-					title: 'Assignee Name',
+					name: 'AssigneeName',
 					description: 'Ticket assignee name.'
 				},
 				{
 					id: 3,
-					name: 'deadline',
-					title: 'Deadline Time',
+					name: 'DeadlineTime',
 					description: 'Time for the technician to handle this issue.'
 				},
 				{
 					id: 4,
-					name: 'department',
-					title: 'Department Name',
+					name: 'DepartmentName',
 					description: 'Department name responsible for handling this ticket.'
 				},
 				{
 					id: 5,
-					name: 'caseid',
-					title: 'Case ID',
+					name: 'CaseID',
 					description: 'Unique case number used to distinguish tickets.'
 				},
 				{
 					id: 6,
-					name: 'casename',
-					title: 'Case Name',
+					name: 'CaseName',
 					description: 'Name of the ticket provided by the user.'
 				},
 				{
 					id: 7,
-					name: 'contact',
-					title: 'Contact E-mail',
+					name: 'ContactEmail',
 					description: 'Customer Support contact e-mail address.'
 				},
 				{
 					id: 8,
-					name: 'customer',
-					title: 'Customer Name',
+					name: 'CustomerName',
 					description: 'Recipient of your response.'
 				},
 				{
 					id: 9,
-					name: 'hotline',
-					title: 'Hotline Number',
+					name: 'HotlineNumber',
 					description: 'Customer Support Hotline number.'
 				},
 				{
 					id: 10,
-					name: 'technician',
-					title: 'Technician Name',
+					name: 'TechnicianName',
 					description: 'Technician who will handle this ticket.'
 				}
 			];
@@ -175,16 +165,16 @@
 				plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,link,undo,placeholder',
 				toolbar: [
 					{ name: 'document', items: [ 'Undo', 'Redo' ] },
-					{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
+					{ name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] },
 					{ name: 'links', items: [ 'Link', 'Unlink' ] }
 				],
 				on: {
 					instanceReady: function( evt ) {
 						var itemTemplate = '<li data-id="{id}">' +
-								'<div><strong class="item-title">{title}</strong></div>' +
+								'<div><strong class="item-title">{name}</strong></div>' +
 								'<div><i>{description}</i></div>' +
 							'</li>',
-							outputTemplate = '[[{title}]]<span>&nbsp;</span>';
+							outputTemplate = '[[{name}]]<span>&nbsp;</span>';
 
 						var autocomplete = new CKEDITOR.plugins.autocomplete( evt.editor, {
 							textTestCallback: textTestCallback,
@@ -226,7 +216,7 @@
 
 			function dataCallback( matchInfo, callback ) {
 				var data = PLACEHOLDERS.filter( function( item ) {
-					var itemName = '[[' + item.name + ']]';
+					var itemName = '[[' + item.name.toLowerCase() + ']]';
 					return itemName.indexOf( matchInfo.query.toLowerCase() ) == 0;
 				} );
 
