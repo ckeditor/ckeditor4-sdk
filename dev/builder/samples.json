@@ -146,10 +146,10 @@
 				{
 					"name": "Tutorials",
 					"samples": [
-						"Autotag Plugin",
 						"Timestamp Plugin",
 						"Abbreviation Plugin",
-						"Custom Widget"
+						"Custom Widget",
+						"Autotag Plugin"
 					]
 				},
 				{
