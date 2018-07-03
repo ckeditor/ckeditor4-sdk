@@ -55,6 +55,8 @@
 					"name": "Working with Document",
 					"samples": [
 						"Spell Checking",
+						"Mentions, Tags and Emoji",
+						"Autocomplete",
 						"Source Code Editing",
 						"Magic Line"
 					]
@@ -146,7 +148,8 @@
 					"samples": [
 						"Timestamp Plugin",
 						"Abbreviation Plugin",
-						"Custom Widget"
+						"Custom Widget",
+						"Autotag Plugin"
 					]
 				},
 				{
