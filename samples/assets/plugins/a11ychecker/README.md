@@ -13,14 +13,14 @@ This package contains the distribution version of Accessibility Checker.
 
 ## Browser Support
 
-Accessibility Checker has [the same browser compatibility as CKEditor](https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_browsers), with the following exceptions:
+Accessibility Checker has [the same browser compatibility as CKEditor](https://docs.ckeditor.com/ckeditor4/latest/guide/dev_browsers.html), with the following exceptions:
 
 * Internet Explorer 8 is not supported.
 * Internet Explorer 9 Quirks Mode is not supported.
 
 ## Installation
 
-The recommended way to install Accessibility Checker is through [CKBuilder](https://ckeditor.com/cke4/builder).
+The recommended way to install Accessibility Checker is through [online builder](https://ckeditor.com/cke4/builder).
 
 Select Accessibility Checker from the list of Available Plugins and add it to your editor build - CKBuilder will automatically resolve the dependencies for you and include all necessary plugins in your configuration.
 
@@ -30,7 +30,7 @@ Select Accessibility Checker from the list of Available Plugins and add it to yo
 
 ## License
 
-Copyright (c) 2014-2017 CKSource - Frederico Knabben. All rights reserved.<br>
+Copyright (c) 2014-2018, CKSource - Frederico Knabben. All rights reserved.<br>
 Licensed under the terms of the [GNU General Public License Version 2 or later (the "GPL")](http://www.gnu.org/licenses/gpl.html).
 
 See LICENSE.md for more information.

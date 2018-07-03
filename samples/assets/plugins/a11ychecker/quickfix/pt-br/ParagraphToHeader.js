@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'en',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'ElementReplace',
 		callback: function( ElementReplace ) {
 			/**
@@ -161,8 +161,8 @@
 			};
 
 
-			ParagraphToHeader.prototype.lang = {"levelLabel":"Header level","suggested":"(Suggested)"};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'en/ParagraphToHeader', ParagraphToHeader );
+			ParagraphToHeader.prototype.lang = {"levelLabel":"Nível de cabeçalho","suggested":"(Sugerido)"};
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/ParagraphToHeader', ParagraphToHeader );
 		}
 	} );
 }() );

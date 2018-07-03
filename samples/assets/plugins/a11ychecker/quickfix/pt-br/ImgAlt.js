@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'de',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 
@@ -82,8 +82,8 @@
 				return ret;
 			};
 
-			ImgAlt.prototype.lang = {"altLabel":"Alternativtext","errorTooLong":"Der Alternativtext ist zu lang. Er sollte {limit} Zeichen lang sein, ist aber aktuell {length} Zeichen lang","errorWhitespace":"Der Alternativtext kann nicht nur Leerzeichen enthalten","errorSameAsFileName":"Der Alternativtext sollte nicht dem Dateinamen entsprechen"};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'de/ImgAlt', ImgAlt );
+			ImgAlt.prototype.lang = {"altLabel":"Texto alternativo","errorTooLong":"O texto alternativo é muito longo. Este deve conter no máximo {limit} caracteres, enquanto o seu possui {length}","errorWhitespace":"O texto alternativo não pode conter somente espaços em branco.","errorSameAsFileName":"O texto alternativo da imagem não deve ter o mesmo nome do arquivo da imagem"};
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/ImgAlt', ImgAlt );
 		}
 	} );
 }() );

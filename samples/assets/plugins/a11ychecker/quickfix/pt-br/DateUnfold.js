@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'de',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 			// List of month names.
@@ -127,7 +127,7 @@
 			};
 
 			DateUnfold.prototype.lang = {};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'de/DateUnfold', DateUnfold );
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/DateUnfold', DateUnfold );
 		}
 	} );
 }() );

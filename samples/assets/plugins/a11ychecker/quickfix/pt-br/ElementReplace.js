@@ -6,7 +6,7 @@
 ( function() {
 	'use strict';
 
-	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'en',
+	CKEDITOR.plugins.a11ychecker.quickFixes.get( { langCode: 'pt-br',
 		name: 'QuickFix',
 		callback: function( QuickFix ) {
 			/**
@@ -53,7 +53,7 @@
 			};
 
 			ElementReplace.prototype.lang = {};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'en/ElementReplace', ElementReplace );
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/ElementReplace', ElementReplace );
 		}
 	} );
 }() );

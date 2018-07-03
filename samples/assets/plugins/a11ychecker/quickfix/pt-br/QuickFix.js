@@ -86,5 +86,5 @@
 	QuickFix.prototype.lang = {};
 
 	QuickFix.prototype.lang = {};
-			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'nl/QuickFix', QuickFix );
+			CKEDITOR.plugins.a11ychecker.quickFixes.add( 'pt-br/QuickFix', QuickFix );
 }());
