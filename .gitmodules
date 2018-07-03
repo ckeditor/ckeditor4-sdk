@@ -14,3 +14,6 @@
 [submodule "samples/assets/plugins/linkballoon"]
 	path = samples/assets/plugins/linkballoon
 	url = https://github.com/ckeditor/ckeditor4-plugin-linkballoon.git
+[submodule "samples/assets/ckeditor-docs-samples"]
+	path = samples/assets/ckeditor-docs-samples
+	url = https://github.com/ckeditor/ckeditor-docs-samples.git
