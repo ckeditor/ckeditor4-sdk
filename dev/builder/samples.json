@@ -40,15 +40,14 @@
 					]
 				},
 				{
-					"name": "Authoring Content",
+					"name": "Styling and Formatting",
 					"samples": [
 						"Basic Text Styles",
 						"Copying Text Formatting",
 						"Removing Text Formatting",
 						"Styles and Stylesheet Parser",
 						"Text Formats",
-						"Text and Background Color",
-						"Multilingual Content"
+						"Text and Background Color"
 					]
 				},
 				{
@@ -58,7 +57,8 @@
 						"Mentions, Tags and Emoji",
 						"Autocomplete",
 						"Source Code Editing",
-						"Magic Line"
+						"Magic Line",
+						"Multilingual Content"
 					]
 				},
 				{
