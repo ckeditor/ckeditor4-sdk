@@ -74,6 +74,21 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 					// Remove unused buttons.
 					removeButtons: 'Anchor,BGColor,Font,Strike,Subscript,Superscript',
 					// Width and height are not supported in the BBCode format, so object resizing is disabled.
+					toolbar: [
+						[ 'Undo', 'Redo' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Indent', 'Outdent' ],
+						[ 'Link', 'Unlink' ],
+						[ 'Image', 'SpecialChar', 'Smiley' ],
+						[ 'Maximize' ],
+						[ 'Source' ],
+						'/',
+						[ 'Bold', 'Italic', 'Underline', '-', 'RemoveFormat' ],
+						[ 'Blockquote' ],
+						[ 'JustifyLeft', 'JustifyCenter', 'JustifyRight' ],
+						[ 'FontSize' ],
+						[ 'TextColor' ],
+						[ 'About' ]
+					],
 					disableObjectResizing: true,
 					// Define font sizes in percent values.
 					fontSize_sizes: "30/30%;50/50%;100/100%;120/120%;150/150%;200/200%;300/300%",
