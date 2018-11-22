@@ -136,8 +136,8 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 					// Configure your file manager integration. This example uses CKFinder 3 for PHP.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
 					filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
-					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
+					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&currentFolder=/Public/',
+					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&currentFolder=/Public/'
 				} );
 			</script>
 
@@ -147,13 +147,13 @@ For licensing, see license.html or https://sdk.ckeditor.com/license.html.
 					height: 300,
 
 					// Upload images to a CKFinder connector (note that the response type is set to JSON).
-					uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
+					uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json&currentFolder=/Public/',
 
 					// Configure your file manager integration. This example uses CKFinder 3 for PHP.
 					filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
 					filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
-					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+					filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&currentFolder=/Public/',
+					filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&currentFolder=/Public/',
 
 					// The following options are not necessary and are used here for presentation purposes only.
 					// They configure the Styles drop-down list and widgets to use classes.
