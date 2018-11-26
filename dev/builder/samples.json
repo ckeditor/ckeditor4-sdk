@@ -159,6 +159,12 @@
 				{
 					"name": "File Management",
 					"samples": []
+				},
+				{
+					"name": "Framework Integration",
+					"samples": [
+						"React Integration"
+					]
 				}
 			]
 		}
