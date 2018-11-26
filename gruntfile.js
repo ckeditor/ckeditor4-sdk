@@ -8,12 +8,15 @@
 module.exports = function( grunt ) {
 	var BUILDER_DIR = 'dev/builder',
 		SDK_VERSION = grunt.option( 'sdk-version' ) || 'offline',
-		CKE_VERSION = grunt.option( 'sdk-ckeditor-version' ) || 'master';
+		CKE_VERSION = grunt.option( 'sdk-ckeditor-version' ) || 'master',
+		webpackReactConf = require( './react/webpack.config.js' );
 
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 	grunt.loadNpmTasks( 'grunt-text-replace' );
 	grunt.loadNpmTasks( 'grunt-mkdir' );
+	grunt.loadNpmTasks( 'grunt-webpack' );
+	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 
 	grunt.registerTask( 'default', 'build' );
 
@@ -114,6 +117,28 @@ module.exports = function( grunt ) {
 					outputStyle: 'expanded'
 				}
 			}
+		},
+
+		webpack: {
+			react: webpackReactConf( SDK_VERSION )
+		},
+
+		copy: {
+			react: {
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [
+							'node_modules/ckeditor4-react/dist/*',
+							'node_modules/react/umd/react.production.min.js',
+							'node_modules/react-dom/umd/react-dom.production.min.js'
+						],
+						dest: 'build/' + SDK_VERSION + '/samples/assets/react/component/',
+						filter: 'isFile'
+					},
+				]
+			}
 		}
 	} );
 
@@ -128,7 +153,9 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
 		'mkdir:build',
-		'shell:sdk-build'
+		'shell:sdk-build',
+		'webpack:react',
+		'copy:react'
 	] );
 
 	grunt.registerTask( 'watch-css', [
