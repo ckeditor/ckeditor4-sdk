@@ -150,12 +150,16 @@ module.exports = function( grunt ) {
 		'shell:builder-setup'
 	] );
 
+	grunt.registerTask( 'build-react', [
+		'webpack:react',
+		'copy:react'
+	] );
+
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
 		'mkdir:build',
 		'shell:sdk-build',
-		'webpack:react',
-		'copy:react'
+		'build-react'
 	] );
 
 	grunt.registerTask( 'watch-css', [
