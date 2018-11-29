@@ -102,16 +102,25 @@
 	contentLoaded( window, onLoad );
 
 	function onLoad() {
+		var body = document.getElementsByTagName( 'body' )[ 0 ]
+
+		refreshSamples();
+		initSidebarAccordion( body );
+	}
+
+	function refreshSamples() {
 		var resources = prepareSampleResources(),
-			body = document.getElementsByTagName( 'body' )[ 0 ],
 			sections = document.getElementsByTagName( 'section' ),
+			samplesListEl = document.querySelector( '.samples-list' ),
 			sdkContents;
 
 		simpleSample.metaNames = prepareSamplesNames();
 
-		var samplesList = createFromHtml( prepareSamplesList( resources ) );
+		if ( samplesListEl ) {
+			samplesListEl.parentNode.parentNode.removeChild( samplesListEl.parentNode );
+		}
 
-		initSidebarAccordion( body );
+		var samplesList = createFromHtml( prepareSamplesList( resources ) );
 
 		accept( sections, function( element ) {
 			var classAttr = element.attributes && element.attributes.getNamedItem( 'class' );
@@ -161,6 +170,7 @@
 			}
 
 			sampleHash = relLi.attributes.getNamedItem( 'data-sample' ).value;
+
 			showSampleSource( sampleHash.replace( /\D/g, '' ) );
 
 			return false;
@@ -183,6 +193,10 @@
 				headResources = [],
 				result;
 
+			if ( !sampleResources ) {
+				return;
+			}
+
 			wrapInHtmlStructure = ( wrapInHtmlStructure === false ? false : true );
 			wrapInCodePre = ( wrapInCodePre === false ? false : true );
 			doubleEscapeTextAreaContent = ( doubleEscapeTextAreaContent === false ? false : true );
@@ -201,7 +215,7 @@
 			}
 
 			if ( !resourcesString.match( /<script[^>]*ckeditor\.js"[^>]*>/gi ) ) {
-				headResources.unshift( '<script src="https://cdn.ckeditor.com/<CKEditorVersion>/standard-all/ckeditor.js"></script>' );
+				headResources.unshift( '<script src="https://cdn.ckeditor.com/4.11.1/standard-all/ckeditor.js"></script>' );
 			}
 			headResources = headResources.join( '' );
 
@@ -314,8 +328,12 @@
 		simpleSample.createSampleSourceCode = createSampleSourceCode;
 
 		var showSampleSource;
-		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
+		if ( !window.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
 			showSampleSource = function( sampleId ) {
+				if ( !sampleId ) {
+					return;
+				}
+
 				var code = createSampleSourceCode( sampleId );
 				if ( popup ) {
 					popup.close();
@@ -328,6 +346,11 @@
 		} else {
 			showSampleSource = function( sampleId ) {
 				var sampleSource = getSampleSourceCode( sampleId );
+
+				if ( !sampleId || !sampleSource ) {
+					return;
+				}
+
 				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
 					code = [
 						'<div>',
@@ -345,7 +368,7 @@
 						modalClass: 'source-code',
 						modalStyles: null,
 						closeStyles: null,
-						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
+						closeHtml: '<img src="../theme/img/close.png" alt="Close" />'
 					} ),
 					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
 					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
@@ -370,7 +393,7 @@
 			};
 		}
 
-		if ( window.location.hash ) {
+		if ( window.location.hash && window.location.hash.indexOf( 'sample-' ) === 0 ) {
 			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
 			window.location.hash = '';
 		}
@@ -403,14 +426,17 @@
 			var exampleBlocks = [],
 				examples = {};
 
+			placeholders = [];
 			var k = 0;
 			accept( document.getElementsByTagName( 'html' )[ 0 ], function( node ) {
 				var attrs = node.attributes,
+					isInSampleList = node.parentNode.className && node.parentNode.className.indexOf( 'samples-list' ) !== -1,
 					sample = attrs ? attrs.getNamedItem( 'data-sample' ) : null,
 					sampleClear = attrs ? attrs.getNamedItem( 'data-sample-clear' ) : null,
 					preserveWhitespace = attrs ? attrs.getNamedItem( 'data-sample-preserveWhitespace' ) : null;
 
-				if ( sample ) {
+				if ( sample && !isInSampleList ) {
+
 					var typeAttr = attrs.getNamedItem( 'type' );
 
 					if ( typeAttr && typeAttr.value == 'template' ) {
@@ -508,9 +534,10 @@
 			return examples;
 		}
 	}
+	simpleSample.refreshSamples = refreshSamples;
 
 	function prepareSamplesList( examples ) {
-		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
+		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul class="samples-list">';
 
 		for ( var id in examples ) {
 			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
