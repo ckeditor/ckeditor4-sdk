@@ -1,47 +1,50 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Link, Route, Switch } from 'react-router-dom';
+import { HashRouter, Link, Route, Switch, withRouter } from 'react-router-dom';
 
-import LiveFeed from './LiveFeed.jsx';
-
-class Subpage extends Component {
-	render() {
-		return (
-			<CKEditor data="<p>Hi, I'm CKEditor 4 instance on subpage!</p>" />
-		);
-	}
-}
-
-const initialData = '<p>This is an example CKEditor 4 instance.</p>';
-
-const Home = () => (
-	<div>
-		<h2>Classic Example</h2>
-		<CKEditor data={initialData} />
-		<h2>Inline Example</h2>
-		<CKEditor type="inline" data={initialData} />
-	</div>
-);
+import Nav from './Nav.jsx';
+import EditorTypes from './EditorTypes.jsx';
+import ConfigEvents from './ConfigEvents.jsx';
+import TwoWayBinding from './TwoWayBinding.jsx';
 
 class Samples extends Component {
 	render() {
 		return (
 			<HashRouter>
-				<main>
-					<h1>CKEditor 4 – React Component – development sample</h1>
-					<nav>
-						<Link to="/">Home Page</Link>
-						<Link to="/subpage">Sample Subpage</Link>
-						<Link to="/livefeed">Live Feed</Link>
-					</nav>
+				<SamplesContainer>
+					<Nav label="React integration samples">
+						<Link to="/">Editor Types</Link>
+						<Link to="/events">Config &amp; Events</Link>
+						<Link to="/2-way-binding">2-way Binding</Link>
+					</Nav>
 					<Switch>
-						<Route exact path="/" component={Home} />
-						<Route path="/subpage" component={Subpage} />
-						<Route path="/livefeed" component={LiveFeed} />
+						<Route exact path="/" component={EditorTypes} />
+						<Route path="/events" component={ConfigEvents} />
+						<Route path="/2-way-binding" component={TwoWayBinding} />
 					</Switch>
-				</main>
+				</SamplesContainer>
 			</HashRouter>
 		);
+	}
+}
+
+const SamplesContainer = withRouter( class extends Component {
+	componentDidUpdate() {
+		refreshSamples();
+	}
+
+	render() {
+		return (
+			<>
+				{this.props.children}
+			</>
+		);
+	}
+} );
+
+function refreshSamples() {
+	if ( simpleSample ) {
+		simpleSample.refreshSamples();
 	}
 }
 
@@ -50,4 +53,3 @@ ReactDOM.render(
 	window.document.getElementById( 'app' )
 );
 
-export default { React, ReactDOM, Samples };
