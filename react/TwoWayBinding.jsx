@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CKEditor from 'ckeditor4-react';
 import Code from './Code.jsx';
 
 class TwoWayBinding extends Component {

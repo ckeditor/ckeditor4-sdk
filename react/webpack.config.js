@@ -16,6 +16,11 @@ module.exports = function( sdkVersion ) {
 		context: __dirname,
 		mode: 'production',
 
+		resolve: {
+			// Allows testing of local, development version of React component.
+			symlinks: false
+		},
+
 		devtool: 'source-map',
 		performance: {
 			hints: false
@@ -26,13 +31,6 @@ module.exports = function( sdkVersion ) {
 				commonjs2: 'ckeditor',
 				commonjs: 'ckeditor',
 				amd: 'ckeditor'
-			},
-
-			CKEditor: {
-				root: 'CKEditor',
-				commonjs2: 'ckeditor4-react',
-				commonjs: 'ckeditor4-react',
-				amd: 'ckeditor4-react'
 			}
 		},
 

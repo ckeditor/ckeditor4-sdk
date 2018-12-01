@@ -121,24 +121,6 @@ module.exports = function( grunt ) {
 
 		webpack: {
 			react: webpackReactConf( SDK_VERSION )
-		},
-
-		copy: {
-			react: {
-				files: [
-					{
-						expand: true,
-						flatten: true,
-						src: [
-							'node_modules/ckeditor4-react/dist/*',
-							'node_modules/react/umd/react.production.min.js',
-							'node_modules/react-dom/umd/react-dom.production.min.js'
-						],
-						dest: 'build/' + SDK_VERSION + '/samples/assets/react/component/',
-						filter: 'isFile'
-					},
-				]
-			}
 		}
 	} );
 
@@ -150,16 +132,11 @@ module.exports = function( grunt ) {
 		'shell:builder-setup'
 	] );
 
-	grunt.registerTask( 'build-react', [
-		'webpack:react',
-		'copy:react'
-	] );
-
 	grunt.registerTask( 'build', [
 		'compass:sdk-build-css',
 		'mkdir:build',
 		'shell:sdk-build',
-		'build-react'
+		'webpack:react'
 	] );
 
 	grunt.registerTask( 'watch-css', [

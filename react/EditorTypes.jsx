@@ -1,3 +1,5 @@
+import React from 'react';
+import CKEditor from 'ckeditor4-react/dist/ckeditor.js';
 import Code from './Code.jsx';
 
 const initialData = '<p>This is an example CKEditor 4 instance.</p>';
