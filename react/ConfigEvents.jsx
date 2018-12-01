@@ -57,6 +57,8 @@ class ConfigEvents extends Component {
 					onBlur={this.logEvent}
 					onChange={this.logEvent}
 					onSelectionChange={this.logEvent} />
+					<h3>Events Log</h3>
+					<p><small>To check additional details about every event, please consult console in browser's devtools.</small></p>
 					<EventLog stream={this.state.events} />
 					<button onClick={this.clearEvents}>Clear events log</button>
 					<Code id="3">
@@ -83,11 +85,11 @@ class ConfigEvents extends Component {
 const EventLog = ( { stream } ) => {
 	return (
 		<div className="event-log">
-			<ul>
+			<ul className="event-log__events">
 				{
 					stream.map( event => {
 						return (
-							<li>
+							<li className="event-log__event">
 								<Event data={event} />
 							</li>
 						)

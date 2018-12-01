@@ -2,11 +2,11 @@ import React from 'react';
 
 const Nav = ( { label, children } ) => {
 	return (
-		<nav aria-label={label}>
-			<ul>
+		<nav className="react-nav" aria-label={label}>
+			<ul className="react-nav__menu">
 				{
 					React.Children.map( children, ( child ) => {
-						return <li>{child}</li>;
+						return <li class="react-nav__menu-item">{child}</li>;
 					} )
 				}
 			</ul>

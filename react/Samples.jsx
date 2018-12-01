@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Link, Route, Switch, withRouter } from 'react-router-dom';
+import { HashRouter, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 
 import Nav from './Nav.jsx';
 import EditorTypes from './EditorTypes.jsx';
@@ -13,9 +13,9 @@ class Samples extends Component {
 			<HashRouter>
 				<SamplesContainer>
 					<Nav label="React integration samples">
-						<Link to="/">Editor Types</Link>
-						<Link to="/events">Config &amp; Events</Link>
-						<Link to="/2-way-binding">2-way Binding</Link>
+						<NavLink exact={true} to="/" activeClassName="active">Editor Types</NavLink>
+						<NavLink to="/events" activeClassName="active">Config &amp; Events</NavLink>
+						<NavLink to="/2-way-binding" activeClassName="active">2-way Binding</NavLink>
 					</Nav>
 					<Switch>
 						<Route exact path="/" component={EditorTypes} />

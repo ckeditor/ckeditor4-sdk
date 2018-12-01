@@ -34,21 +34,30 @@ class TwoWayBinding extends Component {
 				<p>
 					Using internal state of React components, it's possible to create simple two-way data binding between editor component and other components, e.g. preview component that renders the content of the editor.
 				</p>
-				<CKEditor
-					data={this.state.data}
-					config={{
-						extraPlugins: 'easyimage',
-						removePlugins: 'image',
-						cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
-						cloudServices_tokenUrl:
-							'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt'
-					}}
-					onChange={this.onEditorChange} />
-					<label style={{ clear: 'both' }}>
-						Change val:
-						<textarea defaultValue={this.state.data} onChange={this.handleChange} />
-					</label>
+				<p>
+					<label>Change value:</label>
+				</p>
+				<p>
+					<textarea className="binding-editor" defaultValue={this.state.data} onChange={this.handleChange} />
+				</p>
+				<div style={{overflow: 'auto'}}>
+					<CKEditor
+						data={this.state.data}
+						config={{
+							extraPlugins: 'easyimage',
+							removePlugins: 'image',
+							cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
+							cloudServices_tokenUrl:
+								'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt'
+						}}
+						onChange={this.onEditorChange}
+						style={{
+							float: 'left',
+							width: '50%'
+						}}
+					/>
 					<EditorPreview data={this.state.data} />
+				</div>
 					<Code id="4">
 						{`
 	class TwoWayBinding extends Component {
