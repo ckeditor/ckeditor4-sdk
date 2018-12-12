@@ -1,15 +1,15 @@
 # ⚠ This repository is no longer maintained ⚠
 
-We moved all examples to the [ckeditor-docs](https://github.com/ckeditor/ckeditor-docs) repository. You'll find all the former SDK samples in [Examples section on our docs](https://ckeditor.com/docs/ckeditor4/latest/examples/index.html).
+We moved all examples to the [`ckeditor-docs`](https://github.com/ckeditor/ckeditor-docs) repository. You will find all the former SDK samples in the [Examples section of the CKEditor 4 documentation](https://ckeditor.com/docs/ckeditor4/latest/examples/index.html).
 
 # CKEditor SDK
 
-This repository contains the **CKEditor SDK** that includes the  [CKEditor developer documentation](https://docs.ckeditor.com/ckeditor4/) as well as working CKEditor samples showcasing its numerous features.
+This repository contained the **CKEditor SDK** that included the [CKEditor developer documentation](https://ckeditor.com/docs/ckeditor4/latest/index.html) as well as working CKEditor samples showcasing its numerous features.
 
-It is used for building the online version of the CKEditor SDK which is available at https://sdk.ckeditor.com/.
-You can also download the built package (click the **Download SDK** button at https://sdk.ckeditor.com/) to use it offline.
+It was used for building the online version of the CKEditor SDK which was previously available at https://sdk.ckeditor.com/.
+You could also download the built package (click the **Download SDK** button at https://sdk.ckeditor.com/) to use it offline.
 
-**Note:** The CKEditor SDK is a work in progress. Use the [Issues](https://github.com/ckeditor/ckeditor-sdk/issues) tab to report any bugs and tips. Thanks!
+**Note:** Use the [Issues](https://github.com/ckeditor/ckeditor-sdk/issues) tab to report any bugs and tips. Thanks!
 
 ---
 
