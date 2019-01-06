@@ -18,7 +18,11 @@
 		SDK_ONLINE_URL = 'https://sdk.ckeditor.com/',
 		SHORT_EDITOR_CONTENT = '<p>This is some <strong>sample text</strong>. You are using <a href="https://ckeditor.com/">CKEditor</a>.</p>',
 		popup,
-		placeholders = [];
+		placeholders = [],
+		jsFiddleForm,
+		codepenForm,
+		resources,
+		decodeEntities
 
 	// IE8...
 	if ( typeof String.prototype.trim !== 'function' ) {
@@ -102,10 +106,11 @@
 	contentLoaded( window, onLoad );
 
 	function onLoad() {
-		var resources = prepareSampleResources(),
-			body = document.getElementsByTagName( 'body' )[ 0 ],
+		var body = document.getElementsByTagName( 'body' )[ 0 ],
 			sections = document.getElementsByTagName( 'section' ),
 			sdkContents;
+
+		resources = prepareSampleResources();
 
 		simpleSample.metaNames = prepareSamplesNames();
 
@@ -126,7 +131,7 @@
 		}
 
 		// http://stackoverflow.com/questions/5796718/html-entity-decode
-		var decodeEntities = ( function() {
+		decodeEntities = ( function() {
 			// this prevents any overhead from creating the object each time
 			var element = document.createElement( 'div' );
 
@@ -165,6 +170,70 @@
 
 			return false;
 		} );
+
+		var showSampleSource;
+		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
+			showSampleSource = function( sampleId ) {
+				var code = createSampleSourceCode( sampleId );
+				if ( popup ) {
+					popup.close();
+				}
+
+				popup = window.open( '', '', 'width=800, height=600' );
+
+				popup.document.write( code );
+			};
+		} else {
+			showSampleSource = function( sampleId ) {
+				var sampleSource = getSampleSourceCode( sampleId );
+				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
+					code = [
+						'<div>',
+						'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
+						( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
+						'<div class="textarea-wrapper">',
+						'<textarea>',
+						sampleSource.dialog,
+						'</textarea>',
+						'</div>',
+						'</div>'
+					].join( '' ),
+					modal = picoModal( {
+						content: code,
+						modalClass: 'source-code',
+						modalStyles: null,
+						closeStyles: null,
+						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
+					} ),
+					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
+					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
+					textarea = modalElem.findOne( 'textarea' );
+
+				function escListener( evt ) {
+					if ( evt.keyCode == 27 ) {
+						modal.close();
+					}
+				}
+
+				selectButton.on( 'click', function( evt ) {
+					textarea.$.select();
+					evt.data.preventDefault();
+				} );
+
+				modal.afterShow( function() {
+					addEventListener( 'keydown', escListener );
+				} ).afterClose( function() {
+					removeEventListener( 'keydown', escListener );
+				} ).show();
+			};
+		}
+
+		if ( window.location.hash ) {
+			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
+			window.location.hash = '';
+		}
+
+		prepareExternalForms();
 
 		function getSampleSourceCode( sampleId ) {
 
@@ -313,68 +382,6 @@
 		}
 		simpleSample.createSampleSourceCode = createSampleSourceCode;
 
-		var showSampleSource;
-		if ( !this.picoModal || ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 ) ) {
-			showSampleSource = function( sampleId ) {
-				var code = createSampleSourceCode( sampleId );
-				if ( popup ) {
-					popup.close();
-				}
-
-				popup = window.open( '', '', 'width=800, height=600' );
-
-				popup.document.write( code );
-			};
-		} else {
-			showSampleSource = function( sampleId ) {
-				var sampleSource = getSampleSourceCode( sampleId );
-				var sampleName = simpleSample.metaNames[ sampleId - 1 ].toLowerCase().replace( / /g, '_' ),
-					code = [
-						'<div>',
-							'<a href="#" class="source-code-tab source-code-tab-select">Select Code</a>',
-							( HTML5.downloadAttr ? '<a href="data:text/html;charset=utf-8,' + encodeURIComponent( sampleSource.download ) + '" class="source-code-tab" download="' + sampleName + '.html">Download</a>' : '' ),
-							'<div class="textarea-wrapper">',
-								'<textarea>',
-									sampleSource.dialog,
-								'</textarea>',
-							'</div>',
-						'</div>'
-					].join( '' ),
-					modal = picoModal( {
-						content: code,
-						modalClass: 'source-code',
-						modalStyles: null,
-						closeStyles: null,
-						closeHtml: '<img src="../template/theme/img/close.png" alt="Close" />'
-					} ),
-					modalElem = new CKEDITOR.dom.element( modal.modalElem() ),
-					selectButton = modalElem.findOne( 'a.source-code-tab-select' ),
-					textarea = modalElem.findOne( 'textarea' );
-
-				function escListener( evt ) {
-					if ( evt.keyCode == 27 ) {
-						modal.close();
-					}
-				}
-
-				selectButton.on( 'click', function( evt ) {
-					textarea.$.select();
-					evt.data.preventDefault();
-				} );
-
-				modal.afterShow( function() {
-					addEventListener( 'keydown', escListener );
-				} ).afterClose( function() {
-					removeEventListener( 'keydown', escListener );
-				} ).show();
-			};
-		}
-
-		if ( window.location.hash ) {
-			showSampleSource( window.location.hash.replace( /\D/g, '' ) );
-			window.location.hash = '';
-		}
-
 		function fixUrls( str ) {
 			return str
 
@@ -513,11 +520,64 @@
 		var template = '<div><h2>Get Sample Source Code</h2>' + '<ul>';
 
 		for ( var id in examples ) {
-			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + simpleSample.metaNames[ id - 1 ] + '</a></li>';
+			var name = simpleSample.metaNames[ id - 1 ];
+
+			template += '<li data-sample="sample-' + id + '"><a href="#sample-' + id + '">' + name + '</a>';
+
+			// Hack off these samples and keep them like that until the problems connected with them are solved.
+			if ( !( name == "Accessibility Checker" ||
+				name == "Default Styles Combo plugin implementation" ||
+				name == "Stylesheet Parser plugin" ) ) {
+				template += getButton( {
+					src: 'assets/img/jsfiddle-logo.png',
+					onClick: 'simpleSample.openJsFiddle(' + id + ')',
+					title: 'JSFiddle sample',
+					alt: 'Open JSFiddle sample'
+				} ) + getButton( {
+							src: 'assets/img/codepen-logo.png',
+							onClick: 'simpleSample.openCodepen(' + id + ')',
+							title: 'Codepen sample',
+							alt: 'Open Codepen sample'
+				} );
+
+				// template += '<img src="assets/img/jsfiddle-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openJsFiddle('+ id +')" />' +
+				// 		'<img src="assets/img/codepen-logo.png" style="height: 3em; cursor: pointer" onClick="simpleSample.openCodepen('+ id +')" />';
+			}
+
+			template += '</li>';
 		}
 		template += '</ul></div>';
 
 		return template;
+	}
+
+	function getButton( options ) {
+		return '<img src="' + options.src + '" style="height: 3em; cursor: pointer" title="' + options.title + '" alt="' + options.alt + '" onClick="' + options.onClick + '" />';
+	}
+
+	function prepareExternalForms() {
+		jsFiddleForm = document.createElement( 'form' );
+		jsFiddleForm.style.display = 'none';
+		jsFiddleForm.id = 'jsFiddleForm';
+		jsFiddleForm.target = 'blank';
+		jsFiddleForm.method = 'post';
+		jsFiddleForm.action = 'https://jsfiddle.net/api/post/library/pure/';
+		jsFiddleForm.innerHTML = '<textarea name="wrap">b</textarea><textarea name="html"></textarea>' +
+			'<textarea name="js"></textarea><textarea name="css"></textarea>' +
+			'<textarea name="resources">https://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js,https://code.jquery.com/jquery-2.2.3.min.js</textarea>';
+
+		document.body.appendChild( jsFiddleForm );
+
+		codepenForm = document.createElement( 'form' );
+		codepenForm.style.display = 'none';
+		codepenForm.id = 'codepenForm';
+		codepenForm.target = 'blank';
+		codepenForm.method = 'post';
+		codepenForm.action = 'https://codepen.io/pen/define/';
+
+		codepenForm.innerHTML = '<textarea name="data"></textarea>';
+
+		document.body.appendChild( codepenForm );
 	}
 
 	function initSidebarAccordion( body ) {
@@ -545,6 +605,65 @@
 			}
 		}
 	}
+
+	function collectFormData( sampleId ) {
+		var elements = document.querySelectorAll( '[data-sample="' + sampleId + '"]' );
+		var resource = resources[ sampleId ],
+			html = '', css = '', js = '';
+
+		for ( var i = 0; i < elements.length; i++ ) {
+			var element = elements[i];
+			switch( element.tagName.toLowerCase() ) {
+				default:
+					html += element.outerHTML
+						.replace( /src="assets\//g, 'src="http://sdk.ckeditor.com/samples/assets/' );
+					break;
+				case 'style':
+					css += element.innerText;
+					break;
+				case 'script':
+					js += element.innerText
+						.replace( /&lt;.*?&gt;/g, '' )
+						.replace( /^[\s]*\n/, '' )
+						// Replace path for some css files.
+						.replace( /'assets\//g, '\'http://sdk.ckeditor.com/samples/assets/' )
+						// Replace path for CKEditor
+						.replace( /\.\.\/vendor\/ckeditor\//g, 'https://cdn.ckeditor.com/<CKEditorVersion>/full-all/' )
+						// Replace path for additional plugins.
+						.replace( /\.\.\/\.\.\/samples\/assets/g, 'http://sdk.ckeditor.com/samples/assets' );
+			}
+		}
+
+		return {
+			html: html,
+			css: css,
+			js: js
+		}
+	}
+
+	function openJsFiddle( sampleId ) {
+		var formData = collectFormData( sampleId );
+
+		jsFiddleForm.querySelector( '[name="html"]' ).value = formData.html;
+		jsFiddleForm.querySelector( '[name="css"]' ).value = formData.css;
+		jsFiddleForm.querySelector( '[name="js"]' ).value = formData.js;
+
+		jsFiddleForm.submit();
+	}
+	simpleSample.openJsFiddle = openJsFiddle;
+
+	function openCodepen( sampleId ) {
+		var formData = collectFormData( sampleId, true );
+
+		// Hacky hack because for some reason Codepen ignores js_external in POST data.
+		formData.html += '<script src="https://cdn.ckeditor.com/<CKEditorVersion>/full-all/ckeditor.js"></script>';
+		formData.html += '<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>';
+
+		codepenForm.querySelector( '[name="data"]' ).value = JSON.stringify( formData );
+
+		codepenForm.submit();
+	}
+	simpleSample.openCodepen = openCodepen;
 
 	window.simpleSample = simpleSample;
 }() );
